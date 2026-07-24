@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "translator"
-version = "1.0.4"
+name = "jls-translator"
+version = "1.0.3"
 description = "Translate Minecraft Bedrock .lang files into all languages supported by Minecraft"
 requires-python = ">=3.8"
 dependencies = [
@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.scripts]
-translator = "translator.translator:main"
+jls-translator = "jls-translator.translator:main"
 
 [tool.setuptools]
-packages = ["translator"]
+packages = ["jls-translator"]
