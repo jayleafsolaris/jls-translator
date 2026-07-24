@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "roe-translator"
+version = "1.0.0"
+description = "Auto-translates Resonance of Echoes .lang files into other locales"
+requires-python = ">=3.8"
+dependencies = [
+    "deep-translator"
+]
+
+[project.scripts]
+roe-translate = "roe_translator.translator:main"
+
+[tool.setuptools]
+packages = ["roe_translator"]
