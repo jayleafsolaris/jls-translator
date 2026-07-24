@@ -91,7 +91,16 @@ DEFAULTS = {
     "workers_throttle_ceiling": 20,
 }
 
-SCRIPT_DIR = None  # set at runtime from the required --path argument
+SCRIPT_DIR = None  # set at runtime from the saved --path
+
+# Where this script/module itself lives once pip-installed (e.g. inside
+# site-packages). Cache, progress tracking, languages.json, and the config
+# folder all live here -- next to the package -- rather than inside the
+# project folder pointed to by --path. NOTE: this means cache/config are
+# shared across every project you point --path at; fine for a single
+# ongoing project, but keep in mind if you ever manage multiple addons with
+# this same install.
+PACKAGE_DIR = Path(__file__).resolve().parent
 
 # Remembers the last --path used, independent of any project folder,
 # so --get works even before you've told the script where to look.
@@ -122,10 +131,10 @@ _LAST_REQUEST_TIME = 0.0
 _CONFIG_DELAY = None
 
 def config_dir_state():
-    visible = SCRIPT_DIR / CONFIG_DIR_VISIBLE_NAME
+    visible = PACKAGE_DIR / CONFIG_DIR_VISIBLE_NAME
     if visible.is_dir():
         return "visible", visible
-    return "hidden", SCRIPT_DIR / CONFIG_DIR_HIDDEN_NAME
+    return "hidden", PACKAGE_DIR / CONFIG_DIR_HIDDEN_NAME
 
 def current_config_dir():
     return config_dir_state()[1]
@@ -450,7 +459,7 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
 # ----------------------------------------------------------------------
 
 def load_cache():
-    path = SCRIPT_DIR / DEFAULTS["cache_file"]
+    path = PACKAGE_DIR / DEFAULTS["cache_file"]
     if path.exists():
         try:
             return json.loads(path.read_text(encoding="utf-8"))
@@ -459,11 +468,11 @@ def load_cache():
     return {}
 
 def save_cache(base_values):
-    path = SCRIPT_DIR / DEFAULTS["cache_file"]
+    path = PACKAGE_DIR / DEFAULTS["cache_file"]
     path.write_text(json.dumps(base_values, ensure_ascii=False, indent=2), encoding="utf-8")
 
 def clear_cache():
-    path = SCRIPT_DIR / DEFAULTS["cache_file"]
+    path = PACKAGE_DIR / DEFAULTS["cache_file"]
     if path.exists():
         path.unlink()
         return True
@@ -471,7 +480,7 @@ def clear_cache():
 
 def write_languages_json():
     codes = [c for c in LANGUAGES if (SCRIPT_DIR / f"{c}.lang").exists()]
-    path = SCRIPT_DIR / DEFAULTS["languages_json"]
+    path = PACKAGE_DIR / DEFAULTS["languages_json"]
     path.write_text(json.dumps(codes, ensure_ascii=False), encoding="utf-8")
 
 def compute_auto_workers():
@@ -752,7 +761,7 @@ def cmd_config_show():
         print(f"Config folder is already visible: {path.name}/")
         return
 
-    target = SCRIPT_DIR / CONFIG_DIR_VISIBLE_NAME
+    target = PACKAGE_DIR / CONFIG_DIR_VISIBLE_NAME
     if target.exists():
         print(f"Can't make it visible -- a '{target.name}' folder already exists here for another reason.")
         return
@@ -771,7 +780,7 @@ def cmd_config_hide():
         print(f"Config folder is already hidden: {path.name}/")
         return
 
-    target = SCRIPT_DIR / CONFIG_DIR_HIDDEN_NAME
+    target = PACKAGE_DIR / CONFIG_DIR_HIDDEN_NAME
     if target.exists():
         print(f"Can't hide it -- a '{target.name}' folder already exists here for another reason.")
         return
@@ -829,7 +838,7 @@ def base_fingerprint(base_values):
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 def load_progress():
-    path = SCRIPT_DIR / DEFAULTS["progress_file"]
+    path = PACKAGE_DIR / DEFAULTS["progress_file"]
     if path.exists():
         try:
             return json.loads(path.read_text(encoding="utf-8"))
@@ -838,7 +847,7 @@ def load_progress():
     return None
 
 def save_progress(command, completed, fingerprint, elapsed_time=0.0):
-    path = SCRIPT_DIR / DEFAULTS["progress_file"]
+    path = PACKAGE_DIR / DEFAULTS["progress_file"]
     path.write_text(
         json.dumps({
             "command": command,
@@ -850,7 +859,7 @@ def save_progress(command, completed, fingerprint, elapsed_time=0.0):
     )
 
 def clear_progress():
-    path = SCRIPT_DIR / DEFAULTS["progress_file"]
+    path = PACKAGE_DIR / DEFAULTS["progress_file"]
     if path.exists():
         path.unlink()
         return True
@@ -1476,10 +1485,10 @@ def cmd_backup():
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for p in all_files:
             zf.write(p, arcname=p.name)
-        cache_path = SCRIPT_DIR / DEFAULTS["cache_file"]
+        cache_path = PACKAGE_DIR / DEFAULTS["cache_file"]
         if cache_path.exists():
             zf.write(cache_path, arcname=cache_path.name)
-        lj_path = SCRIPT_DIR / DEFAULTS["languages_json"]
+        lj_path = PACKAGE_DIR / DEFAULTS["languages_json"]
         if lj_path.exists():
              zf.write(lj_path, arcname=lj_path.name)
 
@@ -1528,7 +1537,13 @@ def cmd_restore():
         return
 
     with zipfile.ZipFile(chosen, "r") as zf:
-        zf.extractall(SCRIPT_DIR)
+        for name in zf.namelist():
+            if name in (DEFAULTS["cache_file"], DEFAULTS["languages_json"]):
+                dest_dir = PACKAGE_DIR
+            else:
+                dest_dir = SCRIPT_DIR
+            with zf.open(name) as src, open(dest_dir / name, "wb") as dst:
+                shutil.copyfileobj(src, dst)
 
     print(f"\nRestored {len(names)} file(s) from {chosen.name}.")
 
@@ -1590,7 +1605,7 @@ def cmd_cache_clear():
 
 
 def cmd_cache_view():
-    path = SCRIPT_DIR / DEFAULTS["cache_file"]
+    path = PACKAGE_DIR / DEFAULTS["cache_file"]
     if not path.exists():
         print(f"No cache file found ({DEFAULTS['cache_file']}). "
               f"Run --cache --build, or --create/--update/--add first.")
