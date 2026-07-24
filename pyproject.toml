@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "translator"
-version = "1.0.1"
+version = "1.0.2"
 description = "Auto-translates Resonance of Echoes .lang files into other locales"
 requires-python = ">=3.8"
 dependencies = [
