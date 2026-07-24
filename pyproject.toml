@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "translator"
-version = "1.0.2"
-description = "Auto-translates Resonance of Echoes .lang files into other locales"
+version = "1.0.3"
+description = "Translate Minecraft Bedrock .lang files into all languages supported by Minecraft"
 requires-python = ">=3.8"
 dependencies = [
     "deep-translator"
