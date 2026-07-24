@@ -92,6 +92,25 @@ DEFAULTS = {
 }
 
 SCRIPT_DIR = None  # set at runtime from the required --path argument
+
+# Remembers the last --path used, independent of any project folder,
+# so --get works even before you've told the script where to look.
+LAST_PATH_FILE = Path.home() / ".roe_translator_last_path.json"
+
+def get_last_path():
+    if LAST_PATH_FILE.exists():
+        try:
+            data = json.loads(LAST_PATH_FILE.read_text(encoding="utf-8"))
+            return data.get("path")
+        except Exception:
+            return None
+    return None
+
+def save_last_path(path):
+    try:
+        LAST_PATH_FILE.write_text(json.dumps({"path": str(path)}, indent=2), encoding="utf-8")
+    except Exception:
+        pass  # non-critical -- don't block a run just because this couldn't save
 SCRIPT_VERSION = "2026.07.23"
 
 CONFIG_DIR_HIDDEN_NAME = ".config"
@@ -1656,10 +1675,39 @@ def prompt_for_ask():
 
 
 def main():
+    argv = sys.argv[1:]
+
+    # `--path --get` / `--path --help` are handled before argparse ever sees
+    # them, since argparse can't cleanly accept another flag-looking token
+    # as a plain value for --path.
+    if "--path" in argv:
+        idx = argv.index("--path")
+        next_token = argv[idx + 1] if idx + 1 < len(argv) else None
+
+        if next_token == "--get":
+            last = get_last_path()
+            print(f"Last used path: {last}" if last else "No path has been used yet.")
+            return
+
+        if next_token == "--help":
+            print(
+                "--path <folder>\n\n"
+                "  Folder containing 'base' and the .lang files this script operates\n"
+                "  on. Required for every mode except --version.\n\n"
+                "  --path --get   print the last folder path you used\n"
+                "  --path --help  show this message\n\n"
+                "Example:\n"
+                "  roe-translate --path RP/texts --create"
+            )
+            return
+
     parser = argparse.ArgumentParser(description="Translate base into all Minecraft Bedrock languages (including en_US).")
 
-    parser.add_argument("--path", type=str, default=None,
-                         help="folder containing 'base' and the .lang files (required for every mode except --version)")
+    parser.add_argument("--path", type=str, nargs="?", default=None,
+                         help="own standalone command (like --config): sets and saves the folder "
+                              "containing 'base' and the .lang files, then exits. Every other "
+                              "command reuses whatever was last saved here. Also accepts "
+                              "--path --get or --path --help.")
 
     # New mode argument implemented
     parser.add_argument("--mode", choices=["lang", "key"], default="lang", 
@@ -1712,13 +1760,28 @@ def main():
         print(f"translate.py version {SCRIPT_VERSION}")
         return
 
-    if not args.path:
-        parser.error("--path is required (e.g. --path RP/texts)")
+    # --path is its own standalone command, like --config or --cache: giving
+    # it a folder sets and saves that as the default, then exits immediately.
+    # It never combines with --create/--config/etc. in the same invocation.
+    if args.path:
+        new_dir = Path(args.path).resolve()
+        if not new_dir.is_dir():
+            parser.error(f"--path '{args.path}' is not a valid directory")
+        save_last_path(new_dir)
+        print(f"Path set to: {new_dir}")
+        return
 
+    # Every other command (--create, --config, --cache, --view, etc.) reads
+    # the folder that was saved by a previous --path call, so it doesn't
+    # need to be passed again each time.
     global SCRIPT_DIR
-    SCRIPT_DIR = Path(args.path).resolve()
+    last = get_last_path()
+    if not last:
+        parser.error("No path has been set yet. Run --path <folder> once first, "
+                     "e.g. --path RP/texts")
+    SCRIPT_DIR = Path(last)
     if not SCRIPT_DIR.is_dir():
-        parser.error(f"--path '{args.path}' is not a valid directory")
+        parser.error(f"Saved path '{last}' no longer exists -- run --path <folder> again")
 
     if (args.workers or args.languages or args.delay or args.show or args.hide) and not args.config:
         args.config = True
