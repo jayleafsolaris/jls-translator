@@ -9,21 +9,23 @@ It's kept separate from every generated .lang file — en_US.lang is
 now just a regular output, an untranslated copy of `base`, exactly
 like en_GB.lang.
 
-Usage (run from anywhere — it always operates on the folder this file
-lives in, e.g. RP/texts/):
+Usage (run from anywhere — pass --path to point at the folder containing
+base and your .lang files, e.g. RP/texts/):
 
-    python3 translate.py --create   overwrite ALL .lang files from scratch
-    python3 translate.py --update   retranslate changed keys (existing keys only)
-    python3 translate.py --add      only add missing keys (no change detection)
-    python3 translate.py --remove   remove keys no longer in base
-    python3 translate.py --delete   delete every generated .lang file (base is kept)
-    python3 translate.py --backup   zip base + all .lang files into lang_backups/
-    python3 translate.py --restore  restore base + .lang files (+ cache/languages.json)
+    python3 translate.py --path RP/texts --create   overwrite ALL .lang files from scratch
+    python3 translate.py --path RP/texts --update   retranslate changed keys (existing keys only)
+    python3 translate.py --path RP/texts --add      only add missing keys (no change detection)
+    python3 translate.py --path RP/texts --remove   remove keys no longer in base
+    python3 translate.py --path RP/texts --delete   delete every generated .lang file (base is kept)
+    python3 translate.py --path RP/texts --backup   zip base + all .lang files into lang_backups/
+    python3 translate.py --path RP/texts --restore  restore base + .lang files (+ cache/languages.json)
                                      from a lang_backups/ zip you pick
-    python3 translate.py --view     list base + .lang files in this folder + sizes
-    python3 translate.py --continue resume the last interrupted --create/--update/--add/--remove/--delete run
-    python3 translate.py --cache    manage the translation cache (see below)
-    python3 translate.py --config   manage script configuration (see below)
+    python3 translate.py --path RP/texts --view     list base + .lang files in this folder + sizes
+    python3 translate.py --path RP/texts --continue resume the last interrupted --create/--update/--add/--remove/--delete run
+    python3 translate.py --path RP/texts --cache    manage the translation cache (see below)
+    python3 translate.py --path RP/texts --config   manage script configuration (see below)
+
+--path is required for every mode except --version.
 
 Add --ask to --create/--update/--add/--remove/--delete/--continue to be asked after each
 language whether to continue or stop, e.g.:
@@ -89,8 +91,7 @@ DEFAULTS = {
     "workers_throttle_ceiling": 20,
 }
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-SCRIPT_PATH = Path(__file__).resolve()
+SCRIPT_DIR = None  # set at runtime from the required --path argument
 SCRIPT_VERSION = "2026.07.23"
 
 CONFIG_DIR_HIDDEN_NAME = ".config"
@@ -1439,58 +1440,6 @@ def cmd_delete(resume=False, interactive=False):
           f"The base file ('{DEFAULTS['base_lang']}') was untouched.")
 
 
-def cmd_publish():
-    source = SCRIPT_PATH
-    target = source.parent / "translator"
-    base_path = SCRIPT_DIR / DEFAULTS["base_lang"]
-    base_exists = base_path.exists()
-
-    if source.resolve() == target.resolve():
-        print(f"{source.name} is already published under its final name -- "
-              f"there's no separate source file left to copy.")
-        print(f"This will completely delete {source.name}"
-              + (f" and {base_path.name}" if base_exists else "")
-              + ", with nothing left behind.")
-        confirm = input("Type 'yes' to confirm: ").strip().lower()
-        if confirm != "yes":
-            print("Cancelled.")
-            return
-        source.unlink()
-        if base_exists:
-            base_path.unlink()
-        print(f"\nDone. {source.name}"
-              + (f" and {base_path.name}" if base_exists else "")
-              + " have been completely deleted.")
-        return
-
-    print(f"This will:")
-    print(f"  1. Copy {source.name} to {target.name} (a fully working duplicate)")
-    print(f"  2. Delete {source.name} itself")
-    if base_exists:
-        print(f"  3. Delete {base_path.name}")
-    print(f"\nAfterward only {target.name} will run.\n{source.name}"
-          + (f" and {base_path.name} will" if base_exists else " will")
-          + " be deleted.")
-    confirm = input("Type 'yes' to confirm: ").strip().lower()
-    if confirm != "yes":
-        print("Cancelled.")
-        return
-
-    if target.exists():
-        overwrite = input(f"{target.name} already exists here. Overwrite it? [y/N]: ").strip().lower()
-        if overwrite not in ("y", "yes"):
-            print("Cancelled.")
-            return
-
-    shutil.copy2(source, target)
-    source.unlink()
-    if base_exists:
-        base_path.unlink()
-
-    print(f"\nDone. {target.name} is now the working copy (run it with `python3 {target.name}`).")
-    print(f"{source.name}" + (f" and {base_path.name} have" if base_exists else " has") + " been deleted.")
-
-
 def cmd_backup():
     backup_dir = SCRIPT_DIR / DEFAULTS["backup_dir"]
     backup_dir.mkdir(exist_ok=True)
@@ -1708,7 +1657,10 @@ def prompt_for_ask():
 
 def main():
     parser = argparse.ArgumentParser(description="Translate base into all Minecraft Bedrock languages (including en_US).")
-    
+
+    parser.add_argument("--path", type=str, default=None,
+                         help="folder containing 'base' and the .lang files (required for every mode except --version)")
+
     # New mode argument implemented
     parser.add_argument("--mode", choices=["lang", "key"], default="lang", 
                         help="Choose batching mode: translate language by language (lang) or key by key (key).")
@@ -1750,9 +1702,6 @@ def main():
                          help="(with --config) make the config folder visible")
     parser.add_argument("--hide", action="store_true",
                          help="(with --config) make the config folder hidden")
-    parser.add_argument("--publish", action="store_true",
-                         help="copy this script to 'translator' (no extension), then delete "
-                              "this file itself")
     parser.add_argument("--version", action="store_true", help="print the script version and exit")
     parser.add_argument("--ask", action="store_true",
                          help="ask after each item whether to continue or stop "
@@ -1762,6 +1711,14 @@ def main():
     if args.version:
         print(f"translate.py version {SCRIPT_VERSION}")
         return
+
+    if not args.path:
+        parser.error("--path is required (e.g. --path RP/texts)")
+
+    global SCRIPT_DIR
+    SCRIPT_DIR = Path(args.path).resolve()
+    if not SCRIPT_DIR.is_dir():
+        parser.error(f"--path '{args.path}' is not a valid directory")
 
     if (args.workers or args.languages or args.delay or args.show or args.hide) and not args.config:
         args.config = True
@@ -1808,7 +1765,6 @@ def main():
         ("create", args.create), ("update", args.update), ("add", args.add),
         ("remove", args.remove), ("delete", args.delete), ("backup", args.backup),
         ("restore", args.restore), ("view", args.view), ("cont", args.cont),
-        ("publish", args.publish),
     ]
     chosen = [key for key, on in top_flags if on]
     if len(chosen) > 1:
@@ -1848,8 +1804,6 @@ def main():
         cmd_view()
     elif mode == "cont":
         cmd_continue(interactive=ask)
-    elif mode == "publish":
-        cmd_publish()
 
 
 if __name__ == "__main__":
