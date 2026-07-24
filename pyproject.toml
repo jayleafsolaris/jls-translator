@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.scripts]
-jls-translator = "translator.translator:main"
+translator = "translator.translator:main"
 
 [tool.setuptools]
 packages = ["translator"]
