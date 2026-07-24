@@ -8,7 +8,7 @@ version = "1.0.6"
 description = "Translate Minecraft Bedrock .lang files into all languages supported by Minecraft. Needs deep-translator and latest python version"
 
 [project.scripts]
-jls-translator = "jls-translator.translator:main"
+jls-translator = "translator.translator:main"
 
 [tool.setuptools]
 packages = ["jls-translator"]
