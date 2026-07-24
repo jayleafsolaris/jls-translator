@@ -15,4 +15,4 @@ dependencies = [
 jls-translator = "translator.translator:main"
 
 [tool.setuptools]
-packages = ["jls-translator"]
+packages = ["translator"]
