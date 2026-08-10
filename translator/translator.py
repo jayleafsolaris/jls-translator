@@ -1051,7 +1051,7 @@ def cmd_upgrade():
                     shutil.copy2(src, dst)
 
         shutil.rmtree(temp_dir)
-        print(f"Update complete! Restarting jls-translator...")
+        print(f"Update complete!")
         
         # Strip --upgrade from args so it doesn't loop infinitely upon restart
         new_args = [arg for arg in sys.argv if arg != "--upgrade"]
