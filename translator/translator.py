@@ -1036,7 +1036,7 @@ def cmd_upgrade():
         print("Downloading...")
         with zipfile.ZipFile(io.BytesIO(response.content)) as z:
             z.extractall(temp_dir)
-            print("Extracting...")
+            print("Updating...")
             
             # GitHub zips put everything in a root folder like 'jls-translator-main'
             extracted_root = os.path.join(temp_dir, z.namelist()[0])
