@@ -12,18 +12,19 @@ like en_GB.lang.
 Usage (run from anywhere — pass --path to point at the folder containing
 base and your .lang files, e.g. RP/texts/):
 
-    python3 translate.py --path RP/texts --create   overwrite ALL .lang files from scratch
-    python3 translate.py --path RP/texts --update   retranslate changed keys (existing keys only)
-    python3 translate.py --path RP/texts --add      only add missing keys (no change detection)
-    python3 translate.py --path RP/texts --remove   remove keys no longer in base
-    python3 translate.py --path RP/texts --delete   delete every generated .lang file (base is kept)
-    python3 translate.py --path RP/texts --backup   zip base + all .lang files into lang_backups/
-    python3 translate.py --path RP/texts --restore  restore base + .lang files (+ cache/languages.json)
+    python3 translate.py --create   overwrite ALL .lang files from scratch
+    python3 translate.py --update   retranslate changed keys (existing keys only)
+    python3 translate.py --add      only add missing keys (no change detection)
+    python3 translate.py --remove   remove keys no longer in base
+    python3 translate.py --delete   delete every generated .lang file (base is kept)
+    python3 translate.py --backup   zip base + all .lang files into lang_backups/
+    python3 translate.py --restore  restore base + .lang files (+ cache/languages.json)
                                      from a lang_backups/ zip you pick
-    python3 translate.py --path RP/texts --view     list base + .lang files in this folder + sizes
-    python3 translate.py --path RP/texts --continue resume the last interrupted --create/--update/--add/--remove/--delete run
-    python3 translate.py --path RP/texts --cache    manage the translation cache (see below)
-    python3 translate.py --path RP/texts --config   manage script configuration (see below)
+    python3 translate.py --view     list base + .lang files in this folder + sizes
+    python3 translate.py --continue resume the last interrupted --create/--update/--add/--remove/--delete run
+    python3 translate.py --cache    manage the translation cache (see below)
+    python3 translate.py --config   manage script configuration (see below)
+    python3 translate.py --upgrade  update the script to the latest version from GitHub
 
 --path is required for every mode except --version.
 
@@ -55,12 +56,13 @@ separate files under a .config/ folder:
     python3 translate.py --config --hide       make the config folder hidden
 
 Requires:
-    pip install deep_translator --user
+    pip install deep_translator requests --user
 """
 
 import argparse
 import concurrent.futures
 import hashlib
+import io
 import json
 import os
 import random
@@ -73,6 +75,19 @@ import time
 import zipfile
 from datetime import datetime
 from pathlib import Path
+
+# ----------------------------------------------------------------------
+# Dependency Check
+# ----------------------------------------------------------------------
+try:
+    import requests
+    from deep_translator import GoogleTranslator
+except ImportError:
+    print("\033[91m\nError: Missing required dependencies.\033[0m")
+    print("This script requires 'deep_translator' and 'requests' to run.")
+    print("Please install them by running:\n\n    pip install deep_translator requests\n")
+    sys.exit(1)
+
 
 # ----------------------------------------------------------------------
 # Config
@@ -291,7 +306,7 @@ BRITISH_SPELLINGS = {
     "apologizing": "apologising", "customize": "customise", "customizes": "customises",
     "customized": "customised", "customizing": "customising", "customizable": "customisable",
     "analyze": "analyse", "analyzes": "analyses", "analyzed": "analysed",
-    "analyzing": "analysing", "catalog": "catalogue", "catalogs": "catalogues",
+    "analyzing": "analising", "catalog": "catalogue", "catalogs": "catalogues",
     "dialog": "dialogue", "dialogs": "dialogues", "theater": "theatre", 
     "theaters": "theatres", "center": "centre", "centers": "centres", 
     "centered": "centred", "centering": "centring", "fiber": "fibre", 
@@ -369,7 +384,6 @@ def require_internet_or_warn(flag_name):
 
 
 def get_translator(google_code):
-    from deep_translator import GoogleTranslator
     return GoogleTranslator(source="en", target=google_code)
 
 
@@ -424,26 +438,6 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
     current_batch = []
     current_len = 0
 
-    # Also cap items-per-batch, not just chars-per-batch. Without this,
-    # small changesets (the common case for --update, where only a
-    # handful of keys changed) all fit under MAX_BATCH_CHARS and collapse
-    # into a *single* batch. That means a single network call/future, so
-    # the progress callback never fires until the whole thing finishes --
-    # the bar sits frozen, then SmoothProgress has to ease the *entire*
-    # gap in one go, which looks like a sudden snap to completion.
-    #
-    # NOTE: target_batch_count must NOT be capped by max_workers alone.
-    # resolve_workers() deliberately shrinks workers for small jobs
-    # (roughly text_count // 3), so a typical --update run with a
-    # handful of changed keys gets max_workers == 1 -- which would send
-    # target_batch_count right back down to 1 and reproduce the exact
-    # freeze this is meant to fix. Batch count and worker count are
-    # different knobs: fewer workers just means batches run more
-    # sequentially, not that there should be fewer of them. So we take
-    # whichever is larger out of max_workers and a minimum batch floor
-    # (capped by how many items there actually are), guaranteeing
-    # multiple batches -- and therefore multiple incremental progress
-    # ticks -- even under a single-worker, small-changeset --update run.
     MIN_BATCH_FLOOR = 8
     desired_min_batches = min(len(valid_indices), MIN_BATCH_FLOOR)
     target_batch_count = min(len(valid_indices), max(max_workers, desired_min_batches))
@@ -957,16 +951,6 @@ class SmoothProgress:
     """
     Eases a progress bar's displayed value toward the latest real ("target")
     value instead of jumping straight to it.
-
-    translate_many() fires its progress callback whenever a parallel batch
-    finishes, which -- since batches tend to land close together -- used to
-    make the bar jump from e.g. 0% to 61% to 100% almost instantly instead of
-    climbing steadily. A single background ticker thread now owns all
-    rendering: workers just report the true progress via update(), and the
-    ticker advances the displayed value toward it in small steps, closing
-    the gap over roughly `catch_up_seconds` rather than in one jump. It never
-    shows something less than what's actually done, and it's guaranteed to
-    reach 100% (via finish()) even if real progress stalls.
     """
 
     def __init__(self, key_total, render, tick_interval=0.08, catch_up_seconds=1.0):
@@ -1033,6 +1017,52 @@ def _ask_continue(code):
 # ----------------------------------------------------------------------
 # Commands
 # ----------------------------------------------------------------------
+
+def cmd_upgrade():
+    """Fetches the latest main.zip from GitHub, replaces current files, and restarts."""
+    UPDATE_URL = "https://github.com/jayleafsolaris/jls-translator/archive/refs/heads/main.zip"
+    
+    print("Checking for updates from GitHub...")
+    if not require_internet_or_warn("--upgrade"):
+        return
+
+    try:
+        response = requests.get(UPDATE_URL, stream=True)
+        response.raise_for_status()
+
+        temp_dir = PACKAGE_DIR / "temp_update"
+        os.makedirs(temp_dir, exist_ok=True)
+
+        print("Downloading and extracting...")
+        with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+            z.extractall(temp_dir)
+            
+            # GitHub zips put everything in a root folder like 'jls-translator-main'
+            extracted_root = os.path.join(temp_dir, z.namelist()[0])
+            
+            # Move files from the extracted folder directly into the script's package dir
+            for item in os.listdir(extracted_root):
+                src = os.path.join(extracted_root, item)
+                dst = os.path.join(PACKAGE_DIR, item)
+                
+                if os.path.isdir(src):
+                    shutil.copytree(src, dst, dirs_exist_ok=True)
+                else:
+                    shutil.copy2(src, dst)
+
+        shutil.rmtree(temp_dir)
+        print(f"Update complete! Restarting jls-translator...")
+        
+        # Strip --upgrade from args so it doesn't loop infinitely upon restart
+        new_args = [arg for arg in sys.argv if arg != "--upgrade"]
+        if len(new_args) == 1:
+            new_args.append("--version") # Just show the version if they ran it raw
+            
+        os.execv(sys.executable, [sys.executable] + new_args)
+        
+    except Exception as e:
+        warn_red(f"Update failed: {e}")
+
 
 def cmd_create(resume=False, interactive=False):
     if not require_internet_or_warn("--create"):
@@ -1716,6 +1746,7 @@ _MODES = [
     ("cont", "Resume the last interrupted run (any modifying command)"),
     ("cache", "Manage the translation cache (build, view, or clear)"),
     ("config", "Manage script configuration (workers, active languages, delay)"),
+    ("upgrade", "Update the script to the latest version from GitHub"),
 ]
 _MODE_FLAG_NAME = {"cont": "--continue"}
 
@@ -1791,6 +1822,8 @@ def main():
     parser.add_argument("--ask", action="store_true",
                          help="ask after each item whether to continue or stop "
                               "(combine with --create/--update/--add/--remove/--delete/--continue)")
+    parser.add_argument("--upgrade", action="store_true", help="update the script to the latest version from GitHub")
+    
     args = parser.parse_args()
 
     if args.version:
@@ -1847,6 +1880,7 @@ def main():
         ("create", args.create), ("update", args.update), ("add", args.add),
         ("remove", args.remove), ("delete", args.delete), ("backup", args.backup),
         ("restore", args.restore), ("view", args.view), ("cont", args.cont),
+        ("upgrade", args.upgrade),
     ]
     chosen = [key for key, on in top_flags if on]
     if len(chosen) > 1:
@@ -1867,8 +1901,13 @@ def main():
         if mode == "cache":
             cmd_cache_menu()
             return
+        if mode == "upgrade":
+            cmd_upgrade()
+            return
 
-    if mode == "create":
+    if mode == "upgrade":
+        cmd_upgrade()
+    elif mode == "create":
         cmd_create(interactive=ask)
     elif mode == "update":
         cmd_update(interactive=ask)
