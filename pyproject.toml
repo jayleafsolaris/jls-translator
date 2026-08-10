@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jls-translator"
-version = "1.3.0"
+version = "1.3.1"
 description = "Translate Minecraft Bedrock .lang files into all languages supported by Minecraft. Needs deep-translator and latest python version"
 
 [project.scripts]
