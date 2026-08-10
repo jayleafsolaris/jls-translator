@@ -1022,7 +1022,7 @@ def cmd_upgrade():
     """Fetches the latest main.zip from GitHub, replaces current files, and restarts."""
     UPDATE_URL = "https://github.com/jayleafsolaris/jls-translator/archive/refs/heads/main.zip"
     
-    print("Checking for updates from GitHub...")
+    print("Checking for updates...")
     if not require_internet_or_warn("--upgrade"):
         return
 
@@ -1033,9 +1033,10 @@ def cmd_upgrade():
         temp_dir = PACKAGE_DIR / "temp_update"
         os.makedirs(temp_dir, exist_ok=True)
 
-        print("Downloading and extracting...")
+        print("Downloading...")
         with zipfile.ZipFile(io.BytesIO(response.content)) as z:
             z.extractall(temp_dir)
+            print("Extracting...")
             
             # GitHub zips put everything in a root folder like 'jls-translator-main'
             extracted_root = os.path.join(temp_dir, z.namelist()[0])
