@@ -117,10 +117,10 @@ SCRIPT_DIR = None  # set at runtime from the saved --path
 # this same install.
 PACKAGE_DIR = Path(__file__).resolve().parent
 
-SCRIPT_VERSION = "2026.07.23"
+SCRIPT_VERSION = "1.4.1"
 
 CONFIG_DIR_HIDDEN_NAME = ".config"
-CONFIG_DIR_VISIBLE_NAME = "config"
+CONFIG_DIR_VISIBLE_NAME = "configuration"
 
 # Thread-safe rate limiter variables
 _RATE_LIMIT_LOCK = threading.Lock()
