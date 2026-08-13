@@ -118,7 +118,7 @@ SCRIPT_DIR = None  # set at runtime from the saved --path
 # this same install.
 PACKAGE_DIR = Path(__file__).resolve().parent
 
-SCRIPT_VERSION = "1.4.1"
+SCRIPT_VERSION = "1.4.2"
 
 CONFIG_DIR_HIDDEN_NAME = ".config"
 CONFIG_DIR_VISIBLE_NAME = "configuration"
@@ -1167,8 +1167,30 @@ def cmd_create(resume=False, interactive=False):
 
 
 def _report_translating(done, total):
+    """
+    Renders a 3-line progress block:
+
+        Translating [total] keys...
+        Keys: #/# (e.g. 012/104)
+        Left: #
+
+    Redraws in place on every call by moving the cursor back up to the top
+    of the block (rather than the previous single \\r-terminated line).
+    """
     width = len(str(total)) if total else 1
-    sys.stdout.write(f"\rTranslating [{done:0{width}d}/{total}]".ljust(40))
+    left = max(total - done, 0)
+    lines = [
+        f"Translating {total} keys...",
+        f"Keys: {done:0{width}d}/{total}",
+        f"Left: {left}",
+    ]
+    if getattr(_report_translating, "_active", False):
+        # Move cursor up to the start of the previously drawn block.
+        sys.stdout.write(f"\033[{len(lines)}A")
+    else:
+        _report_translating._active = True
+    for line in lines:
+        sys.stdout.write("\033[2K" + line + "\n")
     sys.stdout.flush()
 
 
@@ -1264,6 +1286,7 @@ def cmd_update(resume=False, interactive=False):
               "translated together as a single batch.\n")
 
     start_run_time = time.time()
+    _report_translating._active = False
     _report_translating(done_count, total)
 
     # Local (non-network) work first: direct copy (en_US) and British-spelling
@@ -1334,7 +1357,7 @@ def cmd_update(resume=False, interactive=False):
         write_lang(data["target_path"], out_lines)
         summary.append((code, changed))
 
-    print(f"\n\nUpdate complete in {format_duration(total_duration)}:")
+    print(f"\nUpdate complete in {format_duration(total_duration)}:")
     for code, changed in summary:
         print(f"  {code}.lang: {changed} key(s) updated")
 
