@@ -118,7 +118,7 @@ SCRIPT_DIR = None  # set at runtime from the saved --path
 # this same install.
 PACKAGE_DIR = Path(__file__).resolve().parent
 
-SCRIPT_VERSION = "1.4.2"
+SCRIPT_VERSION = "1.4.3"
 
 CONFIG_DIR_HIDDEN_NAME = ".config"
 CONFIG_DIR_VISIBLE_NAME = "configuration"
@@ -1181,7 +1181,7 @@ def _report_translating(done, total):
     left = max(total - done, 0)
     lines = [
         f"Translating {total} keys...",
-        f"Keys: {done:0{width}d}/{total}",
+        f"Keys: {done:0{width}d}",
         f"Left: {left}",
     ]
     if getattr(_report_translating, "_active", False):
