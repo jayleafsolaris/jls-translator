@@ -378,7 +378,7 @@ def require_internet_or_warn(flag_name):
         f"to reach Google Translate."
     )
     print("Check your connection and try again. (Offline-only modes like "
-          "--view, --backup, --restore, --remove, --delete, --cache, and "
+          "--view, --backup, --restore, --remove, --delete, --add, --cache, and "
           "--config don't need this.)")
     return False
 
@@ -1165,6 +1165,12 @@ def cmd_create(resume=False, interactive=False):
     print(f"\nDone. Created {lang_total} language files from {DEFAULTS['base_lang']} in {format_duration(total_duration)}.")
 
 
+def _report_translating(done, total):
+    width = len(str(total)) if total else 1
+    sys.stdout.write(f"\rTranslating [{done:0{width}d}/{total}]".ljust(40))
+    sys.stdout.flush()
+
+
 def cmd_update(resume=False, interactive=False):
     if not require_internet_or_warn("--update"):
         return
@@ -1184,119 +1190,159 @@ def cmd_update(resume=False, interactive=False):
               "or check --config --languages if you expected some here.")
         return
 
-    completed = []
-    elapsed_time = 0.0
-
-    if resume:
-        progress = load_progress()
-        if not progress or progress.get("command") != "update":
-            print("No interrupted --update run found.\nStarting fresh.\n")
-        else:
-            completed = progress.get("completed", [])
-            elapsed_time = progress.get("elapsed_time", 0.0)
-            if progress.get("fingerprint") != fingerprint:
-                print(f"Note: {DEFAULTS['base_lang']} has changed since that run was interrupted — "
-                      "resuming anyway using the languages already completed.\n")
-            print(f"Resuming --update: {len(completed)}/{len(existing_codes)} language(s) already checked (accumulated time: {format_duration(elapsed_time)}).\n")
-
-    print(f"Checking {len(existing_codes)} language file(s) for changed values...\n")
-    start_run_time = time.time()
-    summary = []
-    total_changed = 0
-
-    for lang_idx, code in enumerate(existing_codes, start=1):
-        if code in completed:
-            continue
+    # Figure out, for every language at once, exactly which keys need
+    # (re)translating. Nothing gets written to a .lang file yet -- that only
+    # happens after every translation below is resolved.
+    lang_data = {}
+    tasks = []
+    for code in existing_codes:
         google_code = LANGUAGES[code]
         target_path = SCRIPT_DIR / f"{code}.lang"
         target_lines = parse_lang(target_path)
-        key_total = sum(1 for l in target_lines if l[0] == "entry")
-
         entries = [line for line in target_lines if line[0] == "entry"]
-        to_translate_idx = [
+        to_update = [
             i for i, (_, key, current_value, _) in enumerate(entries)
             if key in base_values and (
                 (key in cache and cache[key] != base_values[key])
                 or (google_code is not None and current_value.strip() == "")
             )
         ]
-        changed = len(to_translate_idx)
-        base_done = key_total - changed
-        _report(lang_idx, len(existing_codes), code, base_done, key_total, start_run_time, elapsed_time,
-                note=f"({changed} to update)" if changed else "(up to date)")
+        lang_data[code] = {
+            "target_path": target_path,
+            "target_lines": target_lines,
+            "entries": entries,
+            "to_update": to_update,
+        }
+        for i in to_update:
+            tasks.append({"code": code, "key": entries[i][1], "google_code": google_code})
 
-        if changed and google_code == GB_CONVERT:
-            texts = [base_values[entries[i][1]] for i in to_translate_idx]
-            converted = [to_british(t) for t in texts]
-            for i, new_value in zip(to_translate_idx, converted):
-                _, key, _, inline_comment = entries[i]
-                entries[i] = ("entry", key, new_value, inline_comment)
+    total = len(tasks)
+    if total == 0:
+        clear_progress()
+        save_cache(base_values)
+        print(f"\nNo keys needed updating — all present .lang files already match {DEFAULTS['base_lang']}.")
+        return
 
-            def _render(done, _lang_idx=lang_idx, _code=code, _changed=changed, _base_done=base_done):
-                _report(_lang_idx, len(existing_codes), _code, _base_done + done, key_total, start_run_time, elapsed_time,
-                        note=f"({done}/{_changed} updated)")
+    # Hidden scratch file: every finished translation lands here first, keyed
+    # by language + key, and is only fanned back out into the real .lang
+    # files once the whole combined batch is done. This is also what
+    # --continue resumes from if a run gets interrupted.
+    temp_path = PACKAGE_DIR / ".translate_update_temp.json"
+    results = {}
 
-            smoother = SmoothProgress(changed, _render, catch_up_seconds=3.0)
-            smoother.update(changed)
-            smoother.finish()
-            _report(lang_idx, len(existing_codes), code, key_total, key_total, start_run_time, elapsed_time,
-                    note=f"({changed} updated)")
-        elif changed and google_code is not None:
-            texts = [base_values[entries[i][1]] for i in to_translate_idx]
+    if resume and temp_path.exists():
+        try:
+            saved = json.loads(temp_path.read_text(encoding="utf-8"))
+            if saved.get("fingerprint") == fingerprint:
+                results = saved.get("results", {})
+        except Exception:
+            results = {}
+    elif temp_path.exists():
+        temp_path.unlink()
 
-            def _render(done, _lang_idx=lang_idx, _code=code, _changed=changed, _base_done=base_done):
-                _report(_lang_idx, len(existing_codes), _code, _base_done + done, key_total, start_run_time, elapsed_time,
-                        note=f"({done}/{_changed} updated)")
+    def task_key(code, key):
+        return f"{code}\x00{key}"
 
-            smoother = SmoothProgress(changed, _render)
-            effective_workers = resolve_workers(len(texts))
-            translated = translate_many(google_code, texts, effective_workers, progress_cb=smoother.update)
-            smoother.finish()
-            for i, new_value in zip(to_translate_idx, translated):
-                _, key, _, inline_comment = entries[i]
-                entries[i] = ("entry", key, new_value, inline_comment)
-            _report(lang_idx, len(existing_codes), code, key_total, key_total, start_run_time, elapsed_time,
-                    note=f"({changed} updated)")
+    def save_temp():
+        temp_path.write_text(
+            json.dumps({"fingerprint": fingerprint, "results": results}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+
+    remaining = [t for t in tasks if task_key(t["code"], t["key"]) not in results]
+    done_count = total - len(remaining)
+
+    if resume:
+        if done_count:
+            print(f"Resuming --update: {done_count}/{total} translation(s) already completed.\n")
+        else:
+            print("No interrupted --update run found (or base changed since) -- starting fresh.\n")
+
+    if interactive:
+        print("Note: --ask has no effect on --update -- all languages are now "
+              "translated together as a single batch.\n")
+
+    start_run_time = time.time()
+    _report_translating(done_count, total)
+
+    # Local (non-network) work first: direct copy (en_US) and British-spelling
+    # conversion (en_GB) need no API call at all.
+    for t in [t for t in remaining if t["google_code"] in (None, GB_CONVERT)]:
+        text = base_values[t["key"]]
+        value = text if t["google_code"] is None else to_british(text)
+        results[task_key(t["code"], t["key"])] = value
+        done_count += 1
+        _report_translating(done_count, total)
+    save_temp()
+    save_progress("update", [], fingerprint, time.time() - start_run_time)
+
+    # Real network translation, grouped by target Google language code (one
+    # 'es' batch covers both es_ES and es_MX, for example) but reported as a
+    # single running total across every language.
+    by_google = {}
+    for t in remaining:
+        if t["google_code"] in (None, GB_CONVERT):
+            continue
+        by_google.setdefault(t["google_code"], []).append(t)
+
+    for google_code, group in by_google.items():
+        texts = [base_values[t["key"]] for t in group]
+        base_offset = done_count
+
+        def _progress_cb(group_done, _base_offset=base_offset):
+            _report_translating(_base_offset + group_done, total)
+
+        workers = resolve_workers(len(texts))
+        translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
+        for t, value in zip(group, translated):
+            results[task_key(t["code"], t["key"])] = value
+        done_count = base_offset + len(group)
+        _report_translating(done_count, total)
+        save_temp()
+        save_progress("update", [], fingerprint, time.time() - start_run_time)
+
+    total_duration = time.time() - start_run_time
+    clear_progress()
+    if temp_path.exists():
+        temp_path.unlink()
+    save_cache(base_values)
+
+    # Now fan the finished translations back out into each language's .lang
+    # file -- this is the only point any .lang file gets touched.
+    summary = []
+    for code in existing_codes:
+        data = lang_data[code]
+        entries = data["entries"]
+        changed = 0
+        for i in data["to_update"]:
+            _, key, _, inline_comment = entries[i]
+            value = results.get(task_key(code, key))
+            if value is None:
+                continue
+            entries[i] = ("entry", key, value, inline_comment)
+            changed += 1
 
         out_lines = []
         e_idx = 0
-        for line in target_lines:
+        for line in data["target_lines"]:
             if line[0] != "entry":
                 out_lines.append(line)
             else:
                 out_lines.append(entries[e_idx])
                 e_idx += 1
-
-        write_lang(target_path, out_lines)
+        write_lang(data["target_path"], out_lines)
         summary.append((code, changed))
-        total_changed += changed
 
-        completed.append(code)
-        current_total_time = elapsed_time + (time.time() - start_run_time)
-        save_progress("update", completed, fingerprint, current_total_time)
-
-        if interactive and lang_idx < len(existing_codes) and not _ask_continue(code):
-            save_cache(base_values)
-            print(f"\nStopped after {code} ({len(completed)}/{len(existing_codes)} done).\n"
-                  f"Total time so far: {format_duration(current_total_time)}.\n"
-                  f"Run --continue to pick up where you left off.")
-            return
-
-    total_duration = elapsed_time + (time.time() - start_run_time)
-    clear_progress()
-    save_cache(base_values)
-
-    if total_changed == 0:
-        print(f"\nNo keys needed updating — all present .lang files already match {DEFAULTS['base_lang']} (took {format_duration(total_duration)}).")
-    else:
-        print(f"\nUpdate complete in {format_duration(total_duration)}:")
-        for code, changed in summary:
-            print(f"  {code}.lang: {changed} key(s) updated")
+    print(f"\n\nUpdate complete in {format_duration(total_duration)}:")
+    for code, changed in summary:
+        print(f"  {code}.lang: {changed} key(s) updated")
 
 
 def cmd_add(resume=False, interactive=False):
-    if not require_internet_or_warn("--add"):
-        return
+    # --add never calls Google Translate -- missing keys are filled in with a
+    # direct copy (en_US), a British-spelling conversion (en_GB), or left
+    # blank as an untranslated placeholder (run --update afterward to fill
+    # those in). None of that needs network access.
     base_lines = load_base()
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
