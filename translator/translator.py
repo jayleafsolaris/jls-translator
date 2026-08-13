@@ -1,6 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env jls-translator
+
 """
-translate.py — auto-translates `base` into every language Minecraft
+Auto-translates `base` into every language Minecraft
 Bedrock supports out of the box (including en_US), and keeps those
 .lang files in sync.
 
@@ -12,26 +13,26 @@ like en_GB.lang.
 Usage (run from anywhere — pass --path to point at the folder containing
 base and your .lang files, e.g. RP/texts/):
 
-    python3 translate.py --create   overwrite ALL .lang files from scratch
-    python3 translate.py --update   retranslate changed keys (existing keys only)
-    python3 translate.py --add      only add missing keys (no change detection)
-    python3 translate.py --remove   remove keys no longer in base
-    python3 translate.py --delete   delete every generated .lang file (base is kept)
-    python3 translate.py --backup   zip base + all .lang files into lang_backups/
-    python3 translate.py --restore  restore base + .lang files (+ cache/languages.json)
+    jls-translator --create   overwrite ALL .lang files from scratch
+    jls-translator --update   retranslate changed keys (existing keys only)
+    jls-translator --add      only add missing keys (no change detection)
+    jls-translator --remove   remove keys no longer in base
+    jls-translator --delete   delete every generated .lang file (base is kept)
+    jls-translator --backup   zip base + all .lang files into lang_backups/
+    jls-translator --restore  restore base + .lang files (+ cache/languages.json)
                                      from a lang_backups/ zip you pick
-    python3 translate.py --view     list base + .lang files in this folder + sizes
-    python3 translate.py --continue resume the last interrupted --create/--update/--add/--remove/--delete run
-    python3 translate.py --cache    manage the translation cache (see below)
-    python3 translate.py --config   manage script configuration (see below)
-    python3 translate.py --upgrade  update the script to the latest version from GitHub
+    jls-translator --view     list base + .lang files in this folder + sizes
+    jls-translator --continue resume the last interrupted --create/--update/--add/--remove/--delete run
+    jls-translator --cache    manage the translation cache (see below)
+    jls-translator --config   manage script configuration (see below)
+    jls-translator --upgrade  update the script to the latest version from GitHub
 
 --path is required for every mode except --version.
 
 Add --ask to --create/--update/--add/--remove/--delete/--continue to be asked after each
 language whether to continue or stop, e.g.:
 
-    python3 translate.py --create --ask
+    jls-translator --create --ask
 
 Progress is saved after every completed language regardless of --ask,
 so --continue can also recover from a crash, dropped connection, or force-quit.
@@ -39,21 +40,21 @@ so --continue can also recover from a crash, dropped connection, or force-quit.
 --cache holds everything related to the translation cache used by
 --update's change detection:
 
-    python3 translate.py --cache             show the cache menu
-    python3 translate.py --cache --build     rebuild the cache from the current base file...
-    python3 translate.py --cache --view      show info about the cache file
-    python3 translate.py --cache --clear     delete the saved progress file and the translation cache...
+    jls-translator --cache             show the cache menu
+    jls-translator --cache --build     rebuild the cache from the current base file...
+    jls-translator --cache --view      show info about the cache file
+    jls-translator --cache --clear     delete the saved progress file and the translation cache...
 
 --config holds everything that configures how the script behaves, stored as
 separate files under a .config/ folder:
 
-    python3 translate.py --config             show the config menu
-    python3 translate.py --config --workers    set the concurrent worker count
-    python3 translate.py --config --languages  view/edit which are actively translated
-    python3 translate.py --config --delay      set the global translation rate-limit delay
-    python3 translate.py --config --delete     delete the whole config folder (resets all)
-    python3 translate.py --config --show       make the config folder visible
-    python3 translate.py --config --hide       make the config folder hidden
+    jls-translator --config             show the config menu
+    jls-translator --config --workers    set the concurrent worker count
+    jls-translator --config --languages  view/edit which are actively translated
+    jls-translator --config --delay      set the global translation rate-limit delay
+    jls-translator --config --delete     delete the whole config folder (resets all)
+    jls-translator --config --show       make the config folder visible
+    jls-translator --config --hide       make the config folder hidden
 
 Requires:
     pip install deep_translator requests --user
@@ -1874,7 +1875,7 @@ def main():
     args = parser.parse_args()
 
     if args.version:
-        print(f"translate.py version {SCRIPT_VERSION}")
+        print(f"Version: {SCRIPT_VERSION}")
         return
 
     # No --path needed anymore -- the script just operates on wherever
