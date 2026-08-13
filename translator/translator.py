@@ -1181,8 +1181,9 @@ def _report_translating(done, total):
     left = max(total - done, 0)
     lines = [
         f"Translating {total} keys...",
-        f"Keys: {done:0{width}d}",
+        f"Done: {done:0{width}d}",
         f"Left: {left}",
+        f"[{done:0{width}d}/{total}]",
     ]
     if getattr(_report_translating, "_active", False):
         # Move cursor up to the start of the previously drawn block.
