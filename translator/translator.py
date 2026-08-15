@@ -118,7 +118,7 @@ SCRIPT_DIR = None  # set at runtime from the saved --path
 # this same install.
 PACKAGE_DIR = Path(__file__).resolve().parent
 
-SCRIPT_VERSION = "1.4.3"
+SCRIPT_VERSION = "1.5.0"
 
 CONFIG_DIR_HIDDEN_NAME = ".config"
 CONFIG_DIR_VISIBLE_NAME = "configuration"
@@ -280,6 +280,43 @@ def _restore(text, tokens):
         idx = int(m.group(1))
         return tokens[idx] if idx < len(tokens) else m.group(0)
     return re.sub(r"@\s*@\s*PH\s*(\d+)\s*@\s*@", repl, text, flags=re.IGNORECASE)
+
+
+def tokens_only_diff(old_text, new_text):
+    """
+    Compares an old and new base value and checks whether the *only*
+    difference between them lives inside protected tokens (%1$s-style
+    placeholders, section-sign color codes, PUA glyphs, etc) -- i.e. every
+    bit of actual translatable text is byte-for-byte identical, only the
+    token(s) themselves changed (a swapped placeholder index, a different
+    color code, and so on).
+
+    Returns the new token list (in order) if that's the case, so the caller
+    can splice it into an already-translated string instead of retranslating.
+    Returns None if there's any other change (meaning a real retranslation
+    is needed), including the case where nothing changed at all.
+    """
+    old_skeleton, old_tokens = _protect(old_text)
+    new_skeleton, new_tokens = _protect(new_text)
+    if old_skeleton != new_skeleton:
+        return None
+    if old_tokens == new_tokens:
+        return None
+    return new_tokens
+
+
+def apply_token_patch(translated_text, new_tokens):
+    """
+    Re-applies an updated token list onto an already-translated string
+    without calling Google Translate. Only safe when the translated string
+    contains the same number of protected tokens as the new base value --
+    otherwise we can't line them up positionally, so the caller should fall
+    back to a full retranslation. Returns None in that mismatch case.
+    """
+    skeleton, current_tokens = _protect(translated_text)
+    if len(current_tokens) != len(new_tokens):
+        return None
+    return _restore(skeleton, new_tokens)
 
 
 BRITISH_SPELLINGS = {
@@ -1219,129 +1256,169 @@ def cmd_update(resume=False, interactive=False):
     # happens after every translation below is resolved.
     lang_data = {}
     tasks = []
+    total_token_patched = 0
     for code in existing_codes:
         google_code = LANGUAGES[code]
         target_path = SCRIPT_DIR / f"{code}.lang"
         target_lines = parse_lang(target_path)
         entries = [line for line in target_lines if line[0] == "entry"]
-        to_update = [
-            i for i, (_, key, current_value, _) in enumerate(entries)
-            if key in base_values and (
-                (key in cache and cache[key] != base_values[key])
-                or (google_code is not None and current_value.strip() == "")
-            )
-        ]
+
+        to_update = []
+        token_patched_count = 0
+
+        for i, (_, key, current_value, inline_comment) in enumerate(entries):
+            if key not in base_values:
+                continue
+
+            changed_in_base = key in cache and cache[key] != base_values[key]
+            needs_fill = google_code is not None and current_value.strip() == ""
+
+            if not (changed_in_base or needs_fill):
+                continue
+
+            # If the base value only changed inside a protected token --
+            # a %1$s-style placeholder, a section-sign color code, a PUA
+            # glyph -- and every bit of surrounding translatable text is
+            # unchanged, there's nothing to retranslate. Just splice the
+            # new token(s) into the already-translated string in place and
+            # skip Google Translate for this key/language entirely.
+            if changed_in_base and not needs_fill and google_code is not None:
+                new_tokens = tokens_only_diff(cache[key], base_values[key])
+                if new_tokens is not None:
+                    patched = apply_token_patch(current_value, new_tokens)
+                    if patched is not None:
+                        entries[i] = ("entry", key, patched, inline_comment)
+                        token_patched_count += 1
+                        continue
+                    # Token count in the translated string doesn't match the
+                    # new base's token count (translator dropped/duplicated
+                    # a placeholder, or the .lang was hand-edited) -- fall
+                    # through to a full retranslation instead of guessing.
+
+            to_update.append(i)
+
         lang_data[code] = {
             "target_path": target_path,
             "target_lines": target_lines,
             "entries": entries,
             "to_update": to_update,
+            "token_patched_count": token_patched_count,
         }
+        total_token_patched += token_patched_count
         for i in to_update:
             tasks.append({"code": code, "key": entries[i][1], "google_code": google_code})
 
     total = len(tasks)
-    if total == 0:
+    if total == 0 and total_token_patched == 0:
         clear_progress()
         save_cache(base_values)
         print(f"\nNo keys needed updating — all present .lang files already match {DEFAULTS['base_lang']}.")
         return
 
-    # Hidden scratch file: every finished translation lands here first, keyed
-    # by language + key, and is only fanned back out into the real .lang
-    # files once the whole combined batch is done. This is also what
-    # --continue resumes from if a run gets interrupted.
-    temp_path = PACKAGE_DIR / ".translate_update_temp.json"
+    if total_token_patched:
+        print(f"{total_token_patched} key(s) had only token/placeholder changes "
+              f"(e.g. %1$s, §-color codes) -- patched in place, no retranslation needed.\n")
+
     results = {}
+    total_duration = 0.0
 
-    if resume and temp_path.exists():
-        try:
-            saved = json.loads(temp_path.read_text(encoding="utf-8"))
-            if saved.get("fingerprint") == fingerprint:
-                results = saved.get("results", {})
-        except Exception:
-            results = {}
-    elif temp_path.exists():
-        temp_path.unlink()
+    if total:
+        # Hidden scratch file: every finished translation lands here first,
+        # keyed by language + key, and is only fanned back out into the real
+        # .lang files once the whole combined batch is done. This is also
+        # what --continue resumes from if a run gets interrupted.
+        temp_path = PACKAGE_DIR / ".translate_update_temp.json"
 
-    def task_key(code, key):
-        return f"{code}\x00{key}"
+        if resume and temp_path.exists():
+            try:
+                saved = json.loads(temp_path.read_text(encoding="utf-8"))
+                if saved.get("fingerprint") == fingerprint:
+                    results = saved.get("results", {})
+            except Exception:
+                results = {}
+        elif temp_path.exists():
+            temp_path.unlink()
 
-    def save_temp():
-        temp_path.write_text(
-            json.dumps({"fingerprint": fingerprint, "results": results}, ensure_ascii=False),
-            encoding="utf-8",
-        )
+        def task_key(code, key):
+            return f"{code}\x00{key}"
 
-    remaining = [t for t in tasks if task_key(t["code"], t["key"]) not in results]
-    done_count = total - len(remaining)
+        def save_temp():
+            temp_path.write_text(
+                json.dumps({"fingerprint": fingerprint, "results": results}, ensure_ascii=False),
+                encoding="utf-8",
+            )
 
-    if resume:
-        if done_count:
-            print(f"Resuming --update: {done_count}/{total} translation(s) already completed.\n")
-        else:
-            print("No interrupted --update run found (or base changed since) -- starting fresh.\n")
+        remaining = [t for t in tasks if task_key(t["code"], t["key"]) not in results]
+        done_count = total - len(remaining)
 
-    if interactive:
-        print("Note: --ask has no effect on --update -- all languages are now "
-              "translated together as a single batch.\n")
+        if resume:
+            if done_count:
+                print(f"Resuming --update: {done_count}/{total} translation(s) already completed.\n")
+            else:
+                print("No interrupted --update run found (or base changed since) -- starting fresh.\n")
 
-    start_run_time = time.time()
-    _report_translating._active = False
-    _report_translating(done_count, total)
+        if interactive:
+            print("Note: --ask has no effect on --update -- all languages are now "
+                  "translated together as a single batch.\n")
 
-    # Local (non-network) work first: direct copy (en_US) and British-spelling
-    # conversion (en_GB) need no API call at all.
-    for t in [t for t in remaining if t["google_code"] in (None, GB_CONVERT)]:
-        text = base_values[t["key"]]
-        value = text if t["google_code"] is None else to_british(text)
-        results[task_key(t["code"], t["key"])] = value
-        done_count += 1
+        start_run_time = time.time()
+        _report_translating._active = False
         _report_translating(done_count, total)
-    save_temp()
-    save_progress("update", [], fingerprint, time.time() - start_run_time)
 
-    # Real network translation, grouped by target Google language code (one
-    # 'es' batch covers both es_ES and es_MX, for example) but reported as a
-    # single running total across every language.
-    by_google = {}
-    for t in remaining:
-        if t["google_code"] in (None, GB_CONVERT):
-            continue
-        by_google.setdefault(t["google_code"], []).append(t)
-
-    for google_code, group in by_google.items():
-        texts = [base_values[t["key"]] for t in group]
-        base_offset = done_count
-
-        def _progress_cb(group_done, _base_offset=base_offset):
-            _report_translating(_base_offset + group_done, total)
-
-        workers = resolve_workers(len(texts))
-        translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
-        for t, value in zip(group, translated):
+        # Local (non-network) work first: direct copy (en_US) and British-spelling
+        # conversion (en_GB) need no API call at all.
+        for t in [t for t in remaining if t["google_code"] in (None, GB_CONVERT)]:
+            text = base_values[t["key"]]
+            value = text if t["google_code"] is None else to_british(text)
             results[task_key(t["code"], t["key"])] = value
-        done_count = base_offset + len(group)
-        _report_translating(done_count, total)
+            done_count += 1
+            _report_translating(done_count, total)
         save_temp()
         save_progress("update", [], fingerprint, time.time() - start_run_time)
 
-    total_duration = time.time() - start_run_time
+        # Real network translation, grouped by target Google language code (one
+        # 'es' batch covers both es_ES and es_MX, for example) but reported as a
+        # single running total across every language.
+        by_google = {}
+        for t in remaining:
+            if t["google_code"] in (None, GB_CONVERT):
+                continue
+            by_google.setdefault(t["google_code"], []).append(t)
+
+        for google_code, group in by_google.items():
+            texts = [base_values[t["key"]] for t in group]
+            base_offset = done_count
+
+            def _progress_cb(group_done, _base_offset=base_offset):
+                _report_translating(_base_offset + group_done, total)
+
+            workers = resolve_workers(len(texts))
+            translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
+            for t, value in zip(group, translated):
+                results[task_key(t["code"], t["key"])] = value
+            done_count = base_offset + len(group)
+            _report_translating(done_count, total)
+            save_temp()
+            save_progress("update", [], fingerprint, time.time() - start_run_time)
+
+        total_duration = time.time() - start_run_time
+        if temp_path.exists():
+            temp_path.unlink()
+
     clear_progress()
-    if temp_path.exists():
-        temp_path.unlink()
     save_cache(base_values)
 
     # Now fan the finished translations back out into each language's .lang
-    # file -- this is the only point any .lang file gets touched.
+    # file -- this is the only point any .lang file gets touched. Entries
+    # that were already token-patched in place above are written out as-is.
     summary = []
     for code in existing_codes:
         data = lang_data[code]
         entries = data["entries"]
-        changed = 0
+        changed = data["token_patched_count"]
         for i in data["to_update"]:
             _, key, _, inline_comment = entries[i]
-            value = results.get(task_key(code, key))
+            value = results.get(task_key(code, key)) if total else None
             if value is None:
                 continue
             entries[i] = ("entry", key, value, inline_comment)
@@ -1356,11 +1433,14 @@ def cmd_update(resume=False, interactive=False):
                 out_lines.append(entries[e_idx])
                 e_idx += 1
         write_lang(data["target_path"], out_lines)
-        summary.append((code, changed))
+        summary.append((code, changed, data["token_patched_count"]))
 
     print(f"\nUpdate complete in {format_duration(total_duration)}:")
-    for code, changed in summary:
-        print(f"  {code}.lang: {changed} key(s) updated")
+    for code, changed, patched in summary:
+        if patched:
+            print(f"  {code}.lang: {changed} key(s) updated ({patched} via token-only patch)")
+        else:
+            print(f"  {code}.lang: {changed} key(s) updated")
 
 
 def cmd_add(resume=False, interactive=False):
