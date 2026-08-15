@@ -13,7 +13,7 @@ like en_GB.lang.
 Usage (run from anywhere — pass --path to point at the folder containing
 base and your .lang files, e.g. RP/texts/):
 
-    jls-translator --create   overwrite ALL .lang files from scratch
+    jls-translator --create   overwrite ALL .lang files from scratchr
     jls-translator --update   retranslate changed keys (existing keys only)
     jls-translator --add      only add missing keys (no change detection)
     jls-translator --remove   remove keys no longer in base
@@ -118,7 +118,7 @@ SCRIPT_DIR = None  # set at runtime from the saved --path
 # this same install.
 PACKAGE_DIR = Path(__file__).resolve().parent
 
-SCRIPT_VERSION = "1.5.0"
+SCRIPT_VERSION = "1.5.1"
 
 CONFIG_DIR_HIDDEN_NAME = ".config"
 CONFIG_DIR_VISIBLE_NAME = "configuration"
@@ -1316,8 +1316,8 @@ def cmd_update(resume=False, interactive=False):
         return
 
     if total_token_patched:
-        print(f"{total_token_patched} key(s) had only token/placeholder changes "
-              f"(e.g. %1$s, §-color codes) -- patched in place, no retranslation needed.\n")
+        print(f"{total_token_patched} key(s) had only token changes "
+              f"-- patched in place, no retranslation needed.\n")
 
     results = {}
     total_duration = 0.0
