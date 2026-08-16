@@ -77,6 +77,11 @@ import zipfile
 from datetime import datetime
 from pathlib import Path
 
+try:
+    from importlib import metadata as importlib_metadata
+except ImportError:  # pragma: no cover -- Python < 3.8 doesn't ship this
+    importlib_metadata = None
+
 # ----------------------------------------------------------------------
 # Dependency Check
 # ----------------------------------------------------------------------
@@ -100,6 +105,9 @@ DEFAULTS = {
     "languages_json": "languages.json",
     "backup_dir": "lang_backups",
     "progress_file": ".translate_progress.json",
+    "update_temp_file": ".translate_update_temp.json",
+    "version_check_file": ".version_check_cache.json",
+    "version_check_interval_hours": 20,
     "request_delay": 0.15,   # seconds between global translation calls
     "max_retries": 3,
     "workers_min": 1,
@@ -118,7 +126,44 @@ SCRIPT_DIR = None  # set at runtime from the saved --path
 # this same install.
 PACKAGE_DIR = Path(__file__).resolve().parent
 
-SCRIPT_VERSION = "1.5.1"
+# GitHub repo this script/package is published from -- used both by
+# --upgrade (downloads the repo zip) and by the update checker (reads the
+# version out of pyproject.toml on the default branch without downloading
+# anything else).
+GITHUB_OWNER = "jayleafsolaris"
+GITHUB_REPO = "jls-translator"
+GITHUB_BRANCH = "main"
+
+# The pip-installed distribution name -- must match the `name` field under
+# [project] in pyproject.toml. Used to read the *installed* version back out
+# via package metadata, so SCRIPT_VERSION always matches whatever version
+# was actually built into the installed package instead of drifting from a
+# second, hand-maintained copy of the number.
+PACKAGE_NAME = "roe_translator"
+
+_FALLBACK_VERSION = "0.0.0-dev"  # only used if the package isn't pip-installed
+
+
+def get_script_version():
+    """
+    Reads the running script's version from installed package metadata
+    (populated by pip from pyproject.toml's [project] version at install
+    time), so there's a single source of truth instead of a hardcoded
+    string here that can drift out of sync with pyproject.toml. Falls back
+    to a clearly-marked dev placeholder if the package isn't pip-installed
+    (e.g. running the .py file directly without `pip install`).
+    """
+    if importlib_metadata is not None:
+        try:
+            return importlib_metadata.version(PACKAGE_NAME)
+        except importlib_metadata.PackageNotFoundError:
+            pass
+        except Exception:
+            pass
+    return _FALLBACK_VERSION
+
+
+SCRIPT_VERSION = get_script_version()
 
 CONFIG_DIR_HIDDEN_NAME = ".config"
 CONFIG_DIR_VISIBLE_NAME = "configuration"
@@ -419,6 +464,110 @@ def require_internet_or_warn(flag_name):
           "--view, --backup, --restore, --remove, --delete, --add, --cache, and "
           "--config don't need this.)")
     return False
+
+
+_YELLOW = "\033[93m"
+
+
+def fetch_remote_version(timeout=4.0):
+    """
+    Reads just the `version = "..."` line out of pyproject.toml on GitHub's
+    default branch, without downloading the whole repo (that's what
+    --upgrade is for). Returns None on any failure -- offline, rate-limited,
+    the file moved, a bad connection -- so callers can silently skip the
+    update notice instead of erroring out over something this minor.
+    """
+    url = f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/{GITHUB_BRANCH}/pyproject.toml"
+    try:
+        resp = requests.get(url, timeout=timeout)
+        resp.raise_for_status()
+        match = re.search(r'(?m)^\s*version\s*=\s*"([^"]+)"', resp.text)
+        if match:
+            return match.group(1)
+    except Exception:
+        pass
+    return None
+
+
+def _parse_version_tuple(version_string):
+    """
+    Best-effort parse of a dotted version string into a tuple of ints for
+    comparison (e.g. '1.5.10' -> (1, 5, 10)), ignoring any non-numeric
+    suffix on a segment (e.g. '2rc1' -> 2) so odd version strings don't
+    blow up the comparison.
+    """
+    parts = []
+    for chunk in version_string.split("."):
+        m = re.match(r"\d+", chunk)
+        parts.append(int(m.group(0)) if m else 0)
+    return tuple(parts)
+
+
+def _load_version_check_cache():
+    path = PACKAGE_DIR / DEFAULTS["version_check_file"]
+    if path.exists():
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}
+
+
+def _save_version_check_cache(data):
+    path = PACKAGE_DIR / DEFAULTS["version_check_file"]
+    try:
+        path.write_text(json.dumps(data), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def check_for_update_notice(force=False):
+    """
+    Best-effort, silent-on-failure notice printed when a newer version is
+    available on GitHub than the one currently installed/running.
+
+    Only reaches out to the network at most once every
+    DEFAULTS['version_check_interval_hours'] hours (tracked in a small
+    cache file next to the package), so this never adds network latency to
+    every-day command usage. Pass force=True (used by --version) to always
+    check fresh regardless of that interval.
+
+    Never raises and never blocks a command on a slow/offline connection --
+    worst case this simply prints nothing.
+    """
+    cache = _load_version_check_cache()
+    now = time.time()
+    last_checked = cache.get("last_checked", 0)
+    interval_seconds = DEFAULTS["version_check_interval_hours"] * 3600
+
+    remote = cache.get("remote_version")
+    stale = force or (now - last_checked) > interval_seconds
+
+    if stale:
+        if not check_internet(timeout=2.0):
+            return
+        fetched = fetch_remote_version()
+        if fetched:
+            remote = fetched
+            cache["remote_version"] = remote
+            cache["last_checked"] = now
+            _save_version_check_cache(cache)
+        elif force:
+            # An explicit, forced check that couldn't reach the network --
+            # stay quiet rather than report a possibly-stale cached result.
+            return
+
+    if not remote:
+        return
+
+    try:
+        is_newer = _parse_version_tuple(remote) > _parse_version_tuple(SCRIPT_VERSION)
+    except Exception:
+        return
+
+    if is_newer:
+        print(f"{_YELLOW}⬆ Update available: v{SCRIPT_VERSION} → v{remote} "
+              f"-- run --upgrade to update.{_RESET}")
 
 
 def get_translator(google_code):
@@ -1056,9 +1205,38 @@ def _ask_continue(code):
 # Commands
 # ----------------------------------------------------------------------
 
+def _upgrade_protected_names():
+    """
+    Basenames (files or folders) inside PACKAGE_DIR that --upgrade must
+    never overwrite, delete, or merge into, no matter what happens to be
+    sitting in the downloaded repo zip under the same name.
+
+    This exists because the cache, progress file, languages.json, the
+    version-check cache, and the config folder all deliberately live right
+    next to the installed package (see the PACKAGE_DIR comment above) --
+    the same directory --upgrade copies the fresh GitHub download into. Any
+    matching filename in the repo would otherwise silently overwrite the
+    user's real cache/config with whatever happens to be committed (or not
+    committed at all, which is just as bad), which is exactly the "my
+    config got wiped by --upgrade" bug this guards against.
+    """
+    return {
+        DEFAULTS["cache_file"],
+        DEFAULTS["languages_json"],
+        DEFAULTS["progress_file"],
+        DEFAULTS["update_temp_file"],
+        DEFAULTS["version_check_file"],
+        CONFIG_DIR_HIDDEN_NAME,
+        CONFIG_DIR_VISIBLE_NAME,
+        "temp_update",  # --upgrade's own scratch dir, in case it ever lingers
+    }
+
+
 def cmd_upgrade():
     """Fetches the latest main.zip from GitHub, replaces current files, and restarts."""
-    UPDATE_URL = "https://github.com/jayleafsolaris/jls-translator/archive/refs/heads/main.zip"
+    UPDATE_URL = (
+        f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/refs/heads/{GITHUB_BRANCH}.zip"
+    )
     
     print("Checking for updates...")
     if not require_internet_or_warn("--upgrade"):
@@ -1072,6 +1250,8 @@ def cmd_upgrade():
         os.makedirs(temp_dir, exist_ok=True)
 
         print("Downloading...")
+        protected = _upgrade_protected_names()
+        skipped = []
         with zipfile.ZipFile(io.BytesIO(response.content)) as z:
             z.extractall(temp_dir)
             print("Updating...")
@@ -1079,8 +1259,13 @@ def cmd_upgrade():
             # GitHub zips put everything in a root folder like 'jls-translator-main'
             extracted_root = os.path.join(temp_dir, z.namelist()[0])
             
-            # Move files from the extracted folder directly into the script's package dir
+            # Move files from the extracted folder directly into the script's package dir --
+            # except anything that would clobber local cache/config/progress state.
             for item in os.listdir(extracted_root):
+                if item in protected:
+                    skipped.append(item)
+                    continue
+
                 src = os.path.join(extracted_root, item)
                 dst = os.path.join(PACKAGE_DIR, item)
                 
@@ -1091,6 +1276,8 @@ def cmd_upgrade():
 
         shutil.rmtree(temp_dir)
         print(f"Update complete!")
+        if skipped:
+            print(f"Left your local cache/config untouched (repo also had: {', '.join(sorted(skipped))}).")
         
         # Strip --upgrade from args so it doesn't loop infinitely upon restart
         new_args = [arg for arg in sys.argv if arg != "--upgrade"]
@@ -1327,7 +1514,7 @@ def cmd_update(resume=False, interactive=False):
         # keyed by language + key, and is only fanned back out into the real
         # .lang files once the whole combined batch is done. This is also
         # what --continue resumes from if a run gets interrupted.
-        temp_path = PACKAGE_DIR / ".translate_update_temp.json"
+        temp_path = PACKAGE_DIR / DEFAULTS["update_temp_file"]
 
         if resume and temp_path.exists():
             try:
@@ -1980,12 +2167,18 @@ def main():
 
     if args.version:
         print(f"Version: {SCRIPT_VERSION}")
+        check_for_update_notice(force=True)
         return
 
     # No --path needed anymore -- the script just operates on wherever
     # you're standing when you run it.
     global SCRIPT_DIR
     SCRIPT_DIR = Path.cwd().resolve()
+
+    # Passive, rate-limited check (see DEFAULTS['version_check_interval_hours']) --
+    # only prints anything if it can positively confirm a newer version
+    # exists, and never blocks or errors out the command being run.
+    check_for_update_notice()
 
     if (args.workers or args.languages or args.delay or args.show or args.hide) and not args.config:
         args.config = True
