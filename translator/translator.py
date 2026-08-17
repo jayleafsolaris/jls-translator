@@ -113,6 +113,7 @@ DEFAULTS = {
     "workers_min": 1,
     "workers_max": 100,
     "workers_throttle_ceiling": 20,
+    "update_limit": 30,      # max number of completed --update runs per base file
 }
 
 SCRIPT_DIR = None  # set at runtime from the saved --path
@@ -141,7 +142,19 @@ GITHUB_BRANCH = "main"
 # second, hand-maintained copy of the number.
 PACKAGE_NAME = "roe_translator"
 
-_FALLBACK_VERSION = "0.0.0-dev"  # only used if the package isn't pip-installed
+# Hidden marker used to track how many times --update has completed against
+# the current base file. Stored as a "##"-prefixed comment at the very
+# bottom of base (parse_lang treats "##" lines as opaque comments, never as
+# real keys, so this never shows up as a translatable entry) and mirrored
+# under the same key in the translation cache, so the count can be
+# recovered and re-added to base if that marker line is ever lost (hand
+# edit, merge, partial restore, etc). Deterministic (not random) so the
+# same marker is found run over run.
+_UPDATE_COUNT_MARKER = hashlib.sha256(
+    f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:update_count".encode("utf-8")
+).hexdigest()[:25]
+
+_FALLBACK_VERSION = "0.0.0-dev"  # only used if neither pip metadata nor pyproject.toml resolve a version
 
 
 def get_script_version():
@@ -149,9 +162,14 @@ def get_script_version():
     Reads the running script's version from installed package metadata
     (populated by pip from pyproject.toml's [project] version at install
     time), so there's a single source of truth instead of a hardcoded
-    string here that can drift out of sync with pyproject.toml. Falls back
-    to a clearly-marked dev placeholder if the package isn't pip-installed
-    (e.g. running the .py file directly without `pip install`).
+    string here that can drift out of sync with pyproject.toml.
+
+    If the package isn't pip-installed (e.g. running the .py file directly,
+    such as under a-Shell), importlib metadata has nothing to look up --
+    in that case, fall back to reading the version straight out of a
+    pyproject.toml sitting next to this script, so --version still reports
+    the real version instead of the dev placeholder. Only if that also
+    can't be found does it fall back to the placeholder.
     """
     if importlib_metadata is not None:
         try:
@@ -160,6 +178,17 @@ def get_script_version():
             pass
         except Exception:
             pass
+
+    try:
+        pyproject_path = PACKAGE_DIR / "pyproject.toml"
+        if pyproject_path.exists():
+            text = pyproject_path.read_text(encoding="utf-8")
+            match = re.search(r'(?m)^\s*version\s*=\s*"([^"]+)"', text)
+            if match:
+                return match.group(1)
+    except Exception:
+        pass
+
     return _FALLBACK_VERSION
 
 
@@ -307,6 +336,41 @@ def write_lang(path: Path, lines):
             else:
                 out.append(f"{key}={value}")
     path.write_text("\n".join(out) + "\n", encoding="utf-8")
+
+
+def _update_count_comment_prefix():
+    return f"##{_UPDATE_COUNT_MARKER}="
+
+
+def read_update_count_from_base(base_lines):
+    """
+    Scans a base file's parsed lines for the hidden --update count marker
+    comment and returns its integer value, or None if the marker isn't
+    present (or is unparseable) in these lines.
+    """
+    prefix = _update_count_comment_prefix()
+    for line in base_lines:
+        if line[0] == "comment" and line[1].strip().startswith(prefix):
+            try:
+                return int(line[1].strip()[len(prefix):].strip())
+            except ValueError:
+                continue
+    return None
+
+
+def strip_update_count_markers(base_lines):
+    """
+    Returns base_lines with any existing --update count marker comment(s)
+    removed. Used whenever base's lines are copied out into an actual
+    .lang file (en_US.lang, translated output, etc) so the hidden marker
+    never leaks into generated, user-facing files -- it only ever belongs
+    at the bottom of base itself.
+    """
+    prefix = _update_count_comment_prefix()
+    return [
+        line for line in base_lines
+        if not (line[0] == "comment" and line[1].strip().startswith(prefix))
+    ]
 
 
 # ----------------------------------------------------------------------
@@ -706,6 +770,61 @@ def clear_cache():
         path.unlink()
         return True
     return False
+
+
+def write_update_count(count):
+    """
+    Persists the running --update count in two places:
+      1. As a hidden marker comment appended to the very bottom of the
+         base file (source of truth -- survives independent of the cache).
+      2. Under the same marker key in the translation cache, so that if
+         the marker line is ever removed from base (by hand, a merge, or a
+         partial restore), get_update_count() can recover the count from
+         cache and re-add it to base instead of silently resetting to zero.
+
+    This reloads base and the cache fresh from disk rather than trusting
+    whatever the caller has in memory, since this is the last write before
+    a run finishes and shouldn't clobber anything written concurrently.
+    """
+    base_path = SCRIPT_DIR / DEFAULTS["base_lang"]
+    current_lines = parse_lang(base_path)
+    stripped = strip_update_count_markers(current_lines)
+    while stripped and stripped[-1][0] == "blank":
+        stripped.pop()
+    marker_line = ("comment", f"{_update_count_comment_prefix()}{count}")
+    write_lang(base_path, stripped + [marker_line])
+
+    cache = load_cache()
+    cache[_UPDATE_COUNT_MARKER] = str(count)
+    cache_path = PACKAGE_DIR / DEFAULTS["cache_file"]
+    cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def get_update_count():
+    """
+    Resolves the current --update count for this base file. Prefers the
+    marker comment stored at the bottom of base; if it's missing there but
+    still present in the cache, the cached count is re-added to base right
+    away (self-healing) so the two stay in sync, and that recovered value
+    is returned. Returns 0 if neither has a record of it.
+    """
+    base_path = SCRIPT_DIR / DEFAULTS["base_lang"]
+    base_lines = parse_lang(base_path)
+    from_base = read_update_count_from_base(base_lines)
+    if from_base is not None:
+        return from_base
+
+    cache = load_cache()
+    cached_raw = cache.get(_UPDATE_COUNT_MARKER)
+    if cached_raw is not None:
+        try:
+            count = int(cached_raw)
+        except (TypeError, ValueError):
+            count = 0
+        write_update_count(count)  # re-add the missing marker to base
+        return count
+
+    return 0
 
 def write_languages_json():
     codes = [c for c in LANGUAGES if (SCRIPT_DIR / f"{c}.lang").exists()]
@@ -1112,7 +1231,10 @@ def load_base():
 
 def sync_en_us_from_base(base_lines):
     en_us_path = SCRIPT_DIR / "en_US.lang"
-    write_lang(en_us_path, list(base_lines))
+    # Strip the hidden --update count marker before mirroring base into
+    # en_US.lang -- that marker is internal bookkeeping for base only and
+    # should never show up in a generated, user-facing .lang file.
+    write_lang(en_us_path, strip_update_count_markers(list(base_lines)))
     return en_us_path
 
 def _report(lang_idx, lang_total, code, key_idx, key_total, start_time=None, prev_elapsed=0.0, note=""):
@@ -1294,6 +1416,9 @@ def cmd_create(resume=False, interactive=False):
     if not require_internet_or_warn("--create"):
         return
     base_lines = load_base()
+    # Never propagate the hidden --update count marker into generated
+    # output files -- only the sourced-of-truth base file should carry it.
+    template_lines = strip_update_count_markers(base_lines)
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
     key_total = len(base_values)
@@ -1329,7 +1454,7 @@ def cmd_create(resume=False, interactive=False):
         _report(lang_idx, lang_total, code, 0, key_total, start_run_time, elapsed_time)
 
         if google_code is None:
-            out_lines = list(base_lines)
+            out_lines = list(template_lines)
 
             def _render(done, _lang_idx=lang_idx, _code=code):
                 _report(_lang_idx, lang_total, _code, done, key_total, start_run_time, elapsed_time)
@@ -1340,7 +1465,7 @@ def cmd_create(resume=False, interactive=False):
         elif google_code == GB_CONVERT:
             out_lines = [
                 line if line[0] != "entry" else ("entry", line[1], to_british(line[2]), line[3])
-                for line in base_lines
+                for line in template_lines
             ]
 
             def _render(done, _lang_idx=lang_idx, _code=code):
@@ -1350,7 +1475,7 @@ def cmd_create(resume=False, interactive=False):
             smoother.update(key_total)
             smoother.finish()
         else:
-            values = [line[2] for line in base_lines if line[0] == "entry"]
+            values = [line[2] for line in template_lines if line[0] == "entry"]
 
             def _render(done, _lang_idx=lang_idx, _code=code):
                 _report(_lang_idx, lang_total, _code, done, key_total, start_run_time, elapsed_time)
@@ -1362,7 +1487,7 @@ def cmd_create(resume=False, interactive=False):
 
             out_lines = []
             t_idx = 0
-            for line in base_lines:
+            for line in template_lines:
                 if line[0] != "entry":
                     out_lines.append(line)
                     continue
@@ -1387,6 +1512,9 @@ def cmd_create(resume=False, interactive=False):
     clear_progress()
     save_cache(base_values)
     write_languages_json()
+    # A full --create fully regenerates everything from base, so this is
+    # the reset point for the --update run counter.
+    write_update_count(0)
     print(f"\nDone. Created {lang_total} language files from {DEFAULTS['base_lang']} in {format_duration(total_duration)}.")
 
 
@@ -1420,9 +1548,21 @@ def _report_translating(done, total):
 
 
 def cmd_update(resume=False, interactive=False):
+    base_lines = load_base()
+
+    # Enforce the --update run limit *before* touching the network or
+    # doing any work -- once a base file has been --update'd this many
+    # times, it needs a full --create to regenerate everything cleanly.
+    update_count = get_update_count()
+    if update_count >= DEFAULTS["update_limit"]:
+        warn_red(
+            f"--update limit reached ({update_count}/{DEFAULTS['update_limit']}) for this base file."
+        )
+        print("Run --create to fully regenerate every .lang file -- this resets the limit.")
+        return
+
     if not require_internet_or_warn("--update"):
         return
-    base_lines = load_base()
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
     cache = load_cache()
@@ -1622,12 +1762,25 @@ def cmd_update(resume=False, interactive=False):
         write_lang(data["target_path"], out_lines)
         summary.append((code, changed, data["token_patched_count"]))
 
+    # This --update run did real work (translation and/or token patching),
+    # so it counts against the run limit. Persist the incremented count to
+    # both base (marker comment) and cache.
+    new_update_count = update_count + 1
+    write_update_count(new_update_count)
+
     print(f"\nUpdate complete in {format_duration(total_duration)}:")
     for code, changed, patched in summary:
         if patched:
             print(f"  {code}.lang: {changed} key(s) updated ({patched} via token-only patch)")
         else:
             print(f"  {code}.lang: {changed} key(s) updated")
+
+    print(f"\nUpdate count: {new_update_count}/{DEFAULTS['update_limit']}.")
+    if new_update_count >= DEFAULTS["update_limit"]:
+        warn_red(
+            f"--update limit reached ({new_update_count}/{DEFAULTS['update_limit']}) -- "
+            f"this base file must be recreated (--create) before --update can run again."
+        )
 
 
 def cmd_add(resume=False, interactive=False):
@@ -1636,6 +1789,9 @@ def cmd_add(resume=False, interactive=False):
     # blank as an untranslated placeholder (run --update afterward to fill
     # those in). None of that needs network access.
     base_lines = load_base()
+    # Never propagate the hidden --update count marker into generated
+    # output files -- only the source-of-truth base file should carry it.
+    template_lines = strip_update_count_markers(base_lines)
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
     key_total = len(base_values)
@@ -1674,7 +1830,7 @@ def cmd_add(resume=False, interactive=False):
 
         entries = []
         missing_idx = []
-        for line in base_lines:
+        for line in template_lines:
             if line[0] != "entry":
                 continue
             _, key, value, inline_comment = line
@@ -1697,7 +1853,7 @@ def cmd_add(resume=False, interactive=False):
 
         out_lines = []
         e_idx = 0
-        for line in base_lines:
+        for line in template_lines:
             if line[0] != "entry":
                 out_lines.append(line)
             else:
@@ -1822,7 +1978,7 @@ def cmd_remove(resume=False, interactive=False):
     clear_progress()
 
     cache = load_cache()
-    trimmed_cache = {k: v for k, v in cache.items() if k in base_values}
+    trimmed_cache = {k: v for k, v in cache.items() if k in base_values or k == _UPDATE_COUNT_MARKER}
     if trimmed_cache != cache:
         save_cache(trimmed_cache)
 
@@ -1993,12 +2149,19 @@ def cmd_view():
          key_count = len(entries_dict(parse_lang(p)))
          marker = " (base)" if p.name == DEFAULTS["base_lang"] else ""
          print(f"{p.name:<16}{_human_size(size):>10}   {key_count}{marker}")
+    if base_path.exists():
+        count = get_update_count()
+        print(f"\n--update count for this base file: {count}/{DEFAULTS['update_limit']}")
 
 
 def cmd_cache_build():
     base_lines = load_base()
     base_values = entries_dict(base_lines)
     save_cache(base_values)
+    # save_cache() overwrites the whole cache file, so the update-count
+    # marker key needs to be re-added afterward or it would be wiped.
+    count = get_update_count()
+    write_update_count(count)
     print(
         f"Rebuilt {DEFAULTS['cache_file']} from {DEFAULTS['base_lang']} "
         f"({len(base_values)} key(s)), without translating anything."
@@ -2024,6 +2187,10 @@ def cmd_cache_clear():
          "\n.lang files and lang_backups/ are untouched. --continue now has "
         "nothing to resume, and the next --update will re-check every key "
         "once --create/--update/--add rebuilds the cache."
+    )
+    print(
+        "\nNote: the --update run count marker at the bottom of base is "
+        "untouched by this -- it's only reset by --create."
     )
 
 
