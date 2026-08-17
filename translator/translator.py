@@ -578,6 +578,7 @@ def require_internet_or_warn(flag_name):
 
 
 _YELLOW = "\033[93m"
+_BLUE = "\033[94m"
 
 
 def fetch_remote_version(timeout=4.0):
@@ -677,7 +678,7 @@ def check_for_update_notice(force=False):
         return
 
     if is_newer:
-        print(f"{_YELLOW}⬆ Update available: v{SCRIPT_VERSION} → v{remote} "
+        print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote} "
               f"-- run --upgrade to update.{_RESET}")
 
 
