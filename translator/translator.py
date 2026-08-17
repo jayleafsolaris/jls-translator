@@ -113,7 +113,7 @@ DEFAULTS = {
     "workers_min": 1,
     "workers_max": 100,
     "workers_throttle_ceiling": 20,
-    "update_limit": 5,      # max number of completed --update runs per base file
+    "update_limit": 30,      # max number of completed --update runs per base file
 }
 
 SCRIPT_DIR = None  # set at runtime from the saved --path
