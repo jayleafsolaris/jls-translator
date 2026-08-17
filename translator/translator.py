@@ -139,7 +139,7 @@ GITHUB_BRANCH = "main"
 # via package metadata, so SCRIPT_VERSION always matches whatever version
 # was actually built into the installed package instead of drifting from a
 # second, hand-maintained copy of the number.
-PACKAGE_NAME = "jls-translator"
+PACKAGE_NAME = "roe_translator"
 
 _FALLBACK_VERSION = "0.0.0-dev"  # only used if the package isn't pip-installed
 
