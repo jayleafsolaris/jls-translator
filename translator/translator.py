@@ -107,13 +107,13 @@ DEFAULTS = {
     "progress_file": ".translate_progress.json",
     "update_temp_file": ".translate_update_temp.json",
     "version_check_file": ".version_check_cache.json",
-    "version_check_interval_hours": 0,
+    "version_check_interval_hours": 1,
     "request_delay": 0.15,   # seconds between global translation calls
     "max_retries": 3,
     "workers_min": 1,
     "workers_max": 100,
     "workers_throttle_ceiling": 20,
-    "update_limit": 1,      # max number of completed --update runs per base file
+    "update_limit": 50,      # max number of completed --update runs per base file
 }
 
 SCRIPT_DIR = None  # set at runtime from the saved --path
@@ -1606,7 +1606,7 @@ def cmd_update(resume=False, interactive=False):
         warn_red(
             f"--update limit reached ({update_count}/{DEFAULTS['update_limit']}) for this base file."
         )
-        print("Run --create to fully regenerate every .lang file -- this resets the limit.")
+        print("This file has reached it's maximum update count. Please create a new set of .lang files")
         return
 
     if not require_internet_or_warn("--update"):
