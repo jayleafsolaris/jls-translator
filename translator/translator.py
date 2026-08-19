@@ -34,6 +34,11 @@ language whether to continue or stop, e.g.:
 
     jls-translator --create --ask
 
+Add --summary to --add/--remove for a full per-language breakdown instead
+of just the totals, e.g.:
+
+    jls-translator --add --summary
+
 Progress is saved after every completed language regardless of --ask,
 so --continue can also recover from a crash, dropped connection, or force-quit.
 
@@ -1271,11 +1276,25 @@ def format_duration(seconds):
     hours, mins = divmod(minutes, 60)
     return f"{hours}h {mins}m {secs}s"
 
+def _convert_base_vars(lines):
+    """Converts user-friendly {1} syntax in base to Bedrock's %1$s."""
+    out = []
+    for line in lines:
+        if line[0] == "entry":
+            # Replaces {1} -> %1$s, {2} -> %2$s, etc.
+            new_val = re.sub(r"\{(\d+)\}", r"%\1$s", line[2])
+            out.append(("entry", line[1], new_val, line[3]))
+        else:
+            out.append(line)
+    return out
+
 def load_base():
     base_path = SCRIPT_DIR / DEFAULTS["base_lang"]
     if not base_path.exists():
         sys.exit(f"Error: base file not found (expected '{DEFAULTS['base_lang']}' in {SCRIPT_DIR})")
-    return parse_lang(base_path)
+    lines = parse_lang(base_path)
+    # Process the lines to convert `{n}` to `%n$s` in memory
+    return _convert_base_vars(lines)
 
 def sync_en_us_from_base(base_lines):
     en_us_path = SCRIPT_DIR / "en_US.lang"
@@ -1301,6 +1320,13 @@ def _report(lang_idx, lang_total, code, key_idx, key_total, start_time=None, pre
     if note:
         line += f" {note}"
     sys.stdout.write("\r" + line.ljust(85))
+    sys.stdout.flush()
+
+
+def _report_keys(action, done, total):
+    """Prints a clean, single-line progress indicator like 'Adding Keys... [023/643]'"""
+    width = len(str(total)) if total > 0 else 1
+    sys.stdout.write(f"\r{action} Keys... [{done:0{width}d}/{total}]".ljust(60))
     sys.stdout.flush()
 
 
@@ -1831,7 +1857,7 @@ def cmd_update(resume=False, interactive=False):
         )
 
 
-def cmd_add(resume=False, interactive=False):
+def cmd_add(resume=False, interactive=False, show_summary=False):
     # --add never calls Google Translate -- missing keys are filled in with a
     # direct copy (en_US), a British-spelling conversion (en_GB), or left
     # blank as an untranslated placeholder (run --update afterward to fill
@@ -1866,21 +1892,31 @@ def cmd_add(resume=False, interactive=False):
                       "resuming anyway using the languages already completed.\n")
             print(f"Resuming --add: {len(completed)}/{lang_total} language(s) already done (accumulated time: {format_duration(elapsed_time)}).\n")
 
+    total_keys_to_check = lang_total * key_total
+    keys_checked = len(completed) * key_total
+
     print(f"Adding missing keys across {lang_total} languages...\n")
     start_run_time = time.time()
     summary = []
+    total_added_overall = 0
 
     for lang_idx, (code, google_code) in enumerate(all_codes, start=1):
         if code in completed:
             continue
+
         target_path = SCRIPT_DIR / f"{code}.lang"
         existing = entries_dict(parse_lang(target_path))
 
         entries = []
-        missing_idx = []
+        added_this_lang = 0
+
         for line in template_lines:
             if line[0] != "entry":
                 continue
+
+            keys_checked += 1
+            _report_keys("Adding", keys_checked, total_keys_to_check)
+
             _, key, value, inline_comment = line
             if key in existing:
                 entries.append(("entry", key, existing[key], inline_comment))
@@ -1892,12 +1928,9 @@ def cmd_add(resume=False, interactive=False):
                 else:
                     placeholder = ""
                 entries.append(("entry", key, placeholder, inline_comment))
-                missing_idx.append(len(entries) - 1)
+                added_this_lang += 1
 
-        added = len(missing_idx)
-        base_done = key_total - added
-        _report(lang_idx, lang_total, code, key_total, key_total, start_run_time, elapsed_time,
-                note=f"({added} added)" if added else "")
+        total_added_overall += added_this_lang
 
         out_lines = []
         e_idx = 0
@@ -1909,7 +1942,7 @@ def cmd_add(resume=False, interactive=False):
                 e_idx += 1
 
         write_lang(target_path, out_lines)
-        summary.append((code, added))
+        summary.append((code, added_this_lang))
 
         completed.append(code)
         current_total_time = elapsed_time + (time.time() - start_run_time)
@@ -1926,12 +1959,15 @@ def cmd_add(resume=False, interactive=False):
     clear_progress()
     write_languages_json()
 
-    print(f"\nAdd complete in {format_duration(total_duration)}:")
-    for code, added in summary:
-        print(f"  {code}.lang: {added} new key(s) added (untranslated -- run --update to translate)")
+    print(f"\n\nAdd complete in {format_duration(total_duration)}:")
+    if show_summary:
+        for code, added in summary:
+            print(f"  {code}.lang: {added} new key(s) added (untranslated -- run --update to translate)")
+    else:
+        print(f"  Added {total_added_overall} total missing key(s) across {len(summary)} language(s).")
 
 
-def cmd_continue(interactive=False):
+def cmd_continue(interactive=False, show_summary=False):
     progress = load_progress()
     if not progress:
         print("No previous run to continue. Nothing to resume.")
@@ -1943,9 +1979,9 @@ def cmd_continue(interactive=False):
     elif command == "update":
         cmd_update(resume=True, interactive=interactive)
     elif command == "add":
-        cmd_add(resume=True, interactive=interactive)
+        cmd_add(resume=True, interactive=interactive, show_summary=show_summary)
     elif command == "remove":
-        cmd_remove(resume=True, interactive=interactive)
+        cmd_remove(resume=True, interactive=interactive, show_summary=show_summary)
     elif command == "delete":
         cmd_delete(resume=True, interactive=interactive)
     else:
@@ -1953,7 +1989,7 @@ def cmd_continue(interactive=False):
               "Re-run --create, --update, --add, --remove, or --delete to start over.")
 
 
-def cmd_remove(resume=False, interactive=False):
+def cmd_remove(resume=False, interactive=False, show_summary=False):
     base_lines = load_base()
     base_values = entries_dict(base_lines)
 
@@ -1975,6 +2011,15 @@ def cmd_remove(resume=False, interactive=False):
             elapsed_time = progress.get("elapsed_time", 0.0)
             print(f"Resuming --remove: {len(completed)}/{len(existing_codes)} language(s) already checked (accumulated time: {format_duration(elapsed_time)}).\n")
 
+    # Pre-calculate totals for the progress bar
+    total_keys_to_check = 0
+    keys_checked = 0
+    for code in existing_codes:
+        count = sum(1 for l in parse_lang(SCRIPT_DIR / f"{code}.lang") if l[0] == "entry")
+        total_keys_to_check += count
+        if code in completed:
+            keys_checked += count
+
     print(f"Checking {len(existing_codes)} language file(s) for deprecated keys...\n")
     start_run_time = time.time()
     summary = []
@@ -1986,31 +2031,29 @@ def cmd_remove(resume=False, interactive=False):
 
         target_path = SCRIPT_DIR / f"{code}.lang"
         target_lines = parse_lang(target_path)
-        key_total = sum(1 for l in target_lines if l[0] == "entry")
 
-        removed = 0
+        removed_this_lang = 0
         out_lines = []
-        key_idx = 0
-        _report(lang_idx, len(existing_codes), code, 0, key_total, start_run_time, elapsed_time)
+
         for line in target_lines:
             if line[0] != "entry":
                 out_lines.append(line)
                 continue
+
+            keys_checked += 1
+            _report_keys("Removing", keys_checked, total_keys_to_check)
+
             _, key, value, inline_comment = line
-            key_idx += 1
 
             if key not in base_values:
-                removed += 1
-                _report(lang_idx, len(existing_codes), code, key_idx, key_total, start_run_time, elapsed_time, note=f"({removed} removed)")
+                removed_this_lang += 1
                 continue
 
             out_lines.append(line)
-            note = f"({removed} removed)" if removed else "(clean)"
-            _report(lang_idx, len(existing_codes), code, key_idx, key_total, start_run_time, elapsed_time, note=note)
 
         write_lang(target_path, out_lines)
-        summary.append((code, removed))
-        total_removed += removed
+        summary.append((code, removed_this_lang))
+        total_removed += removed_this_lang
 
         completed.append(code)
         current_total_time = elapsed_time + (time.time() - start_run_time)
@@ -2031,11 +2074,14 @@ def cmd_remove(resume=False, interactive=False):
         save_cache(trimmed_cache)
 
     if total_removed == 0:
-        print(f"\nNo deprecated keys found — all present .lang files already match {DEFAULTS['base_lang']}'s keys (took {format_duration(total_duration)}).")
+        print(f"\n\nNo deprecated keys found — all present .lang files already match {DEFAULTS['base_lang']}'s keys (took {format_duration(total_duration)}).")
     else:
-        print(f"\nCleanup complete in {format_duration(total_duration)}:")
-        for code, removed in summary:
-            print(f"  {code}.lang: {removed} key(s) removed")
+        print(f"\n\nCleanup complete in {format_duration(total_duration)}:")
+        if show_summary:
+            for code, removed in summary:
+                print(f"  {code}.lang: {removed} key(s) removed")
+        else:
+            print(f"  Removed {total_removed} total key(s) across {len(summary)} language(s).")
 
 
 def cmd_delete(resume=False, interactive=False):
@@ -2377,6 +2423,7 @@ def main():
                          help="ask after each item whether to continue or stop "
                               "(combine with --create/--update/--add/--remove/--delete/--continue)")
     parser.add_argument("--upgrade", action="store_true", help="update the script to the latest version from GitHub")
+    parser.add_argument("--summary", action="store_true", help="show detailed per-language results for --add and --remove")
     
     args = parser.parse_args()
 
@@ -2472,9 +2519,9 @@ def main():
     elif mode == "update":
         cmd_update(interactive=ask)
     elif mode == "add":
-        cmd_add(interactive=ask)
+        cmd_add(interactive=ask, show_summary=args.summary)
     elif mode == "remove":
-        cmd_remove(interactive=ask)
+        cmd_remove(interactive=ask, show_summary=args.summary)
     elif mode == "delete":
         cmd_delete(interactive=ask)
     elif mode == "backup":
@@ -2484,7 +2531,7 @@ def main():
     elif mode == "view":
         cmd_view()
     elif mode == "cont":
-        cmd_continue(interactive=ask)
+        cmd_continue(interactive=ask, show_summary=args.summary)
 
 
 if __name__ == "__main__":
