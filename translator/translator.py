@@ -34,7 +34,7 @@ base and your .lang files, e.g. RP/texts/):
 
 --path is required for every mode except --version.
 
-Add --ask to --create/--update/--add/--remove/--delete/--continue to be asked after each
+Add --ask to --create/--add/--remove/--delete/--continue to be asked after each
 language whether to continue or stop, e.g.:
 
     jls-translator --create --ask
@@ -1726,7 +1726,7 @@ def cmd_update(resume=False, interactive=False):
         warn_red(
             f"--update limit reached ({update_count}/{DEFAULTS['update_limit']}) for this base file."
         )
-        print("This file has reached it's maximum update count. Please create a new set of .lang files")
+        print("This file has reached it's maximum update count. Please create a new set of .lang files to remove any leaked or missed translation keys")
         return
 
     if not require_internet_or_warn("--update"):
