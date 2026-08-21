@@ -26,6 +26,11 @@ base and your .lang files, e.g. RP/texts/):
     jls-translator --cache    manage the translation cache (see below)
     jls-translator --config   manage script configuration (see below)
     jls-translator --upgrade  update the script to the latest version from GitHub
+    jls-translator --check    manually check GitHub for a newer version right now
+                                     (doesn't change automatic checking)
+    jls-translator --check true|false
+                              turn the automatic passive update check (the one that
+                                     runs quietly on every command) on or off
 
 --path is required for every mode except --version.
 
@@ -112,7 +117,7 @@ DEFAULTS = {
     "progress_file": ".translate_progress.json",
     "update_temp_file": ".translate_update_temp.json",
     "version_check_file": ".version_check_cache.json",
-    "version_check_interval_hours": 1,
+    "version_check_interval_minutes": 10,
     "request_delay": 0.15,   # seconds between global translation calls
     "max_retries": 3,
     "workers_min": 1,
@@ -544,22 +549,36 @@ def to_british(text):
     return _restore(converted, tokens)
 
 
-def check_internet(timeout=3.0):
+def check_internet(timeout=1.2):
     """
     Quick, cheap connectivity probe. Tries a couple of well-known, highly
     available hosts on their DNS port so we don't depend on Google Translate
     itself (or DNS resolution of a hostname) just to find out whether we're
-    online at all. Returns True on first successful TCP connect, False if
-    every attempt fails or times out.
+    online at all.
+
+    The hosts are probed concurrently, not one after another -- a slow or
+    silently-dropping connection to one host no longer doubles the wait.
+    Worst case is roughly `timeout` seconds total (not `timeout` per host).
+    Returns True on the first successful TCP connect, False if every
+    attempt fails or times out.
     """
     import socket
+
     hosts = [("8.8.8.8", 53), ("1.1.1.1", 53)]
-    for host, port in hosts:
+
+    def _try(host_port):
+        host, port = host_port
         try:
             with socket.create_connection((host, port), timeout=timeout):
                 return True
         except OSError:
-            continue
+            return False
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(hosts)) as ex:
+        futures = [ex.submit(_try, hp) for hp in hosts]
+        for fut in concurrent.futures.as_completed(futures):
+            if fut.result():
+                return True
     return False
 
 
@@ -570,7 +589,7 @@ def require_internet_or_warn(flag_name):
     caller can bail out before doing any work or touching progress/cache
     files.
     """
-    if check_internet():
+    if check_internet(timeout=2.5):
         return True
     warn_red(
         f"No internet connection detected -- {flag_name} needs network access "
@@ -644,34 +663,48 @@ def check_for_update_notice(force=False):
     available on GitHub than the one currently installed/running.
 
     Only reaches out to the network at most once every
-    DEFAULTS['version_check_interval_hours'] hours (tracked in a small
+    DEFAULTS['version_check_interval_minutes'] minutes (tracked in a small
     cache file next to the package), so this never adds network latency to
-    every-day command usage. Pass force=True (used by --version) to always
-    check fresh regardless of that interval.
+    every-day command usage. Pass force=True (used by --version and a bare
+    --check) to always check fresh regardless of that interval.
+
+    When a check is due, this makes exactly one short, low-timeout network
+    attempt (no separate "are we online" probe beforehand) so an offline
+    or slow connection is discovered and given up on quickly instead of
+    waiting out two stacked timeouts.
+
+    The passive/automatic check can be turned off entirely with
+    `--check false` (see the "autocheck_enabled" flag in the version-check
+    cache) -- while off, this function does nothing unless force=True, so
+    --version and a bare --check still always work even with autocheck
+    disabled.
 
     Never raises and never blocks a command on a slow/offline connection --
     worst case this simply prints nothing.
     """
     cache = _load_version_check_cache()
+    if not force and cache.get("autocheck_enabled", True) is False:
+        return
     now = time.time()
     last_checked = cache.get("last_checked", 0)
-    interval_seconds = DEFAULTS["version_check_interval_hours"] * 3600
+    interval_seconds = DEFAULTS["version_check_interval_minutes"] * 60
 
     remote = cache.get("remote_version")
     stale = force or (now - last_checked) > interval_seconds
 
     if stale:
-        if not check_internet(timeout=2.0):
-            return
-        fetched = fetch_remote_version()
+        # Passive checks stay snappy with a short timeout; a forced check
+        # (--version, bare --check) can afford to wait a bit longer for an
+        # accurate answer since the user explicitly asked for one.
+        fetched = fetch_remote_version(timeout=1.5 if not force else 3.0)
         if fetched:
             remote = fetched
             cache["remote_version"] = remote
             cache["last_checked"] = now
             _save_version_check_cache(cache)
-        elif force:
-            # An explicit, forced check that couldn't reach the network --
-            # stay quiet rather than report a possibly-stale cached result.
+        else:
+            # Offline, blocked, slow, or GitHub unreachable -- stay quiet
+            # rather than block the command or report a stale result.
             return
 
     if not remote:
@@ -685,6 +718,67 @@ def check_for_update_notice(force=False):
     if is_newer:
         print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote} "
               f"-- run --upgrade to update.{_RESET}")
+
+
+def cmd_check_update():
+    """
+    Manually, immediately checks GitHub for a newer version -- always hits
+    the network (ignoring DEFAULTS['version_check_interval_minutes']) and
+    prints the result either way. This is `--check` used with no value.
+
+    Makes exactly one network attempt (fetch_remote_version) rather than a
+    separate "are we online" probe followed by the real request, so an
+    offline connection is reported quickly instead of after two stacked
+    timeouts.
+
+    Purely informational: it does NOT change whether the passive/automatic
+    checker keeps running on other commands -- use `--check true` or
+    `--check false` for that.
+    """
+    print("Checking for updates...")
+    cache = _load_version_check_cache()
+
+    remote = fetch_remote_version(timeout=3.0)
+    now = time.time()
+
+    if not remote:
+        warn_red("Couldn't reach GitHub -- no internet connection, or GitHub is unreachable.")
+        return
+
+    cache["remote_version"] = remote
+    cache["last_checked"] = now
+    _save_version_check_cache(cache)
+
+    try:
+        is_newer = _parse_version_tuple(remote) > _parse_version_tuple(SCRIPT_VERSION)
+    except Exception:
+        is_newer = None
+
+    if is_newer:
+        print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote} "
+              f"-- run --upgrade to update.{_RESET}")
+    elif is_newer is False:
+        print(f"Up to date: v{SCRIPT_VERSION} is the latest version.")
+    else:
+        print(f"Current version: v{SCRIPT_VERSION} (latest on GitHub: v{remote}, couldn't compare).")
+
+
+def cmd_set_autocheck(enabled):
+    """
+    Turns the passive/automatic update check (the one that silently runs
+    at the top of every command) on or off, via `--check true` / `--check
+    false`. Does not itself hit the network or change the cached remote
+    version -- it only flips the stored flag that check_for_update_notice()
+    consults.
+    """
+    cache = _load_version_check_cache()
+    cache["autocheck_enabled"] = enabled
+    _save_version_check_cache(cache)
+    if enabled:
+        print(f"Automatic update checks are now ON (checks at most every "
+              f"{DEFAULTS['version_check_interval_minutes']} minutes).")
+    else:
+        print("Automatic update checks are now OFF. Run --check anytime to check manually.")
 
 
 def get_translator(google_code):
@@ -2419,6 +2513,11 @@ def main():
     parser.add_argument("--hide", action="store_true",
                          help="(with --config) make the config folder hidden")
     parser.add_argument("--version", action="store_true", help="print the script version and exit")
+    parser.add_argument("--check", nargs="?", const="__now__", default=None, metavar="{true,false}",
+                         help="with no value: manually check GitHub for a newer version right now "
+                              "(does not change automatic checking). "
+                              "with true/false: turn the automatic passive update check "
+                              "(the one that runs quietly on every command) on or off")
     parser.add_argument("--ask", action="store_true",
                          help="ask after each item whether to continue or stop "
                               "(combine with --create/--update/--add/--remove/--delete/--continue)")
@@ -2432,12 +2531,25 @@ def main():
         check_for_update_notice(force=True)
         return
 
+    if args.check is not None:
+        if args.check == "__now__":
+            cmd_check_update()
+        else:
+            val = args.check.strip().lower()
+            if val in ("true", "1", "yes", "on"):
+                cmd_set_autocheck(True)
+            elif val in ("false", "0", "no", "off"):
+                cmd_set_autocheck(False)
+            else:
+                parser.error("--check expects no value, or true/false")
+        return
+
     # No --path needed anymore -- the script just operates on wherever
     # you're standing when you run it.
     global SCRIPT_DIR
     SCRIPT_DIR = Path.cwd().resolve()
 
-    # Passive, rate-limited check (see DEFAULTS['version_check_interval_hours']) --
+    # Passive, rate-limited check (see DEFAULTS['version_check_interval_minutes']) --
     # only prints anything if it can positively confirm a newer version
     # exists, and never blocks or errors out the command being run.
     check_for_update_notice()
