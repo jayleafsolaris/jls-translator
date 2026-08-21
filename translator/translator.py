@@ -124,7 +124,7 @@ DEFAULTS = {
     "workers_max": 100,
     "workers_throttle_ceiling": 20,
     "update_limit": 50,      # max number of completed --update runs per base file
-    "key_progress_delay": 0.0001,  # seconds paused after each key-by-key progress tick (--add/--remove/--check)
+    "key_progress_delay": 0.0005,  # seconds paused after each key-by-key progress tick (--add/--remove/--check)
 }
 
 SCRIPT_DIR = None  # set at runtime from the saved --path
