@@ -124,6 +124,7 @@ DEFAULTS = {
     "workers_max": 100,
     "workers_throttle_ceiling": 20,
     "update_limit": 50,      # max number of completed --update runs per base file
+    "key_progress_delay": 0.03,  # seconds paused after each key-by-key progress tick (--add/--remove/--check)
 }
 
 SCRIPT_DIR = None  # set at runtime from the saved --path
@@ -1418,10 +1419,21 @@ def _report(lang_idx, lang_total, code, key_idx, key_total, start_time=None, pre
 
 
 def _report_keys(action, done, total):
-    """Prints a clean, single-line progress indicator like 'Adding Keys... [023/643]'"""
+    """
+    Prints a clean, single-line progress indicator like 'Adding Keys... [023/643]'.
+
+    Always called once per completed key (never skipped/batched), and
+    pauses briefly after each write so the counter is actually visible
+    ticking up one-by-one (1, then 2, then 3, ...) instead of flashing by
+    too fast to read on fast, local (non-network) commands like --add and
+    --remove. See DEFAULTS['key_progress_delay'].
+    """
     width = len(str(total)) if total > 0 else 1
     sys.stdout.write(f"\r{action} Keys... [{done:0{width}d}/{total}]".ljust(60))
     sys.stdout.flush()
+    delay = DEFAULTS.get("key_progress_delay", 0)
+    if delay:
+        time.sleep(delay)
 
 
 class SmoothProgress:
@@ -2009,7 +2021,7 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
                 continue
 
             keys_checked += 1
-            _report_keys("Adding", keys_checked, total_keys_to_check)
+            _report_keys("Adding Keys...", keys_checked, total_keys_to_check)
 
             _, key, value, inline_comment = line
             if key in existing:
@@ -2135,7 +2147,7 @@ def cmd_remove(resume=False, interactive=False, show_summary=False):
                 continue
 
             keys_checked += 1
-            _report_keys("Removing", keys_checked, total_keys_to_check)
+            _report_keys("Checking Keys...", keys_checked, total_keys_to_check)
 
             _, key, value, inline_comment = line
 
