@@ -2001,7 +2001,7 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
     total_keys_to_check = lang_total * key_total
     keys_checked = len(completed) * key_total
 
-    print(f"Adding missing keys across {lang_total} languages...\n")
+    print(f"Adding missing keys...\n")
     start_run_time = time.time()
     summary = []
     total_added_overall = 0
@@ -2126,7 +2126,7 @@ def cmd_remove(resume=False, interactive=False, show_summary=False):
         if code in completed:
             keys_checked += count
 
-    print(f"Checking {len(existing_codes)} language file(s) for deprecated keys...\n")
+    print(f"Removing deprecated keys...\n")
     start_run_time = time.time()
     summary = []
     total_removed = 0
