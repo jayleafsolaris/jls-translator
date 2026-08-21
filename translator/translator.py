@@ -124,7 +124,7 @@ DEFAULTS = {
     "workers_max": 100,
     "workers_throttle_ceiling": 20,
     "update_limit": 50,      # max number of completed --update runs per base file
-    "key_progress_delay": 0.03,  # seconds paused after each key-by-key progress tick (--add/--remove/--check)
+    "key_progress_delay": 0.005,  # seconds paused after each key-by-key progress tick (--add/--remove/--check)
 }
 
 SCRIPT_DIR = None  # set at runtime from the saved --path
@@ -2021,7 +2021,7 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
                 continue
 
             keys_checked += 1
-            _report_keys("Adding Keys...", keys_checked, total_keys_to_check)
+            _report_keys("Adding", keys_checked, total_keys_to_check)
 
             _, key, value, inline_comment = line
             if key in existing:
@@ -2147,7 +2147,7 @@ def cmd_remove(resume=False, interactive=False, show_summary=False):
                 continue
 
             keys_checked += 1
-            _report_keys("Checking Keys...", keys_checked, total_keys_to_check)
+            _report_keys("Checking", keys_checked, total_keys_to_check)
 
             _, key, value, inline_comment = line
 
