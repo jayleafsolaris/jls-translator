@@ -363,7 +363,15 @@ def parse_lang(path: Path):
             if not stripped:
                 lines.append(("blank", ""))
                 continue
-            if stripped.startswith("##"):
+            if stripped.startswith("#"):
+                # Any line starting with '#' is a comment -- this covers
+                # both '##'/'###' section headers and a single '#' used to
+                # disable/comment-out an entry (e.g. '#ui.roe:key=value').
+                # Without this, a single-'#' disabled entry that still
+                # contains an '=' would otherwise fall through to the
+                # entry-parsing branch below and get treated as a real key
+                # (with a stray '#' stuck in front of it), which then
+                # pollutes key counts, the cache, and generated .lang files.
                 lines.append(("comment", raw))
                 continue
             if "=" not in raw:
@@ -429,6 +437,23 @@ def strip_update_count_markers(base_lines):
         line for line in base_lines
         if not (line[0] == "comment" and line[1].strip().startswith(prefix))
     ]
+
+
+def strip_comments_for_output(base_lines):
+    """
+    Returns base_lines with EVERY comment line removed -- section headers
+    like '## UI' / '### PACK DETAILS', notes, and disabled/commented-out
+    entries that start with a bare '#' -- plus the hidden --update count
+    marker (which is itself stored as a comment, so it's covered by this
+    too).
+
+    Comments are organizational scaffolding for `base` only. They should
+    never be copied into an actual, user-facing .lang file -- not the
+    untranslated en_US/en_GB copies, and not the real translated
+    languages. This is called on base's parsed lines before any of that
+    copying happens; `base` itself is never touched by this function.
+    """
+    return [line for line in base_lines if line[0] != "comment"]
 
 
 # ----------------------------------------------------------------------
@@ -589,8 +614,14 @@ def require_internet_or_warn(flag_name):
     calls to Google Translate). Warns and returns False if offline, so the
     caller can bail out before doing any work or touching progress/cache
     files.
+
+    Uses a short timeout: both probe hosts are tried concurrently, so an
+    offline machine (which fails fast with "network unreachable" or
+    "connection refused" rather than hanging) is reported back almost
+    instantly. The timeout is only a ceiling for the rarer case of a
+    connection that silently drops packets instead of refusing them.
     """
-    if check_internet(timeout=2.5):
+    if check_internet(timeout=0.6):
         return True
     warn_red(
         f"No internet connection detected -- {flag_name} needs network access "
@@ -1393,10 +1424,11 @@ def load_base():
 
 def sync_en_us_from_base(base_lines):
     en_us_path = SCRIPT_DIR / "en_US.lang"
-    # Strip the hidden --update count marker before mirroring base into
-    # en_US.lang -- that marker is internal bookkeeping for base only and
-    # should never show up in a generated, user-facing .lang file.
-    write_lang(en_us_path, strip_update_count_markers(list(base_lines)))
+    # Strip every comment line (section headers, notes, disabled/commented
+    # entries, and the hidden --update count marker) before mirroring base
+    # into en_US.lang -- comments belong to base only and should never
+    # show up in a generated, user-facing .lang file.
+    write_lang(en_us_path, strip_comments_for_output(list(base_lines)))
     return en_us_path
 
 def _report(lang_idx, lang_total, code, key_idx, key_total, start_time=None, prev_elapsed=0.0, note=""):
@@ -1596,9 +1628,10 @@ def cmd_create(resume=False, interactive=False):
     if not require_internet_or_warn("--create"):
         return
     base_lines = load_base()
-    # Never propagate the hidden --update count marker into generated
-    # output files -- only the sourced-of-truth base file should carry it.
-    template_lines = strip_update_count_markers(base_lines)
+    # Never propagate comments (section headers, notes, disabled entries)
+    # or the hidden --update count marker into generated output files --
+    # only the source-of-truth base file should carry any of that.
+    template_lines = strip_comments_for_output(base_lines)
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
     key_total = len(base_values)
@@ -1969,9 +2002,10 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
     # blank as an untranslated placeholder (run --update afterward to fill
     # those in). None of that needs network access.
     base_lines = load_base()
-    # Never propagate the hidden --update count marker into generated
-    # output files -- only the source-of-truth base file should carry it.
-    template_lines = strip_update_count_markers(base_lines)
+    # Never propagate comments (section headers, notes, disabled entries)
+    # or the hidden --update count marker into generated output files --
+    # only the source-of-truth base file should carry any of that.
+    template_lines = strip_comments_for_output(base_lines)
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
     key_total = len(base_values)
