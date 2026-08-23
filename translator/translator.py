@@ -646,8 +646,9 @@ def require_internet_or_warn(flag_name):
         f"No internet connection detected -- {flag_name} needs network access "
         f"to reach Google Translate."
     )
-    print("Check your connection and try again. (Offline-only modes "
-          "don't need this.)")
+    print("Check your connection and try again. (Offline-only modes like "
+          "--view, --backup, --restore, --remove, --delete, --add, --cache, and "
+          "--config don't need this.)")
     return False
 
 
@@ -1819,6 +1820,9 @@ def cmd_create(resume=False, interactive=False):
     print(f"\nDone. Created {lang_total} language files from {DEFAULTS['base_lang']} in {format_duration(total_duration)}.")
 
 
+_REPORT_TRANSLATING_LOCK = threading.Lock()
+
+
 def _report_translating(done, total):
     """
     Renders a 3-line progress block:
@@ -1829,6 +1833,15 @@ def _report_translating(done, total):
 
     Redraws in place on every call by moving the cursor back up to the top
     of the block (rather than the previous single \\r-terminated line).
+
+    --update's translation workers call this concurrently from multiple
+    threads (one per in-flight batch). Without serializing the actual
+    writes, two threads' "move cursor up" + "print" sequences can interleave
+    mid-escape-sequence, which corrupts the redraw -- the header line stops
+    getting overwritten and instead stacks a new copy on every call, while
+    only the last few lines (whichever thread wrote last) stay in place.
+    The lock ensures each call's cursor-move + 4-line redraw happens as one
+    atomic unit on stdout.
     """
     width = len(str(total)) if total else 1
     left = max(total - done, 0)
@@ -1838,14 +1851,15 @@ def _report_translating(done, total):
         f"Left: {left}",
         f"[{done:0{width}d}/{total}]",
     ]
-    if getattr(_report_translating, "_active", False):
-        # Move cursor up to the start of the previously drawn block.
-        sys.stdout.write(f"\033[{len(lines)}A")
-    else:
-        _report_translating._active = True
-    for line in lines:
-        sys.stdout.write("\033[2K" + line + "\n")
-    sys.stdout.flush()
+    with _REPORT_TRANSLATING_LOCK:
+        if getattr(_report_translating, "_active", False):
+            # Move cursor up to the start of the previously drawn block.
+            sys.stdout.write(f"\033[{len(lines)}A")
+        else:
+            _report_translating._active = True
+        for line in lines:
+            sys.stdout.write("\033[2K" + line + "\n")
+        sys.stdout.flush()
 
 
 def cmd_update(resume=False, interactive=False):
