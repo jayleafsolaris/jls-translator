@@ -165,7 +165,7 @@ _UPDATE_COUNT_MARKER = hashlib.sha256(
     f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:update_count".encode("utf-8")
 ).hexdigest()[:25]
 
-_FALLBACK_VERSION = "0.0.0-dev"  # only used if neither pip metadata nor pyproject.toml resolve a version
+_FALLBACK_VERSION = "?.?.?"  # only used if neither pip metadata nor pyproject.toml resolve a version
 
 
 def get_script_version():
