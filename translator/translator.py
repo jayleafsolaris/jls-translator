@@ -1746,7 +1746,7 @@ def _report_translating(done, total):
     left = max(total - done, 0)
     lines = [
         f"Translating {total} keys...",
-        f"Done: {done:0{width}d}",
+        f"Done: {done}",
         f"Left: {left}",
         f"[{done:0{width}d}/{total}]",
     ]
