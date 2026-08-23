@@ -404,25 +404,6 @@ def write_lang(path: Path, lines):
     path.write_text("\n".join(out) + "\n", encoding="utf-8")
 
 
-def parse_disabled_entry_key(raw):
-    """
-    If `raw` is a single-'#' disabled/commented-out entry line (e.g.
-    '#ui.roe:key=value') -- as opposed to a '##'/'###' section header or a
-    plain '#' note with no '=' in it -- returns the key it disables.
-    Returns None for anything else (section headers, plain notes, blank or
-    active entry lines).
-    """
-    stripped = raw.strip()
-    if not stripped.startswith("#") or stripped.startswith("##"):
-        return None
-    body = stripped[1:]
-    if "=" not in body:
-        return None
-    key, _, _ = body.partition("=")
-    key = key.strip()
-    return key or None
-
-
 def _update_count_comment_prefix():
     return f"##{_UPDATE_COUNT_MARKER}="
 
@@ -1441,76 +1422,6 @@ def load_base():
     # Process the lines to convert `{n}` to `%n$s` in memory
     return _convert_base_vars(lines)
 
-
-# ----------------------------------------------------------------------
-# {key.reference} resolution (used by --add)
-# ----------------------------------------------------------------------
-
-# Matches any remaining {...} in a base value. Numeric placeholders like
-# {1}/{2} have already been converted to %1$s/%2$s by _convert_base_vars
-# before this ever runs, so anything still wrapped in {} at this point is
-# a reference to another key's value (e.g. {ui.roe:pack.name}), never a
-# positional variable.
-_KEY_REF_PATTERN = re.compile(r"\{([^{}]+)\}")
-
-
-def resolve_key_references(base_lines, max_passes=10):
-    """
-    Resolves {key.name}-style references in base's entry values by
-    substituting them with the referenced key's own value.
-
-    Returns (resolved_lines, missing_keys):
-      - If every referenced key exists somewhere in base, resolved_lines
-        is base_lines with every {key.name} reference replaced by that
-        key's (recursively resolved) value, and missing_keys is [].
-      - If ANY referenced key doesn't exist in base, resolved_lines is
-        None and missing_keys is a sorted list of every such missing key
-        -- nothing is resolved in that case, so the caller can abort
-        cleanly instead of writing partially-substituted values.
-
-    References to references are resolved iteratively (capped at
-    max_passes) so a chain like A -> B -> C still resolves fully; a
-    circular reference simply stops changing once nothing's left to
-    substitute for a given pass and is left as literal text.
-    """
-    base_values = entries_dict(base_lines)
-
-    missing = set()
-    for value in base_values.values():
-        for match in _KEY_REF_PATTERN.finditer(value):
-            ref_key = match.group(1).strip()
-            if ref_key not in base_values:
-                missing.add(ref_key)
-
-    if missing:
-        return None, sorted(missing)
-
-    resolved = dict(base_values)
-    for _ in range(max_passes):
-        changed = False
-
-        def repl(m):
-            nonlocal changed
-            ref_key = m.group(1).strip()
-            changed = True
-            return resolved.get(ref_key, m.group(0))
-
-        next_resolved = {}
-        for key, value in resolved.items():
-            next_resolved[key] = _KEY_REF_PATTERN.sub(repl, value)
-        resolved = next_resolved
-        if not changed:
-            break
-
-    out = []
-    for line in base_lines:
-        if line[0] == "entry":
-            _, key, _, inline_comment = line
-            out.append(("entry", key, resolved.get(key, base_values[key]), inline_comment))
-        else:
-            out.append(line)
-    return out, []
-
 def sync_en_us_from_base(base_lines):
     en_us_path = SCRIPT_DIR / "en_US.lang"
     # Strip every comment line (section headers, notes, disabled/commented
@@ -1820,9 +1731,6 @@ def cmd_create(resume=False, interactive=False):
     print(f"\nDone. Created {lang_total} language files from {DEFAULTS['base_lang']} in {format_duration(total_duration)}.")
 
 
-_REPORT_TRANSLATING_LOCK = threading.Lock()
-
-
 def _report_translating(done, total):
     """
     Renders a 3-line progress block:
@@ -1833,15 +1741,6 @@ def _report_translating(done, total):
 
     Redraws in place on every call by moving the cursor back up to the top
     of the block (rather than the previous single \\r-terminated line).
-
-    --update's translation workers call this concurrently from multiple
-    threads (one per in-flight batch). Without serializing the actual
-    writes, two threads' "move cursor up" + "print" sequences can interleave
-    mid-escape-sequence, which corrupts the redraw -- the header line stops
-    getting overwritten and instead stacks a new copy on every call, while
-    only the last few lines (whichever thread wrote last) stay in place.
-    The lock ensures each call's cursor-move + 4-line redraw happens as one
-    atomic unit on stdout.
     """
     width = len(str(total)) if total else 1
     left = max(total - done, 0)
@@ -1851,15 +1750,14 @@ def _report_translating(done, total):
         f"Left: {left}",
         f"[{done:0{width}d}/{total}]",
     ]
-    with _REPORT_TRANSLATING_LOCK:
-        if getattr(_report_translating, "_active", False):
-            # Move cursor up to the start of the previously drawn block.
-            sys.stdout.write(f"\033[{len(lines)}A")
-        else:
-            _report_translating._active = True
-        for line in lines:
-            sys.stdout.write("\033[2K" + line + "\n")
-        sys.stdout.flush()
+    if getattr(_report_translating, "_active", False):
+        # Move cursor up to the start of the previously drawn block.
+        sys.stdout.write(f"\033[{len(lines)}A")
+    else:
+        _report_translating._active = True
+    for line in lines:
+        sys.stdout.write("\033[2K" + line + "\n")
+    sys.stdout.flush()
 
 
 def cmd_update(resume=False, interactive=False):
@@ -2104,19 +2002,6 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
     # blank as an untranslated placeholder (run --update afterward to fill
     # those in). None of that needs network access.
     base_lines = load_base()
-
-    # Resolve {key.reference} substitutions in base before anything else.
-    # If any referenced key doesn't exist anywhere in base, abort the whole
-    # --add run without touching any .lang file -- a half-resolved base
-    # would silently write literal "{missing.key}" text into every
-    # language, which is worse than just refusing to run.
-    resolved_lines, missing_keys = resolve_key_references(base_lines)
-    if missing_keys:
-        warn_red("Add failed due to missing keys:")
-        print(f"[{', '.join(missing_keys)}]")
-        return
-    base_lines = resolved_lines
-
     # Never propagate comments (section headers, notes, disabled entries)
     # or the hidden --update count marker into generated output files --
     # only the source-of-truth base file should carry any of that.
@@ -2154,32 +2039,16 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
     start_run_time = time.time()
     summary = []
     total_added_overall = 0
-    total_excluded_disabled = 0
 
     for lang_idx, (code, google_code) in enumerate(all_codes, start=1):
         if code in completed:
             continue
 
         target_path = SCRIPT_DIR / f"{code}.lang"
-        target_lines = parse_lang(target_path)
-        existing = entries_dict(target_lines)
-
-        # Keys that already exist in this language's file but are
-        # disabled/commented-out (a single-'#' line, e.g.
-        # '#ui.roe:key=value') -- these count as "already present" for
-        # --add's purposes and must NOT get a duplicate active entry added
-        # underneath them. The original disabled line is carried forward
-        # into the output as-is.
-        disabled_map = {}
-        for line in target_lines:
-            if line[0] == "comment":
-                disabled_key = parse_disabled_entry_key(line[1])
-                if disabled_key is not None:
-                    disabled_map[disabled_key] = line
+        existing = entries_dict(parse_lang(target_path))
 
         entries = []
         added_this_lang = 0
-        excluded_this_lang = 0
 
         for line in template_lines:
             if line[0] != "entry":
@@ -2191,9 +2060,6 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
             _, key, value, inline_comment = line
             if key in existing:
                 entries.append(("entry", key, existing[key], inline_comment))
-            elif key in disabled_map:
-                entries.append(disabled_map[key])
-                excluded_this_lang += 1
             else:
                 if google_code is None:
                     placeholder = value
@@ -2205,7 +2071,6 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
                 added_this_lang += 1
 
         total_added_overall += added_this_lang
-        total_excluded_disabled += excluded_this_lang
 
         out_lines = []
         e_idx = 0
@@ -2217,7 +2082,7 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
                 e_idx += 1
 
         write_lang(target_path, out_lines)
-        summary.append((code, added_this_lang, excluded_this_lang))
+        summary.append((code, added_this_lang))
 
         completed.append(code)
         current_total_time = elapsed_time + (time.time() - start_run_time)
@@ -2236,15 +2101,10 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
 
     print(f"\n\nAdd complete in {format_duration(total_duration)}:")
     if show_summary:
-        for code, added, excluded in summary:
-            note = f"  {code}.lang: {added} new key(s) added (untranslated -- run --update to translate)"
-            if excluded:
-                note += f", {excluded} skipped (already present but disabled with '#')"
-            print(note)
+        for code, added in summary:
+            print(f"  {code}.lang: {added} new key(s) added (untranslated -- run --update to translate)")
     else:
         print(f"  Added {total_added_overall} total missing key(s) across {len(summary)} language(s).")
-        if total_excluded_disabled:
-            print(f"  Skipped {total_excluded_disabled} key(s) already present but disabled with '#' (not re-added).")
 
 
 def cmd_continue(interactive=False, show_summary=False):
@@ -2316,30 +2176,18 @@ def cmd_remove(resume=False, interactive=False, show_summary=False):
         out_lines = []
 
         for line in target_lines:
-            if line[0] == "entry":
-                keys_checked += 1
-                _report_keys("Checking", keys_checked, total_keys_to_check)
-
-                _, key, value, inline_comment = line
-
-                if key not in base_values:
-                    removed_this_lang += 1
-                    continue
-
+            if line[0] != "entry":
                 out_lines.append(line)
                 continue
 
-            if line[0] == "comment":
-                # A single-'#' disabled/commented-out entry (e.g.
-                # '#ui.roe:key=value') whose key no longer exists in base
-                # is just as deprecated as an active entry for that same
-                # key -- drop it too. '##' section headers and plain '#'
-                # notes (no '=') aren't tied to a key, so they're always
-                # kept.
-                disabled_key = parse_disabled_entry_key(line[1])
-                if disabled_key is not None and disabled_key not in base_values:
-                    removed_this_lang += 1
-                    continue
+            keys_checked += 1
+            _report_keys("Checking", keys_checked, total_keys_to_check)
+
+            _, key, value, inline_comment = line
+
+            if key not in base_values:
+                removed_this_lang += 1
+                continue
 
             out_lines.append(line)
 
