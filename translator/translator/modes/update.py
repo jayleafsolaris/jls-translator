@@ -12,35 +12,10 @@ from ..common.netcheck import require_internet_or_warn
 from ..common.config_store import warn_red
 from ..common.translate import translate_many
 from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, get_active_language_codes, resolve_workers
-from ..common.progress import load_base, sync_en_us_from_base, base_fingerprint, clear_progress, save_progress, format_duration
-
-def _report_translating(done, total):
-    """
-    Renders a 3-line progress block:
-
-        Translating [total] keys...
-        Keys: #/# (e.g. 012/104)
-        Left: #
-
-    Redraws in place on every call by moving the cursor back up to the top
-    of the block (rather than the previous single \\r-terminated line).
-    """
-    width = len(str(total)) if total else 1
-    left = max(total - done, 0)
-    lines = [
-        f"Translating {total} keys...",
-        f"Done: {done}",
-        f"Left: {left}",
-        f"[{done:0{width}d}/{total}]",
-    ]
-    if getattr(_report_translating, "_active", False):
-        # Move cursor up to the start of the previously drawn block.
-        sys.stdout.write(f"\033[{len(lines)}A")
-    else:
-        _report_translating._active = True
-    for line in lines:
-        sys.stdout.write("\033[2K" + line + "\n")
-    sys.stdout.flush()
+from ..common.progress import (
+    load_base, sync_en_us_from_base, base_fingerprint, clear_progress, save_progress,
+    format_duration, SmoothProgress, _report_keys,
+)
 
 
 def cmd_update(resume=False, interactive=False):
@@ -185,8 +160,19 @@ def cmd_update(resume=False, interactive=False):
                   "translated together as a single batch.\n")
 
         start_run_time = time.time()
-        _report_translating._active = False
-        _report_translating(done_count, total)
+
+        # Single combined batch across every language -- rendered as one
+        # smooth, easing percentage bar (same feel as --create) rather than
+        # a raw done/left counter.
+        def _render(done, _total=total):
+            pct = (done / _total * 100) if _total else 100.0
+            time_str = format_duration(time.time() - start_run_time)
+            line = f"Translating {_total} keys... {pct:5.1f}% - Time: {time_str}"
+            sys.stdout.write("\r" + line.ljust(85))
+            sys.stdout.flush()
+
+        smoother = SmoothProgress(total, _render)
+        smoother.update(done_count)
 
         # Local (non-network) work first: direct copy (en_US) and British-spelling
         # conversion (en_GB) need no API call at all.
@@ -195,7 +181,7 @@ def cmd_update(resume=False, interactive=False):
             value = text if t["google_code"] is None else to_british(text)
             results[task_key(t["code"], t["key"])] = value
             done_count += 1
-            _report_translating(done_count, total)
+            smoother.update(done_count)
         save_temp()
         save_progress("update", [], fingerprint, time.time() - start_run_time)
 
@@ -213,17 +199,18 @@ def cmd_update(resume=False, interactive=False):
             base_offset = done_count
 
             def _progress_cb(group_done, _base_offset=base_offset):
-                _report_translating(_base_offset + group_done, total)
+                smoother.update(_base_offset + group_done)
 
             workers = resolve_workers(len(texts))
             translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
             for t, value in zip(group, translated):
                 results[task_key(t["code"], t["key"])] = value
             done_count = base_offset + len(group)
-            _report_translating(done_count, total)
+            smoother.update(done_count)
             save_temp()
             save_progress("update", [], fingerprint, time.time() - start_run_time)
 
+        smoother.finish()
         total_duration = time.time() - start_run_time
         if temp_path.exists():
             temp_path.unlink()
@@ -234,7 +221,11 @@ def cmd_update(resume=False, interactive=False):
     # Now fan the finished translations back out into each language's .lang
     # file -- this is the only point any .lang file gets touched. Entries
     # that were already token-patched in place above are written out as-is.
+    # Reported the same way --add/--remove report their key-by-key sweeps.
     summary = []
+    applied = 0
+    if total:
+        print(f"\n\nApplying {total} translation(s)...\n")
     for code in existing_codes:
         data = lang_data[code]
         entries = data["entries"]
@@ -246,6 +237,9 @@ def cmd_update(resume=False, interactive=False):
                 continue
             entries[i] = ("entry", key, value, inline_comment)
             changed += 1
+            applied += 1
+            if total:
+                _report_keys("Applying", applied, total)
 
         out_lines = []
         e_idx = 0
@@ -264,7 +258,7 @@ def cmd_update(resume=False, interactive=False):
     new_update_count = update_count + 1
     write_update_count(new_update_count)
 
-    print(f"\nUpdate complete in {format_duration(total_duration)}:")
+    print(f"\n\nUpdate complete in {format_duration(total_duration)}:")
     for code, changed, patched in summary:
         if patched:
             print(f"  {code}.lang: {changed} key(s) updated ({patched} via token-only patch)")
@@ -277,4 +271,3 @@ def cmd_update(resume=False, interactive=False):
             f"--update limit reached ({new_update_count}/{DEFAULTS['update_limit']}) -- "
             f"this base file must be recreated (--create) before --update can run again."
         )
-
