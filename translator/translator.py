@@ -26,15 +26,10 @@ base and your .lang files, e.g. RP/texts/):
     jls-translator --cache    manage the translation cache (see below)
     jls-translator --config   manage script configuration (see below)
     jls-translator --upgrade  update the script to the latest version from GitHub
-    jls-translator --check    manually check GitHub for a newer version right now
-                                     (doesn't change automatic checking)
-    jls-translator --check true|false
-                              turn the automatic passive update check (the one that
-                                     runs quietly on every command) on or off
 
 --path is required for every mode except --version.
 
-Add --ask to --create/--add/--remove/--delete/--continue to be asked after each
+Add --ask to --create/--update/--add/--remove/--delete/--continue to be asked after each
 language whether to continue or stop, e.g.:
 
     jls-translator --create --ask
@@ -117,14 +112,13 @@ DEFAULTS = {
     "progress_file": ".translate_progress.json",
     "update_temp_file": ".translate_update_temp.json",
     "version_check_file": ".version_check_cache.json",
-    "version_check_interval_minutes": 10,
+    "version_check_interval_hours": 1,
     "request_delay": 0.15,   # seconds between global translation calls
     "max_retries": 3,
     "workers_min": 1,
     "workers_max": 100,
     "workers_throttle_ceiling": 20,
     "update_limit": 50,      # max number of completed --update runs per base file
-    "key_progress_delay": 0.0001,  # seconds paused after each key-by-key progress tick (--add/--remove/--check)
 }
 
 SCRIPT_DIR = None  # set at runtime from the saved --path
@@ -363,15 +357,7 @@ def parse_lang(path: Path):
             if not stripped:
                 lines.append(("blank", ""))
                 continue
-            if stripped.startswith("#"):
-                # Any line starting with '#' is a comment -- this covers
-                # both '##'/'###' section headers and a single '#' used to
-                # disable/comment-out an entry (e.g. '#ui.roe:key=value').
-                # Without this, a single-'#' disabled entry that still
-                # contains an '=' would otherwise fall through to the
-                # entry-parsing branch below and get treated as a real key
-                # (with a stray '#' stuck in front of it), which then
-                # pollutes key counts, the cache, and generated .lang files.
+            if stripped.startswith("##"):
                 lines.append(("comment", raw))
                 continue
             if "=" not in raw:
@@ -437,23 +423,6 @@ def strip_update_count_markers(base_lines):
         line for line in base_lines
         if not (line[0] == "comment" and line[1].strip().startswith(prefix))
     ]
-
-
-def strip_comments_for_output(base_lines):
-    """
-    Returns base_lines with EVERY comment line removed -- section headers
-    like '## UI' / '### PACK DETAILS', notes, and disabled/commented-out
-    entries that start with a bare '#' -- plus the hidden --update count
-    marker (which is itself stored as a comment, so it's covered by this
-    too).
-
-    Comments are organizational scaffolding for `base` only. They should
-    never be copied into an actual, user-facing .lang file -- not the
-    untranslated en_US/en_GB copies, and not the real translated
-    languages. This is called on base's parsed lines before any of that
-    copying happens; `base` itself is never touched by this function.
-    """
-    return [line for line in base_lines if line[0] != "comment"]
 
 
 # ----------------------------------------------------------------------
@@ -575,36 +544,22 @@ def to_british(text):
     return _restore(converted, tokens)
 
 
-def check_internet(timeout=1.2):
+def check_internet(timeout=3.0):
     """
     Quick, cheap connectivity probe. Tries a couple of well-known, highly
     available hosts on their DNS port so we don't depend on Google Translate
     itself (or DNS resolution of a hostname) just to find out whether we're
-    online at all.
-
-    The hosts are probed concurrently, not one after another -- a slow or
-    silently-dropping connection to one host no longer doubles the wait.
-    Worst case is roughly `timeout` seconds total (not `timeout` per host).
-    Returns True on the first successful TCP connect, False if every
-    attempt fails or times out.
+    online at all. Returns True on first successful TCP connect, False if
+    every attempt fails or times out.
     """
     import socket
-
     hosts = [("8.8.8.8", 53), ("1.1.1.1", 53)]
-
-    def _try(host_port):
-        host, port = host_port
+    for host, port in hosts:
         try:
             with socket.create_connection((host, port), timeout=timeout):
                 return True
         except OSError:
-            return False
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(hosts)) as ex:
-        futures = [ex.submit(_try, hp) for hp in hosts]
-        for fut in concurrent.futures.as_completed(futures):
-            if fut.result():
-                return True
+            continue
     return False
 
 
@@ -614,14 +569,8 @@ def require_internet_or_warn(flag_name):
     calls to Google Translate). Warns and returns False if offline, so the
     caller can bail out before doing any work or touching progress/cache
     files.
-
-    Uses a short timeout: both probe hosts are tried concurrently, so an
-    offline machine (which fails fast with "network unreachable" or
-    "connection refused" rather than hanging) is reported back almost
-    instantly. The timeout is only a ceiling for the rarer case of a
-    connection that silently drops packets instead of refusing them.
     """
-    if check_internet(timeout=0.6):
+    if check_internet():
         return True
     warn_red(
         f"No internet connection detected -- {flag_name} needs network access "
@@ -695,48 +644,34 @@ def check_for_update_notice(force=False):
     available on GitHub than the one currently installed/running.
 
     Only reaches out to the network at most once every
-    DEFAULTS['version_check_interval_minutes'] minutes (tracked in a small
+    DEFAULTS['version_check_interval_hours'] hours (tracked in a small
     cache file next to the package), so this never adds network latency to
-    every-day command usage. Pass force=True (used by --version and a bare
-    --check) to always check fresh regardless of that interval.
-
-    When a check is due, this makes exactly one short, low-timeout network
-    attempt (no separate "are we online" probe beforehand) so an offline
-    or slow connection is discovered and given up on quickly instead of
-    waiting out two stacked timeouts.
-
-    The passive/automatic check can be turned off entirely with
-    `--check false` (see the "autocheck_enabled" flag in the version-check
-    cache) -- while off, this function does nothing unless force=True, so
-    --version and a bare --check still always work even with autocheck
-    disabled.
+    every-day command usage. Pass force=True (used by --version) to always
+    check fresh regardless of that interval.
 
     Never raises and never blocks a command on a slow/offline connection --
     worst case this simply prints nothing.
     """
     cache = _load_version_check_cache()
-    if not force and cache.get("autocheck_enabled", True) is False:
-        return
     now = time.time()
     last_checked = cache.get("last_checked", 0)
-    interval_seconds = DEFAULTS["version_check_interval_minutes"] * 60
+    interval_seconds = DEFAULTS["version_check_interval_hours"] * 3600
 
     remote = cache.get("remote_version")
     stale = force or (now - last_checked) > interval_seconds
 
     if stale:
-        # Passive checks stay snappy with a short timeout; a forced check
-        # (--version, bare --check) can afford to wait a bit longer for an
-        # accurate answer since the user explicitly asked for one.
-        fetched = fetch_remote_version(timeout=1.5 if not force else 3.0)
+        if not check_internet(timeout=2.0):
+            return
+        fetched = fetch_remote_version()
         if fetched:
             remote = fetched
             cache["remote_version"] = remote
             cache["last_checked"] = now
             _save_version_check_cache(cache)
-        else:
-            # Offline, blocked, slow, or GitHub unreachable -- stay quiet
-            # rather than block the command or report a stale result.
+        elif force:
+            # An explicit, forced check that couldn't reach the network --
+            # stay quiet rather than report a possibly-stale cached result.
             return
 
     if not remote:
@@ -750,67 +685,6 @@ def check_for_update_notice(force=False):
     if is_newer:
         print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote} "
               f"-- run --upgrade to update.{_RESET}")
-
-
-def cmd_check_update():
-    """
-    Manually, immediately checks GitHub for a newer version -- always hits
-    the network (ignoring DEFAULTS['version_check_interval_minutes']) and
-    prints the result either way. This is `--check` used with no value.
-
-    Makes exactly one network attempt (fetch_remote_version) rather than a
-    separate "are we online" probe followed by the real request, so an
-    offline connection is reported quickly instead of after two stacked
-    timeouts.
-
-    Purely informational: it does NOT change whether the passive/automatic
-    checker keeps running on other commands -- use `--check true` or
-    `--check false` for that.
-    """
-    print("Checking for updates...")
-    cache = _load_version_check_cache()
-
-    remote = fetch_remote_version(timeout=3.0)
-    now = time.time()
-
-    if not remote:
-        warn_red("Couldn't reach GitHub -- no internet connection, or GitHub is unreachable.")
-        return
-
-    cache["remote_version"] = remote
-    cache["last_checked"] = now
-    _save_version_check_cache(cache)
-
-    try:
-        is_newer = _parse_version_tuple(remote) > _parse_version_tuple(SCRIPT_VERSION)
-    except Exception:
-        is_newer = None
-
-    if is_newer:
-        print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote} "
-              f"-- run --upgrade to update.{_RESET}")
-    elif is_newer is False:
-        print(f"Up to date: v{SCRIPT_VERSION} is the latest version.")
-    else:
-        print(f"Current version: v{SCRIPT_VERSION} (latest on GitHub: v{remote}, couldn't compare).")
-
-
-def cmd_set_autocheck(enabled):
-    """
-    Turns the passive/automatic update check (the one that silently runs
-    at the top of every command) on or off, via `--check true` / `--check
-    false`. Does not itself hit the network or change the cached remote
-    version -- it only flips the stored flag that check_for_update_notice()
-    consults.
-    """
-    cache = _load_version_check_cache()
-    cache["autocheck_enabled"] = enabled
-    _save_version_check_cache(cache)
-    if enabled:
-        print(f"Automatic update checks are now ON (checks at most every "
-              f"{DEFAULTS['version_check_interval_minutes']} minutes).")
-    else:
-        print("Automatic update checks are now OFF. Run --check anytime to check manually.")
 
 
 def get_translator(google_code):
@@ -1424,11 +1298,10 @@ def load_base():
 
 def sync_en_us_from_base(base_lines):
     en_us_path = SCRIPT_DIR / "en_US.lang"
-    # Strip every comment line (section headers, notes, disabled/commented
-    # entries, and the hidden --update count marker) before mirroring base
-    # into en_US.lang -- comments belong to base only and should never
-    # show up in a generated, user-facing .lang file.
-    write_lang(en_us_path, strip_comments_for_output(list(base_lines)))
+    # Strip the hidden --update count marker before mirroring base into
+    # en_US.lang -- that marker is internal bookkeeping for base only and
+    # should never show up in a generated, user-facing .lang file.
+    write_lang(en_us_path, strip_update_count_markers(list(base_lines)))
     return en_us_path
 
 def _report(lang_idx, lang_total, code, key_idx, key_total, start_time=None, prev_elapsed=0.0, note=""):
@@ -1451,21 +1324,10 @@ def _report(lang_idx, lang_total, code, key_idx, key_total, start_time=None, pre
 
 
 def _report_keys(action, done, total):
-    """
-    Prints a clean, single-line progress indicator like 'Adding Keys... [023/643]'.
-
-    Always called once per completed key (never skipped/batched), and
-    pauses briefly after each write so the counter is actually visible
-    ticking up one-by-one (1, then 2, then 3, ...) instead of flashing by
-    too fast to read on fast, local (non-network) commands like --add and
-    --remove. See DEFAULTS['key_progress_delay'].
-    """
+    """Prints a clean, single-line progress indicator like 'Adding Keys... [023/643]'"""
     width = len(str(total)) if total > 0 else 1
     sys.stdout.write(f"\r{action} Keys... [{done:0{width}d}/{total}]".ljust(60))
     sys.stdout.flush()
-    delay = DEFAULTS.get("key_progress_delay", 0)
-    if delay:
-        time.sleep(delay)
 
 
 class SmoothProgress:
@@ -1628,10 +1490,9 @@ def cmd_create(resume=False, interactive=False):
     if not require_internet_or_warn("--create"):
         return
     base_lines = load_base()
-    # Never propagate comments (section headers, notes, disabled entries)
-    # or the hidden --update count marker into generated output files --
-    # only the source-of-truth base file should carry any of that.
-    template_lines = strip_comments_for_output(base_lines)
+    # Never propagate the hidden --update count marker into generated
+    # output files -- only the sourced-of-truth base file should carry it.
+    template_lines = strip_update_count_markers(base_lines)
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
     key_total = len(base_values)
@@ -1771,7 +1632,7 @@ def cmd_update(resume=False, interactive=False):
         warn_red(
             f"--update limit reached ({update_count}/{DEFAULTS['update_limit']}) for this base file."
         )
-        print("This file has reached it's maximum update count. Please create a new set of .lang files to remove any leaked or missed translation keys")
+        print("This file has reached it's maximum update count. Please create a new set of .lang files")
         return
 
     if not require_internet_or_warn("--update"):
@@ -2002,10 +1863,9 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
     # blank as an untranslated placeholder (run --update afterward to fill
     # those in). None of that needs network access.
     base_lines = load_base()
-    # Never propagate comments (section headers, notes, disabled entries)
-    # or the hidden --update count marker into generated output files --
-    # only the source-of-truth base file should carry any of that.
-    template_lines = strip_comments_for_output(base_lines)
+    # Never propagate the hidden --update count marker into generated
+    # output files -- only the source-of-truth base file should carry it.
+    template_lines = strip_update_count_markers(base_lines)
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
     key_total = len(base_values)
@@ -2035,7 +1895,7 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
     total_keys_to_check = lang_total * key_total
     keys_checked = len(completed) * key_total
 
-    print(f"Adding missing keys...\n")
+    print(f"Adding missing keys across {lang_total} languages...\n")
     start_run_time = time.time()
     summary = []
     total_added_overall = 0
@@ -2055,7 +1915,7 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
                 continue
 
             keys_checked += 1
-            _report_keys("Checking", keys_checked, total_keys_to_check)
+            _report_keys("Adding", keys_checked, total_keys_to_check)
 
             _, key, value, inline_comment = line
             if key in existing:
@@ -2160,7 +2020,7 @@ def cmd_remove(resume=False, interactive=False, show_summary=False):
         if code in completed:
             keys_checked += count
 
-    print(f"Removing deprecated keys...\n")
+    print(f"Checking {len(existing_codes)} language file(s) for deprecated keys...\n")
     start_run_time = time.time()
     summary = []
     total_removed = 0
@@ -2181,7 +2041,7 @@ def cmd_remove(resume=False, interactive=False, show_summary=False):
                 continue
 
             keys_checked += 1
-            _report_keys("Checking", keys_checked, total_keys_to_check)
+            _report_keys("Removing", keys_checked, total_keys_to_check)
 
             _, key, value, inline_comment = line
 
@@ -2559,11 +2419,6 @@ def main():
     parser.add_argument("--hide", action="store_true",
                          help="(with --config) make the config folder hidden")
     parser.add_argument("--version", action="store_true", help="print the script version and exit")
-    parser.add_argument("--check", nargs="?", const="__now__", default=None, metavar="{true,false}",
-                         help="with no value: manually check GitHub for a newer version right now "
-                              "(does not change automatic checking). "
-                              "with true/false: turn the automatic passive update check "
-                              "(the one that runs quietly on every command) on or off")
     parser.add_argument("--ask", action="store_true",
                          help="ask after each item whether to continue or stop "
                               "(combine with --create/--update/--add/--remove/--delete/--continue)")
@@ -2577,25 +2432,12 @@ def main():
         check_for_update_notice(force=True)
         return
 
-    if args.check is not None:
-        if args.check == "__now__":
-            cmd_check_update()
-        else:
-            val = args.check.strip().lower()
-            if val in ("true", "1", "yes", "on"):
-                cmd_set_autocheck(True)
-            elif val in ("false", "0", "no", "off"):
-                cmd_set_autocheck(False)
-            else:
-                parser.error("--check expects no value, or true/false")
-        return
-
     # No --path needed anymore -- the script just operates on wherever
     # you're standing when you run it.
     global SCRIPT_DIR
     SCRIPT_DIR = Path.cwd().resolve()
 
-    # Passive, rate-limited check (see DEFAULTS['version_check_interval_minutes']) --
+    # Passive, rate-limited check (see DEFAULTS['version_check_interval_hours']) --
     # only prints anything if it can positively confirm a newer version
     # exists, and never blocks or errors out the command being run.
     check_for_update_notice()
