@@ -92,7 +92,7 @@ except ImportError:  # pragma: no cover -- Python < 3.8 doesn't ship this
 # ----------------------------------------------------------------------
 try:
     import requests
-    from deep_translator import MyMemoryTranslator
+    from deep_translator import GoogleTranslator
 except ImportError:
     print("\033[91m\nError: Missing required dependencies.\033[0m")
     print("This script requires 'deep_translator' and 'requests' to run.")
@@ -688,7 +688,7 @@ def check_for_update_notice(force=False):
 
 
 def get_translator(google_code):
-    return MyMemoryTranslator(source="en", target=google_code)
+    return GoogleTranslator(source="en", target=google_code)
 
 
 def translate_value(google_code, text):
