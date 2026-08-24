@@ -4,6 +4,7 @@ protection + rate limiting) and batched multi-value translation.
 """
 
 import concurrent.futures
+import re
 import threading
 import time
 
@@ -18,6 +19,28 @@ from .text_protect import _protect, _restore
 _RATE_LIMIT_LOCK = threading.Lock()
 _LAST_REQUEST_TIME = 0.0
 
+_PLACEHOLDER_RE = re.compile(r"@@PH\d+@@")
+
+
+def _has_translatable_content(text):
+    """
+    True if translating `text` would actually give Google Translate any
+    real, non-token content to work with. Some base values are made up
+    entirely of protected tokens -- most commonly a value that's just a
+    single {key.path} cross-reference (see text_protect.TOKEN_PATTERN)
+    with no surrounding text -- and have nothing left once every token is
+    stripped out. Sending a payload of pure placeholder text to Google
+    Translate gives it nothing to translate and reliably fails with a
+    "Translation not found" error rather than a sensible passthrough, so
+    callers should skip the API call entirely and leave these values
+    untouched -- the real text lives at whatever key is being referenced,
+    and that key gets translated in its own right.
+    """
+    protected, _ = _protect(text)
+    remaining = _PLACEHOLDER_RE.sub("", protected)
+    return bool(remaining.strip())
+
+
 def get_translator(google_code):
     return GoogleTranslator(source="en", target=google_code)
 
@@ -25,6 +48,10 @@ def get_translator(google_code):
 def translate_value(google_code, text):
     global _LAST_REQUEST_TIME
     if not text.strip():
+        return text
+    if not _has_translatable_content(text):
+        # Entirely protected tokens (e.g. a {key.path} reference with no
+        # surrounding text) -- nothing real to send to Google Translate.
         return text
     protected, tokens = _protect(text)
     last_err = None
@@ -56,10 +83,17 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
     if not texts:
         return results
 
-    # Filter out empty strings beforehand to optimize network requests
-    valid_indices = [i for i, t in enumerate(texts) if t.strip()]
+    # Filter out empty strings, and values with nothing translatable left
+    # once tokens are protected (e.g. a value that's entirely a
+    # {key.path} reference) -- both get passed through unchanged rather
+    # than sent to Google Translate, which has nothing real to work with
+    # for either case.
+    valid_indices = [
+        i for i, t in enumerate(texts)
+        if t.strip() and _has_translatable_content(t)
+    ]
     for i in range(len(texts)):
-        if not texts[i].strip():
+        if not texts[i].strip() or not _has_translatable_content(texts[i]):
             results[i] = texts[i]
 
     if not valid_indices:
