@@ -16,16 +16,18 @@ def _upgrade_protected_names():
     """
     Basenames (files or folders) inside PACKAGE_DIR that --upgrade must
     never overwrite, delete, or merge into, no matter what happens to be
-    sitting in the downloaded repo zip under the same name.
+    sitting in the downloaded repo zip under the same name, and no matter
+    how deep in the tree they actually live (e.g. common/cache.json, not
+    just a hypothetical PACKAGE_DIR/cache.json).
 
     This exists because the cache, progress file, languages.json, the
-    version-check cache, and the config folder all deliberately live right
-    next to the installed package (see the PACKAGE_DIR comment above) --
-    the same directory --upgrade copies the fresh GitHub download into. Any
-    matching filename in the repo would otherwise silently overwrite the
-    user's real cache/config with whatever happens to be committed (or not
-    committed at all, which is just as bad), which is exactly the "my
-    config got wiped by --upgrade" bug this guards against.
+    version-check cache, and the config folder all deliberately live
+    somewhere inside the installed package -- the same tree --upgrade
+    replaces with a fresh GitHub download. Any matching filename in the
+    repo would otherwise silently overwrite the user's real cache/config
+    with whatever happens to be committed (or not committed at all, which
+    is just as bad), which is exactly the "my config got wiped by
+    --upgrade" bug this guards against.
     """
     return {
         DEFAULTS["cache_file"],
@@ -53,6 +55,89 @@ def _find_package_source(extracted_root):
         if "cli.py" in filenames:
             return dirpath
     return extracted_root
+
+
+def _contains_protected(dir_path, protected):
+    """True if dir_path contains a protected-named file/folder anywhere below it."""
+    for dirpath, dirnames, filenames in os.walk(dir_path):
+        for name in dirnames + filenames:
+            if name in protected:
+                return True
+    return False
+
+
+def _backup_and_clear(src_dir, backup_dir, protected):
+    """
+    Recursively move everything under src_dir into backup_dir, EXCEPT any
+    file or directory whose basename is in `protected` -- those are left
+    exactly where they are, at whatever depth they live, so persistent
+    state (cache, progress, config) survives regardless of which folder
+    it happens to live in (e.g. common/cache.json). A directory that
+    itself isn't a protected name but contains a protected descendant is
+    recursed into rather than moved wholesale, so the protected file
+    inside it stays put while everything around it still gets replaced.
+    """
+    for entry in os.listdir(src_dir):
+        if entry in protected:
+            continue
+        s = os.path.join(src_dir, entry)
+        d = os.path.join(backup_dir, entry)
+        if os.path.isdir(s) and _contains_protected(s, protected):
+            os.makedirs(d, exist_ok=True)
+            _backup_and_clear(s, d, protected)
+            if not os.listdir(s):
+                os.rmdir(s)
+        else:
+            shutil.move(s, d)
+
+
+def _copy_skip_protected(src_dir, dst_dir, protected, skipped):
+    """
+    Recursively copy src_dir's contents into dst_dir, skipping (not
+    overwriting) any file or directory whose basename is in `protected`,
+    at any depth -- mirrors _backup_and_clear so persistent files that
+    survived the backup step are never clobbered by the fresh copy.
+    """
+    os.makedirs(dst_dir, exist_ok=True)
+    for entry in os.listdir(src_dir):
+        if entry in protected:
+            skipped.append(entry)
+            continue
+        s = os.path.join(src_dir, entry)
+        d = os.path.join(dst_dir, entry)
+        if os.path.isdir(s):
+            _copy_skip_protected(s, d, protected, skipped)
+        else:
+            shutil.copy2(s, d)
+
+
+def _remove_non_protected(dir_path, protected):
+    """Recursively delete everything under dir_path except protected-named items."""
+    for entry in os.listdir(dir_path):
+        if entry in protected:
+            continue
+        target = os.path.join(dir_path, entry)
+        if os.path.isdir(target) and _contains_protected(target, protected):
+            _remove_non_protected(target, protected)
+            if not os.listdir(target):
+                os.rmdir(target)
+        elif os.path.isdir(target):
+            shutil.rmtree(target)
+        else:
+            os.remove(target)
+
+
+def _restore_backup(backup_dir, dst_dir):
+    """Recursively move everything from backup_dir back into dst_dir."""
+    for entry in os.listdir(backup_dir):
+        s = os.path.join(backup_dir, entry)
+        d = os.path.join(dst_dir, entry)
+        if os.path.isdir(s) and os.path.isdir(d):
+            _restore_backup(s, d)
+            if not os.listdir(s):
+                os.rmdir(s)
+        else:
+            shutil.move(s, d)
 
 
 # Repo-root files (siblings of the package folder, not inside it) that
@@ -110,36 +195,18 @@ def cmd_upgrade():
             extracted_root = _find_package_source(zip_root)
 
             # Back up the current package contents instead of deleting them
-            # outright. copytree(dirs_exist_ok=True)/copy2 only overwrite
-            # matching filenames and never remove files that were
-            # deleted/renamed upstream, so a straight merge lets stale
-            # files pile up forever -- but wiping first is risky if the
-            # new copy turns out incomplete (wrong source folder, network
-            # hiccup mid-zip, etc). Move everything non-protected into a
-            # backup dir under temp_update instead, so we can restore it if
-            # the new install fails verification below.
+            # outright, so a bad/incomplete copy can be rolled back. Any
+            # protected persistent file (cache, progress, config) is left
+            # in place wherever it actually lives in the tree -- not moved,
+            # not touched -- regardless of depth.
             backup_dir = os.path.join(temp_dir, "_old_install_backup")
             os.makedirs(backup_dir, exist_ok=True)
-            for item in os.listdir(PACKAGE_DIR):
-                if item in protected:
-                    continue
-                shutil.move(os.path.join(PACKAGE_DIR, item), os.path.join(backup_dir, item))
+            _backup_and_clear(str(PACKAGE_DIR), backup_dir, protected)
 
-            # Move files from the extracted package folder directly into
-            # the script's package dir -- except anything that would
-            # clobber local cache/config/progress state.
-            for item in os.listdir(extracted_root):
-                if item in protected:
-                    skipped.append(item)
-                    continue
-
-                src = os.path.join(extracted_root, item)
-                dst = os.path.join(PACKAGE_DIR, item)
-                
-                if os.path.isdir(src):
-                    shutil.copytree(src, dst, dirs_exist_ok=True)
-                else:
-                    shutil.copy2(src, dst)
+            # Copy the fresh package in, again skipping protected names at
+            # any depth so nothing the repo happens to ship under the same
+            # name can clobber real persisted data.
+            _copy_skip_protected(extracted_root, str(PACKAGE_DIR), protected, skipped)
 
             # Verify the new install actually looks complete before we
             # commit to it. If _find_package_source picked the wrong
@@ -147,16 +214,8 @@ def cmd_upgrade():
             # abort instead of restarting into a broken install.
             missing_files = _missing_required_files(PACKAGE_DIR)
             if missing_files:
-                for item in os.listdir(PACKAGE_DIR):
-                    if item in protected:
-                        continue
-                    target = os.path.join(PACKAGE_DIR, item)
-                    if os.path.isdir(target):
-                        shutil.rmtree(target)
-                    else:
-                        os.remove(target)
-                for item in os.listdir(backup_dir):
-                    shutil.move(os.path.join(backup_dir, item), os.path.join(PACKAGE_DIR, item))
+                _remove_non_protected(str(PACKAGE_DIR), protected)
+                _restore_backup(backup_dir, str(PACKAGE_DIR))
                 shutil.rmtree(temp_dir)
                 warn_red(
                     "Update looked incomplete (missing: " + ", ".join(missing_files) + "). "
