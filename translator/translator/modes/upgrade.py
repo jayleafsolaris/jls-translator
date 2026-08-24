@@ -60,6 +60,23 @@ def _find_package_source(extracted_root):
 # not inside it, so they're handled separately from the package copy loop.
 _REQUIRED_TOP_LEVEL_FILES = {"LICENSE", "pyproject.toml"}
 
+# Files that MUST exist in a working install, checked (as relative paths
+# from PACKAGE_DIR) after copying the new version in. If any are missing,
+# the copy was incomplete -- e.g. _find_package_source picked the wrong
+# folder, or the download was truncated -- and we roll back rather than
+# restart into a broken install with no clear error.
+_REQUIRED_PACKAGE_FILES = [
+    "cli.py",
+    os.path.join("common", "state.py"),
+    os.path.join("common", "config_store.py"),
+    os.path.join("common", "netcheck.py"),
+    os.path.join("modes", "upgrade.py"),
+]
+
+
+def _missing_required_files(package_dir):
+    return [f for f in _REQUIRED_PACKAGE_FILES if not os.path.isfile(os.path.join(package_dir, f))]
+
 
 def cmd_upgrade():
     """Fetches the latest main.zip from GitHub, replaces current files, and restarts."""
@@ -92,22 +109,21 @@ def cmd_upgrade():
             zip_root = os.path.join(temp_dir, z.namelist()[0])
             extracted_root = _find_package_source(zip_root)
 
-            # Fully replace the installed package contents, rather than
-            # merging on top of them. copytree(dirs_exist_ok=True) and
-            # copy2 only overwrite files with matching names -- they never
-            # remove a file that existed in the old install but was
-            # deleted/renamed in the new version, so without this step
-            # stale files silently pile up on every --upgrade. Wipe
-            # everything in PACKAGE_DIR except the protected cache/config
-            # state first, then copy the fresh package in clean.
+            # Back up the current package contents instead of deleting them
+            # outright. copytree(dirs_exist_ok=True)/copy2 only overwrite
+            # matching filenames and never remove files that were
+            # deleted/renamed upstream, so a straight merge lets stale
+            # files pile up forever -- but wiping first is risky if the
+            # new copy turns out incomplete (wrong source folder, network
+            # hiccup mid-zip, etc). Move everything non-protected into a
+            # backup dir under temp_update instead, so we can restore it if
+            # the new install fails verification below.
+            backup_dir = os.path.join(temp_dir, "_old_install_backup")
+            os.makedirs(backup_dir, exist_ok=True)
             for item in os.listdir(PACKAGE_DIR):
                 if item in protected:
                     continue
-                target = os.path.join(PACKAGE_DIR, item)
-                if os.path.isdir(target):
-                    shutil.rmtree(target)
-                else:
-                    os.remove(target)
+                shutil.move(os.path.join(PACKAGE_DIR, item), os.path.join(backup_dir, item))
 
             # Move files from the extracted package folder directly into
             # the script's package dir -- except anything that would
@@ -124,6 +140,29 @@ def cmd_upgrade():
                     shutil.copytree(src, dst, dirs_exist_ok=True)
                 else:
                     shutil.copy2(src, dst)
+
+            # Verify the new install actually looks complete before we
+            # commit to it. If _find_package_source picked the wrong
+            # folder, or the zip was incomplete, restore the backup and
+            # abort instead of restarting into a broken install.
+            missing_files = _missing_required_files(PACKAGE_DIR)
+            if missing_files:
+                for item in os.listdir(PACKAGE_DIR):
+                    if item in protected:
+                        continue
+                    target = os.path.join(PACKAGE_DIR, item)
+                    if os.path.isdir(target):
+                        shutil.rmtree(target)
+                    else:
+                        os.remove(target)
+                for item in os.listdir(backup_dir):
+                    shutil.move(os.path.join(backup_dir, item), os.path.join(PACKAGE_DIR, item))
+                shutil.rmtree(temp_dir)
+                warn_red(
+                    "Update looked incomplete (missing: " + ", ".join(missing_files) + "). "
+                    "Restored your previous install untouched -- nothing was changed."
+                )
+                return
 
             # LICENSE / pyproject.toml live next to the package folder in
             # the repo (i.e. in zip_root, the wrapper folder), not inside
