@@ -21,8 +21,14 @@ _LAST_REQUEST_TIME = 0.0
 
 
 class TranslationUnavailableError(RuntimeError):
-    """Raised when Google Translate can't be reached after retries."""
+    """Raised when Google Translate can't be reached."""
     pass
+
+
+# Guards against multiple threads all hitting the same failure at once and
+# each printing/exiting redundantly.
+_STOP_LOCK = threading.Lock()
+_STOPPED = False
 
 
 def get_translator(google_code):
@@ -30,36 +36,43 @@ def get_translator(google_code):
 
 
 def translate_value(google_code, text):
-    global _LAST_REQUEST_TIME
+    global _LAST_REQUEST_TIME, _STOPPED
     if not text.strip():
         return text
+
+    # If another thread already tripped the stop, don't even try.
+    if _STOPPED:
+        raise TranslationUnavailableError("Google Translate does not appear to be available right now. Please try again later.")
+
     protected, tokens = _protect(text)
-    last_err = None
     delay = get_request_delay()
 
-    for attempt in range(DEFAULTS["max_retries"]):
-        try:
-            translator = get_translator(google_code)
+    try:
+        translator = get_translator(google_code)
 
-            with _RATE_LIMIT_LOCK:
-                now = time.time()
-                elapsed = now - _LAST_REQUEST_TIME
-                if elapsed < delay:
-                    time.sleep(delay - elapsed)
-                _LAST_REQUEST_TIME = time.time()
+        with _RATE_LIMIT_LOCK:
+            now = time.time()
+            elapsed = now - _LAST_REQUEST_TIME
+            if elapsed < delay:
+                time.sleep(delay - elapsed)
+            _LAST_REQUEST_TIME = time.time()
 
-            result = translator.translate(protected)
-            return _restore(result, tokens)
-        except Exception as e:
-            last_err = e
-            time.sleep(0.5 * (attempt + 1))
-
-    # Stop instead of quietly falling back to untranslated text.
-    message = "Google Translate does not appear to be available right now. Please try again later."
-    warn_red(f"Translation failed for '{google_code}' after {DEFAULTS['max_retries']} attempts "
-             f"({last_err!r}).")
-    print(message)
-    raise TranslationUnavailableError(message) from last_err
+        result = translator.translate(protected)
+        return _restore(result, tokens)
+    except Exception as e:
+        message = "Google Translate does not appear to be available right now. Please try again later."
+        with _STOP_LOCK:
+            if not _STOPPED:
+                _STOPPED = True
+                warn_red(f"Translation failed for '{google_code}' ({e!r}).")
+                print(message)
+        if threading.current_thread() is threading.main_thread():
+            # Safe to exit the process directly here.
+            sys.exit(1)
+        # Otherwise this is a worker thread, where sys.exit() only kills
+        # that thread, not the process. Propagate and let the main thread
+        # (e.g. translate_many's as_completed loop) exit instead.
+        raise TranslationUnavailableError(message) from e
 
 
 def translate_many(google_code, texts, max_workers, progress_cb=None):
@@ -137,6 +150,9 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
             # One worker hit an unavailable service: cancel the rest and stop.
             for f in futures:
                 f.cancel()
-            raise
+            ex.shutdown(wait=True, cancel_futures=True)
+            # We're back on the main thread here, so sys.exit() actually
+            # terminates the process instead of just the worker thread.
+            sys.exit(1)
 
     return results
