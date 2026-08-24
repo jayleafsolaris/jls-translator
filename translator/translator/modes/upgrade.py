@@ -55,6 +55,12 @@ def _find_package_source(extracted_root):
     return extracted_root
 
 
+# Repo-root files (siblings of the package folder, not inside it) that
+# still need to make it into the install -- these live next to PACKAGE_DIR,
+# not inside it, so they're handled separately from the package copy loop.
+_REQUIRED_TOP_LEVEL_FILES = {"LICENSE", "pyproject.toml"}
+
+
 def cmd_upgrade():
     """Fetches the latest main.zip from GitHub, replaces current files, and restarts."""
     UPDATE_URL = (
@@ -86,6 +92,23 @@ def cmd_upgrade():
             zip_root = os.path.join(temp_dir, z.namelist()[0])
             extracted_root = _find_package_source(zip_root)
 
+            # Fully replace the installed package contents, rather than
+            # merging on top of them. copytree(dirs_exist_ok=True) and
+            # copy2 only overwrite files with matching names -- they never
+            # remove a file that existed in the old install but was
+            # deleted/renamed in the new version, so without this step
+            # stale files silently pile up on every --upgrade. Wipe
+            # everything in PACKAGE_DIR except the protected cache/config
+            # state first, then copy the fresh package in clean.
+            for item in os.listdir(PACKAGE_DIR):
+                if item in protected:
+                    continue
+                target = os.path.join(PACKAGE_DIR, item)
+                if os.path.isdir(target):
+                    shutil.rmtree(target)
+                else:
+                    os.remove(target)
+
             # Move files from the extracted package folder directly into
             # the script's package dir -- except anything that would
             # clobber local cache/config/progress state.
@@ -102,10 +125,24 @@ def cmd_upgrade():
                 else:
                     shutil.copy2(src, dst)
 
+            # LICENSE / pyproject.toml live next to the package folder in
+            # the repo (i.e. in zip_root, the wrapper folder), not inside
+            # it -- copy them to PACKAGE_DIR's parent to match.
+            install_root = os.path.dirname(str(PACKAGE_DIR))
+            missing_required = []
+            for fname in _REQUIRED_TOP_LEVEL_FILES:
+                top_src = os.path.join(zip_root, fname)
+                if os.path.isfile(top_src):
+                    shutil.copy2(top_src, os.path.join(install_root, fname))
+                else:
+                    missing_required.append(fname)
+
         shutil.rmtree(temp_dir)
         print(f"Update complete!")
         if skipped:
             print(f"Left your local cache/config untouched (repo also had: {', '.join(sorted(skipped))}).")
+        if missing_required:
+            warn_red(f"Could not find in repo, so left untouched: {', '.join(sorted(missing_required))}")
         
         # Strip --upgrade from args so it doesn't loop infinitely upon restart
         new_args = [arg for arg in sys.argv if arg != "--upgrade"]
