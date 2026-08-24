@@ -213,7 +213,12 @@ LANGUAGE_NAMES = {
     "zh_TW": "Chinese (Traditional)", "ko_KR": "Korean",
 }
 
-# Updated to protect actual newlines via __NL__ token during batch splits
+# Updated to protect actual newlines via __NL__ token during batch splits,
+# and to protect {key.path}-style base-value cross-references (e.g.
+# {ui.roe:pack.name}) so they're passed through translation untouched,
+# just like %1$s-style placeholders and section-sign color codes -- these
+# reference another key's value (resolved at runtime, not by this script)
+# rather than being translatable text themselves.
 TOKEN_PATTERN = re.compile(
-    r"__NL__|§.|%\d+\$[a-zA-Z]|%[a-zA-Z]|[\uE000-\uF8FF\U000F0000-\U000FFFFD\U00100000-\U0010FFFD]"
+    r"__NL__|§.|%\d+\$[a-zA-Z]|%[a-zA-Z]|\{[^{}]+\}|[\uE000-\uF8FF\U000F0000-\U000FFFFD\U00100000-\U0010FFFD]"
 )
