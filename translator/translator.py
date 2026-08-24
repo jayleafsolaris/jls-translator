@@ -688,7 +688,7 @@ def check_for_update_notice(force=False):
 
 
 def get_translator(google_code):
-    return GoogleTranslator(source="en", target=google_code)
+    return MyMemoryTranslator(source="en", target=google_code)
 
 
 def translate_value(google_code, text):
