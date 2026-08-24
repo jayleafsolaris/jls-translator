@@ -223,10 +223,12 @@ def cmd_upgrade():
                 )
                 return
 
-            # LICENSE / pyproject.toml live next to the package folder in
-            # the repo (i.e. in zip_root, the wrapper folder), not inside
-            # it -- copy them to PACKAGE_DIR's parent to match.
-            install_root = os.path.dirname(str(PACKAGE_DIR))
+            # LICENSE / pyproject.toml live at the repo root (zip_root) in
+            # the repo, which is TWO levels above PACKAGE_DIR here --
+            # PACKAGE_DIR is the inner package folder, whose parent is the
+            # outer wrapper folder, whose parent is the repo root -- not
+            # just one level up. Go up twice to land in the same place.
+            install_root = os.path.dirname(os.path.dirname(str(PACKAGE_DIR)))
             missing_required = []
             for fname in _REQUIRED_TOP_LEVEL_FILES:
                 top_src = os.path.join(zip_root, fname)
