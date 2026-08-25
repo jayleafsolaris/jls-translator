@@ -12,7 +12,7 @@ from deep_translator import GoogleTranslator
 
 from .state import DEFAULTS
 from .config_store import get_request_delay, warn_red
-from .text_protect import _protect, _restore
+from .text_protect import _protect, _restore, split_segments, join_segments
 
 # Thread-safe rate limiter variables (module-local: _raw_translate_once is
 # the only place these are read or written).
@@ -171,6 +171,13 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
     if not texts:
         return results
 
+    # Snapshot the fallback counter so the summary below reports only
+    # THIS call's fallbacks -- _fallback_count is a module-wide running
+    # total (translate_value can be called standalone outside of
+    # translate_many too), so without this, each language's summary would
+    # include every prior language's fallbacks as well.
+    fallback_baseline = _fallback_count
+
     # Filter out empty strings beforehand to optimize network requests
     valid_indices = [i for i, t in enumerate(texts) if t.strip()]
     for i in range(len(texts)):
@@ -182,65 +189,101 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
             progress_cb(len(texts))
         return results
 
-    # Dedupe by "skeleton" -- the value with its protected tokens
-    # (%1$s-style placeholders, section-sign color codes, {key.path}-style
-    # cross-references, etc) swapped out. Values that only differ in their
-    # token content (e.g. eleven "{item.roe_lib:disc_X} Blueprint" lines
-    # that only differ by which disc is named) collapse to the SAME
-    # skeleton, so they only need to be translated once -- the per-item
-    # tokens get spliced back into that one translated result afterward,
-    # with zero extra API calls. This also avoids sending Google a batch
-    # of near-identical repeated lines, which can trip its spam/repetition
-    # detection and come back as an empty TranslationNotFound response.
-    skeleton_to_members = {}   # skeleton -> list of (idx, tokens)
-    skeleton_order = []        # first-seen order, for stable batching
+    # Split each value into alternating token/text pieces at TOKEN_PATTERN
+    # boundaries (color codes, %1$s-style placeholders, {key.path}-style
+    # cross-references, __NL__ newline markers). Tokens are carried through
+    # completely unchanged and NEVER sent to Google -- only the plain-text
+    # pieces are. This means a value like
+    #   "{item.roe_lib:disc_x} Blueprint"
+    # sends only "Blueprint" for translation, not a placeholder-laden
+    # stand-in for the whole value. Previously tokens were replaced with an
+    # inline "@@PHn@@" marker that still traveled to Google as part of the
+    # request text -- harmless-looking alone, but a batch of many such
+    # marker-heavy lines can look like repetitive noise to Google and
+    # trigger an empty TranslationNotFound response.
+    value_parts = {}   # idx -> list of ('token'|'text', content), in order
     for idx in valid_indices:
         text_clean = texts[idx].replace('\n', '__NL__')
-        skeleton, tokens = _protect(text_clean)
-        if skeleton not in skeleton_to_members:
-            skeleton_to_members[skeleton] = []
-            skeleton_order.append(skeleton)
-        skeleton_to_members[skeleton].append((idx, tokens))
+        value_parts[idx] = split_segments(text_clean)
 
-    unique_skeletons = skeleton_order
-    skeleton_results = [None] * len(unique_skeletons)
+    # Unique plain-text fragments across ALL values, deduped by exact
+    # content. A fragment shared across different keys (" by ", "Blueprint",
+    # "Corrupted Disc") -- or repeated more than once within the same
+    # value -- only gets translated once no matter how many places it's
+    # used, and the result is spliced back into every one of them.
+    segment_to_values = {}   # text -> set of idx that need it
+    segment_order = []       # first-seen order, for stable batching
+    value_remaining = {}     # idx -> count of distinct unresolved segments
+    for idx, parts in value_parts.items():
+        distinct_text = {content for kind, content in parts if kind == "text"}
+        if not distinct_text:
+            # Entirely tokens (e.g. a value that's just one {key.path}
+            # cross-reference) -- nothing to translate, resolve immediately.
+            results[idx] = join_segments(parts).replace('__NL__', '\n')
+            continue
+        value_remaining[idx] = len(distinct_text)
+        for content in distinct_text:
+            if content not in segment_to_values:
+                segment_to_values[content] = set()
+                segment_order.append(content)
+            segment_to_values[content].add(idx)
 
-    def values_in_skeleton(skel_idx):
-        return len(skeleton_to_members[unique_skeletons[skel_idx]])
+    unique_segments = segment_order
+    segment_results = {}  # text -> translated text
 
-    # Batch configurations -- sized against skeleton length (what's
-    # actually sent to Google), so token-heavy values pack more densely
-    # per request than they would using their full original length.
+    # Batch configuration -- sized against the plain-text fragments
+    # actually being sent (never the full original value, and never
+    # token-laden), so requests pack more densely and cleanly than before.
     MAX_BATCH_CHARS = 2500
     batches = []
     current_batch = []
     current_len = 0
 
-    MIN_BATCH_FLOOR = 8
-    desired_min_batches = min(len(unique_skeletons), MIN_BATCH_FLOOR)
-    target_batch_count = min(len(unique_skeletons), max(max_workers, desired_min_batches))
-    items_per_batch = max(1, -(-len(unique_skeletons) // target_batch_count))  # ceil div
+    if unique_segments:
+        MIN_BATCH_FLOOR = 8
+        desired_min_batches = min(len(unique_segments), MIN_BATCH_FLOOR)
+        target_batch_count = min(len(unique_segments), max(max_workers, desired_min_batches))
+        items_per_batch = max(1, -(-len(unique_segments) // target_batch_count))  # ceil div
 
-    for skel_idx, skeleton in enumerate(unique_skeletons):
-        if current_batch and (
-            current_len + len(skeleton) > MAX_BATCH_CHARS
-            or len(current_batch) >= items_per_batch
-        ):
+        for seg in unique_segments:
+            if current_batch and (
+                current_len + len(seg) > MAX_BATCH_CHARS
+                or len(current_batch) >= items_per_batch
+            ):
+                batches.append(current_batch)
+                current_batch = []
+                current_len = 0
+
+            current_batch.append(seg)
+            current_len += len(seg) + 1  # +1 for the joining \n
+
+        if current_batch:
             batches.append(current_batch)
-            current_batch = []
-            current_len = 0
 
-        current_batch.append((skel_idx, skeleton))
-        current_len += len(skeleton) + 1  # +1 for the joining \n
-
-    if current_batch:
-        batches.append(current_batch)
-
+    # Values already resolved above (pure-token, no translation needed)
+    # count toward done_count immediately, same as blank strings.
     done_count = len(texts) - len(valid_indices)
+    done_count += sum(1 for idx in valid_indices if idx not in value_remaining)
+
+    remaining_lock = threading.Lock()
+
+    def resolve_segment(seg, translated):
+        """Records a segment's translated result and returns how many
+        original values just became fully resolved because of it (used
+        only for progress_cb accounting -- the actual strings get rebuilt
+        in one pass after every batch finishes, below)."""
+        segment_results[seg] = translated
+        newly_done = 0
+        with remaining_lock:
+            for idx in segment_to_values[seg]:
+                value_remaining[idx] -= 1
+                if value_remaining[idx] == 0:
+                    newly_done += 1
+        return newly_done
 
     def translate_batch_worker(batch):
         # We join by newline. Google Translator translates sentences separately and natively returns them separated by \n
-        combined = "\n".join(skel for _, skel in batch)
+        combined = "\n".join(batch)
 
         try:
             translated = _raw_translate_once(google_code, combined)
@@ -250,14 +293,13 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
         except Exception:
             # Combined attempt failed. Rather than retrying the whole
             # (potentially large) combined blob, fall back to translating
-            # this batch's skeletons individually -- translate_value
+            # this batch's fragments individually -- translate_value
             # handles retries, the untranslated-fallback for isolated
             # quirks, and outage-streak detection for each one.
             completed_values = 0
-            for skel_idx, skel in batch:
-                res = translate_value(google_code, skel)
-                skeleton_results[skel_idx] = res
-                completed_values += values_in_skeleton(skel_idx)
+            for seg in batch:
+                res = translate_value(google_code, seg)
+                completed_values += resolve_segment(seg, res)
             return completed_values
 
         lines = [line.replace('\r', '') for line in translated.split('\n')]
@@ -265,45 +307,52 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
         completed_values = 0
         # Perfect split match
         if len(lines) == len(batch):
-            for i, (skel_idx, _) in enumerate(batch):
-                skeleton_results[skel_idx] = lines[i]
-                completed_values += values_in_skeleton(skel_idx)
+            for i, seg in enumerate(batch):
+                completed_values += resolve_segment(seg, lines[i])
         else:
             # Fallback: if translation split structure shifted, do them independently
-            for skel_idx, skel in batch:
-                res = translate_value(google_code, skel)
-                skeleton_results[skel_idx] = res
-                completed_values += values_in_skeleton(skel_idx)
+            for seg in batch:
+                res = translate_value(google_code, seg)
+                completed_values += resolve_segment(seg, res)
         return completed_values
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as ex:
-        futures = [ex.submit(translate_batch_worker, b) for b in batches]
-        try:
-            for fut in concurrent.futures.as_completed(futures):
-                done_count += fut.result()
-                if progress_cb:
-                    progress_cb(done_count)
-        except TranslationUnavailableError:
-            # Failure streak crossed the outage threshold: cancel the
-            # rest and stop, rather than continuing to hammer a dead
-            # service batch after batch.
-            for f in futures:
-                f.cancel()
-            ex.shutdown(wait=True, cancel_futures=True)
-            # We're back on the main thread here, so sys.exit() actually
-            # terminates the process instead of just the worker thread.
-            sys.exit(1)
+    if batches:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as ex:
+            futures = [ex.submit(translate_batch_worker, b) for b in batches]
+            try:
+                for fut in concurrent.futures.as_completed(futures):
+                    done_count += fut.result()
+                    if progress_cb:
+                        progress_cb(done_count)
+            except TranslationUnavailableError:
+                # Failure streak crossed the outage threshold: cancel the
+                # rest and stop, rather than continuing to hammer a dead
+                # service batch after batch.
+                for f in futures:
+                    f.cancel()
+                ex.shutdown(wait=True, cancel_futures=True)
+                # We're back on the main thread here, so sys.exit() actually
+                # terminates the process instead of just the worker thread.
+                sys.exit(1)
+    elif progress_cb:
+        progress_cb(done_count)
 
-    # Fan each translated skeleton back out to every original value that
-    # shared it, splicing in that value's OWN tokens (not whichever
-    # member happened to be translated) and restoring __NL__ to a real
-    # newline.
-    for skel_idx, skeleton in enumerate(unique_skeletons):
-        translated_skeleton = skeleton_results[skel_idx]
-        for idx, tokens in skeleton_to_members[skeleton]:
-            results[idx] = _restore(translated_skeleton, tokens).replace('__NL__', '\n')
+    # Final reconstruction: rebuild each value from its own ordered
+    # token/text pieces, splicing in that piece's translated result --
+    # tokens pass through completely untouched.
+    for idx in valid_indices:
+        if results[idx] is not None:
+            continue  # already resolved above (pure-token value)
+        rebuilt = []
+        for kind, content in value_parts[idx]:
+            if kind == "token":
+                rebuilt.append(content)
+            else:
+                rebuilt.append(segment_results.get(content, content))
+        results[idx] = "".join(rebuilt).replace('__NL__', '\n')
 
-    if _fallback_count:
-        print(f"({_fallback_count} value(s) could not be translated after retries and were left as-is.)")
+    fallback_this_call = _fallback_count - fallback_baseline
+    if fallback_this_call:
+        print(f"({fallback_this_call} value(s) could not be translated after retries and were left as-is.)")
 
     return results
