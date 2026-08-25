@@ -192,6 +192,9 @@ def cmd_upgrade():
 
     try:
         response = requests.get(UPDATE_URL, stream=True)
+        if response.status_code == 404:
+            warn_red(f"Invalid branch: '{branch}'")
+            return
         response.raise_for_status()
 
         temp_dir = os.path.join(package_root, "temp_update")
