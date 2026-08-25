@@ -25,6 +25,10 @@ base and your .lang files, e.g. RP/texts/):
     jls-translator --continue resume the last interrupted --create/--update/--add/--remove/--delete run
     jls-translator --cache    manage the translation cache (see below)
     jls-translator --config   manage script configuration (see below)
+    jls-translator --release  view or set which GitHub branch --upgrade downloads
+                                     from and the update checker compares against
+    jls-translator --release <branch>
+                              set the release branch (persisted; --release alone shows it)
     jls-translator --upgrade  update the script to the latest version from GitHub
     jls-translator --check    manually check GitHub for a newer version right now
                                      (doesn't change automatic checking)
@@ -92,6 +96,7 @@ from .modes.restore import cmd_restore
 from .modes.view import cmd_view
 from .modes.cont import cmd_continue
 from .modes.upgrade import cmd_upgrade
+from .modes.release import cmd_show_release_branch, cmd_set_release_branch
 
 _MODES = [
     ("create", "Overwrite ALL .lang files from scratch"),
@@ -183,6 +188,11 @@ def main():
                               "(does not change automatic checking). "
                               "with true/false: turn the automatic passive update check "
                               "(the one that runs quietly on every command) on or off")
+    parser.add_argument("--release", nargs="?", const="__show__", default=None, metavar="BRANCH",
+                         help="with no value: show which GitHub branch --upgrade downloads from "
+                              "and the update checker compares against. "
+                              "with a branch name: set that as the release branch (persisted "
+                              "until changed again)")
     parser.add_argument("--ask", action="store_true",
                          help="ask after each item whether to continue or stop "
                               "(combine with --create/--update/--add/--remove/--delete/--continue)")
@@ -207,6 +217,13 @@ def main():
                 cmd_set_autocheck(False)
             else:
                 parser.error("--check expects no value, or true/false")
+        return
+
+    if args.release is not None:
+        if args.release == "__show__":
+            cmd_show_release_branch()
+        else:
+            cmd_set_release_branch(args.release)
         return
 
     # No --path needed anymore -- the script just operates on wherever
