@@ -14,75 +14,156 @@ from .state import DEFAULTS
 from .config_store import get_request_delay, warn_red
 from .text_protect import _protect, _restore
 
-# Thread-safe rate limiter variables (module-local: translate_value is the
-# only place these are read or written).
+# Thread-safe rate limiter variables (module-local: _raw_translate_once is
+# the only place these are read or written).
 _RATE_LIMIT_LOCK = threading.Lock()
 _LAST_REQUEST_TIME = 0.0
 
 
 class TranslationUnavailableError(RuntimeError):
-    """Raised when Google Translate can't be reached."""
+    """Raised only when Google Translate looks genuinely unreachable -- see
+    FAILURE_STREAK_THRESHOLD below -- not for a single value/batch quirk."""
     pass
 
 
-# Guards against multiple threads all hitting the same failure at once and
-# each printing/exiting redundantly.
-_STOP_LOCK = threading.Lock()
+# --- Automatic outage detection -----------------------------------------
+#
+# A single value (or batch) failing doesn't necessarily mean Google
+# Translate is down -- it might just be one oddly-shaped string tripping
+# something on Google's end (seen in practice: a batch of near-identical
+# placeholder-heavy lines returning TranslationNotFound). Retrying and
+# falling back to leaving that one value untranslated handles that case
+# without losing the rest of a run.
+#
+# What DOES indicate a real outage is failures happening back-to-back with
+# no successes in between, regardless of what the content looks like --
+# that's not "this string is weird", that's "nothing is getting through".
+# Any success anywhere resets the streak, so scattered failures across a
+# long run never fake-trigger a stop.
+FAILURE_STREAK_THRESHOLD = 5
+
+_streak_lock = threading.Lock()
+_consecutive_failures = 0
 _STOPPED = False
-_BATCH_LOG_LOCK = threading.Lock()
-_BATCH_LOGGED = False
+
+# Counts values that fell back to untranslated text (not a real outage),
+# so translate_many can report a summary at the end instead of the user
+# having to scroll back through every individual warning.
+_fallback_lock = threading.Lock()
+_fallback_count = 0
+
+
+def _record_success():
+    global _consecutive_failures
+    with _streak_lock:
+        _consecutive_failures = 0
+
+
+def _record_failure_and_check_streak():
+    """Increments the run's failure streak. Returns True if this failure
+    just pushed it over FAILURE_STREAK_THRESHOLD (i.e. treat as a real
+    outage), False if it's still within normal single-item quirk territory."""
+    global _consecutive_failures, _STOPPED
+    with _streak_lock:
+        _consecutive_failures += 1
+        if _consecutive_failures >= FAILURE_STREAK_THRESHOLD and not _STOPPED:
+            _STOPPED = True
+            return True
+        return False
+
+
+def _record_fallback():
+    global _fallback_count
+    with _fallback_lock:
+        _fallback_count += 1
 
 
 def get_translator(google_code):
     return GoogleTranslator(source="en", target=google_code)
 
 
-def translate_value(google_code, text):
-    global _LAST_REQUEST_TIME, _STOPPED
-    if not text.strip():
-        return text
+def _raw_translate_once(google_code, text):
+    """One real attempt against Google -- no retries, no fallback, raises
+    on failure. Also short-circuits immediately if a prior failure streak
+    already declared the service unavailable, so threads stop hammering a
+    dead service once that's been detected."""
+    global _LAST_REQUEST_TIME
 
-    # If another thread already tripped the stop, don't even try.
     if _STOPPED:
-        exc = TranslationUnavailableError("Google Translate does not appear to be available right now. Please try again later.")
-        exc.is_root_cause = False  # this thread got preempted, not the actual failure
-        raise exc
+        raise TranslationUnavailableError(
+            "Google Translate does not appear to be available right now. Please try again later."
+        )
 
     protected, tokens = _protect(text)
     delay = get_request_delay()
+    translator = get_translator(google_code)
 
-    try:
-        translator = get_translator(google_code)
+    with _RATE_LIMIT_LOCK:
+        now = time.time()
+        elapsed = now - _LAST_REQUEST_TIME
+        if elapsed < delay:
+            time.sleep(delay - elapsed)
+        _LAST_REQUEST_TIME = time.time()
 
-        with _RATE_LIMIT_LOCK:
-            now = time.time()
-            elapsed = now - _LAST_REQUEST_TIME
-            if elapsed < delay:
-                time.sleep(delay - elapsed)
-            _LAST_REQUEST_TIME = time.time()
+    result = translator.translate(protected)
+    return _restore(result, tokens)
 
-        result = translator.translate(protected)
-        return _restore(result, tokens)
-    except Exception as e:
+
+def translate_value(google_code, text):
+    """
+    Translates a single string. Retries a few times on failure
+    (DEFAULTS['max_retries']); if it still won't go through, that failure
+    is weighed against the run's overall failure streak rather than
+    treated as fatal on its own:
+
+    - If this looks like an isolated quirk (the run has otherwise been
+      succeeding), the ORIGINAL untranslated text is returned so one bad
+      value doesn't take down everything else, and a note is logged.
+    - If failures have been happening back-to-back (FAILURE_STREAK_THRESHOLD
+      in a row with no successes between them), that's treated as Google
+      actually being unavailable, and the whole run stops.
+    """
+    if not text.strip():
+        return text
+
+    last_err = None
+    for attempt in range(DEFAULTS["max_retries"]):
+        try:
+            result = _raw_translate_once(google_code, text)
+            _record_success()
+            return result
+        except TranslationUnavailableError:
+            # Streak threshold already tripped by another thread -- no
+            # point retrying, this run is stopping.
+            raise
+        except Exception as e:
+            last_err = e
+            time.sleep(0.5 * (attempt + 1))
+
+    # Exhausted retries for this one value.
+    is_outage = _record_failure_and_check_streak()
+    preview = text if len(text) <= 300 else text[:300] + "...(truncated)"
+
+    if is_outage:
         message = "Google Translate does not appear to be available right now. Please try again later."
-        with _STOP_LOCK:
-            if not _STOPPED:
-                _STOPPED = True
-                preview = text if len(text) <= 300 else text[:300] + "...(truncated)"
-                warn_red(
-                    f"Translation failed for '{google_code}' ({e!r}).\n"
-                    f"Text being translated when it failed:\n{preview!r}"
-                )
-                print(message)
+        warn_red(
+            f"{FAILURE_STREAK_THRESHOLD} translations in a row failed for '{google_code}' -- "
+            f"this looks like Google Translate is actually unavailable, not just one odd value. Stopping.\n"
+            f"Most recent failure ({last_err!r}) was on:\n{preview!r}"
+        )
+        print(message)
         if threading.current_thread() is threading.main_thread():
-            # Safe to exit the process directly here.
             sys.exit(1)
-        # Otherwise this is a worker thread, where sys.exit() only kills
-        # that thread, not the process. Propagate and let the main thread
-        # (e.g. translate_many's as_completed loop) exit instead.
-        exc = TranslationUnavailableError(message)
-        exc.is_root_cause = True  # this thread's request is what actually failed
-        raise exc from e
+        raise TranslationUnavailableError(message) from last_err
+
+    # Isolated quirk, not (yet) an outage -- log it and move on with the
+    # original text rather than losing the rest of the run over one value.
+    _record_fallback()
+    warn_red(
+        f"Could not translate for '{google_code}' after {DEFAULTS['max_retries']} attempts "
+        f"({last_err!r}); leaving this one value untranslated:\n{preview!r}"
+    )
+    return text
 
 
 def translate_many(google_code, texts, max_workers, progress_cb=None):
@@ -160,22 +241,25 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
     def translate_batch_worker(batch):
         # We join by newline. Google Translator translates sentences separately and natively returns them separated by \n
         combined = "\n".join(skel for _, skel in batch)
+
         try:
-            translated = translate_value(google_code, combined)
-        except TranslationUnavailableError as exc:
-            # Only log the batch breakdown for the batch that actually
-            # caused the failure -- other in-flight batches raise this
-            # too (via the _STOPPED short-circuit above) once one batch
-            # trips the stop, but they never touched the API and would
-            # just add noise.
-            if getattr(exc, "is_root_cause", False):
-                with _BATCH_LOG_LOCK:
-                    global _BATCH_LOGGED
-                    if not _BATCH_LOGGED:
-                        _BATCH_LOGGED = True
-                        lines = [f"  [skeleton {i}] {skel!r}" for i, skel in batch]
-                        warn_red("Batch that failed contained these items:\n" + "\n".join(lines))
+            translated = _raw_translate_once(google_code, combined)
+            _record_success()
+        except TranslationUnavailableError:
             raise
+        except Exception:
+            # Combined attempt failed. Rather than retrying the whole
+            # (potentially large) combined blob, fall back to translating
+            # this batch's skeletons individually -- translate_value
+            # handles retries, the untranslated-fallback for isolated
+            # quirks, and outage-streak detection for each one.
+            completed_values = 0
+            for skel_idx, skel in batch:
+                res = translate_value(google_code, skel)
+                skeleton_results[skel_idx] = res
+                completed_values += values_in_skeleton(skel_idx)
+            return completed_values
+
         lines = [line.replace('\r', '') for line in translated.split('\n')]
 
         completed_values = 0
@@ -200,7 +284,9 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
                 if progress_cb:
                     progress_cb(done_count)
         except TranslationUnavailableError:
-            # One worker hit an unavailable service: cancel the rest and stop.
+            # Failure streak crossed the outage threshold: cancel the
+            # rest and stop, rather than continuing to hammer a dead
+            # service batch after batch.
             for f in futures:
                 f.cancel()
             ex.shutdown(wait=True, cancel_futures=True)
@@ -216,5 +302,8 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
         translated_skeleton = skeleton_results[skel_idx]
         for idx, tokens in skeleton_to_members[skeleton]:
             results[idx] = _restore(translated_skeleton, tokens).replace('__NL__', '\n')
+
+    if _fallback_count:
+        print(f"({_fallback_count} value(s) could not be translated after retries and were left as-is.)")
 
     return results
