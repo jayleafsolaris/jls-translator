@@ -101,31 +101,56 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
             progress_cb(len(texts))
         return results
 
-    # Batch configurations
+    # Dedupe by "skeleton" -- the value with its protected tokens
+    # (%1$s-style placeholders, section-sign color codes, {key.path}-style
+    # cross-references, etc) swapped out. Values that only differ in their
+    # token content (e.g. eleven "{item.roe_lib:disc_X} Blueprint" lines
+    # that only differ by which disc is named) collapse to the SAME
+    # skeleton, so they only need to be translated once -- the per-item
+    # tokens get spliced back into that one translated result afterward,
+    # with zero extra API calls. This also avoids sending Google a batch
+    # of near-identical repeated lines, which can trip its spam/repetition
+    # detection and come back as an empty TranslationNotFound response.
+    skeleton_to_members = {}   # skeleton -> list of (idx, tokens)
+    skeleton_order = []        # first-seen order, for stable batching
+    for idx in valid_indices:
+        text_clean = texts[idx].replace('\n', '__NL__')
+        skeleton, tokens = _protect(text_clean)
+        if skeleton not in skeleton_to_members:
+            skeleton_to_members[skeleton] = []
+            skeleton_order.append(skeleton)
+        skeleton_to_members[skeleton].append((idx, tokens))
+
+    unique_skeletons = skeleton_order
+    skeleton_results = [None] * len(unique_skeletons)
+
+    def values_in_skeleton(skel_idx):
+        return len(skeleton_to_members[unique_skeletons[skel_idx]])
+
+    # Batch configurations -- sized against skeleton length (what's
+    # actually sent to Google), so token-heavy values pack more densely
+    # per request than they would using their full original length.
     MAX_BATCH_CHARS = 2500
     batches = []
     current_batch = []
     current_len = 0
 
     MIN_BATCH_FLOOR = 8
-    desired_min_batches = min(len(valid_indices), MIN_BATCH_FLOOR)
-    target_batch_count = min(len(valid_indices), max(max_workers, desired_min_batches))
-    items_per_batch = max(1, -(-len(valid_indices) // target_batch_count))  # ceil div
+    desired_min_batches = min(len(unique_skeletons), MIN_BATCH_FLOOR)
+    target_batch_count = min(len(unique_skeletons), max(max_workers, desired_min_batches))
+    items_per_batch = max(1, -(-len(unique_skeletons) // target_batch_count))  # ceil div
 
-    # Group strings into batches using newlines
-    for idx in valid_indices:
-        text_clean = texts[idx].replace('\n', '__NL__')
-
+    for skel_idx, skeleton in enumerate(unique_skeletons):
         if current_batch and (
-            current_len + len(text_clean) > MAX_BATCH_CHARS
+            current_len + len(skeleton) > MAX_BATCH_CHARS
             or len(current_batch) >= items_per_batch
         ):
             batches.append(current_batch)
             current_batch = []
             current_len = 0
 
-        current_batch.append((idx, text_clean))
-        current_len += len(text_clean) + 1  # +1 for the joining \n
+        current_batch.append((skel_idx, skeleton))
+        current_len += len(skeleton) + 1  # +1 for the joining \n
 
     if current_batch:
         batches.append(current_batch)
@@ -134,7 +159,7 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
 
     def translate_batch_worker(batch):
         # We join by newline. Google Translator translates sentences separately and natively returns them separated by \n
-        combined = "\n".join(t for _, t in batch)
+        combined = "\n".join(skel for _, skel in batch)
         try:
             translated = translate_value(google_code, combined)
         except TranslationUnavailableError as exc:
@@ -148,21 +173,24 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
                     global _BATCH_LOGGED
                     if not _BATCH_LOGGED:
                         _BATCH_LOGGED = True
-                        lines = [f"  [index {idx}] {t!r}" for idx, t in batch]
+                        lines = [f"  [skeleton {i}] {skel!r}" for i, skel in batch]
                         warn_red("Batch that failed contained these items:\n" + "\n".join(lines))
             raise
         lines = [line.replace('\r', '') for line in translated.split('\n')]
 
+        completed_values = 0
         # Perfect split match
         if len(lines) == len(batch):
-            for i, (idx, _) in enumerate(batch):
-                results[idx] = lines[i].replace('__NL__', '\n')
+            for i, (skel_idx, _) in enumerate(batch):
+                skeleton_results[skel_idx] = lines[i]
+                completed_values += values_in_skeleton(skel_idx)
         else:
             # Fallback: if translation split structure shifted, do them independently
-            for idx, t in batch:
-                res = translate_value(google_code, t)
-                results[idx] = res.replace('__NL__', '\n')
-        return len(batch)
+            for skel_idx, skel in batch:
+                res = translate_value(google_code, skel)
+                skeleton_results[skel_idx] = res
+                completed_values += values_in_skeleton(skel_idx)
+        return completed_values
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as ex:
         futures = [ex.submit(translate_batch_worker, b) for b in batches]
@@ -179,5 +207,14 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
             # We're back on the main thread here, so sys.exit() actually
             # terminates the process instead of just the worker thread.
             sys.exit(1)
+
+    # Fan each translated skeleton back out to every original value that
+    # shared it, splicing in that value's OWN tokens (not whichever
+    # member happened to be translated) and restoring __NL__ to a real
+    # newline.
+    for skel_idx, skeleton in enumerate(unique_skeletons):
+        translated_skeleton = skeleton_results[skel_idx]
+        for idx, tokens in skeleton_to_members[skeleton]:
+            results[idx] = _restore(translated_skeleton, tokens).replace('__NL__', '\n')
 
     return results
