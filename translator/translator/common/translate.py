@@ -46,11 +46,16 @@ _streak_lock = threading.Lock()
 _consecutive_failures = 0
 _STOPPED = False
 
-# Counts values that fell back to untranslated text (not a real outage),
-# so translate_many can report a summary at the end instead of the user
-# having to scroll back through every individual warning.
+# Counts (and logs details of) values that fell back to untranslated text
+# (not a real outage). These are deferred rather than printed immediately
+# -- translate_value used to warn_red() the moment each one happened,
+# which meant a warning could land mid-line in the middle of a live
+# progress percentage. Collecting them here lets translate_many print one
+# clean block at the very end instead of scattering red text through the
+# run.
 _fallback_lock = threading.Lock()
 _fallback_count = 0
+_fallback_log = []  # list of (preview, error_repr) for this whole process
 
 
 def _record_success():
@@ -72,10 +77,11 @@ def _record_failure_and_check_streak():
         return False
 
 
-def _record_fallback():
+def _record_fallback(preview, err):
     global _fallback_count
     with _fallback_lock:
         _fallback_count += 1
+        _fallback_log.append((preview, err))
 
 
 def get_translator(google_code):
@@ -156,13 +162,12 @@ def translate_value(google_code, text):
             sys.exit(1)
         raise TranslationUnavailableError(message) from last_err
 
-    # Isolated quirk, not (yet) an outage -- log it and move on with the
-    # original text rather than losing the rest of the run over one value.
-    _record_fallback()
-    warn_red(
-        f"Could not translate for '{google_code}' after {DEFAULTS['max_retries']} attempts "
-        f"({last_err!r}); leaving this one value untranslated:\n{preview!r}"
-    )
+    # Isolated quirk, not (yet) an outage -- record it silently and move on
+    # with the original text rather than losing the rest of the run over
+    # one value. Nothing is printed here: translate_many prints one clean
+    # summary block for all of this call's fallbacks at the very end,
+    # instead of scattering a warning mid-progress-bar for each one.
+    _record_fallback(preview, last_err)
     return text
 
 
@@ -171,11 +176,8 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
     if not texts:
         return results
 
-    # Snapshot the fallback counter so the summary below reports only
-    # THIS call's fallbacks -- _fallback_count is a module-wide running
-    # total (translate_value can be called standalone outside of
-    # translate_many too), so without this, each language's summary would
-    # include every prior language's fallbacks as well.
+    # Snapshot the fallback log too (same reasoning as the count baseline
+    # above) so the block below only reports fragments from THIS call.
     fallback_baseline = _fallback_count
 
     # Filter out empty strings beforehand to optimize network requests
@@ -353,6 +355,13 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
 
     fallback_this_call = _fallback_count - fallback_baseline
     if fallback_this_call:
-        print(f"({fallback_this_call} value(s) could not be translated after retries and were left as-is.)")
+        entries = _fallback_log[fallback_baseline:]
+        lines = [
+            f"{fallback_this_call} value(s) could not be translated for '{google_code}' "
+            f"after retries and were left as-is:"
+        ]
+        for preview, err in entries:
+            lines.append(f"  - {preview!r} ({err!r})")
+        warn_red("\n".join(lines))
 
     return results
