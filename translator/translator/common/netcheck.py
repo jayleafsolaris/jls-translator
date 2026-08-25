@@ -11,7 +11,7 @@ import time
 import requests
 
 from .state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
-from .config_store import warn_red, _RESET
+from .config_store import warn_red, _RESET, get_release_branch
 
 def check_internet(timeout=1.2):
     """
@@ -77,13 +77,17 @@ _BLUE = "\033[94m"
 
 def fetch_remote_version(timeout=4.0):
     """
-    Reads just the `version = "..."` line out of pyproject.toml on GitHub's
-    default branch, without downloading the whole repo (that's what
-    --upgrade is for). Returns None on any failure -- offline, rate-limited,
-    the file moved, a bad connection -- so callers can silently skip the
-    update notice instead of erroring out over something this minor.
+    Reads just the `version = "..."` line out of pyproject.toml on
+    whichever GitHub branch is currently selected as the release branch
+    (see config_store.get_release_branch() -- defaults to GITHUB_BRANCH,
+    overridable via --release <branch>), without downloading the whole
+    repo (that's what --upgrade is for). Returns None on any failure --
+    offline, rate-limited, the file moved, a bad connection -- so callers
+    can silently skip the update notice instead of erroring out over
+    something this minor.
     """
-    url = f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/{GITHUB_BRANCH}/pyproject.toml"
+    branch = get_release_branch()
+    url = f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/{branch}/pyproject.toml"
     try:
         resp = requests.get(url, timeout=timeout)
         resp.raise_for_status()
@@ -125,6 +129,20 @@ def _save_version_check_cache(data):
         path.write_text(json.dumps(data), encoding="utf-8")
     except Exception:
         pass
+
+
+def _branch_suffix():
+    """
+    A short " (branch: X)" annotation appended to update-notice messages
+    whenever the release branch has been overridden away from the repo's
+    normal default (GITHUB_BRANCH) -- so a custom branch's version checks
+    are clearly labeled, while the common default-branch case stays
+    exactly as quiet/plain as before.
+    """
+    branch = get_release_branch()
+    if branch == GITHUB_BRANCH:
+        return ""
+    return f" (branch: {branch})"
 
 
 def check_for_update_notice(force=False):
@@ -186,7 +204,7 @@ def check_for_update_notice(force=False):
         return
 
     if is_newer:
-        print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote} "
+        print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote}{_branch_suffix()} "
               f"-- run --upgrade to update.{_RESET}")
 
 
@@ -205,7 +223,7 @@ def cmd_check_update():
     checker keeps running on other commands -- use `--check true` or
     `--check false` for that.
     """
-    print("Checking for updates...")
+    print(f"Checking for updates{_branch_suffix()}...")
     cache = _load_version_check_cache()
 
     remote = fetch_remote_version(timeout=3.0)
@@ -225,7 +243,7 @@ def cmd_check_update():
         is_newer = None
 
     if is_newer:
-        print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote} "
+        print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote}{_branch_suffix()} "
               f"-- run --upgrade to update.{_RESET}")
     elif is_newer is False:
         print(f"Up to date: v{SCRIPT_VERSION} is the latest version.")
