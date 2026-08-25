@@ -14,11 +14,10 @@ from ..common.netcheck import require_internet_or_warn
 
 def _upgrade_protected_names():
     """
-    Basenames (files or folders) inside PACKAGE_DIR that --upgrade must
+    Basenames (files or folders) inside the package that --upgrade must
     never overwrite, delete, or merge into, no matter what happens to be
     sitting in the downloaded repo zip under the same name, and no matter
-    how deep in the tree they actually live (e.g. common/cache.json, not
-    just a hypothetical PACKAGE_DIR/cache.json).
+    how deep in the tree they actually live (e.g. common/cache.json).
 
     This exists because the cache, progress file, languages.json, the
     version-check cache, and the config folder all deliberately live
@@ -140,16 +139,16 @@ def _restore_backup(backup_dir, dst_dir):
             shutil.move(s, d)
 
 
-# Repo-root files (siblings of the package folder, not inside it) that
-# still need to make it into the install -- these live next to PACKAGE_DIR,
-# not inside it, so they're handled separately from the package copy loop.
+# Repo-root files (siblings of the outer package folder, not inside it)
+# that still need to make it into the install -- handled separately from
+# the package copy loop since they live one level further out.
 _REQUIRED_TOP_LEVEL_FILES = {"LICENSE", "pyproject.toml"}
 
 # Files that MUST exist in a working install, checked (as relative paths
-# from PACKAGE_DIR) after copying the new version in. If any are missing,
-# the copy was incomplete -- e.g. _find_package_source picked the wrong
-# folder, or the download was truncated -- and we roll back rather than
-# restart into a broken install with no clear error.
+# from the package root) after copying the new version in. If any are
+# missing, the copy was incomplete -- e.g. _find_package_source picked the
+# wrong folder, or the download was truncated -- and we roll back rather
+# than restart into a broken install with no clear error.
 _REQUIRED_PACKAGE_FILES = [
     "cli.py",
     os.path.join("common", "state.py"),
@@ -159,8 +158,8 @@ _REQUIRED_PACKAGE_FILES = [
 ]
 
 
-def _missing_required_files(package_dir):
-    return [f for f in _REQUIRED_PACKAGE_FILES if not os.path.isfile(os.path.join(package_dir, f))]
+def _missing_required_files(package_root):
+    return [f for f in _REQUIRED_PACKAGE_FILES if not os.path.isfile(os.path.join(package_root, f))]
 
 
 def cmd_upgrade():
@@ -168,16 +167,25 @@ def cmd_upgrade():
     UPDATE_URL = (
         f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/refs/heads/{GITHUB_BRANCH}.zip"
     )
-    
+
     print("Checking for updates...")
     if not require_internet_or_warn("--upgrade"):
         return
+
+    # PACKAGE_DIR (from common.state) is NOT the package root -- it's the
+    # common/ folder itself (that's where state.py lives, and where it
+    # computes cache/progress/config file paths relative to itself). The
+    # actual package root -- the folder holding cli.py, common/, modes/,
+    # and __init__.py -- is PACKAGE_DIR's parent. Every place this used to
+    # copy/backup/verify directly against PACKAGE_DIR was therefore landing
+    # one level too deep, e.g. producing common/common, common/modes, etc.
+    package_root = os.path.dirname(str(PACKAGE_DIR))
 
     try:
         response = requests.get(UPDATE_URL, stream=True)
         response.raise_for_status()
 
-        temp_dir = PACKAGE_DIR / "temp_update"
+        temp_dir = os.path.join(package_root, "temp_update")
         os.makedirs(temp_dir, exist_ok=True)
 
         print("Downloading...")
@@ -194,18 +202,6 @@ def cmd_upgrade():
             zip_root = os.path.join(temp_dir, z.namelist()[0])
             extracted_root = _find_package_source(zip_root)
 
-            # --- TEMPORARY DEBUG: remove once the common/common issue is found ---
-            print(f"[debug] PACKAGE_DIR = {PACKAGE_DIR}")
-            print(f"[debug] zip_root = {zip_root}")
-            print(f"[debug] extracted_root = {extracted_root}")
-            print(f"[debug] listdir(zip_root) = {os.listdir(zip_root)}")
-            print(f"[debug] listdir(extracted_root) = {os.listdir(extracted_root)}")
-            if os.path.isdir(os.path.join(extracted_root, "common")):
-                print(f"[debug] listdir(extracted_root/common) = {os.listdir(os.path.join(extracted_root, 'common'))}")
-            if os.path.isdir(os.path.join(str(PACKAGE_DIR), "common")):
-                print(f"[debug] listdir(PACKAGE_DIR/common) BEFORE backup = {os.listdir(os.path.join(str(PACKAGE_DIR), 'common'))}")
-            # --- END TEMPORARY DEBUG ---
-
             # Back up the current package contents instead of deleting them
             # outright, so a bad/incomplete copy can be rolled back. Any
             # protected persistent file (cache, progress, config) is left
@@ -213,26 +209,21 @@ def cmd_upgrade():
             # not touched -- regardless of depth.
             backup_dir = os.path.join(temp_dir, "_old_install_backup")
             os.makedirs(backup_dir, exist_ok=True)
-            _backup_and_clear(str(PACKAGE_DIR), backup_dir, protected)
+            _backup_and_clear(package_root, backup_dir, protected)
 
             # Copy the fresh package in, again skipping protected names at
             # any depth so nothing the repo happens to ship under the same
             # name can clobber real persisted data.
-            _copy_skip_protected(extracted_root, str(PACKAGE_DIR), protected, skipped)
-
-            # --- TEMPORARY DEBUG ---
-            if os.path.isdir(os.path.join(str(PACKAGE_DIR), "common")):
-                print(f"[debug] listdir(PACKAGE_DIR/common) AFTER copy = {os.listdir(os.path.join(str(PACKAGE_DIR), 'common'))}")
-            # --- END TEMPORARY DEBUG ---
+            _copy_skip_protected(extracted_root, package_root, protected, skipped)
 
             # Verify the new install actually looks complete before we
             # commit to it. If _find_package_source picked the wrong
             # folder, or the zip was incomplete, restore the backup and
             # abort instead of restarting into a broken install.
-            missing_files = _missing_required_files(PACKAGE_DIR)
+            missing_files = _missing_required_files(package_root)
             if missing_files:
-                _remove_non_protected(str(PACKAGE_DIR), protected)
-                _restore_backup(backup_dir, str(PACKAGE_DIR))
+                _remove_non_protected(package_root, protected)
+                _restore_backup(backup_dir, package_root)
                 shutil.rmtree(temp_dir)
                 warn_red(
                     "Update looked incomplete (missing: " + ", ".join(missing_files) + "). "
@@ -240,12 +231,12 @@ def cmd_upgrade():
                 )
                 return
 
-            # LICENSE / pyproject.toml live at the repo root (zip_root) in
-            # the repo, which is TWO levels above PACKAGE_DIR here --
-            # PACKAGE_DIR is the inner package folder, whose parent is the
-            # outer wrapper folder, whose parent is the repo root -- not
-            # just one level up. Go up twice to land in the same place.
-            install_root = os.path.dirname(os.path.dirname(str(PACKAGE_DIR)))
+            # LICENSE / pyproject.toml live at the repo root (zip_root),
+            # which is two levels above package_root (package_root's
+            # parent is the outer wrapper folder, whose parent is the
+            # repo root) -- matching the same relative position in the
+            # install.
+            install_root = os.path.dirname(os.path.dirname(package_root))
             missing_required = []
             for fname in _REQUIRED_TOP_LEVEL_FILES:
                 top_src = os.path.join(zip_root, fname)
@@ -260,13 +251,13 @@ def cmd_upgrade():
             print(f"Left your local cache/config untouched (repo also had: {', '.join(sorted(skipped))}).")
         if missing_required:
             warn_red(f"Could not find in repo, so left untouched: {', '.join(sorted(missing_required))}")
-        
+
         # Strip --upgrade from args so it doesn't loop infinitely upon restart
         new_args = [arg for arg in sys.argv if arg != "--upgrade"]
         if len(new_args) == 1:
             new_args.append("--version") # Just show the version if they ran it raw
-            
+
         os.execv(sys.executable, [sys.executable] + new_args)
-        
+
     except Exception as e:
         warn_red(f"Update failed: {e}")
