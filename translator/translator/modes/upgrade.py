@@ -194,6 +194,18 @@ def cmd_upgrade():
             zip_root = os.path.join(temp_dir, z.namelist()[0])
             extracted_root = _find_package_source(zip_root)
 
+            # --- TEMPORARY DEBUG: remove once the common/common issue is found ---
+            print(f"[debug] PACKAGE_DIR = {PACKAGE_DIR}")
+            print(f"[debug] zip_root = {zip_root}")
+            print(f"[debug] extracted_root = {extracted_root}")
+            print(f"[debug] listdir(zip_root) = {os.listdir(zip_root)}")
+            print(f"[debug] listdir(extracted_root) = {os.listdir(extracted_root)}")
+            if os.path.isdir(os.path.join(extracted_root, "common")):
+                print(f"[debug] listdir(extracted_root/common) = {os.listdir(os.path.join(extracted_root, 'common'))}")
+            if os.path.isdir(os.path.join(str(PACKAGE_DIR), "common")):
+                print(f"[debug] listdir(PACKAGE_DIR/common) BEFORE backup = {os.listdir(os.path.join(str(PACKAGE_DIR), 'common'))}")
+            # --- END TEMPORARY DEBUG ---
+
             # Back up the current package contents instead of deleting them
             # outright, so a bad/incomplete copy can be rolled back. Any
             # protected persistent file (cache, progress, config) is left
@@ -207,6 +219,11 @@ def cmd_upgrade():
             # any depth so nothing the repo happens to ship under the same
             # name can clobber real persisted data.
             _copy_skip_protected(extracted_root, str(PACKAGE_DIR), protected, skipped)
+
+            # --- TEMPORARY DEBUG ---
+            if os.path.isdir(os.path.join(str(PACKAGE_DIR), "common")):
+                print(f"[debug] listdir(PACKAGE_DIR/common) AFTER copy = {os.listdir(os.path.join(str(PACKAGE_DIR), 'common'))}")
+            # --- END TEMPORARY DEBUG ---
 
             # Verify the new install actually looks complete before we
             # commit to it. If _find_package_source picked the wrong
