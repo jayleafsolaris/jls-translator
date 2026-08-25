@@ -29,6 +29,8 @@ class TranslationUnavailableError(RuntimeError):
 # each printing/exiting redundantly.
 _STOP_LOCK = threading.Lock()
 _STOPPED = False
+_BATCH_LOG_LOCK = threading.Lock()
+_BATCH_LOGGED = False
 
 
 def get_translator(google_code):
@@ -42,7 +44,9 @@ def translate_value(google_code, text):
 
     # If another thread already tripped the stop, don't even try.
     if _STOPPED:
-        raise TranslationUnavailableError("Google Translate does not appear to be available right now. Please try again later.")
+        exc = TranslationUnavailableError("Google Translate does not appear to be available right now. Please try again later.")
+        exc.is_root_cause = False  # this thread got preempted, not the actual failure
+        raise exc
 
     protected, tokens = _protect(text)
     delay = get_request_delay()
@@ -64,7 +68,11 @@ def translate_value(google_code, text):
         with _STOP_LOCK:
             if not _STOPPED:
                 _STOPPED = True
-                warn_red(f"Translation failed for '{google_code}' ({e!r}).")
+                preview = text if len(text) <= 300 else text[:300] + "...(truncated)"
+                warn_red(
+                    f"Translation failed for '{google_code}' ({e!r}).\n"
+                    f"Text being translated when it failed:\n{preview!r}"
+                )
                 print(message)
         if threading.current_thread() is threading.main_thread():
             # Safe to exit the process directly here.
@@ -72,7 +80,9 @@ def translate_value(google_code, text):
         # Otherwise this is a worker thread, where sys.exit() only kills
         # that thread, not the process. Propagate and let the main thread
         # (e.g. translate_many's as_completed loop) exit instead.
-        raise TranslationUnavailableError(message) from e
+        exc = TranslationUnavailableError(message)
+        exc.is_root_cause = True  # this thread's request is what actually failed
+        raise exc from e
 
 
 def translate_many(google_code, texts, max_workers, progress_cb=None):
@@ -125,7 +135,22 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
     def translate_batch_worker(batch):
         # We join by newline. Google Translator translates sentences separately and natively returns them separated by \n
         combined = "\n".join(t for _, t in batch)
-        translated = translate_value(google_code, combined)
+        try:
+            translated = translate_value(google_code, combined)
+        except TranslationUnavailableError as exc:
+            # Only log the batch breakdown for the batch that actually
+            # caused the failure -- other in-flight batches raise this
+            # too (via the _STOPPED short-circuit above) once one batch
+            # trips the stop, but they never touched the API and would
+            # just add noise.
+            if getattr(exc, "is_root_cause", False):
+                with _BATCH_LOG_LOCK:
+                    global _BATCH_LOGGED
+                    if not _BATCH_LOGGED:
+                        _BATCH_LOGGED = True
+                        lines = [f"  [index {idx}] {t!r}" for idx, t in batch]
+                        warn_red("Batch that failed contained these items:\n" + "\n".join(lines))
+            raise
         lines = [line.replace('\r', '') for line in translated.split('\n')]
 
         # Perfect split match
