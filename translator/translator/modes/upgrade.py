@@ -9,7 +9,7 @@ import zipfile
 import requests
 
 from ..common.state import DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME
-from ..common.config_store import warn_red
+from ..common.config_store import warn_red, get_release_branch
 from ..common.netcheck import require_internet_or_warn
 
 def _upgrade_protected_names():
@@ -163,12 +163,21 @@ def _missing_required_files(package_root):
 
 
 def cmd_upgrade():
-    """Fetches the latest main.zip from GitHub, replaces current files, and restarts."""
+    """
+    Fetches the latest zip from GitHub and replaces current files, then
+    restarts. Downloads from whichever branch is currently configured as
+    the release branch (see config_store.get_release_branch() -- defaults
+    to GITHUB_BRANCH, overridable via --release <branch>), so pointing
+    --release at e.g. a "dev" or "beta" branch makes --upgrade track that
+    branch instead of the repo's normal default.
+    """
+    branch = get_release_branch()
     UPDATE_URL = (
-        f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/refs/heads/{GITHUB_BRANCH}.zip"
+        f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/refs/heads/{branch}.zip"
     )
 
-    print("Checking for updates...")
+    branch_note = f" (branch: {branch})" if branch != GITHUB_BRANCH else ""
+    print(f"Checking for updates{branch_note}...")
     if not require_internet_or_warn("--upgrade"):
         return
 
@@ -246,7 +255,7 @@ def cmd_upgrade():
                     missing_required.append(fname)
 
         shutil.rmtree(temp_dir)
-        print(f"Update complete!")
+        print(f"Update complete!{branch_note}")
         if skipped:
             print(f"Left your local cache/config untouched (repo also had: {', '.join(sorted(skipped))}).")
         if missing_required:
