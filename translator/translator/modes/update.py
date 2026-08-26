@@ -161,26 +161,26 @@ def cmd_update(resume=False, interactive=False):
 
         start_run_time = time.time()
         _first_render = True
-        
+
         def _render(done, _total=total):
-            global _first_render
-        
+            nonlocal _first_render
+
             pct = (done / _total * 100) if _total else 100.0
             time_str = format_duration(time.time() - start_run_time)
             _usage = 0
-        
+
             # Move cursor up 4 lines on subsequent renders
             cursor_up = "" if _first_render else "\033[4F"
             _first_render = False
-        
-            # Clear each line to prevent trailing characters if line lengths shrink
+
+            # \033[K clears from cursor position to the end of the line
             lines = [
-                f"Translating {_total} keys...".ljust(40),
-                f"Progress: {pct:5.1f}%".ljust(40),
-                f"Time: {time_str}".ljust(40),
-                f"Usage: {_usage}%".ljust(40),
+                f"\033[KTranslating {_total} keys...",
+                f"\033[KProgress: {pct:5.1f}%",
+                f"\033[KTime: {time_str}",
+                f"\033[KUsage: {_usage}%",
             ]
-        
+
             sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
             sys.stdout.flush()
 
