@@ -227,6 +227,9 @@ def main():
     parser.add_argument("--version", action="store_true", help="print the script version and exit")
     parser.add_argument("--usage", action="store_true",
                          help="show current hourly/daily translation usage percentages and reset times")
+    parser.add_argument("--cooldown", dest="cooldown_hours", type=float, metavar="HOURS",
+                         help="use with --usage to manually force a translation cooldown, "
+                              "1-72 hours (clamped to that range)")
     parser.add_argument("--check", nargs="?", const="__now__", default=None, metavar="{true,false}",
                          help="with no value: manually check GitHub for a newer version right now "
                               "(does not change automatic checking). "
@@ -251,7 +254,14 @@ def main():
         return
 
     if args.usage:
-        cmd_usage()
+        if args.cooldown_hours is not None:
+            cmd_usage(cooldown_hours=args.cooldown_hours)
+        else:
+            cmd_usage()
+        return
+
+    if args.cooldown_hours is not None:
+        print("--cooldown only has an effect combined with --usage, e.g. --usage --cooldown 6")
         return
 
     if args.check is not None:
