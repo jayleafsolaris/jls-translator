@@ -38,6 +38,7 @@ def _upgrade_protected_names():
         DEFAULTS["update_temp_file"],
         DEFAULTS["version_check_file"],
         DEFAULTS["section_order_cache"],
+        DEFAULTS["ratelimit_file"],
         CONFIG_DIR_HIDDEN_NAME,
         CONFIG_DIR_VISIBLE_NAME,
         "temp_update",  # --upgrade's own scratch dir, in case it ever lingers
