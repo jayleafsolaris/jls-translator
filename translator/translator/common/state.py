@@ -31,7 +31,7 @@ DEFAULTS = {
     "update_temp_file": ".translate_update_temp.json",
     "version_check_file": ".version_check_cache.json",
     "section_order_cache": ".section_order.json",
-    "ratelimit_file: ".ratelimit_state.json",
+    "ratelimit_file": ".ratelimit_state.json",
     "version_check_interval_minutes": 10,
     "request_delay": 0.15,   # seconds between global translation calls
     "max_retries": 3,
