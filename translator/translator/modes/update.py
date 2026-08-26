@@ -167,7 +167,8 @@ def cmd_update(resume=False, interactive=False):
         def _render(done, _total=total):
             pct = (done / _total * 100) if _total else 100.0
             time_str = format_duration(time.time() - start_run_time)
-            line = f"Translating {_total} keys... {pct:5.1f}% - Time: {time_str}"
+            _usage = 0
+            line = f"Translating {_total} keys... {pct:5.1f}% - Time: {time_str} - Usage: {_usage}%"
             sys.stdout.write("\r" + line.ljust(85))
             sys.stdout.flush()
 
@@ -271,3 +272,5 @@ def cmd_update(resume=False, interactive=False):
             f"--update limit reached ({new_update_count}/{DEFAULTS['update_limit']}) -- "
             f"this base file must be recreated (--create) before --update can run again."
         )
+    print(f"\nUsage: 0% - Resets in N/A")
+    print(f"Cooldown: 0 minutes - You can translate again at N/A")
