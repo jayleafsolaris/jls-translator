@@ -20,6 +20,7 @@ from deep_translator import GoogleTranslator
 from .state import DEFAULTS
 from .config_store import get_request_delay, warn_red
 from .text_protect import _protect, _restore, split_segments, join_segments
+from .ratelimit import reserve, record_extra, RateLimitExceededError
 
 # Thread-safe rate limiter variables (module-local: _raw_translate_once is
 # the only place these are read or written).
@@ -90,6 +91,18 @@ def _record_fallback(preview, err):
         _fallback_log.append((preview, err))
 
 
+def _handle_rate_limit_stop(err):
+    """Shared handling for RateLimitExceededError wherever it surfaces:
+    print the reason, note that progress is safe to resume from, and end
+    the process from the main thread (mirrors how a genuine
+    TranslationUnavailableError outage is handled below)."""
+    warn_red(str(err))
+    print("Progress has been saved -- run --continue once the usage window resets.")
+    if threading.current_thread() is threading.main_thread():
+        sys.exit(1)
+    raise err
+
+
 def get_translator(google_code):
     return GoogleTranslator(source="en", target=google_code)
 
@@ -110,6 +123,12 @@ def _raw_translate_once(google_code, text):
     delay = get_request_delay()
     translator = get_translator(google_code)
 
+    # Usage-cap enforcement: blocks (adaptive cooldown / hourly pause) as
+    # needed, or raises RateLimitExceededError if the daily cap is
+    # genuinely exhausted. Sized on the outgoing request text; the
+    # response size is added afterwards via record_extra() once known.
+    reserve(len(protected.encode("utf-8")))
+
     with _RATE_LIMIT_LOCK:
         now = time.time()
         elapsed = now - _LAST_REQUEST_TIME
@@ -118,6 +137,7 @@ def _raw_translate_once(google_code, text):
         _LAST_REQUEST_TIME = time.time()
 
     result = translator.translate(protected)
+    record_extra(len(result.encode("utf-8")))
     return _restore(result, tokens)
 
 
@@ -148,6 +168,10 @@ def translate_value(google_code, text):
             # Streak threshold already tripped by another thread -- no
             # point retrying, this run is stopping.
             raise
+        except RateLimitExceededError as e:
+            # Daily usage cap exhausted -- stop the run the same way an
+            # outage does, rather than retrying into the same wall.
+            _handle_rate_limit_stop(e)
         except Exception as e:
             last_err = e
             time.sleep(0.5 * (attempt + 1))
@@ -295,6 +319,11 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
             _record_success()
         except TranslationUnavailableError:
             raise
+        except RateLimitExceededError:
+            # Daily usage cap exhausted -- propagate up so the caller
+            # stops the whole run, same as a genuine outage, rather than
+            # falling back to per-fragment retries into the same wall.
+            raise
         except Exception:
             # Combined attempt failed. Rather than retrying the whole
             # (potentially large) combined blob, fall back to translating
@@ -329,13 +358,16 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
                     done_count += fut.result()
                     if progress_cb:
                         progress_cb(done_count)
-            except TranslationUnavailableError:
-                # Failure streak crossed the outage threshold: cancel the
-                # rest and stop, rather than continuing to hammer a dead
-                # service batch after batch.
+            except (TranslationUnavailableError, RateLimitExceededError) as err:
+                # Failure streak crossed the outage threshold, or the
+                # daily usage cap was exhausted: cancel the rest and stop,
+                # rather than continuing to hammer a dead/limited service
+                # batch after batch.
                 for f in futures:
                     f.cancel()
                 ex.shutdown(wait=True, cancel_futures=True)
+                if isinstance(err, RateLimitExceededError):
+                    _handle_rate_limit_stop(err)
                 # We're back on the main thread here, so sys.exit() actually
                 # terminates the process instead of just the worker thread.
                 sys.exit(1)
