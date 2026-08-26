@@ -22,19 +22,39 @@ file itself):
 
     base/UI/PACK DETAILS/keys.txt      <- contains "ui.roe:pack.name"
 
-This also naturally excludes lines like
-`##24175e243bcdb082a4fee9e61=13` (the --update run-count marker, see
-state.py's _UPDATE_COUNT_MARKER) from being mistaken for a heading,
-since there's no whitespace directly after the '##' there.
+`base` must open with a single '##' heading (exactly two hashes) --
+that's the root wrapper for everything under it (e.g. an addon's own
+name). Any FURTHER '##' heading anywhere else in the document is not
+special in any way -- it's just another heading, nested wherever it
+appears, same as any '###'/'####'/etc. This is what lets someone fold a
+second addon's lang into `base` just by dropping in another
+'## SomeAddonName' heading somewhere.
+
+The one real exception is the --update run-count marker (see state.py's
+_UPDATE_COUNT_MARKER) -- a "##"-prefixed line with no space after the
+hashes, e.g. `##24175e243bcdb082a4fee9e61=13`, conventionally sitting at
+the very bottom of base. It never matches the heading pattern (no
+whitespace after '##'), and on top of that it's explicitly recognized
+and pulled out of the tree entirely here -- it's never attributed to any
+section, never written into any keys.txt, and gets reappended verbatim
+at the very end of the file on --merge.
+
+Blank lines are also never written into a keys.txt -- each heading's
+content is split into its actual (non-blank) lines for keys.txt, and a
+separate positional record of exactly which lines were blank (and their
+raw text). --merge splices those blank lines back into their original
+positions, so the reassembled `base` is byte-for-byte identical to what
+was split.
 """
 
 import json
 import re
 
-from .state import DEFAULTS, PACKAGE_DIR
+from .state import DEFAULTS, PACKAGE_DIR, _UPDATE_COUNT_MARKER
 
 _HEADER_RE = re.compile(r'^(#{2,})[ \t]+(\S.*)$')
 _UNSAFE_CHARS_RE = re.compile(r'[\\/:*?"<>|]')
+_UPDATE_MARKER_PREFIX = f"##{_UPDATE_COUNT_MARKER}="
 
 KEYS_FILENAME = "keys.txt"
 
@@ -49,53 +69,86 @@ class Node:
     """One heading in the tree. The synthetic root (level=1, name=None) is
     never itself written out -- only its descendants are."""
 
-    __slots__ = ("level", "name", "folder", "content", "children")
+    __slots__ = ("level", "name", "folder", "content_raw", "key_text", "blanks", "children")
 
     def __init__(self, level, name, folder):
         self.level = level
         self.name = name
         self.folder = folder
-        self.content = ""       # this heading's own lines (before any child heading)
+        self.content_raw = []   # raw lines under this heading, blanks/keys not yet separated
+        self.key_text = ""      # filled in by _finalize(): the eventual keys.txt content
+        self.blanks = []        # filled in by _finalize(): [{"pos": i, "text": raw_line}, ...]
         self.children = []      # list of Node, in source order
+
+
+def _finalize(node):
+    """Splits node.content_raw into node.key_text (non-blank lines only) and
+    node.blanks (positions + exact text of the blank lines removed from it),
+    then recurses into children. Called once, after the whole file is parsed."""
+    key_lines = []
+    blanks = []
+    for i, line in enumerate(node.content_raw):
+        if line.strip() == "":
+            blanks.append({"pos": i, "text": line})
+        else:
+            key_lines.append(line)
+    node.key_text = "".join(key_lines)
+    node.blanks = blanks
+    for child in node.children:
+        _finalize(child)
 
 
 def parse_tree(text):
     """
     Parses `text` (the full contents of `base`) into a tree of Node
-    objects, keyed off heading depth. Returns the synthetic root Node;
-    real top-level sections are root.children.
+    objects, keyed off heading depth. Returns (root, markers):
+    root.children are the real top-level sections, and markers is the
+    list of raw --update run-count marker lines found anywhere in the
+    file (almost always exactly one, at the very end).
 
     Raises ValueError if there's non-blank content before the very first
-    heading, since that content has no heading to belong to.
+    heading, or if that very first heading isn't a single '##' (exactly
+    two hashes).
     """
     lines = text.splitlines(keepends=True)
     root = Node(level=1, name=None, folder=None)
     stack = [root]
     first_header_seen = False
     preamble = []
+    markers = []
 
     for line in lines:
-        m = _HEADER_RE.match(line.rstrip("\r\n"))
+        stripped = line.rstrip("\r\n")
+        m = _HEADER_RE.match(stripped)
         if m:
-            first_header_seen = True
             level = len(m.group(1))
             name = m.group(2).rstrip()
+            if not first_header_seen:
+                if level != 2:
+                    raise ValueError(
+                        f"base must start with a single '##' heading (found "
+                        f"'{'#' * level} {name}' instead)"
+                    )
+                first_header_seen = True
             while len(stack) > 1 and stack[-1].level >= level:
                 stack.pop()
             node = Node(level=level, name=name, folder=sanitize_name(name))
             stack[-1].children.append(node)
             stack.append(node)
+        elif stripped.startswith(_UPDATE_MARKER_PREFIX):
+            markers.append(line)
         elif not first_header_seen:
             preamble.append(line)
         else:
-            stack[-1].content += line
+            stack[-1].content_raw.append(line)
 
     if "".join(preamble).strip():
         raise ValueError(
             "found content before the first '##' heading -- move it under a section first"
         )
 
-    return root
+    _finalize(root)
+    return root, markers
 
 
 def find_duplicate_siblings(node, path=""):
@@ -123,39 +176,61 @@ def preview_paths(node, prefix):
     paths = []
     for child in node.children:
         child_prefix = f"{prefix}/{child.folder}"
-        if child.content.strip():
+        if child.key_text.strip():
             paths.append(f"{child_prefix}/{KEYS_FILENAME}")
         paths.extend(preview_paths(child, child_prefix))
     return paths
 
 
 def write_tree(node, folder_path):
-    """Writes node's own content (if any) as folder_path/keys.txt, then recurses into children."""
-    if node.content.strip():
+    """Writes node's own keys.txt (if it has any non-blank content), then recurses into children."""
+    if node.key_text.strip():
         folder_path.mkdir(parents=True, exist_ok=True)
-        (folder_path / KEYS_FILENAME).write_text(node.content, encoding="utf-8")
+        (folder_path / KEYS_FILENAME).write_text(node.key_text, encoding="utf-8")
     for child in node.children:
         write_tree(child, folder_path / child.folder)
 
 
-def render_tree(tree, base_dir):
+def _reconstruct_content(key_text, blanks):
+    """Inverse of _finalize: splices the recorded blank lines back into their exact
+    original positions among the keys.txt lines."""
+    key_lines = key_text.splitlines(keepends=True) if key_text else []
+    blank_map = {b["pos"]: b["text"] for b in blanks}
+    total = len(key_lines) + len(blanks)
+    parts = []
+    ki = 0
+    for i in range(total):
+        if i in blank_map:
+            parts.append(blank_map[i])
+        else:
+            parts.append(key_lines[ki])
+            ki += 1
+    return "".join(parts)
+
+
+def render_tree(tree, base_dir, markers=None):
     """
-    Inverse of write_tree + save_section_tree: given the cached tree
-    (list of node-dicts, see _node_to_dict) and the base/ folder they
-    were written under, reassembles base's full text.
+    Inverse of write_tree + save_section_data: given the cached tree
+    (list of node-dicts, see _node_to_dict), the base/ folder they were
+    written under, and the cached marker lines, reassembles base's full
+    text -- blank lines restored in place, marker line(s) reappended at
+    the very end.
     """
     parts = []
 
     def _walk(node_dict, dir_path):
         parts.append("#" * node_dict["level"] + " " + node_dict["name"] + "\n")
         keys_file = dir_path / KEYS_FILENAME
-        if keys_file.exists():
-            parts.append(keys_file.read_text(encoding="utf-8"))
+        key_text = keys_file.read_text(encoding="utf-8") if keys_file.exists() else ""
+        parts.append(_reconstruct_content(key_text, node_dict.get("blanks", [])))
         for child in node_dict["children"]:
             _walk(child, dir_path / child["folder"])
 
     for node_dict in tree:
         _walk(node_dict, base_dir / node_dict["folder"])
+
+    if markers:
+        parts.extend(markers)
 
     return "".join(parts)
 
@@ -165,23 +240,28 @@ def _node_to_dict(node):
         "level": node.level,
         "name": node.name,
         "folder": node.folder,
+        "blanks": node.blanks,
         "children": [_node_to_dict(c) for c in node.children],
     }
 
 
-def _section_tree_path():
+def _section_data_path():
     return PACKAGE_DIR / DEFAULTS["section_order_cache"]
 
 
-def save_section_tree(root_children):
-    """Persists the tree shape (headings, levels, nesting -- not their content) for --merge."""
-    data = {"tree": [_node_to_dict(n) for n in root_children]}
-    _section_tree_path().write_text(json.dumps(data, indent=2), encoding="utf-8")
+def save_section_data(root_children, markers):
+    """Persists the tree shape (headings, levels, nesting, blank-line positions) and
+    the --update marker line(s), for --merge to read back."""
+    data = {
+        "tree": [_node_to_dict(n) for n in root_children],
+        "markers": markers,
+    }
+    _section_data_path().write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
-def load_section_tree():
-    """Returns the cached tree (list of node-dicts) from the last --split, or None."""
-    path = _section_tree_path()
+def load_section_data():
+    """Returns (tree, markers) from the last --split, or None if there's no usable cache."""
+    path = _section_data_path()
     if not path.exists():
         return None
     try:
@@ -189,4 +269,9 @@ def load_section_tree():
     except Exception:
         return None
     tree = data.get("tree")
-    return tree if isinstance(tree, list) else None
+    if not isinstance(tree, list):
+        return None
+    markers = data.get("markers")
+    if not isinstance(markers, list):
+        markers = []
+    return tree, markers
