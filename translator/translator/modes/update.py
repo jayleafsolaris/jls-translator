@@ -181,10 +181,10 @@ def cmd_update(resume=False, interactive=False):
             _first_render = False
 
             lines = [
-                f"\033[KTranslating {_total} keys...",
-                f"\033[KProgress: {pct:5.1f}%",
-                f"\033[KTime: {time_str}",
-                f"\033[KUsage: {_usage}%",
+                f"\033[K  Translating {_total} keys...",
+                f"\033[K  Progress: {pct:5.1f}%",
+                f"\033[K  Time: {time_str}",
+                f"\033[K  Usage: {_usage}%",
             ]
 
             sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
@@ -241,12 +241,12 @@ def cmd_update(resume=False, interactive=False):
             # Render fatal output layout over current display block
             cursor_up = "" if _first_render else "\033[4F"
             fatal_lines = [
-                f"\033[KTranslating {total} keys - Fatal Exception",
-                f"\033[KProgress: 0% (Failed)",
-                f"\033[KTime: {time_str}",
-                f"\033[KUsage: {_usage}% (Not impacted by failure)",
-                f"\033[K{CLR_RED}Fatal Errors: {fatal_error_count}{CLR_RESET}",
-                f"\033[K{CLR_DARK_GREEN}Please try again in 0 minutes{CLR_RESET}",
+                f"\033[K  Translating {total} keys - Fatal Exception",
+                f"\033[K  Progress: 0% (Failed)",
+                f"\033[K  Time: {time_str}",
+                f"\033[K  Usage: {_usage}% (Not impacted by failure)",
+                f"\033[K  {CLR_RED}Fatal Errors: {fatal_error_count}{CLR_RESET}",
+                f"\033[K  {CLR_DARK_GREEN}Please try again in 0 minutes{CLR_RESET}",
             ]
             sys.stdout.write(cursor_up + "\n".join(fatal_lines) + "\n")
             sys.stdout.flush()
