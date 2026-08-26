@@ -3,7 +3,7 @@
 from ..common import state
 from ..common.state import DEFAULTS
 from ..common.sections import (
-    parse_tree, find_duplicate_siblings, write_tree, save_section_tree,
+    parse_tree, find_duplicate_siblings, write_tree, save_section_data,
 )
 
 
@@ -15,7 +15,7 @@ def cmd_split():
 
     text = base_path.read_text(encoding="utf-8")
     try:
-        root = parse_tree(text)
+        root, markers = parse_tree(text)
     except ValueError as e:
         print(f"Can't split: {e}")
         return
@@ -37,5 +37,5 @@ def cmd_split():
     for child in root.children:
         write_tree(child, base_dir / child.folder)
 
-    save_section_tree(root.children)
+    save_section_data(root.children, markers)
     print("Done! Base: split")
