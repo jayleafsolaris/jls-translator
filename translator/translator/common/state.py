@@ -81,6 +81,16 @@ _UPDATE_COUNT_MARKER = hashlib.sha256(
     f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:update_count".encode("utf-8")
 ).hexdigest()[:25]
 
+# Same idea as _UPDATE_COUNT_MARKER above, but for --compile/--decompile
+# (see common/obfuscate.py): the key needed to reverse a --compile run is
+# stored in a trailing "##"-prefixed line using this marker, so it's
+# never mistaken for a real '## Name' heading (no space after the
+# hashes -- see common/sections.py's _HEADER_RE) and reads as an opaque
+# comment to everything else in this tool.
+_COMPILE_KEY_MARKER = hashlib.sha256(
+    f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:compile_key".encode("utf-8")
+).hexdigest()[:25]
+
 _FALLBACK_VERSION = "?.?.?"  # only used if neither pip metadata nor pyproject.toml resolve a version
 
 
