@@ -21,11 +21,7 @@ def _relative(epoch):
 
     if not nonzero:
         return "0s"
-    if len(nonzero) == 1:
-        return f"{nonzero[0][1]}{nonzero[0][0]}"
-    first_label, first_val = nonzero[0]
-    second_label, second_val = nonzero[1]
-    return f"{first_val}{first_label} {second_val}{second_label}"
+    return " ".join(f"{val}{label}" for label, val in nonzero)
 
 
 def cmd_usage(cooldown_hours=None):
@@ -60,5 +56,5 @@ def cmd_usage(cooldown_hours=None):
         print(f"Hourly Reset: {_clock(report['hour_reset_epoch'])} (in {report['hour_reset_str']})")
 
     if report["cooldown_active"]:
-        print(f"Manual Cooldown: active until {_clock(report['cooldown_until_epoch'])} "
+        print(f"Manual Cooldown: Expires at {_clock(report['cooldown_until_epoch'])} "
               f"(in {report['cooldown_reset_str']})")
