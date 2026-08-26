@@ -281,11 +281,18 @@ def status_report(use_cache=True):
     hour_pct = 100.0 * data["hour_used"] / data["hour_cap"] if data["hour_cap"] else 0.0
     day_pct = 100.0 * data["day_used"] / data["day_cap"] if data["day_cap"] else 0.0
 
+    hour_reset_epoch = data["hour_start"] + _HOUR_SECONDS
+    day_reset_epoch = data["day_start"] + _DAY_SECONDS
+
     report = {
         "hour_pct": min(100.0, hour_pct),
         "day_pct": min(100.0, day_pct),
-        "hour_reset_str": _format_secs(_HOUR_SECONDS - (now - data["hour_start"])),
-        "day_reset_str": _format_secs(_DAY_SECONDS - (now - data["day_start"])),
+        "hour_reset_str": _format_secs(hour_reset_epoch - now),
+        "day_reset_str": _format_secs(day_reset_epoch - now),
+        # Absolute epoch timestamps for callers (e.g. --usage) that want
+        # to show a clock time rather than just a relative countdown.
+        "hour_reset_epoch": hour_reset_epoch,
+        "day_reset_epoch": day_reset_epoch,
     }
 
     with _cache_lock:
