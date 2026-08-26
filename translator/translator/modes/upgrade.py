@@ -8,9 +8,12 @@ import zipfile
 
 import requests
 
-from ..common.state import DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME
+from ..common.state import (
+    DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH,
+    CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, SCRIPT_VERSION,
+)
 from ..common.config_store import warn_red, get_release_branch
-from ..common.netcheck import require_internet_or_warn
+from ..common.netcheck import require_internet_or_warn, fetch_remote_version, _parse_version_tuple
 
 def _upgrade_protected_names():
     """
@@ -34,6 +37,7 @@ def _upgrade_protected_names():
         DEFAULTS["progress_file"],
         DEFAULTS["update_temp_file"],
         DEFAULTS["version_check_file"],
+        DEFAULTS["section_order_cache"],
         CONFIG_DIR_HIDDEN_NAME,
         CONFIG_DIR_VISIBLE_NAME,
         "temp_update",  # --upgrade's own scratch dir, in case it ever lingers
@@ -162,7 +166,27 @@ def _missing_required_files(package_root):
     return [f for f in _REQUIRED_PACKAGE_FILES if not os.path.isfile(os.path.join(package_root, f))]
 
 
-def cmd_upgrade():
+def _pad(t, n):
+    return t + (0,) * (n - len(t))
+
+
+def _compare_versions(remote_version, local_version=SCRIPT_VERSION):
+    """
+    Returns -1, 0, or 1 (remote older / identical / newer than local),
+    padding both parsed tuples to the same length first so e.g. '1.2' and
+    '1.2.0' compare as identical rather than one looking like a downgrade
+    of the other just because it has fewer segments.
+    """
+    remote_t = _parse_version_tuple(remote_version)
+    local_t = _parse_version_tuple(local_version)
+    n = max(len(remote_t), len(local_t))
+    remote_t, local_t = _pad(remote_t, n), _pad(local_t, n)
+    if remote_t == local_t:
+        return 0
+    return -1 if remote_t < local_t else 1
+
+
+def cmd_upgrade(enforce=False):
     """
     Fetches the latest zip from GitHub and replaces current files, then
     restarts. Downloads from whichever branch is currently configured as
@@ -170,25 +194,45 @@ def cmd_upgrade():
     to GITHUB_BRANCH, overridable via --release <branch>), so pointing
     --release at e.g. a "dev" or "beta" branch makes --upgrade track that
     branch instead of the repo's normal default.
+
+    Before downloading anything, compares the running version against the
+    version on that branch's pyproject.toml:
+      - identical and not --enforce: cancels, nothing is touched
+      - remote older than local: proceeds, but labeled as a Downgrade
+      - remote newer than local, or --enforce: proceeds as a normal Update
+      - can't determine the remote version at all: aborts unless --enforce
     """
     branch = get_release_branch()
-    UPDATE_URL = (
-        f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/refs/heads/{branch}.zip"
-    )
-
     branch_note = f" (branch: {branch})" if branch != GITHUB_BRANCH else ""
-    print(f"Checking for updates{branch_note}...")
+
+    print(f"Checking version{branch_note}...")
     if not require_internet_or_warn("--upgrade"):
         return
 
-    # PACKAGE_DIR (from common.state) is NOT the package root -- it's the
-    # common/ folder itself (that's where state.py lives, and where it
-    # computes cache/progress/config file paths relative to itself). The
-    # actual package root -- the folder holding cli.py, common/, modes/,
-    # and __init__.py -- is PACKAGE_DIR's parent. Every place this used to
-    # copy/backup/verify directly against PACKAGE_DIR was therefore landing
-    # one level too deep, e.g. producing common/common, common/modes, etc.
-    package_root = os.path.dirname(str(PACKAGE_DIR))
+    remote_version = fetch_remote_version(timeout=3.0)
+    if remote_version is None:
+        if not enforce:
+            warn_red("Couldn't determine the version on GitHub -- aborting. "
+                      "Use --enforce to install anyway.")
+            return
+        comparison = None
+    else:
+        comparison = _compare_versions(remote_version)
+
+    if comparison == 0 and not enforce:
+        print("Already running the latest version:")
+        print(f">> Version: v{SCRIPT_VERSION}")
+        print(f">> Release: {branch}")
+        return
+
+    if comparison == -1:
+        action, action_done = "Downgrading", "Downgrade"
+    else:
+        action, action_done = "Updating", "Update"
+
+    UPDATE_URL = (
+        f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/refs/heads/{branch}.zip"
+    )
 
     try:
         response = requests.get(UPDATE_URL, stream=True)
@@ -196,6 +240,15 @@ def cmd_upgrade():
             warn_red(f"Invalid branch: '{branch}'")
             return
         response.raise_for_status()
+
+        # PACKAGE_DIR (from common.state) is NOT the package root -- it's the
+        # common/ folder itself (that's where state.py lives, and where it
+        # computes cache/progress/config file paths relative to itself). The
+        # actual package root -- the folder holding cli.py, common/, modes/,
+        # and __init__.py -- is PACKAGE_DIR's parent. Every place this used to
+        # copy/backup/verify directly against PACKAGE_DIR was therefore landing
+        # one level too deep, e.g. producing common/common, common/modes, etc.
+        package_root = os.path.dirname(str(PACKAGE_DIR))
 
         temp_dir = os.path.join(package_root, "temp_update")
         os.makedirs(temp_dir, exist_ok=True)
@@ -205,7 +258,7 @@ def cmd_upgrade():
         skipped = []
         with zipfile.ZipFile(io.BytesIO(response.content)) as z:
             z.extractall(temp_dir)
-            print("Updating...")
+            print(f"{action}...")
 
             # GitHub zips put everything in a wrapper folder like
             # 'jls-translator-main'. The actual package (cli.py, common/,
@@ -238,7 +291,7 @@ def cmd_upgrade():
                 _restore_backup(backup_dir, package_root)
                 shutil.rmtree(temp_dir)
                 warn_red(
-                    "Update looked incomplete (missing: " + ", ".join(missing_files) + "). "
+                    f"{action} looked incomplete (missing: " + ", ".join(missing_files) + "). "
                     "Restored your previous install untouched -- nothing was changed."
                 )
                 return
@@ -258,18 +311,19 @@ def cmd_upgrade():
                     missing_required.append(fname)
 
         shutil.rmtree(temp_dir)
-        print(f"Update complete!{branch_note}")
+        print(f"{action_done} complete!{branch_note}")
         if skipped:
             print(f"Left your local cache/config untouched (repo also had: {', '.join(sorted(skipped))}).")
         if missing_required:
             warn_red(f"Could not find in repo, so left untouched: {', '.join(sorted(missing_required))}")
 
-        # Strip --upgrade from args so it doesn't loop infinitely upon restart
-        new_args = [arg for arg in sys.argv if arg != "--upgrade"]
+        # Strip --upgrade (and --enforce) from args so it doesn't loop
+        # infinitely upon restart
+        new_args = [arg for arg in sys.argv if arg not in ("--upgrade", "--enforce")]
         if len(new_args) == 1:
             new_args.append("--version") # Just show the version if they ran it raw
 
         os.execv(sys.executable, [sys.executable] + new_args)
 
     except Exception as e:
-        warn_red(f"Update failed: {e}")
+        warn_red(f"{action_done} failed: {e}")
