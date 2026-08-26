@@ -11,7 +11,7 @@ import time
 from deep_translator import GoogleTranslator
 
 from .state import DEFAULTS
-from .config_store import get_request_delay
+from .config_store import get_request_delay, warn_red
 from .text_protect import _protect, _restore, split_segments, join_segments
 
 # Thread-safe rate limiter variables (module-local: _raw_translate_once is
@@ -154,8 +154,8 @@ def translate_value(google_code, text):
 
     if is_outage:
         message = "Google Translate does not appear to be available right now. Please try again later."
-        print(message)
-        print(f"Fatal Errors: {_fallback_count}")
+        warn_red(message)
+        warn_red(f"Fatal Errors: {_fallback_count}")
         if threading.current_thread() is threading.main_thread():
             sys.exit(1)
         raise TranslationUnavailableError(message) from last_err
@@ -351,6 +351,6 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
 
     fallback_this_call = _fallback_count - fallback_baseline
     if fallback_this_call:
-        print(f"Fatal Errors: {fallback_this_call}")
+        warn_red(f"Fatal Errors: {fallback_this_call}")
 
     return results
