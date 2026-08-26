@@ -151,13 +151,23 @@ def _next_reset_epoch(data, now, window_seconds):
 
 def _format_secs(secs):
     secs = max(0, int(secs))
-    h, rem = divmod(secs, 3600)
+    d, rem = divmod(secs, 86400)
+    h, rem = divmod(rem, 3600)
     m, s = divmod(rem, 60)
-    if h:
-        return f"{h}h {m}m"
-    if m:
-        return f"{m}m {s}s"
-    return f"{s}s"
+
+    units = [("d", d), ("h", h), ("m", m), ("s", s)]
+    nonzero = [(label, val) for label, val in units if val]
+
+    if not nonzero:
+        return "0s"
+    if len(nonzero) == 1:
+        return f"{nonzero[0][1]}{nonzero[0][0]}"
+    # Show the largest unit plus whichever non-zero unit comes right
+    # after it, even if a zero unit sits between them (e.g. 3d 6m when
+    # hours happen to be 0) -- never more than two units at a time.
+    first_label, first_val = nonzero[0]
+    second_label, second_val = nonzero[1]
+    return f"{first_val}{first_label} {second_val}{second_label}"
 
 
 def set_job_profile(remaining_keys, remaining_bytes):
