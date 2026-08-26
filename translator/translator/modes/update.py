@@ -160,16 +160,28 @@ def cmd_update(resume=False, interactive=False):
                   "translated together as a single batch.\n")
 
         start_run_time = time.time()
-
-        # Single combined batch across every language -- rendered as one
-        # smooth, easing percentage bar (same feel as --create) rather than
-        # a raw done/left counter.
+        _first_render = True
+        
         def _render(done, _total=total):
+            global _first_render
+        
             pct = (done / _total * 100) if _total else 100.0
             time_str = format_duration(time.time() - start_run_time)
             _usage = 0
-            line = f"Translating {_total} keys... {pct:5.1f}% - Time: {time_str} - Usage: {_usage}%"
-            sys.stdout.write("\r" + line.ljust(85))
+        
+            # Move cursor up 4 lines on subsequent renders
+            cursor_up = "" if _first_render else "\033[4F"
+            _first_render = False
+        
+            # Clear each line to prevent trailing characters if line lengths shrink
+            lines = [
+                f"Translating {_total} keys...".ljust(40),
+                f"Progress: {pct:5.1f}%".ljust(40),
+                f"Time: {time_str}".ljust(40),
+                f"Usage: {_usage}%".ljust(40),
+            ]
+        
+            sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
             sys.stdout.flush()
 
         smoother = SmoothProgress(total, _render)
