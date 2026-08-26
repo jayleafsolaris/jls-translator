@@ -11,7 +11,7 @@ import time
 from deep_translator import GoogleTranslator
 
 from .state import DEFAULTS
-from .config_store import get_request_delay, warn_red
+from .config_store import get_request_delay
 from .text_protect import _protect, _restore, split_segments, join_segments
 
 # Thread-safe rate limiter variables (module-local: _raw_translate_once is
@@ -48,11 +48,10 @@ _STOPPED = False
 
 # Counts (and logs details of) values that fell back to untranslated text
 # (not a real outage). These are deferred rather than printed immediately
-# -- translate_value used to warn_red() the moment each one happened,
-# which meant a warning could land mid-line in the middle of a live
-# progress percentage. Collecting them here lets translate_many print one
-# clean block at the very end instead of scattering red text through the
-# run.
+# -- translate_value used to print a warning the moment each one
+# happened, which meant it could land mid-line in the middle of a live
+# progress percentage. Collecting them here lets translate_many print a
+# single "Fatal Errors: #" line at the very end instead.
 _fallback_lock = threading.Lock()
 _fallback_count = 0
 _fallback_log = []  # list of (preview, error_repr) for this whole process
@@ -146,28 +145,25 @@ def translate_value(google_code, text):
             last_err = e
             time.sleep(0.5 * (attempt + 1))
 
-    # Exhausted retries for this one value.
-    is_outage = _record_failure_and_check_streak()
+    # Exhausted retries for this one value -- always counts as a fatal
+    # error for this value, whether or not it also trips the outage
+    # streak check below.
     preview = text if len(text) <= 300 else text[:300] + "...(truncated)"
+    is_outage = _record_failure_and_check_streak()
+    _record_fallback(preview, last_err)
 
     if is_outage:
         message = "Google Translate does not appear to be available right now. Please try again later."
-        warn_red(
-            f"{FAILURE_STREAK_THRESHOLD} translations in a row failed for '{google_code}' -- "
-            f"this looks like Google Translate is actually unavailable, not just one odd value. Stopping.\n"
-            f"Most recent failure ({last_err!r}) was on:\n{preview!r}"
-        )
         print(message)
+        print(f"Fatal Errors: {_fallback_count}")
         if threading.current_thread() is threading.main_thread():
             sys.exit(1)
         raise TranslationUnavailableError(message) from last_err
 
-    # Isolated quirk, not (yet) an outage -- record it silently and move on
-    # with the original text rather than losing the rest of the run over
-    # one value. Nothing is printed here: translate_many prints one clean
-    # summary block for all of this call's fallbacks at the very end,
-    # instead of scattering a warning mid-progress-bar for each one.
-    _record_fallback(preview, last_err)
+    # Isolated quirk, not (yet) an outage -- already recorded above.
+    # Nothing prints here: translate_many prints a single "Fatal Errors: #"
+    # line for the whole call at the very end, instead of anything
+    # mid-run.
     return text
 
 
@@ -355,13 +351,6 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
 
     fallback_this_call = _fallback_count - fallback_baseline
     if fallback_this_call:
-        entries = _fallback_log[fallback_baseline:]
-        lines = [
-            f"{fallback_this_call} value(s) could not be translated for '{google_code}' "
-            f"after retries and were left as-is:"
-        ]
-        for preview, err in entries:
-            lines.append(f"  - {preview!r} ({err!r})")
-        warn_red("\n".join(lines))
+        print(f"Fatal Errors: {fallback_this_call}")
 
     return results
