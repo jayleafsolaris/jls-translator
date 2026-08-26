@@ -39,6 +39,8 @@ base and your .lang files, e.g. RP/texts/):
     jls-translator --check true|false
                               turn the automatic passive update check (the one that
                                      runs quietly on every command) on or off
+    jls-translator --usage   show current hourly/daily translation usage percentages
+                                     and when each resets (no --path needed)
 
 --path is required for every mode except --version.
 
@@ -122,6 +124,7 @@ from .modes.decompile import cmd_decompile
 from .modes.cont import cmd_continue
 from .modes.upgrade import cmd_upgrade
 from .modes.release import cmd_show_release_branch, cmd_set_release_branch
+from .modes.usage_cmd import cmd_usage
 
 _MODES = [
     ("create", "Overwrite ALL .lang files from scratch"),
@@ -222,6 +225,8 @@ def main():
     parser.add_argument("--hide", action="store_true",
                          help="(with --config) make the config folder hidden")
     parser.add_argument("--version", action="store_true", help="print the script version and exit")
+    parser.add_argument("--usage", action="store_true",
+                         help="show current hourly/daily translation usage percentages and reset times")
     parser.add_argument("--check", nargs="?", const="__now__", default=None, metavar="{true,false}",
                          help="with no value: manually check GitHub for a newer version right now "
                               "(does not change automatic checking). "
@@ -243,6 +248,10 @@ def main():
     if args.version:
         print(f"Version: {SCRIPT_VERSION}")
         check_for_update_notice(force=True)
+        return
+
+    if args.usage:
+        cmd_usage()
         return
 
     if args.check is not None:
