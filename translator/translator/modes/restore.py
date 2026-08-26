@@ -1,4 +1,4 @@
-"""--restore: restore base + .lang files (+ cache/languages.json) from a lang_backups/ zip."""
+"""--restore: restore base + .lang files (+ split section folders + cache/languages.json) from a lang_backups/ zip."""
 
 import shutil
 import zipfile
@@ -6,6 +6,12 @@ import zipfile
 from ..common import state
 from ..common.state import DEFAULTS, PACKAGE_DIR
 from ..common.progress import _human_size
+
+# These live next to the package (see common/state.py's PACKAGE_DIR),
+# not in the project folder -- everything else in the zip goes under
+# state.SCRIPT_DIR instead, including split section folders like
+# "UI/UI.txt" (restored to state.SCRIPT_DIR / "UI" / "UI.txt").
+_PACKAGE_SCOPED = {DEFAULTS["cache_file"], DEFAULTS["languages_json"], DEFAULTS["section_order_cache"]}
 
 def cmd_restore():
     backup_dir = state.SCRIPT_DIR / DEFAULTS["backup_dir"]
@@ -50,11 +56,12 @@ def cmd_restore():
 
     with zipfile.ZipFile(chosen, "r") as zf:
         for name in zf.namelist():
-            if name in (DEFAULTS["cache_file"], DEFAULTS["languages_json"]):
-                dest_dir = PACKAGE_DIR
+            if name in _PACKAGE_SCOPED:
+                dest_path = PACKAGE_DIR / name
             else:
-                dest_dir = state.SCRIPT_DIR
-            with zf.open(name) as src, open(dest_dir / name, "wb") as dst:
+                dest_path = state.SCRIPT_DIR / name
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+            with zf.open(name) as src, open(dest_path, "wb") as dst:
                 shutil.copyfileobj(src, dst)
 
     print(f"\nRestored {len(names)} file(s) from {chosen.name}.")
