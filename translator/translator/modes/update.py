@@ -3,6 +3,7 @@
 import json
 import sys
 import time
+import traceback
 
 from ..common import state
 from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT, PACKAGE_DIR
@@ -16,6 +17,11 @@ from ..common.progress import (
     load_base, sync_en_us_from_base, base_fingerprint, clear_progress, save_progress,
     format_duration, SmoothProgress, _report_keys,
 )
+
+# ANSI Color Code Constants
+CLR_RED = "\033[31m"
+CLR_DARK_GREEN = "\033[32m"
+CLR_RESET = "\033[0m"
 
 
 def cmd_update(resume=False, interactive=False):
@@ -119,6 +125,7 @@ def cmd_update(resume=False, interactive=False):
 
     results = {}
     total_duration = 0.0
+    suppressed_errors = []
 
     if total:
         # Hidden scratch file: every finished translation lands here first,
@@ -132,7 +139,8 @@ def cmd_update(resume=False, interactive=False):
                 saved = json.loads(temp_path.read_text(encoding="utf-8"))
                 if saved.get("fingerprint") == fingerprint:
                     results = saved.get("results", {})
-            except Exception:
+            except Exception as e:
+                suppressed_errors.append(e)
                 results = {}
         elif temp_path.exists():
             temp_path.unlink()
@@ -169,11 +177,9 @@ def cmd_update(resume=False, interactive=False):
             time_str = format_duration(time.time() - start_run_time)
             _usage = 0
 
-            # Move cursor up 4 lines on subsequent renders
             cursor_up = "" if _first_render else "\033[4F"
             _first_render = False
 
-            # \033[K clears from cursor position to the end of the line
             lines = [
                 f"\033[KTranslating {_total} keys...",
                 f"\033[KProgress: {pct:5.1f}%",
@@ -185,45 +191,67 @@ def cmd_update(resume=False, interactive=False):
             sys.stdout.flush()
 
         smoother = SmoothProgress(total, _render)
-        smoother.update(done_count)
-
-        # Local (non-network) work first: direct copy (en_US) and British-spelling
-        # conversion (en_GB) need no API call at all.
-        for t in [t for t in remaining if t["google_code"] in (None, GB_CONVERT)]:
-            text = base_values[t["key"]]
-            value = text if t["google_code"] is None else to_british(text)
-            results[task_key(t["code"], t["key"])] = value
-            done_count += 1
+        fatal_error_count = 0
+        
+        try:
             smoother.update(done_count)
-        save_temp()
-        save_progress("update", [], fingerprint, time.time() - start_run_time)
 
-        # Real network translation, grouped by target Google language code (one
-        # 'es' batch covers both es_ES and es_MX, for example) but reported as a
-        # single running total across every language.
-        by_google = {}
-        for t in remaining:
-            if t["google_code"] in (None, GB_CONVERT):
-                continue
-            by_google.setdefault(t["google_code"], []).append(t)
-
-        for google_code, group in by_google.items():
-            texts = [base_values[t["key"]] for t in group]
-            base_offset = done_count
-
-            def _progress_cb(group_done, _base_offset=base_offset):
-                smoother.update(_base_offset + group_done)
-
-            workers = resolve_workers(len(texts))
-            translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
-            for t, value in zip(group, translated):
+            # Local (non-network) work first: direct copy (en_US) and British-spelling
+            # conversion (en_GB) need no API call at all.
+            for t in [t for t in remaining if t["google_code"] in (None, GB_CONVERT)]:
+                text = base_values[t["key"]]
+                value = text if t["google_code"] is None else to_british(text)
                 results[task_key(t["code"], t["key"])] = value
-            done_count = base_offset + len(group)
-            smoother.update(done_count)
+                done_count += 1
+                smoother.update(done_count)
             save_temp()
             save_progress("update", [], fingerprint, time.time() - start_run_time)
 
-        smoother.finish()
+            # Real network translation, grouped by target Google language code (one
+            # 'es' batch covers both es_ES and es_MX, for example) but reported as a
+            # single running total across every language.
+            by_google = {}
+            for t in remaining:
+                if t["google_code"] in (None, GB_CONVERT):
+                    continue
+                by_google.setdefault(t["google_code"], []).append(t)
+
+            for google_code, group in by_google.items():
+                texts = [base_values[t["key"]] for t in group]
+                base_offset = done_count
+
+                def _progress_cb(group_done, _base_offset=base_offset):
+                    smoother.update(_base_offset + group_done)
+
+                workers = resolve_workers(len(texts))
+                translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
+                for t, value in zip(group, translated):
+                    results[task_key(t["code"], t["key"])] = value
+                done_count = base_offset + len(group)
+                smoother.update(done_count)
+                save_temp()
+                save_progress("update", [], fingerprint, time.time() - start_run_time)
+
+            smoother.finish()
+        except Exception as err:
+            fatal_error_count += 1
+            time_str = format_duration(time.time() - start_run_time)
+            _usage = 0
+
+            # Render fatal output layout over current display block
+            cursor_up = "" if _first_render else "\033[4F"
+            fatal_lines = [
+                f"\033[KTranslating {total} keys - Fatal Exception",
+                f"\033[KProgress: 0% (Failed)",
+                f"\033[KTime: {time_str}",
+                f"\033[KUsage: {_usage}% (Not impacted by failure)",
+                f"\033[K{CLR_RED}Fatal Errors: {fatal_error_count}{CLR_RESET}",
+                f"\033[K{CLR_DARK_GREEN}Please try again in 0 minutes{CLR_RESET}",
+            ]
+            sys.stdout.write(cursor_up + "\n".join(fatal_lines) + "\n")
+            sys.stdout.flush()
+            raise err
+
         total_duration = time.time() - start_run_time
         if temp_path.exists():
             temp_path.unlink()
@@ -286,3 +314,9 @@ def cmd_update(resume=False, interactive=False):
         )
     print(f"\nUsage: 0% - Resets in N/A")
     print(f"Cooldown: 0 minutes - You can translate again at N/A")
+
+    # Display any non-fatal suppressed errors cleanly at the end of output
+    if suppressed_errors:
+        print(f"\n{CLR_RED}Suppressed Non-Fatal Errors ({len(suppressed_errors)}):{CLR_RESET}")
+        for idx, err in enumerate(suppressed_errors, 1):
+            print(f"  {idx}. {type(err).__name__}: {err}")
