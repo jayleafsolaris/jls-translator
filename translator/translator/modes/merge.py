@@ -1,46 +1,26 @@
-"""--merge: rebuild base from the folder hierarchy created by --split."""
+"""--merge: rebuild base from the base/ folder hierarchy created by --split."""
+
+import shutil
 
 from ..common import state
 from ..common.state import DEFAULTS
-from ..common.sections import load_section_order, render_sections
+from ..common.sections import load_section_tree, render_tree
 
 
 def cmd_merge():
-    order = load_section_order()
-    if not order:
-        print("No section-order cache found -- run --split first, or there's nothing to merge.")
+    tree = load_section_tree()
+    if not tree:
+        print("No section-tree cache found -- run --split first, or there's nothing to merge.")
         return
 
-    missing = [n for n in order if not (state.SCRIPT_DIR / n / f"{n}.txt").exists()]
-    if missing:
-        print("Missing expected section file(s), aborting:")
-        for n in missing:
-            print(f"  {n}/{n}.txt")
+    base_dir = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    if not base_dir.is_dir():
+        print(f"No '{DEFAULTS['base_lang']}/' folder found -- nothing to merge.")
         return
 
-    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
-    if base_path.exists():
-        print(f"'{DEFAULTS['base_lang']}' already exists and will be overwritten.")
-        confirm = input("Type 'yes' to confirm: ").strip().lower()
-        if confirm != "yes":
-            print("Cancelled.")
-            return
+    rendered = render_tree(tree, base_dir)
 
-    sections = []
-    for name in order:
-        content = (state.SCRIPT_DIR / name / f"{name}.txt").read_text(encoding="utf-8")
-        sections.append((name, content))
+    shutil.rmtree(base_dir)
+    (state.SCRIPT_DIR / DEFAULTS["base_lang"]).write_text(rendered, encoding="utf-8")
 
-    base_path.write_text(render_sections(sections), encoding="utf-8")
-
-    for name in order:
-        folder = state.SCRIPT_DIR / name
-        txt = folder / f"{name}.txt"
-        if txt.exists():
-            txt.unlink()
-        try:
-            folder.rmdir()
-        except OSError:
-            pass  # folder has other stuff in it -- leave it, don't delete anything unexpected
-
-    print(f"Merged {len(order)} folder(s) back into '{DEFAULTS['base_lang']}'.")
+    print("Done! Base: merged")
