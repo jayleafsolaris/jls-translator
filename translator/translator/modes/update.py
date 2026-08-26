@@ -12,6 +12,7 @@ from ..common.text_protect import tokens_only_diff, apply_token_patch, to_britis
 from ..common.netcheck import require_internet_or_warn
 from ..common.config_store import warn_red
 from ..common.translate import translate_many
+from ..common.ratelimit import set_job_profile, status_report
 from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, get_active_language_codes, resolve_workers
 from ..common.progress import (
     load_base, sync_en_us_from_base, base_fingerprint, clear_progress, save_progress,
@@ -123,6 +124,13 @@ def cmd_update(resume=False, interactive=False):
         print(f"{total_token_patched} key(s) had only token changes "
               f"-- patched in place, no retranslation needed.\n")
 
+    # Feed the rate limiter a rough estimate of how much real (networked)
+    # translation work this run represents, so its adaptive cooldown can
+    # pace itself sensibly against the remaining hourly/daily budget.
+    real_tasks = [t for t in tasks if t["google_code"] not in (None, GB_CONVERT)]
+    estimated_bytes = sum(len(base_values[t["key"]].encode("utf-8")) for t in real_tasks)
+    set_job_profile(len(real_tasks), estimated_bytes)
+
     results = {}
     total_duration = 0.0
     suppressed_errors = []
@@ -175,7 +183,7 @@ def cmd_update(resume=False, interactive=False):
 
             pct = (done / _total * 100) if _total else 100.0
             time_str = format_duration(time.time() - start_run_time)
-            _usage = 0
+            usage = status_report()  # cached -- cheap to call every tick
 
             cursor_up = "" if _first_render else "\033[4F"
             _first_render = False
@@ -184,7 +192,7 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Translating {_total} keys...",
                 f"\033[K  Progress: {pct:5.1f}%",
                 f"\033[K  Time: {time_str}",
-                f"\033[K  Usage: {_usage}%",
+                f"\033[K  Usage: hour {usage['hour_pct']:.0f}% / day {usage['day_pct']:.0f}%",
             ]
 
             sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
@@ -232,11 +240,25 @@ def cmd_update(resume=False, interactive=False):
                 save_temp()
                 save_progress("update", [], fingerprint, time.time() - start_run_time)
 
+                # Refresh the job profile with what's actually left after
+                # this language group finishes, so the cooldown reacts to
+                # progress rather than just the original estimate.
+                remaining_bytes = sum(
+                    len(base_values[t["key"]].encode("utf-8"))
+                    for grp in by_google.values() for t in grp
+                    if task_key(t["code"], t["key"]) not in results
+                )
+                remaining_keys = sum(
+                    1 for grp in by_google.values() for t in grp
+                    if task_key(t["code"], t["key"]) not in results
+                )
+                set_job_profile(remaining_keys, remaining_bytes)
+
             smoother.finish()
         except Exception as err:
             fatal_error_count += 1
             time_str = format_duration(time.time() - start_run_time)
-            _usage = 0
+            usage = status_report()
 
             # Render fatal output layout over current display block
             cursor_up = "" if _first_render else "\033[4F"
@@ -244,11 +266,11 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Translating {total} keys - Fatal Exception",
                 f"\033[K  Progress: 0% (Failed)",
                 f"\033[K  Time: {time_str}",
-                f"\033[K  Usage: {_usage}% (Not impacted by failure)",
+                f"\033[K  Usage: hour {usage['hour_pct']:.0f}% / day {usage['day_pct']:.0f}% (not the cause -- see below)",
                 f"\033[K  {CLR_RED}Fatal Errors: {fatal_error_count}{CLR_RESET}",
                 f"\033[K  {CLR_DARK_GREEN}Please try again in 0 minutes{CLR_RESET}",
             ]
-            sys.stdout.write(cursor_up + "\n".join(fatal_lines) + "\n")
+            sys.stdout.write(cursor_up + "\n".join(fatal_lines) + "\033[J\n")
             sys.stdout.flush()
             raise err
 
@@ -312,10 +334,16 @@ def cmd_update(resume=False, interactive=False):
             f"--update limit reached ({new_update_count}/{DEFAULTS['update_limit']}) -- "
             f"this base file must be recreated (--create) before --update can run again."
         )
-    print(f"\nHourly Usage: 0% - Resets in N/A")
-    print(f"\nDaily Usage: 0% - Resets in N/A")
-    print(f"Cooldown: 1 hour - Ready at ??:??")
-    print(f"You have reached the <usage_type> usage limit to prevent a temporary IP limit/ban")
+
+    report = status_report(use_cache=False)
+    print(f"\nHourly Usage: {report['hour_pct']:.0f}% - Resets in {report['hour_reset_str']}")
+    print(f"Daily Usage: {report['day_pct']:.0f}% - Resets in {report['day_reset_str']}")
+    if report["day_pct"] >= 99.0:
+        warn_red("Daily usage limit reached -- further translation requests will pause until it resets, "
+                  "to avoid a temporary IP rate limit/ban from Google Translate.")
+    elif report["hour_pct"] >= 99.0:
+        warn_red("Hourly usage limit reached -- further translation requests will pause until it resets, "
+                  "to avoid a temporary IP rate limit/ban from Google Translate.")
 
     # Display any non-fatal suppressed errors cleanly at the end of output
     if suppressed_errors:
