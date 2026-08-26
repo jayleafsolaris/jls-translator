@@ -30,6 +30,7 @@ DEFAULTS = {
     "progress_file": ".translate_progress.json",
     "update_temp_file": ".translate_update_temp.json",
     "version_check_file": ".version_check_cache.json",
+    "section_order_cache": ".section_order.json",
     "version_check_interval_minutes": 10,
     "request_delay": 0.15,   # seconds between global translation calls
     "max_retries": 3,
@@ -43,12 +44,14 @@ DEFAULTS = {
 SCRIPT_DIR = None  # set at runtime from the saved --path
 
 # Where this script/module itself lives once pip-installed (e.g. inside
-# site-packages). Cache, progress tracking, languages.json, and the config
-# folder all live here -- next to the package -- rather than inside the
-# project folder pointed to by --path. NOTE: this means cache/config are
-# shared across every project you point --path at; fine for a single
-# ongoing project, but keep in mind if you ever manage multiple addons with
-# this same install.
+# site-packages). Cache, progress tracking, languages.json, the
+# section-order cache (see --split/--merge, common/sections.py), and the
+# config folder all live here -- next to the package -- rather than
+# inside the project folder pointed to by --path. NOTE: this means
+# cache/config are shared across every project you point --path at; fine
+# for a single ongoing project, but keep in mind if you ever manage
+# multiple addons with this same install (in particular, the
+# section-order cache only remembers ONE project's split at a time).
 PACKAGE_DIR = Path(__file__).resolve().parent
 
 # GitHub repo this script/package is published from -- used both by
