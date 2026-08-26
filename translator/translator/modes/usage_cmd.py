@@ -1,17 +1,44 @@
-"""--usage: show current translation usage against the hourly/daily caps."""
+"""--usage: show current translation usage against the hourly/daily caps,
+and --cooldown: manually force a cooldown on top of them."""
 
 import time
 
-from ..common.ratelimit import status_report
+from ..common.ratelimit import status_report, set_manual_cooldown
 
 
-def cmd_usage():
+def _clock(epoch):
+    return time.strftime("%I:%M %p", time.localtime(epoch)).lstrip("0")
+
+
+def _relative(epoch):
+    secs = max(0, int(epoch - time.time()))
+    h, rem = divmod(secs, 3600)
+    m, s = divmod(rem, 60)
+    if h:
+        return f"{h}h {m}m"
+    if m:
+        return f"{m}m {s}s"
+    return f"{s}s"
+
+
+def cmd_usage(cooldown_hours=None):
+    if cooldown_hours is not None:
+        clamped = max(1.0, min(72.0, cooldown_hours))
+        until_epoch = set_manual_cooldown(cooldown_hours)
+        note = ""
+        if clamped != cooldown_hours:
+            note = f" (requested {cooldown_hours:g}h, clamped to the 1-72h range)"
+        print(f"Cooldown enforced for {clamped:g}h{note}.")
+        print(f"Translations are blocked until {_clock(until_epoch)} (in {_relative(until_epoch)}).")
+        return
+
     report = status_report(use_cache=False)
-
-    day_clock = time.strftime("%I:%M %p", time.localtime(report["day_reset_epoch"])).lstrip("0")
-    hour_clock = time.strftime("%I:%M %p", time.localtime(report["hour_reset_epoch"])).lstrip("0")
 
     print(f"Daily Usage: {report['day_pct']:.0f}%")
     print(f"Hourly Usage: {report['hour_pct']:.0f}%")
-    print(f"Daily Reset: {day_clock} (in {report['day_reset_str']})")
-    print(f"Hourly Reset: {hour_clock} (in {report['hour_reset_str']})")
+    print(f"Daily Reset: {_clock(report['day_reset_epoch'])} (in {report['day_reset_str']})")
+    print(f"Hourly Reset: {_clock(report['hour_reset_epoch'])} (in {report['hour_reset_str']})")
+
+    if report["cooldown_active"]:
+        print(f"Manual Cooldown: active until {_clock(report['cooldown_until_epoch'])} "
+              f"(in {report['cooldown_reset_str']})")
