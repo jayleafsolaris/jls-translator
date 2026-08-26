@@ -312,8 +312,10 @@ def cmd_update(resume=False, interactive=False):
             f"--update limit reached ({new_update_count}/{DEFAULTS['update_limit']}) -- "
             f"this base file must be recreated (--create) before --update can run again."
         )
-    print(f"\nUsage: 0% - Resets in N/A")
-    print(f"Cooldown: 0 minutes - You can translate again at N/A")
+    print(f"\nHourly Usage: 0% - Resets in N/A")
+    print(f"\nDaily Usage: 0% - Resets in N/A")
+    print(f"Cooldown: 1 hour - Ready at ??:??")
+    print(f"You have reached the <usage_type> usage limit to prevent a temporary IP limit/ban")
 
     # Display any non-fatal suppressed errors cleanly at the end of output
     if suppressed_errors:
