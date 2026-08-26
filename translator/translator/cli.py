@@ -24,6 +24,8 @@ base and your .lang files, e.g. RP/texts/):
     jls-translator --view     list base + .lang files in this folder + sizes
     jls-translator --split    split base into a folder hierarchy along its ## sections
     jls-translator --merge    merge that folder hierarchy back into base
+    jls-translator --compile   obfuscate base with a fresh random key (only touches base)
+    jls-translator --decompile reverse --compile using the key stored in base
     jls-translator --continue resume the last interrupted --create/--update/--add/--remove/--delete run
     jls-translator --cache    manage the translation cache (see below)
     jls-translator --config   manage script configuration (see below)
@@ -64,6 +66,11 @@ so --continue can also recover from a crash, dropped connection, or force-quit.
 
 --backup includes any current --split section folders automatically; --restore
 puts them back where they came from.
+
+--compile and --decompile are also one-off and only ever touch `base` itself
+(no other files). --compile scrambles base with a brand-new random key every
+time it runs, appending that key as a marker line at the bottom of the file
+so --decompile can reverse it exactly.
 
 --cache holds everything related to the translation cache used by
 --update's change detection:
@@ -110,6 +117,8 @@ from .modes.restore import cmd_restore
 from .modes.view import cmd_view
 from .modes.split import cmd_split
 from .modes.merge import cmd_merge
+from .modes.compile import cmd_compile
+from .modes.decompile import cmd_decompile
 from .modes.cont import cmd_continue
 from .modes.upgrade import cmd_upgrade
 from .modes.release import cmd_show_release_branch, cmd_set_release_branch
@@ -125,6 +134,8 @@ _MODES = [
     ("view", "List .lang files in this folder + sizes"),
     ("split", "Split base into a folder hierarchy along its ## sections"),
     ("merge", "Merge that folder hierarchy back into base"),
+    ("compile", "Obfuscate base with a fresh random key"),
+    ("decompile", "Reverse --compile using the key stored in base"),
     ("cont", "Resume the last interrupted run (any modifying command)"),
     ("cache", "Manage the translation cache (build, view, or clear)"),
     ("config", "Manage script configuration (workers, active languages, delay)"),
@@ -183,6 +194,10 @@ def main():
     parser.add_argument("--merge", action="store_true",
                          help="merge a --split folder hierarchy back into base, using the "
                               "cached section order (one-off)")
+    parser.add_argument("--compile", action="store_true",
+                         help="obfuscate base with a fresh random key (one-off, only touches base)")
+    parser.add_argument("--decompile", action="store_true",
+                         help="reverse --compile using the key stored in base (one-off, only touches base)")
     parser.add_argument("--continue", dest="cont", action="store_true",
                          help="resume the last interrupted modifying run")
     parser.add_argument("--cache", action="store_true",
@@ -304,7 +319,8 @@ def main():
         ("create", args.create), ("update", args.update), ("add", args.add),
         ("remove", args.remove), ("delete", args.delete), ("backup", args.backup),
         ("restore", args.restore), ("view", args.view), ("split", args.split),
-        ("merge", args.merge), ("cont", args.cont), ("upgrade", args.upgrade),
+        ("merge", args.merge), ("compile", args.compile), ("decompile", args.decompile),
+        ("cont", args.cont), ("upgrade", args.upgrade),
     ]
     chosen = [key for key, on in top_flags if on]
     if len(chosen) > 1:
@@ -351,6 +367,10 @@ def main():
         cmd_split()
     elif mode == "merge":
         cmd_merge()
+    elif mode == "compile":
+        cmd_compile()
+    elif mode == "decompile":
+        cmd_decompile()
     elif mode == "cont":
         cmd_continue(interactive=ask, show_summary=args.summary)
 
