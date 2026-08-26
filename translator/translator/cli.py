@@ -22,6 +22,8 @@ base and your .lang files, e.g. RP/texts/):
     jls-translator --restore  restore base + .lang files (+ cache/languages.json)
                                      from a lang_backups/ zip you pick
     jls-translator --view     list base + .lang files in this folder + sizes
+    jls-translator --split    split base into a folder hierarchy along its ## sections
+    jls-translator --merge    merge that folder hierarchy back into base
     jls-translator --continue resume the last interrupted --create/--update/--add/--remove/--delete run
     jls-translator --cache    manage the translation cache (see below)
     jls-translator --config   manage script configuration (see below)
@@ -50,6 +52,18 @@ of just the totals, e.g.:
 
 Progress is saved after every completed language regardless of --ask,
 so --continue can also recover from a crash, dropped connection, or force-quit.
+
+--split and --merge are one-off commands (no --ask/--continue/--summary):
+
+    jls-translator --split    turns each '## Name' section of base into
+                                     Name/Name.txt, deletes base, and caches the
+                                     section order for --merge to use later
+    jls-translator --merge    reads that cached order back and reassembles
+                                     base from the Name/Name.txt files, then
+                                     removes the section folders
+
+--backup includes any current --split section folders automatically; --restore
+puts them back where they came from.
 
 --cache holds everything related to the translation cache used by
 --update's change detection:
@@ -94,6 +108,8 @@ from .modes.delete import cmd_delete
 from .modes.backup import cmd_backup
 from .modes.restore import cmd_restore
 from .modes.view import cmd_view
+from .modes.split import cmd_split
+from .modes.merge import cmd_merge
 from .modes.cont import cmd_continue
 from .modes.upgrade import cmd_upgrade
 from .modes.release import cmd_show_release_branch, cmd_set_release_branch
@@ -107,6 +123,8 @@ _MODES = [
     ("backup", "Zip all .lang files into lang_backups/"),
     ("restore", "Restore .lang files from a lang_backups/ zip"),
     ("view", "List .lang files in this folder + sizes"),
+    ("split", "Split base into a folder hierarchy along its ## sections"),
+    ("merge", "Merge that folder hierarchy back into base"),
     ("cont", "Resume the last interrupted run (any modifying command)"),
     ("cache", "Manage the translation cache (build, view, or clear)"),
     ("config", "Manage script configuration (workers, active languages, delay)"),
@@ -159,6 +177,12 @@ def main():
     parser.add_argument("--view", action="store_true",
                          help="alone: list .lang files and sizes. "
                               "with --cache: view info about the cache file")
+    parser.add_argument("--split", action="store_true",
+                         help="split base into a folder hierarchy along its '## Name' sections "
+                              "(one-off; base is deleted and replaced by the folders)")
+    parser.add_argument("--merge", action="store_true",
+                         help="merge a --split folder hierarchy back into base, using the "
+                              "cached section order (one-off)")
     parser.add_argument("--continue", dest="cont", action="store_true",
                          help="resume the last interrupted modifying run")
     parser.add_argument("--cache", action="store_true",
@@ -279,8 +303,8 @@ def main():
     top_flags = [
         ("create", args.create), ("update", args.update), ("add", args.add),
         ("remove", args.remove), ("delete", args.delete), ("backup", args.backup),
-        ("restore", args.restore), ("view", args.view), ("cont", args.cont),
-        ("upgrade", args.upgrade),
+        ("restore", args.restore), ("view", args.view), ("split", args.split),
+        ("merge", args.merge), ("cont", args.cont), ("upgrade", args.upgrade),
     ]
     chosen = [key for key, on in top_flags if on]
     if len(chosen) > 1:
@@ -323,6 +347,10 @@ def main():
         cmd_restore()
     elif mode == "view":
         cmd_view()
+    elif mode == "split":
+        cmd_split()
+    elif mode == "merge":
+        cmd_merge()
     elif mode == "cont":
         cmd_continue(interactive=ask, show_summary=args.summary)
 
