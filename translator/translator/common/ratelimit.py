@@ -1,35 +1,34 @@
 """
 Network usage rate limiting for translation requests.
 
-Tracks bytes sent to (and received from) Google Translate in rolling
-hourly and daily windows, enforcing hard caps that are intentionally NOT
-user-configurable -- there is no --config flag anywhere that reads or
-writes the ranges below, by design.
+Tracks bytes sent to (and received from) Google Translate as a SLIDING
+window log -- each request is logged as (timestamp, bytes), and "usage
+this hour" / "usage today" is always the sum of whatever's still inside
+the trailing 60-minute / 24-hour window. This is deliberate: with a fixed
+bucket that only resets at a fixed clock boundary, running --update
+in the middle of an existing window doesn't move the reset countdown at
+all (it just adds to a bucket that resets whenever it resets, regardless
+of when the most recent activity happened) -- which reads as "the
+countdown is frozen." With a sliding window, every new request pushes
+back the moment the *oldest* still-counted request ages out, so the
+countdown always reflects recent activity instead of a timestamp frozen
+from whenever the state file was first created.
 
-The caps are randomized within a fixed range on each window rollover
-(a fresh hourly cap is rolled every time the hourly window resets, same
-for daily), so the exact ceiling isn't identical run to run -- only the
-*range* is fixed, never the number itself, and neither range is exposed
-to config_cmd.py or cli.py.
+Hard caps (bytes, KB = 1000 bytes) are intentionally NOT user-
+configurable -- no --config flag anywhere reads or writes the ranges
+below. The cap itself is rerolled to a fresh random value within its
+range once each real hour/day, so the exact ceiling isn't identical
+call to call, only the *range* is fixed.
 
-A per-run "job profile" (roughly how many bytes --create/--update still
-expects to send, and how many keys that represents) lets the cooldown
-between individual requests adapt automatically:
+A per-run "job profile" (how many bytes --create/--update still expects
+to send) lets the cooldown between individual requests adapt: if the
+remaining work fits inside what's left of the current budget, the
+cooldown stays at the normal configured request delay; if it's on track
+to blow past that budget, the cooldown stretches out proportionally.
 
-- If the remaining work is on track to fit inside whatever's left of the
-  current hourly/daily budget, the cooldown stays at the normal
-  configured request delay.
-- If it's on track to blow past that budget, the cooldown stretches out
-  proportionally, so a big run naturally slows itself down instead of
-  burning through the whole allowance in the first few minutes and then
-  hard-stopping.
-
-If a request would blow the *daily* cap outright, this raises
-RateLimitExceededError rather than sleeping for however many hours are
-left -- callers should treat that exactly like a translation outage
-(save progress, stop, let --continue pick it back up once the window
-resets). Hitting the *hourly* cap just pauses until the next hourly
-window opens, since that wait is short enough to sit through.
+On top of the automatic caps, --usage --24hr <hours> lets you manually
+force a hard cooldown (1-72 hours) that blocks every translation request
+until it lifts, independent of the hourly/daily budgets.
 """
 
 import json
@@ -43,27 +42,27 @@ from .config_store import get_request_delay, warn_red
 # --- Hard caps -------------------------------------------------------
 # Deliberately hardcoded here and nowhere else -- no --config flag
 # exposes these, and nothing else in the package reads or writes them.
-# Units are bytes, KB treated as 1000 bytes (not 1024) for simplicity.
 _HOURLY_CAP_RANGE = (100_000, 150_000)   # 100-150 KB per rolling hour
 _DAILY_CAP_RANGE = (450_000, 500_000)    # 450-500 KB per rolling day
 
 _HOUR_SECONDS = 60 * 60
 _DAY_SECONDS = 24 * 60 * 60
 
+_MANUAL_COOLDOWN_MIN_HOURS = 1
+_MANUAL_COOLDOWN_MAX_HOURS = 72
+
 # The adaptive cooldown never stretches past this multiple of the base
-# request delay, however far over budget the projected job looks -- past
-# this point the hard-cap checks (which pause out the hour, or stop the
-# run entirely for a day-cap breach) take over instead of an ever-growing
-# per-request sleep.
+# request delay -- past this point the hard-cap checks (which pause out
+# the hour, or stop the run entirely for a day-cap breach) take over.
 _MAX_COOLDOWN_MULTIPLIER = 20
 
 _STATE_FILE = PACKAGE_DIR / ".ratelimit_state.json"
 _LOCK = threading.Lock()
 
 # Per-process estimate of what the current --create/--update run still
-# needs to send. Not persisted -- (re)supplied by cmd_create/cmd_update
-# via set_job_profile() at the start of each run. Only ever shapes the
-# adaptive cooldown; never affects the hard caps themselves.
+# needs to send. Not persisted -- (re)supplied via set_job_profile() at
+# the start of each run. Only shapes the adaptive cooldown, never the
+# hard caps.
 _job_remaining_keys = 0
 _job_remaining_bytes = 0
 
@@ -76,10 +75,9 @@ _CACHE_TTL_SECONDS = 1.0
 
 
 class RateLimitExceededError(RuntimeError):
-    """Raised when the daily usage cap has genuinely been exhausted and
-    waiting it out isn't reasonable. Callers should treat this like a
-    translation outage: save progress and stop, so --continue can resume
-    once the daily window resets."""
+    """Raised when the daily cap, or a manually-set cooldown, blocks a
+    request outright. Callers should treat this like an outage: save
+    progress and stop, so --continue can resume once it lifts."""
     pass
 
 
@@ -89,12 +87,12 @@ def _now():
 
 def _default_state(now):
     return {
-        "hour_start": now,
         "hour_cap": random.uniform(*_HOURLY_CAP_RANGE),
-        "hour_used": 0.0,
-        "day_start": now,
         "day_cap": random.uniform(*_DAILY_CAP_RANGE),
-        "day_used": 0.0,
+        "cap_rolled_hour_at": now,
+        "cap_rolled_day_at": now,
+        "usage_log": [],  # list of [epoch, bytes], pruned to the trailing 24h
+        "manual_cooldown_until": None,
     }
 
 
@@ -102,8 +100,9 @@ def _load_state():
     if _STATE_FILE.exists():
         try:
             data = json.loads(_STATE_FILE.read_text(encoding="utf-8"))
-            required = ("hour_start", "hour_cap", "hour_used", "day_start", "day_cap", "day_used")
+            required = ("hour_cap", "day_cap", "cap_rolled_hour_at", "cap_rolled_day_at", "usage_log")
             if all(k in data for k in required):
+                data.setdefault("manual_cooldown_until", None)
                 return data
         except Exception:
             pass
@@ -117,18 +116,37 @@ def _save_state(data):
         pass
 
 
-def _roll_windows(data, now):
-    """Resets whichever window(s) have expired, re-rolling a fresh random
-    cap for that window so the ceiling isn't the same number every time."""
-    if now - data["hour_start"] >= _HOUR_SECONDS:
-        data["hour_start"] = now
+def _prune_log(data, now):
+    """Drops any logged usage older than the daily window -- nothing
+    past 24h matters for either the hourly or daily sum."""
+    data["usage_log"] = [[ts, b] for ts, b in data["usage_log"] if now - ts < _DAY_SECONDS]
+
+
+def _maybe_reroll_caps(data, now):
+    if now - data["cap_rolled_hour_at"] >= _HOUR_SECONDS:
         data["hour_cap"] = random.uniform(*_HOURLY_CAP_RANGE)
-        data["hour_used"] = 0.0
-    if now - data["day_start"] >= _DAY_SECONDS:
-        data["day_start"] = now
+        data["cap_rolled_hour_at"] = now
+    if now - data["cap_rolled_day_at"] >= _DAY_SECONDS:
         data["day_cap"] = random.uniform(*_DAILY_CAP_RANGE)
-        data["day_used"] = 0.0
-    return data
+        data["cap_rolled_day_at"] = now
+
+
+def _usage_within(data, now, window_seconds):
+    return sum(b for ts, b in data["usage_log"] if now - ts < window_seconds)
+
+
+def _next_reset_epoch(data, now, window_seconds):
+    """
+    The sliding window doesn't have one fixed "reset" moment -- usage
+    only drains as old entries age out. This returns when the *oldest*
+    entry still inside the window will next age out (the next moment
+    usage actually ticks down), which is exactly what shifts forward
+    every time new usage gets logged.
+    """
+    in_window = [ts for ts, b in data["usage_log"] if now - ts < window_seconds]
+    if not in_window:
+        return now
+    return min(in_window) + window_seconds
 
 
 def _format_secs(secs):
@@ -144,13 +162,9 @@ def _format_secs(secs):
 
 def set_job_profile(remaining_keys, remaining_bytes):
     """
-    Call once at the start of a --create/--update run (and again anytime
-    the caller wants to refresh the estimate) with a rough estimate of
-    how much translation work is left: remaining_keys is a plain count,
-    remaining_bytes is the total UTF-8 size of the text still to be sent.
-
-    This only shapes the adaptive cooldown between requests -- it never
-    affects the hard hourly/daily caps.
+    Call at the start of a --create/--update run (and again to refresh)
+    with a rough estimate of how much translation work is left. Only
+    shapes the adaptive cooldown -- never the hard caps.
     """
     global _job_remaining_keys, _job_remaining_bytes
     with _LOCK:
@@ -158,45 +172,62 @@ def set_job_profile(remaining_keys, remaining_bytes):
         _job_remaining_bytes = max(0, remaining_bytes)
 
 
-def _adaptive_cooldown(data, now, base_delay):
-    """
-    How long to wait before the *next* request, given how the current
-    job's remaining estimated bytes compare to what's left in the hourly
-    and daily budgets. Only ever stretches the delay out -- never
-    shortens it below base_delay.
-    """
+def _adaptive_cooldown(hour_used, day_used, hour_cap, day_cap, base_delay):
     if _job_remaining_bytes <= 0:
         return base_delay
 
-    hour_remaining_budget = max(1.0, data["hour_cap"] - data["hour_used"])
-    day_remaining_budget = max(1.0, data["day_cap"] - data["day_used"])
+    hour_remaining_budget = max(1.0, hour_cap - hour_used)
+    day_remaining_budget = max(1.0, day_cap - day_used)
 
     best_multiplier = 1.0
     for remaining_budget in (hour_remaining_budget, day_remaining_budget):
         if _job_remaining_bytes <= remaining_budget:
-            continue  # this window's budget comfortably covers the rest of the job
-        overrun_ratio = _job_remaining_bytes / remaining_budget
-        best_multiplier = max(best_multiplier, overrun_ratio)
+            continue
+        best_multiplier = max(best_multiplier, _job_remaining_bytes / remaining_budget)
 
-    best_multiplier = min(best_multiplier, _MAX_COOLDOWN_MULTIPLIER)
-    return base_delay * best_multiplier
+    return base_delay * min(best_multiplier, _MAX_COOLDOWN_MULTIPLIER)
+
+
+def set_manual_cooldown(hours):
+    """
+    Manually forces a hard cooldown -- every reserve() call raises
+    RateLimitExceededError until it lifts, independent of the
+    hourly/daily caps. Clamped to [1, 72] hours no matter what's passed
+    in. Returns the epoch timestamp the cooldown lifts at.
+    """
+    hours = max(_MANUAL_COOLDOWN_MIN_HOURS, min(_MANUAL_COOLDOWN_MAX_HOURS, hours))
+    with _LOCK:
+        now = _now()
+        data = _load_state()
+        _prune_log(data, now)
+        _maybe_reroll_caps(data, now)
+        until = now + hours * 3600
+        data["manual_cooldown_until"] = until
+        _save_state(data)
+    return until
+
+
+def clear_manual_cooldown():
+    with _LOCK:
+        data = _load_state()
+        data["manual_cooldown_until"] = None
+        _save_state(data)
 
 
 def reserve(num_bytes):
     """
-    Call this right before actually sending a request to Google Translate,
-    with the UTF-8 byte size of the outgoing text.
+    Call right before sending a request to Google Translate, with the
+    UTF-8 byte size of the outgoing text.
 
-    - Applies the adaptive cooldown (sleeps) before letting the request
-      through, if the current job looks likely to outrun its remaining
-      budget.
-    - If this request would exceed the *hourly* cap, sleeps until the
-      next hourly window opens and re-checks (daily budget permitting).
-    - If this request would exceed the *daily* cap, raises
-      RateLimitExceededError instead of sleeping for hours.
+    - Blocks immediately if a manual cooldown (--usage --24hr) is active.
+    - Raises RateLimitExceededError if this request would exceed the
+      daily cap.
+    - Sleeps until enough usage ages out of the hourly window if this
+      request would exceed the hourly cap (daily budget permitting).
+    - Otherwise applies the adaptive cooldown and logs the usage.
 
-    Thread-safe -- safe to call concurrently from translate_many's worker
-    threads.
+    Thread-safe -- safe to call concurrently from translate_many's
+    worker threads.
     """
     base_delay = get_request_delay()
 
@@ -206,30 +237,40 @@ def reserve(num_bytes):
 
         with _LOCK:
             now = _now()
-            data = _roll_windows(_load_state(), now)
+            data = _load_state()
+            _prune_log(data, now)
+            _maybe_reroll_caps(data, now)
 
-            if data["day_used"] + num_bytes > data["day_cap"]:
+            cooldown_until = data.get("manual_cooldown_until")
+            if cooldown_until and now < cooldown_until:
                 _save_state(data)
-                reset_str = _format_secs(_DAY_SECONDS - (now - data["day_start"]))
                 raise RateLimitExceededError(
-                    f"Daily translation usage limit reached. Resets in {reset_str}."
+                    f"Manual cooldown active. Resets in {_format_secs(cooldown_until - now)}."
                 )
 
-            if data["hour_used"] + num_bytes > data["hour_cap"]:
-                wait_secs = max(1.0, _HOUR_SECONDS - (now - data["hour_start"]) + 1)
+            day_used = _usage_within(data, now, _DAY_SECONDS)
+            hour_used = _usage_within(data, now, _HOUR_SECONDS)
+
+            if day_used + num_bytes > data["day_cap"]:
+                _save_state(data)
+                reset_epoch = _next_reset_epoch(data, now, _DAY_SECONDS)
+                raise RateLimitExceededError(
+                    f"Daily translation usage limit reached. Resets in {_format_secs(reset_epoch - now)}."
+                )
+
+            if hour_used + num_bytes > data["hour_cap"]:
+                reset_epoch = _next_reset_epoch(data, now, _HOUR_SECONDS)
+                wait_secs = max(1.0, reset_epoch - now)
                 _save_state(data)
             else:
-                cooldown = _adaptive_cooldown(data, now, base_delay)
-                data["hour_used"] += num_bytes
-                data["day_used"] += num_bytes
+                cooldown = _adaptive_cooldown(hour_used, day_used, data["hour_cap"], data["day_cap"], base_delay)
+                data["usage_log"].append([now, num_bytes])
                 _save_state(data)
 
         if wait_secs is not None:
-            # Hourly cap hit but the daily budget still has room -- wait
-            # out the rest of this hour rather than stopping the run.
             warn_red(
                 f"Hourly translation usage limit reached -- pausing "
-                f"{_format_secs(wait_secs)} until the next hourly window."
+                f"{_format_secs(wait_secs)} until usage ages out of the hourly window."
             )
             time.sleep(min(wait_secs, _HOUR_SECONDS))
             continue
@@ -241,30 +282,29 @@ def reserve(num_bytes):
 
 def record_extra(num_bytes):
     """
-    Adds additional bytes (e.g. the translated response payload, which
-    isn't known until after the request completes) to the current usage
-    counters after the fact. Never blocks and never raises -- the hard
-    caps are only enforced going into reserve(), not on this top-up, so a
-    response that came back larger than expected doesn't retroactively
-    fail an already-completed request.
+    Adds additional bytes (e.g. the translated response payload, only
+    known after the request completes) to the sliding usage log. Never
+    blocks and never raises.
     """
     if num_bytes <= 0:
         return
     with _LOCK:
         now = _now()
-        data = _roll_windows(_load_state(), now)
-        data["hour_used"] += num_bytes
-        data["day_used"] += num_bytes
+        data = _load_state()
+        _prune_log(data, now)
+        _maybe_reroll_caps(data, now)
+        data["usage_log"].append([now, num_bytes])
         _save_state(data)
 
 
 def status_report(use_cache=True):
     """
-    Snapshot of current usage for display: hour/day percentage used and
-    time until each window resets. Cached for _CACHE_TTL_SECONDS so a
-    live progress display can call this every tick without hitting disk
-    every tick -- pass use_cache=False for a guaranteed-fresh read (e.g.
-    the final summary at the end of a run).
+    Snapshot of current usage: hour/day percentage used, when each
+    window's usage will next tick down, and whether a manual cooldown
+    is active. Cached for _CACHE_TTL_SECONDS so a live progress display
+    can call this every tick without hitting disk every tick -- pass
+    use_cache=False for a guaranteed-fresh read (--usage, end-of-run
+    summaries).
     """
     global _cached_report, _cached_report_time
 
@@ -275,24 +315,33 @@ def status_report(use_cache=True):
                 return _cached_report
 
     with _LOCK:
-        data = _roll_windows(_load_state(), now)
+        data = _load_state()
+        _prune_log(data, now)
+        _maybe_reroll_caps(data, now)
         _save_state(data)
 
-    hour_pct = 100.0 * data["hour_used"] / data["hour_cap"] if data["hour_cap"] else 0.0
-    day_pct = 100.0 * data["day_used"] / data["day_cap"] if data["day_cap"] else 0.0
+        day_used = _usage_within(data, now, _DAY_SECONDS)
+        hour_used = _usage_within(data, now, _HOUR_SECONDS)
+        hour_cap = data["hour_cap"]
+        day_cap = data["day_cap"]
+        hour_reset_epoch = _next_reset_epoch(data, now, _HOUR_SECONDS)
+        day_reset_epoch = _next_reset_epoch(data, now, _DAY_SECONDS)
+        cooldown_until = data.get("manual_cooldown_until")
 
-    hour_reset_epoch = data["hour_start"] + _HOUR_SECONDS
-    day_reset_epoch = data["day_start"] + _DAY_SECONDS
+    hour_pct = 100.0 * hour_used / hour_cap if hour_cap else 0.0
+    day_pct = 100.0 * day_used / day_cap if day_cap else 0.0
+    cooldown_active = bool(cooldown_until and now < cooldown_until)
 
     report = {
         "hour_pct": min(100.0, hour_pct),
         "day_pct": min(100.0, day_pct),
         "hour_reset_str": _format_secs(hour_reset_epoch - now),
         "day_reset_str": _format_secs(day_reset_epoch - now),
-        # Absolute epoch timestamps for callers (e.g. --usage) that want
-        # to show a clock time rather than just a relative countdown.
         "hour_reset_epoch": hour_reset_epoch,
         "day_reset_epoch": day_reset_epoch,
+        "cooldown_active": cooldown_active,
+        "cooldown_until_epoch": cooldown_until if cooldown_active else None,
+        "cooldown_reset_str": _format_secs(cooldown_until - now) if cooldown_active else None,
     }
 
     with _cache_lock:
