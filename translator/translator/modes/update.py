@@ -192,7 +192,7 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Translating {_total} keys...",
                 f"\033[K  Progress: {pct:5.1f}%",
                 f"\033[K  Time: {time_str}",
-                f"\033[K  Usage: hour {usage['hour_pct']:.0f}% / day {usage['day_pct']:.0f}%",
+                f"\033[K  Usage: Hourly {usage['hour_pct']:.0f}% • Daily {usage['day_pct']:.0f}%",
             ]
 
             sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
@@ -266,7 +266,7 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Translating {total} keys - Fatal Exception",
                 f"\033[K  Progress: 0% (Failed)",
                 f"\033[K  Time: {time_str}",
-                f"\033[K  Usage: hour {usage['hour_pct']:.0f}% / day {usage['day_pct']:.0f}% (not the cause -- see below)",
+                f"\033[K  Usage: Hourly {usage['hour_pct']:.0f}% • Daily {usage['day_pct']:.0f}% (not the cause -- see below)",
                 f"\033[K  {CLR_RED}Fatal Errors: {fatal_error_count}{CLR_RESET}",
                 f"\033[K  {CLR_DARK_GREEN}Please try again in 0 minutes{CLR_RESET}",
             ]
