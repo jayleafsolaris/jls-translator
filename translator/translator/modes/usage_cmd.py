@@ -12,13 +12,20 @@ def _clock(epoch):
 
 def _relative(epoch):
     secs = max(0, int(epoch - time.time()))
-    h, rem = divmod(secs, 3600)
+    d, rem = divmod(secs, 86400)
+    h, rem = divmod(rem, 3600)
     m, s = divmod(rem, 60)
-    if h:
-        return f"{h}h {m}m"
-    if m:
-        return f"{m}m {s}s"
-    return f"{s}s"
+
+    units = [("d", d), ("h", h), ("m", m), ("s", s)]
+    nonzero = [(label, val) for label, val in units if val]
+
+    if not nonzero:
+        return "0s"
+    if len(nonzero) == 1:
+        return f"{nonzero[0][1]}{nonzero[0][0]}"
+    first_label, first_val = nonzero[0]
+    second_label, second_val = nonzero[1]
+    return f"{first_val}{first_label} {second_val}{second_label}"
 
 
 def cmd_usage(cooldown_hours=None):
