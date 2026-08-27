@@ -41,6 +41,15 @@ base and your .lang files, e.g. RP/texts/):
                                      runs quietly on every command) on or off
     jls-translator --usage   show current hourly/daily translation usage percentages
                                      and when each resets (no --path needed)
+    jls-translator --push    push <cwd>/jls-translator/ up to this tool's own GitHub
+                                     repo as one combined commit (branch: --release)
+    jls-translator --pull    pull <cwd>/jls-translator/ down from that repo, mirroring
+                                     it exactly (adds/updates/removes local files to match)
+    jls-translator --token   view, set, or remove the GitHub token --push/--pull use
+    jls-translator --token <TOKEN>
+                              store that as the GitHub personal access token
+    jls-translator --token remove
+                              delete the stored GitHub token
 
 --path is required for every mode except --version.
 
@@ -73,6 +82,15 @@ puts them back where they came from.
 (no other files). --compile scrambles base with a brand-new random key every
 time it runs, appending that key as a marker line at the bottom of the file
 so --decompile can reverse it exactly.
+
+--push/--pull sync <cwd>/jls-translator/ against this same-named path in this
+tool's own repo, on whichever branch --release currently points to. --push
+diffs against the remote tree (by content, not by timestamp) and makes one
+combined commit for everything changed/removed; --pull mirrors the remote
+back down, overwriting/adding/removing local files to match exactly. Both
+need a GitHub token with write access (for --push) set via --token first --
+if the token is missing or lacks access, both fail with a plain
+"You are not authorized to do this" rather than a stack trace.
 
 --cache holds everything related to the translation cache used by
 --update's change detection:
@@ -125,6 +143,9 @@ from .modes.cont import cmd_continue
 from .modes.upgrade import cmd_upgrade
 from .modes.release import cmd_show_release_branch, cmd_set_release_branch
 from .modes.usage_cmd import cmd_usage
+from .modes.push import cmd_push
+from .modes.pull import cmd_pull
+from .modes.token import cmd_show_token, cmd_set_token, cmd_remove_token
 
 _MODES = [
     ("create", "Overwrite ALL .lang files from scratch"),
@@ -139,6 +160,8 @@ _MODES = [
     ("merge", "Merge that folder hierarchy back into base"),
     ("compile", "Obfuscate base with a fresh random key"),
     ("decompile", "Reverse --compile using the key stored in base"),
+    ("push", "Push jls-translator/ up to GitHub as one combined commit"),
+    ("pull", "Pull jls-translator/ down from GitHub, mirroring it exactly"),
     ("cont", "Resume the last interrupted run (any modifying command)"),
     ("cache", "Manage the translation cache (build, view, or clear)"),
     ("config", "Manage script configuration (workers, active languages, delay)"),
@@ -245,6 +268,15 @@ def main():
                               "(combine with --create/--update/--add/--remove/--delete/--continue)")
     parser.add_argument("--upgrade", action="store_true", help="update the script to the latest version from GitHub")
     parser.add_argument("--summary", action="store_true", help="show detailed per-language results for --add and --remove")
+    parser.add_argument("--push", action="store_true",
+                         help="push <cwd>/jls-translator/ up to this tool's own GitHub repo "
+                              "as one combined commit (branch: --release)")
+    parser.add_argument("--pull", action="store_true",
+                         help="pull <cwd>/jls-translator/ down from that repo, mirroring it exactly")
+    parser.add_argument("--token", nargs="?", const="__show__", default=None, metavar="TOKEN",
+                         help="with no value: show whether a GitHub token is stored. "
+                              "with a value: store that as the token --push/--pull use. "
+                              "with 'remove': delete the stored token")
     
     args = parser.parse_args()
 
@@ -282,6 +314,15 @@ def main():
             cmd_show_release_branch()
         else:
             cmd_set_release_branch(args.release)
+        return
+
+    if args.token is not None:
+        if args.token == "__show__":
+            cmd_show_token()
+        elif args.token.strip().lower() == "remove":
+            cmd_remove_token()
+        else:
+            cmd_set_token(args.token)
         return
 
     # No --path needed anymore -- the script just operates on wherever
@@ -339,6 +380,7 @@ def main():
         ("remove", args.remove), ("delete", args.delete), ("backup", args.backup),
         ("restore", args.restore), ("view", args.view), ("split", args.split),
         ("merge", args.merge), ("compile", args.compile), ("decompile", args.decompile),
+        ("push", args.push), ("pull", args.pull),
         ("cont", args.cont), ("upgrade", args.upgrade),
     ]
     chosen = [key for key, on in top_flags if on]
@@ -390,6 +432,10 @@ def main():
         cmd_compile()
     elif mode == "decompile":
         cmd_decompile()
+    elif mode == "push":
+        cmd_push()
+    elif mode == "pull":
+        cmd_pull()
     elif mode == "cont":
         cmd_continue(interactive=ask, show_summary=args.summary)
 
