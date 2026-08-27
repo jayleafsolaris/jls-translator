@@ -1,6 +1,7 @@
-"""--pull: sync the current working directory down from this tool's own repo, mirroring it exactly."""
+"""--pull: sync <cwd>/jls-translator/ down from this tool's own repo, mirroring it exactly."""
 
 from ..common import state
+from ..common.state import GITHUB_REPO
 from ..common.config_store import get_release_branch
 from ..common.github_api import (
     GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix,
@@ -10,7 +11,7 @@ from ..common.github_api import (
 
 def cmd_pull():
     branch = get_release_branch()
-    local_root = state.SCRIPT_DIR
+    local_root = state.SCRIPT_DIR / GITHUB_REPO
 
     try:
         _, tree_sha = get_branch_commit_and_tree(branch)

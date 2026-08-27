@@ -1,6 +1,7 @@
-"""--push: sync the current working directory up to this tool's own repo, as one combined commit."""
+"""--push: sync <cwd>/jls-translator/ up to this tool's own repo, as one combined commit."""
 
 from ..common import state
+from ..common.state import GITHUB_REPO
 from ..common.config_store import get_release_branch
 from ..common.github_api import (
     GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix,
@@ -24,7 +25,12 @@ def _local_files(local_root, remote_prefix):
 
 
 def cmd_push():
-    local_root = state.SCRIPT_DIR
+    local_root = state.SCRIPT_DIR / GITHUB_REPO
+    if not local_root.is_dir():
+        print(f"No '{GITHUB_REPO}/' folder found in this directory -- nothing to push. "
+              f"Run --pull first to create it.")
+        return
+
     branch = get_release_branch()
 
     try:
@@ -80,7 +86,7 @@ def cmd_push():
     try:
         new_tree_sha = create_tree(tree_sha, entries)
         new_commit_sha = create_commit(
-            f"Syncronization", new_tree_sha, commit_sha
+            f"jls-translator sync: {changed} changed, {removed} removed", new_tree_sha, commit_sha
         )
         update_ref(branch, new_commit_sha)
     except GitHubAuthError:
