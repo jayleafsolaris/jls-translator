@@ -41,10 +41,10 @@ base and your .lang files, e.g. RP/texts/):
                                      runs quietly on every command) on or off
     jls-translator --usage   show current hourly/daily translation usage percentages
                                      and when each resets (no --path needed)
-    jls-translator --push    push <cwd>/jls-translator/ up to this tool's own GitHub
-                                     repo as one combined commit (branch: --release)
-    jls-translator --pull    pull <cwd>/jls-translator/ down from that repo, mirroring
-                                     it exactly (adds/updates/removes local files to match)
+    jls-translator --push    push the current working directory up to this tool's own
+                                     GitHub repo as one combined commit (branch: --release)
+    jls-translator --pull    pull that repo down into the current working directory,
+                                     mirroring it exactly (adds/updates/removes local files)
     jls-translator --token   view, set, or remove the GitHub token --push/--pull use
     jls-translator --token <TOKEN>
                               store that as the GitHub personal access token
@@ -83,14 +83,20 @@ puts them back where they came from.
 time it runs, appending that key as a marker line at the bottom of the file
 so --decompile can reverse it exactly.
 
---push/--pull sync <cwd>/jls-translator/ against this same-named path in this
-tool's own repo, on whichever branch --release currently points to. --push
-diffs against the remote tree (by content, not by timestamp) and makes one
-combined commit for everything changed/removed; --pull mirrors the remote
-back down, overwriting/adding/removing local files to match exactly. Both
-need a GitHub token with write access (for --push) set via --token first --
-if the token is missing or lacks access, both fail with a plain
-"You are not authorized to do this" rather than a stack trace.
+--push/--pull sync the current working directory (wherever you run the
+command from) against wherever this package's cli.py lives in this tool's
+own repo, on whichever branch --release currently points to. The remote
+location isn't assumed to be named any particular thing -- both scan the
+repo's tree for wherever cli.py actually sits, the same way --upgrade does.
+--push diffs against the remote tree (by content, not by timestamp) and
+makes one combined commit for everything changed/removed; --pull mirrors
+the remote back down into cwd the same way. Your local cache, config
+folder, and stored GitHub token are never pushed and never touched by
+--pull's mirroring, no matter what -- run these from wherever your install
+actually lives if you want them to sync it. Both need a GitHub token with
+write access (for --push) set via --token first -- if the token is missing
+or lacks access, both fail with a plain "You are not authorized to do this"
+rather than a stack trace.
 
 --cache holds everything related to the translation cache used by
 --update's change detection:
@@ -160,8 +166,8 @@ _MODES = [
     ("merge", "Merge that folder hierarchy back into base"),
     ("compile", "Obfuscate base with a fresh random key"),
     ("decompile", "Reverse --compile using the key stored in base"),
-    ("push", "Push jls-translator/ up to GitHub as one combined commit"),
-    ("pull", "Pull jls-translator/ down from GitHub, mirroring it exactly"),
+    ("push", "Push cwd up to GitHub as one combined commit"),
+    ("pull", "Pull GitHub down into cwd, mirroring it exactly"),
     ("cont", "Resume the last interrupted run (any modifying command)"),
     ("cache", "Manage the translation cache (build, view, or clear)"),
     ("config", "Manage script configuration (workers, active languages, delay)"),
