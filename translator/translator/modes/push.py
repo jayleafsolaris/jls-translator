@@ -1,30 +1,30 @@
-"""--push: sync <cwd>/jls-translator/ up to this tool's own repo, as one combined commit."""
+"""--push: sync the current working directory up to this tool's own repo, as one combined commit."""
 
 from ..common import state
 from ..common.config_store import get_release_branch
 from ..common.github_api import (
-    GitHubAuthError, GitHubApiError, SYNC_PREFIX,
+    GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix,
     get_branch_commit_and_tree, get_full_tree, create_blob, create_tree,
     create_commit, update_ref, git_blob_sha,
 )
 
 
-def _local_files(local_root):
-    """Returns {remote_path: absolute_path} for every file under local_root."""
+def _local_files(local_root, remote_prefix):
+    """Returns {remote_path: absolute_path} for every non-excluded file under local_root."""
     files = {}
     for p in local_root.rglob("*"):
-        if p.is_file():
-            rel = p.relative_to(local_root).as_posix()
-            files[f"{SYNC_PREFIX}/{rel}"] = p
+        if not p.is_file():
+            continue
+        rel = p.relative_to(local_root).as_posix()
+        if is_sync_excluded(rel):
+            continue
+        remote_path = f"{remote_prefix}/{rel}" if remote_prefix else rel
+        files[remote_path] = p
     return files
 
 
 def cmd_push():
-    local_root = state.SCRIPT_DIR / SYNC_PREFIX
-    if not local_root.is_dir():
-        print(f"No '{SYNC_PREFIX}/' folder found in this directory -- nothing to push.")
-        return
-
+    local_root = state.SCRIPT_DIR
     branch = get_release_branch()
 
     try:
@@ -37,11 +37,19 @@ def cmd_push():
         print(f"Failed to push: {e}")
         return
 
+    remote_prefix = find_remote_package_prefix(remote_tree)
+    if remote_prefix is None:
+        print("Failed to push: couldn't find cli.py anywhere in the repo's tree "
+              f"on branch '{branch}' -- unexpected repo layout.")
+        return
+
     remote_files = {
         e["path"]: e["sha"] for e in remote_tree
-        if e["type"] == "blob" and e["path"].startswith(f"{SYNC_PREFIX}/")
+        if e["type"] == "blob"
+        and (e["path"] == remote_prefix or e["path"].startswith(f"{remote_prefix}/"))
+        and not is_sync_excluded(e["path"][len(remote_prefix) + 1:] if remote_prefix else e["path"])
     }
-    local_files = _local_files(local_root)
+    local_files = _local_files(local_root, remote_prefix)
 
     entries = []
     try:
@@ -63,7 +71,7 @@ def cmd_push():
         return
 
     if not entries:
-        print(f"Nothing to push -- '{SYNC_PREFIX}/' already matches '{branch}'.")
+        print(f"Nothing to push -- already matches '{branch}'.")
         return
 
     changed = sum(1 for e in entries if e["sha"] is not None)
@@ -72,7 +80,7 @@ def cmd_push():
     try:
         new_tree_sha = create_tree(tree_sha, entries)
         new_commit_sha = create_commit(
-            f"{SYNC_PREFIX} sync: {changed} changed, {removed} removed", new_tree_sha, commit_sha
+            f"jls-translator sync: {changed} changed, {removed} removed", new_tree_sha, commit_sha
         )
         update_ref(branch, new_commit_sha)
     except GitHubAuthError:
