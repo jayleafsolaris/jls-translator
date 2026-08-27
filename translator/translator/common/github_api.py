@@ -16,14 +16,50 @@ import os
 
 import requests
 
-from .state import GITHUB_OWNER, GITHUB_REPO
+from .state import (
+    GITHUB_OWNER, GITHUB_REPO, PACKAGE_DIR, DEFAULTS,
+    CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME,
+)
 from .config_store import load_config_value, save_config_value, current_config_dir
 
 _TOKEN_CONFIG_NAME = "github_token"
 _API_ROOT = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}"
 
-# Both the local folder name (under cwd) and its path prefix in the repo's tree.
-SYNC_PREFIX = "jls-translator"
+# Local persistent files/folders that must never be pushed up, and must
+# never be treated as "stale" and deleted by --pull's mirror step -- same
+# names modes/upgrade.py already protects from a fresh GitHub download,
+# for the same reason: they live inside the install tree (next to
+# common/state.py) but aren't part of the source, they're this specific
+# install's cache/config/token. __pycache__/.pyc/.git are excluded too,
+# since they're never part of the repo either.
+_PROTECTED_NAMES = {
+    DEFAULTS["cache_file"], DEFAULTS["languages_json"], DEFAULTS["progress_file"],
+    DEFAULTS["update_temp_file"], DEFAULTS["version_check_file"], DEFAULTS["section_order_cache"],
+    CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, "temp_update", "__pycache__", ".git",
+}
+
+
+def is_sync_excluded(rel_posix_path):
+    """True if this path (relative to the install root) must be skipped by
+    both --push and --pull -- persistent local state, never repo content."""
+    if rel_posix_path.endswith(".pyc"):
+        return True
+    return any(part in _PROTECTED_NAMES for part in rel_posix_path.split("/"))
+
+
+def find_remote_package_prefix(tree_entries):
+    """
+    Scans a full recursive tree for wherever cli.py actually lives in the
+    repo, and returns that directory as the path prefix everything else
+    should be synced under ("" if cli.py sits at the repo root). Returns
+    None if cli.py isn't found at all (unexpected repo layout).
+    """
+    for e in tree_entries:
+        if e["type"] == "blob" and e["path"].rsplit("/", 1)[-1] == "cli.py":
+            path = e["path"]
+            return path.rsplit("/", 1)[0] if "/" in path else ""
+    return None
+
 
 
 class GitHubAuthError(Exception):
