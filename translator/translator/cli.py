@@ -83,7 +83,8 @@ puts them back where they came from.
 time it runs, appending that key as a marker line at the bottom of the file
 so --decompile can reverse it exactly.
 
---push/--pull sync <cwd>/jls-translator/ specifically -- NOT the rest of the
+--push/--pull sync <cwd>/jls-translator/ (a folder named after this tool's
+own repo, GITHUB_REPO in state.py) specifically -- NOT the rest of the
 current directory -- against wherever this package's cli.py lives in this
 tool's own repo, on whichever branch --release currently points to. Keeping
 this confined to its own subfolder means it can never touch base, your
