@@ -123,6 +123,19 @@ def _report_keys(action, done, total):
         time.sleep(delay)
 
 
+def _report_finishing(done, total):
+    """
+    Prints 'Finishing Translations… [NN]%' in place, once per language
+    processed during --update's post-translation key-reference resolution
+    phase (see common/text_protect.py's resolve_key_references() and
+    modes/update.py) -- a percentage rather than a fraction, since this
+    phase is quick per-language and a fraction would barely move.
+    """
+    pct = int(done / total * 100) if total else 100
+    sys.stdout.write(f"\rFinishing Translations… [{pct}]%".ljust(60))
+    sys.stdout.flush()
+
+
 class SmoothProgress:
     """
     Eases a progress bar's displayed value toward the latest real ("target")

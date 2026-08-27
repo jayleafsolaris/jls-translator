@@ -8,7 +8,7 @@ import traceback
 from ..common import state
 from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT, PACKAGE_DIR
 from ..common.lang_io import parse_lang, write_lang, entries_dict
-from ..common.text_protect import tokens_only_diff, apply_token_patch, to_british
+from ..common.text_protect import tokens_only_diff, apply_token_patch, to_british, resolve_key_references
 from ..common.netcheck import require_internet_or_warn
 from ..common.config_store import warn_red
 from ..common.translate import translate_many
@@ -16,7 +16,7 @@ from ..common.ratelimit import set_job_profile, status_report
 from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, get_active_language_codes, resolve_workers
 from ..common.progress import (
     load_base, sync_en_us_from_base, base_fingerprint, clear_progress, save_progress,
-    format_duration, SmoothProgress, _report_keys,
+    format_duration, SmoothProgress, _report_keys, _report_finishing,
 )
 
 # ANSI Color Code Constants
@@ -314,6 +314,41 @@ def cmd_update(resume=False, interactive=False):
                 e_idx += 1
         write_lang(data["target_path"], out_lines)
         summary.append((code, changed, data["token_patched_count"]))
+
+    # Second phase: resolve every '{key.path}' cross-reference (see
+    # common/text_protect.py's resolve_key_references()) now that each
+    # language's entries reflect this run's final values -- previously
+    # these were left as the literal '{key.path}' marker in the output.
+    # Runs over every active language regardless of whether it had
+    # translations this run, since a lingering unresolved reference could
+    # predate this feature.
+    print(f"\nFinishing Translations…\n")
+    for i, code in enumerate(existing_codes, start=1):
+        data = lang_data[code]
+        entries = data["entries"]
+        current_values = {key: val for _, key, val, _ in entries}
+        resolved_values = resolve_key_references(current_values)
+
+        changed_refs = False
+        for j, (kind, key, val, inline_comment) in enumerate(entries):
+            new_val = resolved_values.get(key, val)
+            if new_val != val:
+                entries[j] = ("entry", key, new_val, inline_comment)
+                changed_refs = True
+
+        if changed_refs:
+            out_lines = []
+            e_idx = 0
+            for line in data["target_lines"]:
+                if line[0] != "entry":
+                    out_lines.append(line)
+                else:
+                    out_lines.append(entries[e_idx])
+                    e_idx += 1
+            write_lang(data["target_path"], out_lines)
+
+        _report_finishing(i, len(existing_codes))
+    print()
 
     # This --update run did real work (translation and/or token patching),
     # so it counts against the run limit. Persist the incremented count to

@@ -19,7 +19,7 @@ from deep_translator import GoogleTranslator
 
 from .state import DEFAULTS
 from .config_store import get_request_delay, warn_red
-from .text_protect import _protect, _restore, split_segments, join_segments
+from .text_protect import split_segments, join_segments
 from .ratelimit import reserve, record_extra, RateLimitExceededError
 
 # Thread-safe rate limiter variables (module-local: _raw_translate_once is
@@ -107,19 +107,14 @@ def get_translator(google_code):
     return GoogleTranslator(source="en", target=google_code)
 
 
-def _raw_translate_once(google_code, text):
-    """One real attempt against Google -- no retries, no fallback, raises
-    on failure. Also short-circuits immediately if a prior failure streak
-    already declared the service unavailable, so threads stop hammering a
-    dead service once that's been detected."""
+def _translate_raw_api_call(google_code, text_to_send):
+    """
+    The actual network call, plus rate limiting and usage-cap reservation,
+    given plain text that's already safe to send (no protected tokens
+    embedded in it -- see _raw_translate_once below for why that matters).
+    """
     global _LAST_REQUEST_TIME
 
-    if _STOPPED:
-        raise TranslationUnavailableError(
-            "Google Translate does not appear to be available right now. Please try again later."
-        )
-
-    protected, tokens = _protect(text)
     delay = get_request_delay()
     translator = get_translator(google_code)
 
@@ -127,7 +122,7 @@ def _raw_translate_once(google_code, text):
     # needed, or raises RateLimitExceededError if the daily cap is
     # genuinely exhausted. Sized on the outgoing request text; the
     # response size is added afterwards via record_extra() once known.
-    reserve(len(protected.encode("utf-8")))
+    reserve(len(text_to_send.encode("utf-8")))
 
     with _RATE_LIMIT_LOCK:
         now = time.time()
@@ -136,9 +131,57 @@ def _raw_translate_once(google_code, text):
             time.sleep(delay - elapsed)
         _LAST_REQUEST_TIME = time.time()
 
-    result = translator.translate(protected)
+    result = translator.translate(text_to_send)
     record_extra(len(result.encode("utf-8")))
-    return _restore(result, tokens)
+    return result
+
+
+def _raw_translate_once(google_code, text):
+    """
+    One real attempt against Google -- no retries, no fallback, raises
+    on failure. Also short-circuits immediately if a prior failure streak
+    already declared the service unavailable, so threads stop hammering a
+    dead service once that's been detected.
+
+    Protected tokens (color codes, %1$s-style placeholders, {key.path}
+    cross-references, PUA glyphs) are split OUT of the text entirely
+    before anything is sent to Google -- never embedded as an inline
+    "@@PHn@@"-style marker for Google to (sometimes) mangle or silently
+    drop as noise, which is how a token like a {key.path} cross-reference
+    could previously vanish from the translated result. This mirrors the
+    same split_segments()/join_segments() approach translate_many() uses
+    for its batches.
+    """
+    if _STOPPED:
+        raise TranslationUnavailableError(
+            "Google Translate does not appear to be available right now. Please try again later."
+        )
+
+    text_clean = text.replace('\n', '__NL__')
+    parts = split_segments(text_clean)
+    distinct_text = list(dict.fromkeys(content for kind, content in parts if kind == "text"))
+
+    if not distinct_text:
+        # Nothing but tokens (e.g. a value that's just one {key.path}
+        # cross-reference) -- nothing to actually translate.
+        return join_segments(parts).replace('__NL__', '\n')
+
+    combined = "\n".join(distinct_text)
+    result = _translate_raw_api_call(google_code, combined)
+
+    lines = [line.replace('\r', '') for line in result.split('\n')]
+    if len(lines) == len(distinct_text):
+        segment_results = dict(zip(distinct_text, lines))
+    else:
+        # Google's returned line count didn't line up with what was sent --
+        # translate each distinct fragment on its own instead of guessing
+        # at an alignment.
+        segment_results = {seg: _translate_raw_api_call(google_code, seg) for seg in distinct_text}
+
+    rebuilt = []
+    for kind, content in parts:
+        rebuilt.append(content if kind == "token" else segment_results.get(content, content))
+    return "".join(rebuilt).replace('__NL__', '\n')
 
 
 def translate_value(google_code, text):

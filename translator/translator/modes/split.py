@@ -38,4 +38,4 @@ def cmd_split():
         write_tree(child, base_dir / child.folder)
 
     save_section_data(root.children, markers)
-    print("Done! Base: split")
+    print("Done! Base: Split")
