@@ -1,13 +1,14 @@
 """
 Translation cache (last-known base values), the --update run-count
-marker, languages.json, and worker/active-language resolution.
+marker, the --compile key cache, languages.json, and worker/active-language
+resolution.
 """
 
 import json
 import os
 
 from . import state
-from .state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER
+from .state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
 from .lang_io import (
     parse_lang, write_lang, strip_update_count_markers,
     _update_count_comment_prefix, read_update_count_from_base,
@@ -88,6 +89,44 @@ def get_update_count():
         return count
 
     return 0
+
+
+def save_compile_key(key):
+    """
+    Cache the fresh --compile key so --decompile can recover it later.
+    Unlike the --update count, this key never gets written into base
+    itself -- base only carries a flag marker (see obfuscate.is_compiled),
+    so the cache is the sole source of truth here. If it's lost, the
+    compiled base can't be recovered.
+    """
+    cache = load_cache()
+    cache[_COMPILE_KEY_MARKER] = key.hex()
+    cache_path = PACKAGE_DIR / DEFAULTS["cache_file"]
+    cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def load_compile_key():
+    """Returns the cached --compile key as bytes, or None if there isn't one."""
+    cache = load_cache()
+    key_hex = cache.get(_COMPILE_KEY_MARKER)
+    if key_hex is None:
+        return None
+    try:
+        return bytes.fromhex(key_hex)
+    except ValueError:
+        return None
+
+
+def clear_compile_key():
+    """Drops the cached --compile key, e.g. once --decompile has consumed it."""
+    cache = load_cache()
+    if _COMPILE_KEY_MARKER in cache:
+        del cache[_COMPILE_KEY_MARKER]
+        cache_path = PACKAGE_DIR / DEFAULTS["cache_file"]
+        cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
+        return True
+    return False
+
 
 def write_languages_json():
     codes = [c for c in LANGUAGES if (state.SCRIPT_DIR / f"{c}.lang").exists()]
