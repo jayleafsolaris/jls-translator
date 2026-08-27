@@ -41,10 +41,10 @@ base and your .lang files, e.g. RP/texts/):
                                      runs quietly on every command) on or off
     jls-translator --usage   show current hourly/daily translation usage percentages
                                      and when each resets (no --path needed)
-    jls-translator --push    push the current working directory up to this tool's own
-                                     GitHub repo as one combined commit (branch: --release)
-    jls-translator --pull    pull that repo down into the current working directory,
-                                     mirroring it exactly (adds/updates/removes local files)
+    jls-translator --push    push <cwd>/jls-translator/ up to this tool's own GitHub
+                                     repo as one combined commit (branch: --release)
+    jls-translator --pull    pull that repo down into <cwd>/jls-translator/, mirroring
+                                     it exactly (adds/updates/removes files in that folder only)
     jls-translator --token   view, set, or remove the GitHub token --push/--pull use
     jls-translator --token <TOKEN>
                               store that as the GitHub personal access token
@@ -83,19 +83,20 @@ puts them back where they came from.
 time it runs, appending that key as a marker line at the bottom of the file
 so --decompile can reverse it exactly.
 
---push/--pull sync the current working directory (wherever you run the
-command from) against wherever this package's cli.py lives in this tool's
-own repo, on whichever branch --release currently points to. The remote
-location isn't assumed to be named any particular thing -- both scan the
-repo's tree for wherever cli.py actually sits, the same way --upgrade does.
---push diffs against the remote tree (by content, not by timestamp) and
-makes one combined commit for everything changed/removed; --pull mirrors
-the remote back down into cwd the same way. Your local cache, config
-folder, and stored GitHub token are never pushed and never touched by
---pull's mirroring, no matter what -- run these from wherever your install
-actually lives if you want them to sync it. Both need a GitHub token with
-write access (for --push) set via --token first -- if the token is missing
-or lacks access, both fail with a plain "You are not authorized to do this"
+--push/--pull sync <cwd>/jls-translator/ specifically -- NOT the rest of the
+current directory -- against wherever this package's cli.py lives in this
+tool's own repo, on whichever branch --release currently points to. Keeping
+this confined to its own subfolder means it can never touch base, your
+.lang files, or anything else already sitting in a project folder. The
+remote location isn't assumed to be named any particular thing -- both scan
+the repo's tree for wherever cli.py actually sits, the same way --upgrade
+does. --push diffs against the remote tree (by content, not by timestamp)
+and makes one combined commit for everything changed/removed; --pull
+mirrors the remote back down into that same subfolder. Your local cache,
+config folder, and stored GitHub token are never pushed and never touched
+by --pull's mirroring, no matter what. Both need a GitHub token with write
+access (for --push) set via --token first -- if the token is missing or
+lacks access, both fail with a plain "You are not authorized to do this"
 rather than a stack trace.
 
 --cache holds everything related to the translation cache used by
@@ -126,7 +127,7 @@ import sys
 from pathlib import Path
 
 from .common import state
-from .common.state import SCRIPT_VERSION
+from .common.state import SCRIPT_VERSION, DEFAULTS
 from .common.netcheck import check_for_update_notice, cmd_check_update, cmd_set_autocheck
 from .modes.config_cmd import (
     cmd_config_workers, cmd_config_languages, cmd_config_delay,
@@ -152,6 +153,7 @@ from .modes.usage_cmd import cmd_usage
 from .modes.push import cmd_push
 from .modes.pull import cmd_pull
 from .modes.token import cmd_show_token, cmd_set_token, cmd_remove_token
+from .common.base_backup import refresh_base_backup, load_base_backup
 
 _MODES = [
     ("create", "Overwrite ALL .lang files from scratch"),
@@ -166,8 +168,8 @@ _MODES = [
     ("merge", "Merge that folder hierarchy back into base"),
     ("compile", "Obfuscate base with a fresh random key"),
     ("decompile", "Reverse --compile using the key stored in base"),
-    ("push", "Push cwd up to GitHub as one combined commit"),
-    ("pull", "Pull GitHub down into cwd, mirroring it exactly"),
+    ("push", "Push cwd/jls-translator/ up to GitHub as one combined commit"),
+    ("pull", "Pull GitHub down into cwd/jls-translator/, mirroring it exactly"),
     ("cont", "Resume the last interrupted run (any modifying command)"),
     ("cache", "Manage the translation cache (build, view, or clear)"),
     ("config", "Manage script configuration (workers, active languages, delay)"),
@@ -335,115 +337,130 @@ def main():
     # you're standing when you run it.
     state.SCRIPT_DIR = Path.cwd().resolve()
 
-    # Passive, rate-limited check (see DEFAULTS['version_check_interval_minutes']) --
-    # only prints anything if it can positively confirm a newer version
-    # exists, and never blocks or errors out the command being run.
-    check_for_update_notice()
+    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    if not base_path.exists():
+        cached = load_base_backup()
+        if cached is not None:
+            print("The base file could not be found. Do you want to restore it?")
+            answer = input("[y/N]: ").strip().lower()
+            if answer in ("y", "yes"):
+                base_path.write_text(cached, encoding="utf-8")
+                print(f"Restored '{DEFAULTS['base_lang']}' from backup.")
+    else:
+        refresh_base_backup(state.SCRIPT_DIR)
 
-    if (args.workers or args.languages or args.delay or args.show or args.hide) and not args.config:
-        args.config = True
+    try:
+        # Passive, rate-limited check (see DEFAULTS['version_check_interval_minutes']) --
+        # only prints anything if it can positively confirm a newer version
+        # exists, and never blocks or errors out the command being run.
+        check_for_update_notice()
 
-    if (args.build or args.clear) and not args.cache:
-        args.cache = True
+        if (args.workers or args.languages or args.delay or args.show or args.hide) and not args.config:
+            args.config = True
 
-    if args.cache:
-        sub_flags = [args.build, args.view, args.clear]
-        if sum(bool(f) for f in sub_flags) > 1:
-            parser.error("combine --cache with only one of --build, --view, or --clear at a time")
-        if args.build:
-            cmd_cache_build()
-        elif args.view:
-            cmd_cache_view()
-        elif args.clear:
-            cmd_cache_clear()
-        else:
-            cmd_cache_menu()
-        return
+        if (args.build or args.clear) and not args.cache:
+            args.cache = True
 
-    if args.config:
-        sub_flags = [args.workers, args.languages, args.delay, args.show, args.hide, args.delete]
-        if sum(bool(f) for f in sub_flags) > 1:
-            parser.error("combine --config with only one of --workers, --languages, "
-                         "--delay, --show, --hide, or --delete at a time")
-        if args.workers:
-            cmd_config_workers()
-        elif args.languages:
-            cmd_config_languages()
-        elif args.delay:
-            cmd_config_delay()
-        elif args.show:
-            cmd_config_show()
-        elif args.hide:
-            cmd_config_hide()
-        elif args.delete:
-             cmd_config_delete()
-        else:
-            cmd_config_menu()
-        return
-
-    top_flags = [
-        ("create", args.create), ("update", args.update), ("add", args.add),
-        ("remove", args.remove), ("delete", args.delete), ("backup", args.backup),
-        ("restore", args.restore), ("view", args.view), ("split", args.split),
-        ("merge", args.merge), ("compile", args.compile), ("decompile", args.decompile),
-        ("push", args.push), ("pull", args.pull),
-        ("cont", args.cont), ("upgrade", args.upgrade),
-    ]
-    chosen = [key for key, on in top_flags if on]
-    if len(chosen) > 1:
-        names = ", ".join(_MODE_FLAG_NAME.get(k, f"--{k}") for k in chosen)
-        parser.error(f"choose only one mode at a time (got: {names})")
-
-    mode = chosen[0] if chosen else None
-    ask = args.ask
-
-    if mode is None:
-        mode = prompt_for_mode()
-        if mode in ("create", "update", "add", "remove", "delete", "cont") and not ask:
-            ask = prompt_for_ask()
-        print()
-        if mode == "config":
-            cmd_config_menu()
+        if args.cache:
+            sub_flags = [args.build, args.view, args.clear]
+            if sum(bool(f) for f in sub_flags) > 1:
+                parser.error("combine --cache with only one of --build, --view, or --clear at a time")
+            if args.build:
+                cmd_cache_build()
+            elif args.view:
+                cmd_cache_view()
+            elif args.clear:
+                cmd_cache_clear()
+            else:
+                cmd_cache_menu()
             return
-        if mode == "cache":
-            cmd_cache_menu()
+
+        if args.config:
+            sub_flags = [args.workers, args.languages, args.delay, args.show, args.hide, args.delete]
+            if sum(bool(f) for f in sub_flags) > 1:
+                parser.error("combine --config with only one of --workers, --languages, "
+                             "--delay, --show, --hide, or --delete at a time")
+            if args.workers:
+                cmd_config_workers()
+            elif args.languages:
+                cmd_config_languages()
+            elif args.delay:
+                cmd_config_delay()
+            elif args.show:
+                cmd_config_show()
+            elif args.hide:
+                cmd_config_hide()
+            elif args.delete:
+                 cmd_config_delete()
+            else:
+                cmd_config_menu()
             return
+
+        top_flags = [
+            ("create", args.create), ("update", args.update), ("add", args.add),
+            ("remove", args.remove), ("delete", args.delete), ("backup", args.backup),
+            ("restore", args.restore), ("view", args.view), ("split", args.split),
+            ("merge", args.merge), ("compile", args.compile), ("decompile", args.decompile),
+            ("push", args.push), ("pull", args.pull),
+            ("cont", args.cont), ("upgrade", args.upgrade),
+        ]
+        chosen = [key for key, on in top_flags if on]
+        if len(chosen) > 1:
+            names = ", ".join(_MODE_FLAG_NAME.get(k, f"--{k}") for k in chosen)
+            parser.error(f"choose only one mode at a time (got: {names})")
+
+        mode = chosen[0] if chosen else None
+        ask = args.ask
+
+        if mode is None:
+            mode = prompt_for_mode()
+            if mode in ("create", "update", "add", "remove", "delete", "cont") and not ask:
+                ask = prompt_for_ask()
+            print()
+            if mode == "config":
+                cmd_config_menu()
+                return
+            if mode == "cache":
+                cmd_cache_menu()
+                return
+            if mode == "upgrade":
+                cmd_upgrade()
+                return
+
         if mode == "upgrade":
             cmd_upgrade()
-            return
-
-    if mode == "upgrade":
-        cmd_upgrade()
-    elif mode == "create":
-        cmd_create(interactive=ask)
-    elif mode == "update":
-        cmd_update(interactive=ask)
-    elif mode == "add":
-        cmd_add(interactive=ask, show_summary=args.summary)
-    elif mode == "remove":
-        cmd_remove(interactive=ask, show_summary=args.summary)
-    elif mode == "delete":
-        cmd_delete(interactive=ask)
-    elif mode == "backup":
-        cmd_backup()
-    elif mode == "restore":
-        cmd_restore()
-    elif mode == "view":
-        cmd_view()
-    elif mode == "split":
-        cmd_split()
-    elif mode == "merge":
-        cmd_merge()
-    elif mode == "compile":
-        cmd_compile()
-    elif mode == "decompile":
-        cmd_decompile()
-    elif mode == "push":
-        cmd_push()
-    elif mode == "pull":
-        cmd_pull()
-    elif mode == "cont":
-        cmd_continue(interactive=ask, show_summary=args.summary)
+        elif mode == "create":
+            cmd_create(interactive=ask)
+        elif mode == "update":
+            cmd_update(interactive=ask)
+        elif mode == "add":
+            cmd_add(interactive=ask, show_summary=args.summary)
+        elif mode == "remove":
+            cmd_remove(interactive=ask, show_summary=args.summary)
+        elif mode == "delete":
+            cmd_delete(interactive=ask)
+        elif mode == "backup":
+            cmd_backup()
+        elif mode == "restore":
+            cmd_restore()
+        elif mode == "view":
+            cmd_view()
+        elif mode == "split":
+            cmd_split()
+        elif mode == "merge":
+            cmd_merge()
+        elif mode == "compile":
+            cmd_compile()
+        elif mode == "decompile":
+            cmd_decompile()
+        elif mode == "push":
+            cmd_push()
+        elif mode == "pull":
+            cmd_pull()
+        elif mode == "cont":
+            cmd_continue(interactive=ask, show_summary=args.summary)
+    finally:
+        refresh_base_backup(state.SCRIPT_DIR)
 
 
 if __name__ == "__main__":
