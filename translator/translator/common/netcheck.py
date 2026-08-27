@@ -75,7 +75,7 @@ _YELLOW = "\033[93m"
 _BLUE = "\033[94m"
 
 
-def fetch_remote_version(timeout=4.0):
+def fetch_remote_version(timeout=4.0, bypass_cache=False):
     """
     Reads just the `version = "..."` line out of pyproject.toml on
     whichever GitHub branch is currently selected as the release branch
@@ -85,11 +85,27 @@ def fetch_remote_version(timeout=4.0):
     offline, rate-limited, the file moved, a bad connection -- so callers
     can silently skip the update notice instead of erroring out over
     something this minor.
+
+    bypass_cache=True adds a cache-busting query parameter and no-cache
+    headers to the request. raw.githubusercontent.com is served through
+    Fastly's CDN, which caches responses for a few minutes on its own --
+    without this, two checks close together (passive then manual, or two
+    manual --check runs) can both hit that same cached response and come
+    back identical, which looks exactly like "the check is respecting a
+    cooldown" even though this function itself never consults
+    DEFAULTS['version_check_interval_minutes'] or any last-checked time
+    at all. Used by cmd_check_update() (a bare --check) and by
+    check_for_update_notice() whenever force=True (--version), since both
+    are explicitly supposed to always be live.
     """
     branch = get_release_branch()
     url = f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/{branch}/pyproject.toml"
+    headers = {}
+    if bypass_cache:
+        url += f"?_={int(time.time() * 1000)}"
+        headers = {"Cache-Control": "no-cache", "Pragma": "no-cache"}
     try:
-        resp = requests.get(url, timeout=timeout)
+        resp = requests.get(url, timeout=timeout, headers=headers)
         resp.raise_for_status()
         match = re.search(r'(?m)^\s*version\s*=\s*"([^"]+)"', resp.text)
         if match:
@@ -183,8 +199,10 @@ def check_for_update_notice(force=False):
     if stale:
         # Passive checks stay snappy with a short timeout; a forced check
         # (--version, bare --check) can afford to wait a bit longer for an
-        # accurate answer since the user explicitly asked for one.
-        fetched = fetch_remote_version(timeout=1.5 if not force else 3.0)
+        # accurate answer since the user explicitly asked for one, and
+        # bypasses raw.githubusercontent.com's CDN cache so it's genuinely
+        # live rather than possibly a few-minutes-stale cached response.
+        fetched = fetch_remote_version(timeout=1.5 if not force else 3.0, bypass_cache=force)
         if fetched:
             remote = fetched
             cache["remote_version"] = remote
@@ -214,10 +232,11 @@ def cmd_check_update():
     the network (ignoring DEFAULTS['version_check_interval_minutes']) and
     prints the result either way. This is `--check` used with no value.
 
-    Makes exactly one network attempt (fetch_remote_version) rather than a
-    separate "are we online" probe followed by the real request, so an
-    offline connection is reported quickly instead of after two stacked
-    timeouts.
+    Makes exactly one network attempt (fetch_remote_version, with
+    bypass_cache=True so raw.githubusercontent.com's CDN can't hand back a
+    stale cached response) rather than a separate "are we online" probe
+    followed by the real request, so an offline connection is reported
+    quickly instead of after two stacked timeouts.
 
     Purely informational: it does NOT change whether the passive/automatic
     checker keeps running on other commands -- use `--check true` or
@@ -226,7 +245,7 @@ def cmd_check_update():
     print(f"Checking for updates{_branch_suffix()}...")
     cache = _load_version_check_cache()
 
-    remote = fetch_remote_version(timeout=3.0)
+    remote = fetch_remote_version(timeout=3.0, bypass_cache=True)
     now = time.time()
 
     if not remote:
