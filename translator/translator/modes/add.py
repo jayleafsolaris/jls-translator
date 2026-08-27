@@ -71,7 +71,7 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
                 continue
 
             keys_checked += 1
-            _report_keys("Checking", keys_checked, total_keys_to_check)
+            _report_keys("Checking", min(keys_checked, total_keys_to_check), total_keys_to_check)
 
             _, key, value, inline_comment = line
             if key in existing:
