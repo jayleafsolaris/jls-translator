@@ -3,6 +3,7 @@
 from ..common import state
 from ..common.state import DEFAULTS
 from ..common.obfuscate import compile_text, is_compiled
+from ..common.cache import save_compile_key
 
 
 def cmd_compile():
@@ -16,5 +17,7 @@ def cmd_compile():
         print(f"'{DEFAULTS['base_lang']}' is already compiled -- run --decompile first.")
         return
 
-    base_path.write_text(compile_text(text), encoding="utf-8")
+    compiled, key = compile_text(text)
+    base_path.write_text(compiled, encoding="utf-8")
+    save_compile_key(key)
     print("Done! Base: Compiled")
