@@ -260,7 +260,7 @@ def reserve(num_bytes):
             if cooldown_until and now < cooldown_until:
                 _save_state(data)
                 raise RateLimitExceededError(
-                    f"\nManual cooldown active. Resets in {_format_secs(cooldown_until - now)}."
+                    f"Manual cooldown active. Resets in {_format_secs(cooldown_until - now)}."
                 )
 
             day_used = _usage_within(data, now, _DAY_SECONDS)
