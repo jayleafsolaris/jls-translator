@@ -42,8 +42,8 @@ from .config_store import get_request_delay, warn_red
 # --- Hard caps -------------------------------------------------------
 # Deliberately hardcoded here and nowhere else -- no --config flag
 # exposes these, and nothing else in the package reads or writes them.
-_HOURLY_CAP_RANGE = (100_000, 150_000)   # 100-150 KB per rolling hour
-_DAILY_CAP_RANGE = (450_000, 500_000)    # 450-500 KB per rolling day
+_HOURLY_CAP_RANGE = (1_000_000, 15_000_000)   # 100-150 KB per rolling hour
+_DAILY_CAP_RANGE = (45_000_000, 50_000_000)    # 450-500 KB per rolling day
 
 _HOUR_SECONDS = 60 * 60
 _DAY_SECONDS = 24 * 60 * 60
