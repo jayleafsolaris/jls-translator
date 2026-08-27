@@ -33,7 +33,7 @@ DEFAULTS = {
     "section_order_cache": ".section_order.json",
     "base_backup_file": ".base_backup.txt",
     "ratelimit_file": ".ratelimit_state.json",
-    "version_check_interval_minutes": 10,
+    "version_check_interval_minutes": 2.5,
     "request_delay": 0.15,   # seconds between global translation calls
     "max_retries": 3,
     "workers_min": 1,
