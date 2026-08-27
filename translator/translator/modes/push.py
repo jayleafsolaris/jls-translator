@@ -80,7 +80,7 @@ def cmd_push():
     try:
         new_tree_sha = create_tree(tree_sha, entries)
         new_commit_sha = create_commit(
-            f"jls-translator sync: {changed} changed, {removed} removed", new_tree_sha, commit_sha
+            f"Syncronization", new_tree_sha, commit_sha
         )
         update_ref(branch, new_commit_sha)
     except GitHubAuthError:
