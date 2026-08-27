@@ -35,6 +35,7 @@ _API_ROOT = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}"
 _PROTECTED_NAMES = {
     DEFAULTS["cache_file"], DEFAULTS["languages_json"], DEFAULTS["progress_file"],
     DEFAULTS["update_temp_file"], DEFAULTS["version_check_file"], DEFAULTS["section_order_cache"],
+    DEFAULTS["base_backup_file"],
     CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, "temp_update", "__pycache__", ".git",
 }
 
