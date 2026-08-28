@@ -66,7 +66,7 @@ def require_internet_or_warn(flag_name):
         f"No internet connection detected, {flag_name} needs network access "
         f"to function in this state!"
     )
-    print(f"{_BLUE}Check your connection and try again!")
+    print(f"{_BLUE}Check your connection and try again!{_RESET}")
     return False
 
 
