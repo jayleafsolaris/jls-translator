@@ -4,6 +4,7 @@ protection + rate limiting) and batched multi-value translation.
 """
 
 import concurrent.futures
+import random
 import sys
 import threading
 import time
@@ -184,61 +185,91 @@ def _raw_translate_once(google_code, text):
     return "".join(rebuilt).replace('__NL__', '\n')
 
 
+def _translate_segments_deferred(google_code, segments):
+    """
+    Translates a list of distinct text fragments one at a time, deferring
+    failures instead of retrying them back-to-back.
+
+    A fragment that fails a real attempt is NOT immediately retried
+    against the same request that just failed it -- it's put back into
+    the pool, the whole remaining pool is shuffled, and a DIFFERENT
+    fragment is tried next. Only after a fragment has failed
+    DEFAULTS['max_retries'] times -- spread out like this rather than 3 in
+    a row -- does it give up and fall back to its own original,
+    untranslated text, exactly as before.
+
+    This keeps the outage-streak detector meaningful: hammering one
+    problem fragment 3x in a row used to manufacture its own miniature
+    failure streak in isolation, indistinguishable from a real outage.
+    Interleaving different fragments between attempts means repeated
+    failures on the SAME fragment no longer masquerade as the whole
+    service being down -- only genuinely widespread failures (every
+    fragment in the pool failing) still trip FAILURE_STREAK_THRESHOLD.
+
+    Streak/outage bookkeeping only happens once a fragment is fully
+    exhausted (same as before) -- an intermediate, deferred attempt
+    doesn't itself count against the streak, only a fragment that never
+    recovers across all its attempts does.
+
+    Returns {fragment: translated_text}.
+    """
+    max_attempts = DEFAULTS["max_retries"]
+    pending = [seg for seg in segments if seg.strip()]
+    results = {seg: seg for seg in segments if not seg.strip()}
+    attempts = {seg: 0 for seg in pending}
+
+    while pending:
+        seg = pending.pop(0)
+        try:
+            results[seg] = _raw_translate_once(google_code, seg)
+            _record_success()
+        except TranslationUnavailableError:
+            raise
+        except RateLimitExceededError:
+            # Daily usage cap exhausted -- stop the run the same way an
+            # outage does, rather than deferring into the same wall.
+            raise
+        except Exception as e:
+            attempts[seg] += 1
+            if attempts[seg] < max_attempts:
+                # Defer: a different fragment goes next, this one comes
+                # back around later once the (shuffled) pool cycles to it.
+                pending.append(seg)
+                random.shuffle(pending)
+                continue
+
+            # Exhausted this fragment's attempts -- always counts as a
+            # fatal error for it, whether or not it also trips the outage
+            # streak check below.
+            preview = seg if len(seg) <= 300 else seg[:300] + "...(truncated)"
+            is_outage = _record_failure_and_check_streak()
+            _record_fallback(preview, e)
+            results[seg] = seg
+
+            if is_outage:
+                message = "Google Translate does not appear to be available right now. Please try again later."
+                warn_red(message)
+                warn_red(f"Fatal Errors: {_fallback_count}")
+                if threading.current_thread() is threading.main_thread():
+                    sys.exit(1)
+                raise TranslationUnavailableError(message) from e
+
+    return results
+
+
 def translate_value(google_code, text):
     """
-    Translates a single string. Retries a few times on failure
-    (DEFAULTS['max_retries']); if it still won't go through, that failure
-    is weighed against the run's overall failure streak rather than
-    treated as fatal on its own:
-
-    - If this looks like an isolated quirk (the run has otherwise been
-      succeeding), the ORIGINAL untranslated text is returned so one bad
-      value doesn't take down everything else, and a note is logged.
-    - If failures have been happening back-to-back (FAILURE_STREAK_THRESHOLD
-      in a row with no successes between them), that's treated as Google
-      actually being unavailable, and the whole run stops.
+    Translates a single string in isolation (for any caller working with
+    just one string outside a translate_many() batch). Delegates to the
+    same deferred-retry machinery translate_many's batch fallback uses --
+    see _translate_segments_deferred -- though with only one item in the
+    pool there's nothing else to interleave with, so a failing value
+    simply retries itself up to DEFAULTS['max_retries'] times before
+    falling back to the original text.
     """
     if not text.strip():
         return text
-
-    last_err = None
-    for attempt in range(DEFAULTS["max_retries"]):
-        try:
-            result = _raw_translate_once(google_code, text)
-            _record_success()
-            return result
-        except TranslationUnavailableError:
-            # Streak threshold already tripped by another thread -- no
-            # point retrying, this run is stopping.
-            raise
-        except RateLimitExceededError as e:
-            # Daily usage cap exhausted -- stop the run the same way an
-            # outage does, rather than retrying into the same wall.
-            _handle_rate_limit_stop(e)
-        except Exception as e:
-            last_err = e
-            time.sleep(0.5 * (attempt + 1))
-
-    # Exhausted retries for this one value -- always counts as a fatal
-    # error for this value, whether or not it also trips the outage
-    # streak check below.
-    preview = text if len(text) <= 300 else text[:300] + "...(truncated)"
-    is_outage = _record_failure_and_check_streak()
-    _record_fallback(preview, last_err)
-
-    if is_outage:
-        message = "Google Translate does not appear to be available right now. Please try again later."
-        warn_red(message)
-        warn_red(f"Fatal Errors: {_fallback_count}")
-        if threading.current_thread() is threading.main_thread():
-            sys.exit(1)
-        raise TranslationUnavailableError(message) from last_err
-
-    # Isolated quirk, not (yet) an outage -- already recorded above.
-    # Nothing prints here: translate_many prints a single "Fatal Errors: #"
-    # line for the whole call at the very end, instead of anything
-    # mid-run.
-    return text
+    return _translate_segments_deferred(google_code, [text])[text]
 
 
 def translate_many(google_code, texts, max_workers, progress_cb=None):
@@ -370,13 +401,13 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
         except Exception:
             # Combined attempt failed. Rather than retrying the whole
             # (potentially large) combined blob, fall back to translating
-            # this batch's fragments individually -- translate_value
-            # handles retries, the untranslated-fallback for isolated
-            # quirks, and outage-streak detection for each one.
+            # this batch's fragments individually and deferred -- see
+            # _translate_segments_deferred for retry/fallback/outage
+            # handling across the whole batch at once.
             completed_values = 0
+            translated_map = _translate_segments_deferred(google_code, batch)
             for seg in batch:
-                res = translate_value(google_code, seg)
-                completed_values += resolve_segment(seg, res)
+                completed_values += resolve_segment(seg, translated_map[seg])
             return completed_values
 
         lines = [line.replace('\r', '') for line in translated.split('\n')]
@@ -387,10 +418,11 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
             for i, seg in enumerate(batch):
                 completed_values += resolve_segment(seg, lines[i])
         else:
-            # Fallback: if translation split structure shifted, do them independently
+            # Fallback: if translation split structure shifted, do them
+            # independently and deferred (same as the except-branch above).
+            translated_map = _translate_segments_deferred(google_code, batch)
             for seg in batch:
-                res = translate_value(google_code, seg)
-                completed_values += resolve_segment(seg, res)
+                completed_values += resolve_segment(seg, translated_map[seg])
         return completed_values
 
     if batches:
