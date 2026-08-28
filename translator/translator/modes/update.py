@@ -215,7 +215,7 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Translating {_total} keys...",
                 f"\033[K  Progress: {pct:5.1f}%",
                 f"\033[K  Time: {time_str}",
-                f"\033[K  Usage: Hourly {usage['hour_pct']:.0f}% • Daily {usage['day_pct']:.0f}%",
+                f"\033[K  Usage: Hourly {usage['hour_pct']:.1f}% • Daily {usage['day_pct']:.1f}%",
                 f"\033[K  Fallbacks: {fallbacks}" + (f" {CLR_RED}(untranslated, non-fatal){CLR_RESET}" if fallbacks else ""),
             ]
 
@@ -305,7 +305,7 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Translating {total} keys - Fatal Exception",
                 f"\033[K  Progress: 0% (Failed)",
                 f"\033[K  Time: {time_str}",
-                f"\033[K  Usage: Hourly {usage['hour_pct']:.0f}% • Daily {usage['day_pct']:.0f}% (not the cause -- see below)",
+                f"\033[K  Usage: Hourly {usage['hour_pct']:.1f}% • Daily {usage['day_pct']:.1f}% (not the cause -- see below)",
                 f"\033[K  {CLR_RED}Fatal Errors: {fatal_error_count}{CLR_RESET}",
                 f"\033[K  {CLR_DARK_GREEN}Please try again in 0 minutes{CLR_RESET}",
             ]
@@ -420,8 +420,8 @@ def cmd_update(resume=False, interactive=False):
         )
 
     report = status_report(use_cache=False)
-    print(f"\nHourly Usage: {report['hour_pct']:.0f}% - Resets in {report['hour_reset_str']}")
-    print(f"Daily Usage: {report['day_pct']:.0f}% - Resets in {report['day_reset_str']}")
+    print(f"\nHourly Usage: {report['hour_pct']:.1f}% - Resets in {report['hour_reset_str']}")
+    print(f"Daily Usage: {report['day_pct']:.1f}% - Resets in {report['day_reset_str']}")
     if report["day_pct"] >= 99.0:
         warn_red("Daily usage limit reached -- further translation requests will pause until it resets, "
                   "to avoid a temporary IP rate limit/ban from Google Translate.")
