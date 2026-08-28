@@ -323,6 +323,15 @@ def cmd_update(resume=False, interactive=False):
     # translations this run, since a lingering unresolved reference could
     # predate this feature.
     print(f"\nFinishing Translations…\n")
+    finishing_total = len(existing_codes)
+    # Same easing as the main translation bars (SmoothProgress) instead of
+    # jumping straight to each language's fraction -- this phase is quick
+    # per-language, so an un-smoothed percentage would otherwise leap in
+    # big, jarring steps rather than climb.
+    finishing_smoother = SmoothProgress(
+        finishing_total,
+        lambda done, _total=finishing_total: _report_finishing(done, _total),
+    )
     for i, code in enumerate(existing_codes, start=1):
         data = lang_data[code]
         entries = data["entries"]
@@ -347,7 +356,8 @@ def cmd_update(resume=False, interactive=False):
                     e_idx += 1
             write_lang(data["target_path"], out_lines)
 
-        _report_finishing(i, len(existing_codes))
+        finishing_smoother.update(i)
+    finishing_smoother.finish()
     print()
 
     # This --update run did real work (translation and/or token patching),
