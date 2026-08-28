@@ -31,7 +31,7 @@ _LAST_REQUEST_TIME = 0.0
 
 class TranslationUnavailableError(RuntimeError):
     """Raised only when Google Translate looks genuinely unreachable -- see
-    FAILURE_STREAK_THRESHOLD below -- not for a single value/batch quirk."""
+    the outage-timeout logic below -- not for a single value/batch quirk."""
     pass
 
 
@@ -40,25 +40,30 @@ class TranslationUnavailableError(RuntimeError):
 # A single value (or batch) failing doesn't necessarily mean Google
 # Translate is down -- it might just be one oddly-shaped string tripping
 # something on Google's end (seen in practice: a batch of near-identical
-# placeholder-heavy lines returning TranslationNotFound). Retrying and
-# falling back to leaving that one value untranslated handles that case
-# without losing the rest of a run.
+# placeholder-heavy lines returning TranslationNotFound). Deferring it --
+# shuffling it back into the pool so a DIFFERENT fragment goes next, then
+# cycling back around to it later -- handles that case without losing the
+# rest of a run, and without ever giving up and leaving that value
+# untranslated: a fragment stays in the cycle until it actually succeeds.
 #
-# What DOES indicate a real outage is failures happening back-to-back with
-# no successes in between, regardless of what the content looks like --
-# that's not "this string is weird", that's "nothing is getting through".
-# Any success anywhere resets the streak, so scattered failures across a
-# long run never fake-trigger a stop. The threshold is set high (25) on
-# purpose: with deferred/shuffled retries spreading failures out across
-# different fragments (see _translate_segments_deferred), 25 in a row with
-# zero successes anywhere in the whole run is no longer plausible unless
-# Google Translate is genuinely unreachable -- at which point the process
-# ends completely (sys.exit(1) / re-raised TranslationUnavailableError)
-# rather than continuing to burn through retries into the same wall.
-FAILURE_STREAK_THRESHOLD = 25
+# What DOES indicate a real outage is a stretch with literally zero
+# successful translations anywhere -- across every thread and fragment in
+# play -- for several seconds straight. That's not "this string is
+# weird", that's "nothing is getting through". Any success anywhere
+# resets the clock (see _record_success), so scattered failures across a
+# long run (a fragment needing a few tries, spread among plenty of
+# successful ones elsewhere) never fake-trigger a stop -- only genuine,
+# sustained silence does. Time-based rather than a failed-attempt count:
+# with several worker threads hammering away concurrently, "N consecutive
+# failures" doesn't have a clean meaning once attempts from different
+# threads interleave -- elapsed time since the last real success does.
+# The exact timeout is randomized once per run within this range (same
+# idea as the hourly/daily usage caps) rather than a single fixed number.
+_OUTAGE_TIMEOUT_RANGE = (5.0, 10.0)  # seconds with zero successes anywhere = declared outage
+_outage_timeout_seconds = random.uniform(*_OUTAGE_TIMEOUT_RANGE)
 
 _streak_lock = threading.Lock()
-_consecutive_failures = 0
+_last_success_time = time.time()
 _STOPPED = False
 
 # Counts (and logs details of) values that fell back to untranslated text
@@ -73,19 +78,23 @@ _fallback_log = []  # list of (preview, error_repr) for this whole process
 
 
 def _record_success():
-    global _consecutive_failures
+    global _last_success_time
     with _streak_lock:
-        _consecutive_failures = 0
+        _last_success_time = time.time()
 
 
 def _record_failure_and_check_streak():
-    """Increments the run's failure streak. Returns True if this failure
-    just pushed it over FAILURE_STREAK_THRESHOLD (i.e. treat as a real
-    outage), False if it's still within normal single-item quirk territory."""
-    global _consecutive_failures, _STOPPED
+    """Returns True the first time _outage_timeout_seconds have passed
+    with zero successful translations anywhere in this process since the
+    last one -- i.e. treat as a real, sustained outage. Returns False
+    otherwise, including on every call after an outage has already been
+    declared once (so it doesn't re-trigger repeatedly)."""
+    global _STOPPED
     with _streak_lock:
-        _consecutive_failures += 1
-        if _consecutive_failures >= FAILURE_STREAK_THRESHOLD and not _STOPPED:
+        if _STOPPED:
+            return False
+        elapsed = time.time() - _last_success_time
+        if elapsed >= _outage_timeout_seconds:
             _STOPPED = True
             return True
         return False
@@ -194,35 +203,29 @@ def _raw_translate_once(google_code, text):
 def _translate_segments_deferred(google_code, segments):
     """
     Translates a list of distinct text fragments one at a time, deferring
-    failures instead of retrying them back-to-back.
+    failures instead of retrying them back-to-back -- and never falling
+    back to untranslated text.
 
     A fragment that fails a real attempt is NOT immediately retried
     against the same request that just failed it -- it's put back into
     the pool, the whole remaining pool is shuffled, and a DIFFERENT
-    fragment is tried next. Only after a fragment has failed
-    DEFAULTS['max_retries'] times -- spread out like this rather than 3 in
-    a row -- does it give up and fall back to its own original,
-    untranslated text, exactly as before.
+    fragment is tried next. It stays in that cycle, retried indefinitely,
+    until it actually succeeds -- nothing here ever gives up on a
+    fragment and leaves its original, untranslated text in place.
 
-    This keeps the outage-streak detector meaningful: hammering one
-    problem fragment 3x in a row used to manufacture its own miniature
-    failure streak in isolation, indistinguishable from a real outage.
-    Interleaving different fragments between attempts means repeated
-    failures on the SAME fragment no longer masquerade as the whole
-    service being down -- only genuinely widespread failures (every
-    fragment in the pool failing) still trip FAILURE_STREAK_THRESHOLD.
-
-    Streak/outage bookkeeping only happens once a fragment is fully
-    exhausted (same as before) -- an intermediate, deferred attempt
-    doesn't itself count against the streak, only a fragment that never
-    recovers across all its attempts does.
+    This keeps the outage detector meaningful: hammering one problem
+    fragment repeatedly in a row used to look identical to a real outage
+    in isolation. Interleaving different fragments between attempts means
+    repeated failures on the SAME fragment no longer masquerade as the
+    whole service being down -- only a genuine, sustained stretch with no
+    successful translations anywhere (see _outage_timeout_seconds) still
+    trips it, which is the only way this function ever stops without
+    every fragment having succeeded.
 
     Returns {fragment: translated_text}.
     """
-    max_attempts = DEFAULTS["max_retries"]
     pending = [seg for seg in segments if seg.strip()]
     results = {seg: seg for seg in segments if not seg.strip()}
-    attempts = {seg: 0 for seg in pending}
 
     while pending:
         seg = pending.pop(0)
@@ -236,29 +239,18 @@ def _translate_segments_deferred(google_code, segments):
             # outage does, rather than deferring into the same wall.
             raise
         except Exception as e:
-            attempts[seg] += 1
-            if attempts[seg] < max_attempts:
-                # Defer: a different fragment goes next, this one comes
-                # back around later once the (shuffled) pool cycles to it.
-                pending.append(seg)
-                random.shuffle(pending)
-                continue
-
-            # Exhausted this fragment's attempts -- always counts as a
-            # fatal error for it, whether or not it also trips the outage
-            # streak check below.
-            preview = seg if len(seg) <= 300 else seg[:300] + "...(truncated)"
             is_outage = _record_failure_and_check_streak()
-            _record_fallback(preview, e)
-            results[seg] = seg
-
             if is_outage:
                 message = "Google Translate does not appear to be available right now. Please try again later."
                 warn_red(message)
-                warn_red(f"Fatal Errors: {_fallback_count}")
                 if threading.current_thread() is threading.main_thread():
                     sys.exit(1)
                 raise TranslationUnavailableError(message) from e
+
+            # Defer: a different fragment goes next, this one comes
+            # back around later once the (shuffled) pool cycles to it.
+            pending.append(seg)
+            random.shuffle(pending)
 
     return results
 
@@ -269,9 +261,9 @@ def translate_value(google_code, text):
     just one string outside a translate_many() batch). Delegates to the
     same deferred-retry machinery translate_many's batch fallback uses --
     see _translate_segments_deferred -- though with only one item in the
-    pool there's nothing else to interleave with, so a failing value
-    simply retries itself up to DEFAULTS['max_retries'] times before
-    falling back to the original text.
+    pool there's nothing else to interleave with, so a failing value just
+    retries itself repeatedly until it succeeds or a genuine outage is
+    detected; it's never left untranslated.
     """
     if not text.strip():
         return text
@@ -279,16 +271,16 @@ def translate_value(google_code, text):
 
 
 def get_fallback_count():
-    """Total number of values that fell back to untranslated text (real
-    outages aside) across the whole process so far. Exposed so callers
-    like --update can fold this into their own live progress display
-    instead of translate_many announcing it mid-run itself."""
+    """Total number of values that fell back to untranslated text.
+    Always 0 now -- _translate_segments_deferred no longer gives up on a
+    fragment and leaves it untranslated, it retries indefinitely instead.
+    Kept (rather than removed) for any other caller still importing it."""
     return _fallback_count
 
 
 def get_fallback_log():
-    """Copy of the (preview, error) pairs behind get_fallback_count(), for
-    callers that want to report specifics at the end of a run."""
+    """Copy of the (preview, error) pairs behind get_fallback_count().
+    Always empty now, for the same reason -- kept for compatibility."""
     with _fallback_lock:
         return list(_fallback_log)
 

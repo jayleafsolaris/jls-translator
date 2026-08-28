@@ -12,7 +12,7 @@ from ..common.lang_io import parse_lang, write_lang, entries_dict
 from ..common.text_protect import tokens_only_diff, apply_token_patch, to_british, resolve_key_references
 from ..common.netcheck import require_internet_or_warn
 from ..common.config_store import warn_red
-from ..common.translate import translate_many, get_fallback_count
+from ..common.translate import translate_many
 from ..common.ratelimit import set_job_profile, status_report
 from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, write_languages_json, get_active_language_codes, resolve_workers
 from ..common.progress import (
@@ -199,16 +199,8 @@ def cmd_update(resume=False, interactive=False):
             pct = (done / _total * 100) if _total else 100.0
             time_str = format_duration(time.time() - start_run_time)
             usage = status_report()  # cached -- cheap to call every tick
-            # Non-fatal fallbacks (a value that exhausted its retries and
-            # fell back to untranslated text -- see
-            # common/translate.py's _translate_segments_deferred) used to
-            # print their own "Fatal Errors: N" line mid-run, breaking
-            # into the middle of this live block. Folded in here instead,
-            # so it's just one more number that updates in place along
-            # with everything else.
-            fallbacks = get_fallback_count()
 
-            cursor_up = "" if _first_render else "\033[5F"
+            cursor_up = "" if _first_render else "\033[4F"
             _first_render = False
 
             lines = [
@@ -216,7 +208,6 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Progress: {pct:5.1f}%",
                 f"\033[K  Time: {time_str}",
                 f"\033[K  Usage: Hourly {usage['hour_pct']:.1f}% • Daily {usage['day_pct']:.1f}%",
-                f"\033[K  Fallbacks: {fallbacks}" + (f" {CLR_RED}(untranslated, non-fatal){CLR_RESET}" if fallbacks else ""),
             ]
 
             sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
@@ -314,8 +305,10 @@ def cmd_update(resume=False, interactive=False):
             time_str = format_duration(time.time() - start_run_time)
             usage = status_report()
 
-            # Render fatal output layout over current display block
-            cursor_up = "" if _first_render else "\033[5F"
+            # Render fatal output layout over current display block -- the
+            # live block above is 4 lines, so move up 4 regardless of how
+            # many lines this fatal block itself writes.
+            cursor_up = "" if _first_render else "\033[4F"
             fatal_lines = [
                 f"\033[K  Translating {total} keys - Fatal Exception",
                 f"\033[K  Progress: 0% (Failed)",
