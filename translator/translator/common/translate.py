@@ -48,8 +48,14 @@ class TranslationUnavailableError(RuntimeError):
 # no successes in between, regardless of what the content looks like --
 # that's not "this string is weird", that's "nothing is getting through".
 # Any success anywhere resets the streak, so scattered failures across a
-# long run never fake-trigger a stop.
-FAILURE_STREAK_THRESHOLD = 5
+# long run never fake-trigger a stop. The threshold is set high (25) on
+# purpose: with deferred/shuffled retries spreading failures out across
+# different fragments (see _translate_segments_deferred), 25 in a row with
+# zero successes anywhere in the whole run is no longer plausible unless
+# Google Translate is genuinely unreachable -- at which point the process
+# ends completely (sys.exit(1) / re-raised TranslationUnavailableError)
+# rather than continuing to burn through retries into the same wall.
+FAILURE_STREAK_THRESHOLD = 25
 
 _streak_lock = threading.Lock()
 _consecutive_failures = 0
@@ -272,14 +278,25 @@ def translate_value(google_code, text):
     return _translate_segments_deferred(google_code, [text])[text]
 
 
+def get_fallback_count():
+    """Total number of values that fell back to untranslated text (real
+    outages aside) across the whole process so far. Exposed so callers
+    like --update can fold this into their own live progress display
+    instead of translate_many announcing it mid-run itself."""
+    return _fallback_count
+
+
+def get_fallback_log():
+    """Copy of the (preview, error) pairs behind get_fallback_count(), for
+    callers that want to report specifics at the end of a run."""
+    with _fallback_lock:
+        return list(_fallback_log)
+
+
 def translate_many(google_code, texts, max_workers, progress_cb=None):
     results = [None] * len(texts)
     if not texts:
         return results
-
-    # Snapshot the fallback log too (same reasoning as the count baseline
-    # above) so the block below only reports fragments from THIS call.
-    fallback_baseline = _fallback_count
 
     # Filter out empty strings beforehand to optimize network requests
     valid_indices = [i for i, t in enumerate(texts) if t.strip()]
@@ -462,9 +479,5 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
             else:
                 rebuilt.append(segment_results.get(content, content))
         results[idx] = "".join(rebuilt).replace('__NL__', '\n')
-
-    fallback_this_call = _fallback_count - fallback_baseline
-    if fallback_this_call:
-        warn_red(f"Fatal Errors: {fallback_this_call}")
 
     return results
