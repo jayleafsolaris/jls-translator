@@ -5,7 +5,7 @@ import time
 from ..common import state
 from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT
 from ..common.lang_io import strip_comments_for_output, entries_dict, write_lang
-from ..common.text_protect import to_british
+from ..common.text_protect import to_british, resolve_key_references
 from ..common.netcheck import require_internet_or_warn
 from ..common.translate import translate_many
 from ..common.ratelimit import set_job_profile, status_report
@@ -111,6 +111,21 @@ def cmd_create(resume=False, interactive=False):
                 _, key, _, inline_comment = line
                 out_lines.append(("entry", key, translated[t_idx], inline_comment))
                 t_idx += 1
+
+        # Resolve any '{key.path}' cross-references now that this
+        # language's entries are fully generated (see
+        # common/text_protect.py's resolve_key_references()) -- mirrors
+        # --update's post-translation resolution phase, so freshly
+        # --create'd files don't leave a raw '{key.path}' marker behind
+        # either. Resolved within this language's own entries only.
+        current_values = {line[1]: line[2] for line in out_lines if line[0] == "entry"}
+        resolved_values = resolve_key_references(current_values)
+        out_lines = [
+            line if line[0] != "entry" or resolved_values.get(line[1], line[2]) == line[2]
+            else ("entry", line[1], resolved_values[line[1]], line[3])
+            for line in out_lines
+        ]
+
         write_lang(state.SCRIPT_DIR / f"{code}.lang", out_lines)
 
         completed.append(code)

@@ -12,6 +12,7 @@ import requests
 
 from .state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
 from .config_store import warn_red, _RESET, get_release_branch
+from .progress import format_duration
 
 def check_internet(timeout=1.2):
     """
@@ -62,12 +63,10 @@ def require_internet_or_warn(flag_name):
     if check_internet(timeout=0.6):
         return True
     warn_red(
-        f"No internet connection detected -- {flag_name} needs network access "
-        f"to reach Google Translate."
+        f"No internet connection detected, {flag_name} needs network access "
+        f"to function in this state!"
     )
-    print("Check your connection and try again. (Offline-only modes like "
-          "--view, --backup, --restore, --remove, --delete, --add, --cache, and "
-          "--config don't need this.)")
+    print(f"{_BLUE}Check your connection and try again!")
     return False
 
 
@@ -149,16 +148,16 @@ def _save_version_check_cache(data):
 
 def _branch_suffix():
     """
-    A short " (branch: X)" annotation appended to update-notice messages
-    whenever the release branch has been overridden away from the repo's
-    normal default (GITHUB_BRANCH) -- so a custom branch's version checks
-    are clearly labeled, while the common default-branch case stays
-    exactly as quiet/plain as before.
+    A short " (Current Branch: X)" annotation appended to update-notice
+    messages whenever the release branch has been overridden away from
+    the repo's normal default (GITHUB_BRANCH) -- so a custom branch's
+    version checks are clearly labeled, while the common default-branch
+    case stays exactly as quiet/plain as before.
     """
     branch = get_release_branch()
     if branch == GITHUB_BRANCH:
         return ""
-    return f" (branch: {branch})"
+    return f" (Current Branch: {branch})"
 
 
 def check_for_update_notice(force=False):
@@ -223,7 +222,7 @@ def check_for_update_notice(force=False):
 
     if is_newer:
         print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote}{_branch_suffix()} "
-              f"-- run --upgrade to update.{_RESET}")
+              f">> run --upgrade to update.{_RESET}")
 
 
 def cmd_check_update():
@@ -231,6 +230,14 @@ def cmd_check_update():
     Manually, immediately checks GitHub for a newer version -- always hits
     the network (ignoring DEFAULTS['version_check_interval_minutes']) and
     prints the result either way. This is `--check` used with no value.
+
+    Gated by its own separate cooldown (DEFAULTS['check_cooldown_seconds'],
+    3 minutes) tracked as "last_manual_check" in the same version-check
+    cache file -- independent of the passive checker's interval/timestamp,
+    so this can't be spammed regardless of what raw.githubusercontent.com's
+    CDN does on its end. The cooldown starts counting from the moment a
+    check is actually attempted (not from a successful result), so a
+    string of offline attempts is throttled too.
 
     Makes exactly one network attempt (fetch_remote_version, with
     bypass_cache=True so raw.githubusercontent.com's CDN can't hand back a
@@ -242,14 +249,24 @@ def cmd_check_update():
     checker keeps running on other commands -- use `--check true` or
     `--check false` for that.
     """
-    print(f"Checking for updates{_branch_suffix()}...")
     cache = _load_version_check_cache()
+    now = time.time()
+    cooldown = DEFAULTS["check_cooldown_seconds"]
+    elapsed = now - cache.get("last_manual_check", 0)
+    if elapsed < cooldown:
+        print(f"You can’t check for updates yet! Try again in {format_duration(cooldown - elapsed)}")
+        return
+
+    cache["last_manual_check"] = now
+    _save_version_check_cache(cache)
+
+    print(f"Checking for updates{_branch_suffix()}...")
 
     remote = fetch_remote_version(timeout=3.0, bypass_cache=True)
     now = time.time()
 
     if not remote:
-        warn_red("Couldn't reach GitHub -- no internet connection, or GitHub is unreachable.")
+        warn_red("Couldn't reach GitHub - no internet connection, or GitHub is unreachable.")
         return
 
     cache["remote_version"] = remote
@@ -263,7 +280,7 @@ def cmd_check_update():
 
     if is_newer:
         print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote}{_branch_suffix()} "
-              f"-- run --upgrade to update.{_RESET}")
+              f">> run --upgrade to update.{_RESET}")
     elif is_newer is False:
         print(f"Up to date: v{SCRIPT_VERSION} is the latest version.")
     else:
@@ -282,7 +299,7 @@ def cmd_set_autocheck(enabled):
     cache["autocheck_enabled"] = enabled
     _save_version_check_cache(cache)
     if enabled:
-        print(f"Automatic update checks are now ON (checks at most every "
+        print(f"Automatic update checks are now enabled (checks at most every "
               f"{DEFAULTS['version_check_interval_minutes']} minutes).")
     else:
-        print("Automatic update checks are now OFF. Run --check anytime to check manually.")
+        print("Automatic update checks are now disabled. Run --check anytime to check manually.")
