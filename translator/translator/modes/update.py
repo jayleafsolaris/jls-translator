@@ -1,6 +1,7 @@
 """--update: retranslate changed keys already present in each .lang file."""
 
 import json
+import random
 import sys
 import time
 import traceback
@@ -163,6 +164,20 @@ def cmd_update(resume=False, interactive=False):
             )
 
         remaining = [t for t in tasks if task_key(t["code"], t["key"]) not in results]
+        # Shuffle translation order so keys that changed together (often
+        # near-identical, similarly-shaped strings sitting adjacent in the
+        # base file -- e.g. a batch of blank/templated entries) don't land
+        # next to each other in the same or consecutive batches. The
+        # failure-streak/outage detector in translate.py trips on N real
+        # translation attempts failing back-to-back with no success in
+        # between; --create is naturally protected from this by sheer
+        # variety, but --update's smaller, more homogeneous key set isn't.
+        # Scattering the order gives dissimilar keys a better chance of
+        # interleaving between any that are genuinely problematic, instead
+        # of stacking them into one unbroken run. Purely cosmetic
+        # reordering otherwise -- results are keyed by task, not position,
+        # so resuming (--continue) and final output are unaffected.
+        random.shuffle(remaining)
         done_count = total - len(remaining)
 
         if resume:
@@ -258,7 +273,19 @@ def cmd_update(resume=False, interactive=False):
                 set_job_profile(remaining_keys, remaining_bytes)
 
             smoother.finish()
-        except Exception as err:
+        except (Exception, SystemExit) as err:
+            # translate.py can end a run two ways: a normal Exception
+            # bubbling out of translate_many(), or a direct sys.exit(1)
+            # from translate_value()/translate_many() once the failure
+            # streak crosses FAILURE_STREAK_THRESHOLD (declared outage) or
+            # the daily rate-limit cap is hit. sys.exit() raises SystemExit,
+            # which is a BaseException, NOT an Exception -- so it used to
+            # skip this handler entirely, silently killing the process
+            # with nothing but translate.py's own bare "Fatal Errors: N"
+            # line and no context (no progress/usage summary, no re-raised
+            # traceback). Catching SystemExit here too means every failure
+            # path -- normal exception, outage, or rate limit -- ends up
+            # going through the same fatal-error reporting below.
             fatal_error_count += 1
             time_str = format_duration(time.time() - start_run_time)
             usage = status_report()
