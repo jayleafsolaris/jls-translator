@@ -215,16 +215,19 @@ def cmd_update(resume=False, interactive=False):
             save_temp()
             save_progress("update", [], fingerprint, time.time() - start_run_time)
 
-            # Real network translation, grouped by target Google language code (one
-            # 'es' batch covers both es_ES and es_MX, for example) but reported as a
-            # single running total across every language.
-            by_google = {}
+            # Real network translation, one language at a time -- mirrors
+            # --create's per-language batching instead of pooling every
+            # locale that shares a Google code (e.g. es_ES + es_MX) into a
+            # single combined request. Still reported as a single running
+            # total across every language.
+            by_lang = {}
             for t in remaining:
                 if t["google_code"] in (None, GB_CONVERT):
                     continue
-                by_google.setdefault(t["google_code"], []).append(t)
+                by_lang.setdefault(t["code"], []).append(t)
 
-            for google_code, group in by_google.items():
+            for code, group in by_lang.items():
+                google_code = group[0]["google_code"]
                 texts = [base_values[t["key"]] for t in group]
                 base_offset = done_count
 
@@ -241,15 +244,15 @@ def cmd_update(resume=False, interactive=False):
                 save_progress("update", [], fingerprint, time.time() - start_run_time)
 
                 # Refresh the job profile with what's actually left after
-                # this language group finishes, so the cooldown reacts to
+                # this language finishes, so the cooldown reacts to
                 # progress rather than just the original estimate.
                 remaining_bytes = sum(
                     len(base_values[t["key"]].encode("utf-8"))
-                    for grp in by_google.values() for t in grp
+                    for grp in by_lang.values() for t in grp
                     if task_key(t["code"], t["key"]) not in results
                 )
                 remaining_keys = sum(
-                    1 for grp in by_google.values() for t in grp
+                    1 for grp in by_lang.values() for t in grp
                     if task_key(t["code"], t["key"]) not in results
                 )
                 set_job_profile(remaining_keys, remaining_bytes)
