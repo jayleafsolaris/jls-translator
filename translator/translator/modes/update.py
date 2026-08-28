@@ -14,7 +14,7 @@ from ..common.netcheck import require_internet_or_warn
 from ..common.config_store import warn_red
 from ..common.translate import translate_many, get_fallback_count
 from ..common.ratelimit import set_job_profile, status_report
-from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, get_active_language_codes, resolve_workers
+from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, write_languages_json, get_active_language_codes, resolve_workers
 from ..common.progress import (
     load_base, sync_en_us_from_base, base_fingerprint, clear_progress, save_progress,
     format_duration, SmoothProgress, _report_keys, _report_finishing,
@@ -222,22 +222,37 @@ def cmd_update(resume=False, interactive=False):
             sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
             sys.stdout.flush()
 
-        smoother = SmoothProgress(total, _render)
         fatal_error_count = 0
-        
-        try:
-            smoother.update(done_count)
 
+        try:
             # Local (non-network) work first: direct copy (en_US) and British-spelling
-            # conversion (en_GB) need no API call at all.
-            for t in [t for t in remaining if t["google_code"] in (None, GB_CONVERT)]:
-                text = base_values[t["key"]]
-                value = text if t["google_code"] is None else to_british(text)
-                results[task_key(t["code"], t["key"])] = value
-                done_count += 1
-                smoother.update(done_count)
+            # conversion (en_GB) need no API call at all. Given its own
+            # SmoothProgress scoped just to this local work, with the same
+            # 3-second catch-up --create uses for these same two cases --
+            # so this instant, no-delay work still visibly eases forward
+            # instead of snapping straight to wherever it lands. The main
+            # run smoother (below) then takes over for the real, networked
+            # translation work.
+            local_tasks = [t for t in remaining if t["google_code"] in (None, GB_CONVERT)]
+            if local_tasks:
+                start_offset = done_count
+                local_smoother = SmoothProgress(
+                    len(local_tasks),
+                    lambda done, _offset=start_offset: _render(_offset + done),
+                    catch_up_seconds=3.0,
+                )
+                for i, t in enumerate(local_tasks, start=1):
+                    text = base_values[t["key"]]
+                    value = text if t["google_code"] is None else to_british(text)
+                    results[task_key(t["code"], t["key"])] = value
+                    local_smoother.update(i)
+                local_smoother.finish()
+                done_count = start_offset + len(local_tasks)
             save_temp()
             save_progress("update", [], fingerprint, time.time() - start_run_time)
+
+            smoother = SmoothProgress(total, _render)
+            smoother.update(done_count)
 
             # Real network translation, one language at a time -- mirrors
             # --create's per-language batching instead of pooling every
@@ -319,6 +334,7 @@ def cmd_update(resume=False, interactive=False):
 
     clear_progress()
     save_cache(base_values)
+    write_languages_json()
 
     # Now fan the finished translations back out into each language's .lang
     # file -- this is the only point any .lang file gets touched. Entries
