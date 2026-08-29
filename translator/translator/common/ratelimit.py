@@ -14,17 +14,36 @@ back the moment the *oldest* still-counted request ages out, so the
 countdown always reflects recent activity instead of a timestamp frozen
 from whenever the state file was first created.
 
-Hard caps (bytes, KB = 1000 bytes) are intentionally NOT user-
-configurable -- no --config flag anywhere reads or writes the ranges
-below. The cap itself is rerolled to a fresh random value within its
-range once each real hour/day, so the exact ceiling isn't identical
-call to call, only the *range* is fixed.
+Hard caps (bytes, KB = 1000 bytes) are LEARNED, not hardcoded -- there's
+no documented real quota for the unofficial endpoint deep_translator
+hits, so the only trustworthy way to know how much can actually be sent
+is to watch what actually happens:
+
+  - GROW the cap when a whole hour/day window finishes with real demand
+    (usage got pushed close to the current ceiling) and nothing went
+    wrong -- i.e. a bigger job needed more room and Google didn't
+    object, so there was headroom to spare. This is what makes the cap
+    track actual job sizes automatically, without reading any job
+    estimate directly: a bigger job naturally produces more usage,
+    which naturally earns more room over time.
+  - SHRINK the cap hard when a genuine outage was detected during the
+    window (see translate.py's FAILURE_STREAK_THRESHOLD and this
+    module's record_outage()) -- real evidence Google itself pushed
+    back, as opposed to merely bumping into our own self-imposed
+    ceiling (which is expected and not penalized).
+
+See _adjust_cap()/_maybe_reroll_caps() below for the actual mechanics.
+The _INITIAL_*_CAP_RANGE constants only seed a brand-new state file
+before anything has been learned yet; _MIN_*_CAP/_MAX_*_CAP are sanity
+backstops so growth/shrinkage can't run away to a degenerate value, not
+ongoing hardcoded limits themselves.
 
 A per-run "job profile" (how many bytes --create/--update still expects
-to send) lets the cooldown between individual requests adapt: if the
-remaining work fits inside what's left of the current budget, the
-cooldown stays at the normal configured request delay; if it's on track
-to blow past that budget, the cooldown stretches out proportionally.
+to send) additionally lets the cooldown between individual requests
+adapt within a single run: if the remaining work fits inside what's left
+of the current budget, the cooldown stays at the normal configured
+request delay; if it's on track to blow past that budget, the cooldown
+stretches out proportionally.
 
 On top of the automatic caps, --usage --24hr <hours> lets you manually
 force a hard cooldown (1-72 hours) that blocks every translation request
@@ -39,11 +58,32 @@ import time
 from .state import PACKAGE_DIR
 from .config_store import get_request_delay, warn_red
 
-# --- Hard caps -------------------------------------------------------
-# Deliberately hardcoded here and nowhere else -- no --config flag
-# exposes these, and nothing else in the package reads or writes them.
-_HOURLY_CAP_RANGE = (100_000, 1_500_000)   # 100-150 KB per rolling hour
-_DAILY_CAP_RANGE = (4_500_000, 5_000_000)    # 450-500 KB per rolling day
+# --- Learned caps ------------------------------------------------------
+# Only used to seed a brand-new state file -- once a real cap has been
+# learned (see module docstring), these ranges are never consulted again.
+_INITIAL_HOURLY_CAP_RANGE = (1_000_000, 15_000_000)   # 1-15 MB seed
+_INITIAL_DAILY_CAP_RANGE = (45_000_000, 50_000_000)   # 45-50 MB seed
+
+# Sanity floor/ceiling -- growth/shrinkage can never cross these no
+# matter how many clean windows or outages happen in a row. Wide enough
+# to give the learning process real room to move in either direction.
+_MIN_HOUR_CAP = 250_000
+_MAX_HOUR_CAP = 100_000_000
+_MIN_DAY_CAP = 5_000_000
+_MAX_DAY_CAP = 500_000_000
+
+# AIMD tuning: additive-ish growth, multiplicative (hard) backoff -- the
+# classic shape for learning a safe ceiling against an unknown, possibly
+# adversarial limit, without needing to know the real number in advance.
+_GROWTH_FACTOR = 1.15
+_SHRINK_FACTOR = 0.5
+# Only grow if the window was actually pushed close to its ceiling --
+# growing an underused cap teaches the limiter nothing real.
+_GROWTH_UTILIZATION_THRESHOLD = 0.6
+# Small +/- randomness on every adjustment so the learned cap isn't
+# perfectly deterministic run to run (same reasoning the old fixed-range
+# reroll had for varying the exact ceiling call to call).
+_JITTER_FRACTION = 0.05
 
 _HOUR_SECONDS = 1.5 * 60 * 60
 _DAY_SECONDS = 24 * 60 * 60
@@ -87,10 +127,16 @@ def _now():
 
 def _default_state(now):
     return {
-        "hour_cap": random.uniform(*_HOURLY_CAP_RANGE),
-        "day_cap": random.uniform(*_DAILY_CAP_RANGE),
+        "hour_cap": random.uniform(*_INITIAL_HOURLY_CAP_RANGE),
+        "day_cap": random.uniform(*_INITIAL_DAILY_CAP_RANGE),
         "cap_rolled_hour_at": now,
         "cap_rolled_day_at": now,
+        # Set by record_outage() whenever a genuine outage happens during
+        # the window currently in progress -- consulted (and cleared) the
+        # next time that window's cap rerolls, so a bad window shrinks
+        # the cap instead of growing it.
+        "hour_window_bad": False,
+        "day_window_bad": False,
         "usage_log": [],  # list of [epoch, bytes], pruned to the trailing 24h
         "manual_cooldown_until": None,
     }
@@ -103,6 +149,8 @@ def _load_state():
             required = ("hour_cap", "day_cap", "cap_rolled_hour_at", "cap_rolled_day_at", "usage_log")
             if all(k in data for k in required):
                 data.setdefault("manual_cooldown_until", None)
+                data.setdefault("hour_window_bad", False)
+                data.setdefault("day_window_bad", False)
                 return data
         except Exception:
             pass
@@ -122,13 +170,69 @@ def _prune_log(data, now):
     data["usage_log"] = [[ts, b] for ts, b in data["usage_log"] if now - ts < _DAY_SECONDS]
 
 
+def _adjust_cap(current_cap, used_bytes, had_outage, min_cap, max_cap):
+    """
+    AIMD-style adjustment applied once a window (hour or day) finishes:
+
+    - had_outage=True (record_outage() was called during this window --
+      a genuine translation outage, not just hitting our own ceiling):
+      shrink hard. Real evidence we sent more than Google tolerated.
+    - Otherwise, if usage got pushed to at least
+      _GROWTH_UTILIZATION_THRESHOLD of the current cap: grow gently.
+      This is the only place job size influences the cap, and it does so
+      indirectly and safely -- a bigger job produces more real usage,
+      which is what earns more room, rather than trusting an a-priori
+      estimate to raise the ceiling before there's any evidence it's
+      safe.
+    - Otherwise (window wasn't pushed hard either way): leave it alone,
+      there's nothing to learn from an underused window.
+
+    A small +/- jitter is applied either way so the result isn't
+    perfectly deterministic, then clamped to [min_cap, max_cap].
+    """
+    if had_outage:
+        new_cap = current_cap * _SHRINK_FACTOR
+    elif current_cap and (used_bytes / current_cap) >= _GROWTH_UTILIZATION_THRESHOLD:
+        new_cap = current_cap * _GROWTH_FACTOR
+    else:
+        new_cap = current_cap
+
+    jitter = 1 + random.uniform(-_JITTER_FRACTION, _JITTER_FRACTION)
+    return max(min_cap, min(max_cap, new_cap * jitter))
+
+
 def _maybe_reroll_caps(data, now):
     if now - data["cap_rolled_hour_at"] >= _HOUR_SECONDS:
-        data["hour_cap"] = random.uniform(*_HOURLY_CAP_RANGE)
+        used = _usage_within(data, now, _HOUR_SECONDS)
+        data["hour_cap"] = _adjust_cap(
+            data["hour_cap"], used, data.get("hour_window_bad", False), _MIN_HOUR_CAP, _MAX_HOUR_CAP
+        )
         data["cap_rolled_hour_at"] = now
+        data["hour_window_bad"] = False
     if now - data["cap_rolled_day_at"] >= _DAY_SECONDS:
-        data["day_cap"] = random.uniform(*_DAILY_CAP_RANGE)
+        used = _usage_within(data, now, _DAY_SECONDS)
+        data["day_cap"] = _adjust_cap(
+            data["day_cap"], used, data.get("day_window_bad", False), _MIN_DAY_CAP, _MAX_DAY_CAP
+        )
         data["cap_rolled_day_at"] = now
+        data["day_window_bad"] = False
+
+
+def record_outage():
+    """
+    Call when a genuine translation outage is detected (translate.py's
+    FAILURE_STREAK_THRESHOLD tripping) -- real evidence Google itself
+    pushed back, not just that a run hit our own self-imposed ceiling
+    (hitting our own ceiling is expected under real load and isn't
+    penalized -- see _adjust_cap()). Marks both windows currently in
+    progress so their next reroll shrinks the learned cap instead of
+    growing it.
+    """
+    with _LOCK:
+        data = _load_state()
+        data["hour_window_bad"] = True
+        data["day_window_bad"] = True
+        _save_state(data)
 
 
 def _usage_within(data, now, window_seconds):
