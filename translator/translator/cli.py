@@ -41,6 +41,12 @@ base and your .lang files, e.g. RP/texts/):
                                      runs quietly on every command) on or off
     jls-translator --usage   show current hourly/daily translation usage percentages
                                      and when each resets (no --path needed)
+    jls-translator --mock    swap Google Translate for a fake offline translator --
+                                     no network calls, no usage cap spent. Alone, runs
+                                     a quick self-test of the translation logic on
+                                     synthetic data; combine with --create/--update/
+                                     --add/--remove/--continue to dry-run that mode
+                                     against your real base file instead
     jls-translator --push    push <cwd>/jls-translator/ up to this tool's own GitHub
                                      repo as one combined commit (branch: --release)
     jls-translator --pull    pull that repo down into <cwd>/jls-translator/, mirroring
@@ -154,6 +160,7 @@ from .modes.usage_cmd import cmd_usage
 from .modes.push import cmd_push
 from .modes.pull import cmd_pull
 from .modes.token import cmd_show_token, cmd_set_token, cmd_remove_token
+from .modes.mock import cmd_mock, enable_mock_translation
 from .common.base_backup import refresh_base_backup, load_base_backup
 
 _MODES = [
@@ -259,6 +266,11 @@ def main():
     parser.add_argument("--version", action="store_true", help="print the script version and exit")
     parser.add_argument("--usage", action="store_true",
                          help="show current hourly/daily translation usage percentages and reset times")
+    parser.add_argument("--mock", action="store_true",
+                         help="use a fake offline translator instead of Google -- no network calls, "
+                              "no usage cap spent. alone: quick self-test on synthetic data. "
+                              "combined with --create/--update/--add/--remove/--continue: dry-run "
+                              "that mode against your real base file")
     parser.add_argument("--cooldown", dest="cooldown_hours", type=float, metavar="HOURS",
                          help="use with --usage to manually force a translation cooldown, "
                               "1-72 hours (clamped to that range)")
@@ -334,6 +346,16 @@ def main():
             cmd_set_token(args.token)
         return
 
+    # --mock with no other mode: standalone self-test, no project folder needed.
+    if args.mock and not any([
+        args.create, args.update, args.add, args.remove, args.delete,
+        args.backup, args.restore, args.view, args.split, args.merge,
+        args.compile, args.decompile, args.cont, args.cache, args.config,
+        args.push, args.pull, args.upgrade,
+    ]):
+        cmd_mock()
+        return
+
     # No --path needed anymore -- the script just operates on wherever
     # you're standing when you run it.
     state.SCRIPT_DIR = Path.cwd().resolve()
@@ -355,6 +377,9 @@ def main():
         # only prints anything if it can positively confirm a newer version
         # exists, and never blocks or errors out the command being run.
         check_for_update_notice()
+
+        if args.mock:
+            enable_mock_translation()
 
         if (args.workers or args.languages or args.delay or args.show or args.hide) and not args.config:
             args.config = True
