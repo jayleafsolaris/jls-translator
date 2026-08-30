@@ -22,6 +22,7 @@ from .state import DEFAULTS
 from .config_store import get_request_delay, warn_red
 from .text_protect import split_segments, join_segments
 from .ratelimit import reserve, record_extra, record_outage, RateLimitExceededError
+from . import debug_log
 
 # Thread-safe rate limiter variables (module-local: _raw_translate_once is
 # the only place these are read or written).
@@ -129,7 +130,9 @@ def _translate_raw_api_call(google_code, text_to_send):
     # needed, or raises RateLimitExceededError if the daily cap is
     # genuinely exhausted. Sized on the outgoing request text; the
     # response size is added afterwards via record_extra() once known.
+    debug_log.log(f"reserve() -- {len(text_to_send.encode('utf-8'))} bytes, {google_code}")
     reserve(len(text_to_send.encode("utf-8")))
+    debug_log.log(f"reserve() cleared -- {google_code}")
 
     with _RATE_LIMIT_LOCK:
         now = time.time()
@@ -138,7 +141,16 @@ def _translate_raw_api_call(google_code, text_to_send):
             time.sleep(delay - elapsed)
         _LAST_REQUEST_TIME = time.time()
 
+    # The network call itself -- deep_translator/requests has no timeout
+    # configured anywhere in this codebase, so a stalled connection blocks
+    # here indefinitely with no exception raised, meaning none of the
+    # retry/outage/rate-limit machinery below ever sees it happen. If a
+    # run looks frozen, this is the single most likely place: a "sending"
+    # line here with no matching "received" line, sitting at a stale
+    # timestamp, is the smoking gun.
+    debug_log.log(f"sending -- {google_code}, {len(text_to_send)} chars")
     result = translator.translate(text_to_send)
+    debug_log.log(f"received -- {google_code}, {len(result)} chars")
     record_extra(len(result.encode("utf-8")))
     return result
 
@@ -299,6 +311,7 @@ def get_fallback_log():
 
 
 def translate_many(google_code, texts, max_workers, progress_cb=None):
+    debug_log.log(f"translate_many start -- {google_code}, {len(texts)} values, {max_workers} workers")
     results = [None] * len(texts)
     if not texts:
         return results
@@ -448,11 +461,13 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
         return completed_values
 
     if batches:
+        debug_log.log(f"submitting {len(batches)} batches -- {google_code}")
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as ex:
             futures = [ex.submit(translate_batch_worker, b) for b in batches]
             try:
                 for fut in concurrent.futures.as_completed(futures):
                     done_count += fut.result()
+                    debug_log.log(f"batch done -- {done_count}/{len(valid_indices)} values resolved, {google_code}")
                     if progress_cb:
                         progress_cb(done_count)
             except (TranslationUnavailableError, RateLimitExceededError) as err:
@@ -460,6 +475,7 @@ def translate_many(google_code, texts, max_workers, progress_cb=None):
                 # daily usage cap was exhausted: cancel the rest and stop,
                 # rather than continuing to hammer a dead/limited service
                 # batch after batch.
+                debug_log.log(f"stopping -- {type(err).__name__}: {err}")
                 for f in futures:
                     f.cancel()
                 ex.shutdown(wait=True, cancel_futures=True)

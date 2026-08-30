@@ -57,6 +57,7 @@ import time
 
 from .state import PACKAGE_DIR
 from .config_store import get_request_delay, warn_red
+from . import debug_log
 
 # --- Learned caps ------------------------------------------------------
 # Only used to seed a brand-new state file -- once a real cap has been
@@ -391,10 +392,13 @@ def reserve(num_bytes):
                 f"Hourly translation usage limit reached -- pausing "
                 f"{_format_secs(wait_secs)} until usage ages out of the hourly window."
             )
+            debug_log.log(f"hourly cap hit -- sleeping {wait_secs:.0f}s (not stuck, this is deliberate)")
             time.sleep(min(wait_secs, _HOUR_SECONDS))
+            debug_log.log("hourly pause finished -- rechecking")
             continue
 
         if cooldown and cooldown > 0:
+            debug_log.log(f"adaptive cooldown -- sleeping {cooldown:.1f}s")
             time.sleep(cooldown)
         return
 

@@ -47,6 +47,12 @@ base and your .lang files, e.g. RP/texts/):
                                      synthetic data; combine with --create/--update/
                                      --add/--remove/--continue to dry-run that mode
                                      against your real base file instead
+    jls-translator --debug   alone: reset __debug-log.json (in this folder) to a
+                                     clean empty state. Combine with --create/--update/
+                                     --add/--remove/--continue/etc to print + log a
+                                     timestamped (:hh:mm:ss:) line for every notable
+                                     translation step -- useful for pinning down exactly
+                                     where a run that looks frozen actually stopped
     jls-translator --push    push <cwd>/jls-translator/ up to this tool's own GitHub
                                      repo as one combined commit (branch: --release)
     jls-translator --pull    pull that repo down into <cwd>/jls-translator/, mirroring
@@ -161,6 +167,8 @@ from .modes.push import cmd_push
 from .modes.pull import cmd_pull
 from .modes.token import cmd_show_token, cmd_set_token, cmd_remove_token
 from .modes.mock import cmd_mock, enable_mock_translation
+from .modes.debug import cmd_debug
+from .common import debug_log
 from .common.base_backup import refresh_base_backup, load_base_backup
 
 _MODES = [
@@ -271,6 +279,12 @@ def main():
                               "no usage cap spent. alone: quick self-test on synthetic data. "
                               "combined with --create/--update/--add/--remove/--continue: dry-run "
                               "that mode against your real base file")
+    parser.add_argument("--debug", action="store_true",
+                         help="alone: reset __debug-log.json (in the current project folder) to a "
+                              "clean empty state. combined with --create/--update/--add/--remove/"
+                              "--continue/etc: print + log a timestamped (:hh:mm:ss:) line for every "
+                              "notable translation step, useful for pinning down exactly where a "
+                              "run that looks frozen actually stopped")
     parser.add_argument("--cooldown", dest="cooldown_hours", type=float, metavar="HOURS",
                          help="use with --usage to manually force a translation cooldown, "
                               "1-72 hours (clamped to that range)")
@@ -359,6 +373,20 @@ def main():
     # No --path needed anymore -- the script just operates on wherever
     # you're standing when you run it.
     state.SCRIPT_DIR = Path.cwd().resolve()
+
+    # --debug with no other mode: standalone log-reset command, not a
+    # translation run -- see modes/debug.py.
+    if args.debug and not any([
+        args.create, args.update, args.add, args.remove, args.delete,
+        args.backup, args.restore, args.view, args.split, args.merge,
+        args.compile, args.decompile, args.cont, args.cache, args.config,
+        args.push, args.pull, args.upgrade,
+    ]):
+        cmd_debug()
+        return
+
+    if args.debug:
+        debug_log.enable()
 
     base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
     if not base_path.exists():
