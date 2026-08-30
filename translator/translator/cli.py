@@ -39,20 +39,12 @@ base and your .lang files, e.g. RP/texts/):
     jls-translator --check true|false
                               turn the automatic passive update check (the one that
                                      runs quietly on every command) on or off
-    jls-translator --usage   show current hourly/daily translation usage percentages
-                                     and when each resets (no --path needed)
-    jls-translator --mock    swap Google Translate for a fake offline translator --
-                                     no network calls, no usage cap spent. Alone, runs
-                                     a quick self-test of the translation logic on
-                                     synthetic data; combine with --create/--update/
+    jls-translator --mock    swap the local Argos Translate model for a fake, instant
+                                     translator -- no model downloads, no real translation
+                                     work. Alone, runs a quick self-test of the translation
+                                     logic on synthetic data; combine with --create/--update/
                                      --add/--remove/--continue to dry-run that mode
                                      against your real base file instead
-    jls-translator --debug   alone: reset __debug-log.json (in this folder) to a
-                                     clean empty state. Combine with --create/--update/
-                                     --add/--remove/--continue/etc to print + log a
-                                     timestamped (:hh:mm:ss:) line for every notable
-                                     translation step -- useful for pinning down exactly
-                                     where a run that looks frozen actually stopped
     jls-translator --push    push <cwd>/jls-translator/ up to this tool's own GitHub
                                      repo as one combined commit (branch: --release)
     jls-translator --pull    pull that repo down into <cwd>/jls-translator/, mirroring
@@ -126,13 +118,12 @@ separate files under a .config/ folder:
     jls-translator --config             show the config menu
     jls-translator --config --workers    set the concurrent worker count
     jls-translator --config --languages  view/edit which are actively translated
-    jls-translator --config --delay      set the global translation rate-limit delay
     jls-translator --config --delete     delete the whole config folder (resets all)
     jls-translator --config --show       make the config folder visible
     jls-translator --config --hide       make the config folder hidden
 
 Requires:
-    pip install deep_translator requests --user
+    pip install argostranslate requests --user
 """
 
 import argparse
@@ -143,7 +134,7 @@ from .common import state
 from .common.state import SCRIPT_VERSION, DEFAULTS
 from .common.netcheck import check_for_update_notice, cmd_check_update, cmd_set_autocheck
 from .modes.config_cmd import (
-    cmd_config_workers, cmd_config_languages, cmd_config_delay,
+    cmd_config_workers, cmd_config_languages,
     cmd_config_show, cmd_config_hide, cmd_config_delete, cmd_config_menu,
 )
 from .modes.cache_cmd import cmd_cache_build, cmd_cache_view, cmd_cache_clear, cmd_cache_menu
@@ -162,13 +153,10 @@ from .modes.decompile import cmd_decompile
 from .modes.cont import cmd_continue
 from .modes.upgrade import cmd_upgrade
 from .modes.release import cmd_show_release_branch, cmd_set_release_branch
-from .modes.usage_cmd import cmd_usage
 from .modes.push import cmd_push
 from .modes.pull import cmd_pull
 from .modes.token import cmd_show_token, cmd_set_token, cmd_remove_token
 from .modes.mock import cmd_mock, enable_mock_translation
-from .modes.debug import cmd_debug
-from .common import debug_log
 from .common.base_backup import refresh_base_backup, load_base_backup
 
 _MODES = [
@@ -188,7 +176,7 @@ _MODES = [
     ("pull", "Pull GitHub down into cwd/jls-translator/, mirroring it exactly"),
     ("cont", "Resume the last interrupted run (any modifying command)"),
     ("cache", "Manage the translation cache (build, view, or clear)"),
-    ("config", "Manage script configuration (workers, active languages, delay)"),
+    ("config", "Manage script configuration (workers, active languages)"),
     ("upgrade", "Update the script to the latest version from GitHub"),
 ]
 _MODE_FLAG_NAME = {"cont": "--continue"}
@@ -260,34 +248,21 @@ def main():
                               "cache (does not touch .lang files or lang_backups/)")
     parser.add_argument("--config", action="store_true",
                          help="manage script configuration; combine with --workers, "
-                              "--languages, --delay, --show, --hide, or --delete")
+                              "--languages, --show, --hide, or --delete")
     parser.add_argument("--workers", action="store_true",
                          help="(with --config) configure concurrent translation worker count")
     parser.add_argument("--languages", action="store_true",
                          help="(with --config) view/edit which languages are actively translated")
-    parser.add_argument("--delay", action="store_true",
-                         help="(with --config) configure the global rate-limit delay")
     parser.add_argument("--show", action="store_true",
                          help="(with --config) make the config folder visible")
     parser.add_argument("--hide", action="store_true",
                          help="(with --config) make the config folder hidden")
     parser.add_argument("--version", action="store_true", help="print the script version and exit")
-    parser.add_argument("--usage", action="store_true",
-                         help="show current hourly/daily translation usage percentages and reset times")
     parser.add_argument("--mock", action="store_true",
-                         help="use a fake offline translator instead of Google -- no network calls, "
-                              "no usage cap spent. alone: quick self-test on synthetic data. "
-                              "combined with --create/--update/--add/--remove/--continue: dry-run "
-                              "that mode against your real base file")
-    parser.add_argument("--debug", action="store_true",
-                         help="alone: reset __debug-log.json (in the current project folder) to a "
-                              "clean empty state. combined with --create/--update/--add/--remove/"
-                              "--continue/etc: print + log a timestamped (:hh:mm:ss:) line for every "
-                              "notable translation step, useful for pinning down exactly where a "
-                              "run that looks frozen actually stopped")
-    parser.add_argument("--cooldown", dest="cooldown_hours", type=float, metavar="HOURS",
-                         help="use with --usage to manually force a translation cooldown, "
-                              "1-72 hours (clamped to that range)")
+                         help="use a fake, instant translator instead of the local Argos Translate "
+                              "model -- no model downloads, no real translation work. alone: quick "
+                              "self-test on synthetic data. combined with --create/--update/--add/"
+                              "--remove/--continue: dry-run that mode against your real base file")
     parser.add_argument("--check", nargs="?", const="__now__", default=None, metavar="{true,false}",
                          help="with no value: manually check GitHub for a newer version right now "
                               "(does not change automatic checking). "
@@ -318,17 +293,6 @@ def main():
     if args.version:
         print(f"Version: {SCRIPT_VERSION}")
         check_for_update_notice(force=True)
-        return
-
-    if args.usage:
-        if args.cooldown_hours is not None:
-            cmd_usage(cooldown_hours=args.cooldown_hours)
-        else:
-            cmd_usage()
-        return
-
-    if args.cooldown_hours is not None:
-        print("--cooldown only has an effect combined with --usage, e.g. --usage --cooldown 6")
         return
 
     if args.check is not None:
@@ -374,20 +338,6 @@ def main():
     # you're standing when you run it.
     state.SCRIPT_DIR = Path.cwd().resolve()
 
-    # --debug with no other mode: standalone log-reset command, not a
-    # translation run -- see modes/debug.py.
-    if args.debug and not any([
-        args.create, args.update, args.add, args.remove, args.delete,
-        args.backup, args.restore, args.view, args.split, args.merge,
-        args.compile, args.decompile, args.cont, args.cache, args.config,
-        args.push, args.pull, args.upgrade,
-    ]):
-        cmd_debug()
-        return
-
-    if args.debug:
-        debug_log.enable()
-
     base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
     if not base_path.exists():
         cached = load_base_backup()
@@ -409,7 +359,7 @@ def main():
         if args.mock:
             enable_mock_translation()
 
-        if (args.workers or args.languages or args.delay or args.show or args.hide) and not args.config:
+        if (args.workers or args.languages or args.show or args.hide) and not args.config:
             args.config = True
 
         if (args.build or args.clear) and not args.cache:
@@ -430,16 +380,14 @@ def main():
             return
 
         if args.config:
-            sub_flags = [args.workers, args.languages, args.delay, args.show, args.hide, args.delete]
+            sub_flags = [args.workers, args.languages, args.show, args.hide, args.delete]
             if sum(bool(f) for f in sub_flags) > 1:
                 parser.error("combine --config with only one of --workers, --languages, "
-                             "--delay, --show, --hide, or --delete at a time")
+                             "--show, --hide, or --delete at a time")
             if args.workers:
                 cmd_config_workers()
             elif args.languages:
                 cmd_config_languages()
-            elif args.delay:
-                cmd_config_delay()
             elif args.show:
                 cmd_config_show()
             elif args.hide:

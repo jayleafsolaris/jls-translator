@@ -10,10 +10,8 @@ from ..common import state
 from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT, PACKAGE_DIR
 from ..common.lang_io import parse_lang, write_lang, entries_dict
 from ..common.text_protect import tokens_only_diff, apply_token_patch, to_british, resolve_key_references
-from ..common.netcheck import require_internet_or_warn
 from ..common.config_store import warn_red
-from ..common.translate import translate_many
-from ..common.ratelimit import set_job_profile, status_report
+from ..common.translate import translate_many, get_fallback_count
 from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, write_languages_json, get_active_language_codes, resolve_workers
 from ..common.progress import (
     load_base, sync_en_us_from_base, base_fingerprint, clear_progress, save_progress,
@@ -29,9 +27,9 @@ CLR_RESET = "\033[0m"
 def cmd_update(resume=False, interactive=False):
     base_lines = load_base()
 
-    # Enforce the --update run limit *before* touching the network or
-    # doing any work -- once a base file has been --update'd this many
-    # times, it needs a full --create to regenerate everything cleanly.
+    # Enforce the --update run limit *before* doing any work -- once a
+    # base file has been --update'd this many times, it needs a full
+    # --create to regenerate everything cleanly.
     update_count = get_update_count()
     if update_count >= DEFAULTS["update_limit"]:
         warn_red(
@@ -40,8 +38,6 @@ def cmd_update(resume=False, interactive=False):
         print("This file has reached it's maximum update count. Please create a new set of .lang files to remove any leaked or missed translation keys")
         return
 
-    if not require_internet_or_warn("--update"):
-        return
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
     cache = load_cache()
@@ -87,7 +83,7 @@ def cmd_update(resume=False, interactive=False):
             # glyph -- and every bit of surrounding translatable text is
             # unchanged, there's nothing to retranslate. Just splice the
             # new token(s) into the already-translated string in place and
-            # skip Google Translate for this key/language entirely.
+            # skip translation for this key/language entirely.
             if changed_in_base and not needs_fill and google_code is not None:
                 new_tokens = tokens_only_diff(cache[key], base_values[key])
                 if new_tokens is not None:
@@ -125,13 +121,6 @@ def cmd_update(resume=False, interactive=False):
         print(f"{total_token_patched} key(s) had only token changes "
               f"-- patched in place, no retranslation needed.\n")
 
-    # Feed the rate limiter a rough estimate of how much real (networked)
-    # translation work this run represents, so its adaptive cooldown can
-    # pace itself sensibly against the remaining hourly/daily budget.
-    real_tasks = [t for t in tasks if t["google_code"] not in (None, GB_CONVERT)]
-    estimated_bytes = sum(len(base_values[t["key"]].encode("utf-8")) for t in real_tasks)
-    set_job_profile(len(real_tasks), estimated_bytes)
-
     results = {}
     total_duration = 0.0
     suppressed_errors = []
@@ -164,19 +153,8 @@ def cmd_update(resume=False, interactive=False):
             )
 
         remaining = [t for t in tasks if task_key(t["code"], t["key"]) not in results]
-        # Shuffle translation order so keys that changed together (often
-        # near-identical, similarly-shaped strings sitting adjacent in the
-        # base file -- e.g. a batch of blank/templated entries) don't land
-        # next to each other in the same or consecutive batches. The
-        # failure-streak/outage detector in translate.py trips on N real
-        # translation attempts failing back-to-back with no success in
-        # between; --create is naturally protected from this by sheer
-        # variety, but --update's smaller, more homogeneous key set isn't.
-        # Scattering the order gives dissimilar keys a better chance of
-        # interleaving between any that are genuinely problematic, instead
-        # of stacking them into one unbroken run. Purely cosmetic
-        # reordering otherwise -- results are keyed by task, not position,
-        # so resuming (--continue) and final output are unaffected.
+        # Shuffle order, mostly so a resumed/interrupted run doesn't always
+        # redo the exact same languages first every time.
         random.shuffle(remaining)
         done_count = total - len(remaining)
 
@@ -198,7 +176,7 @@ def cmd_update(resume=False, interactive=False):
 
             pct = (done / _total * 100) if _total else 100.0
             time_str = format_duration(time.time() - start_run_time)
-            usage = status_report()  # cached -- cheap to call every tick
+            fallbacks = get_fallback_count()
 
             cursor_up = "" if _first_render else "\033[4F"
             _first_render = False
@@ -207,7 +185,7 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Translating {_total} keys...",
                 f"\033[K  Progress: {pct:5.1f}%",
                 f"\033[K  Time: {time_str}",
-                f"\033[K  Usage: Hourly {usage['hour_pct']:.1f}% • Daily {usage['day_pct']:.1f}%",
+                f"\033[K  Fallbacks: {fallbacks}" + (f" {CLR_RED}(untranslated, non-fatal){CLR_RESET}" if fallbacks else ""),
             ]
 
             sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
@@ -216,14 +194,15 @@ def cmd_update(resume=False, interactive=False):
         fatal_error_count = 0
 
         try:
-            # Local (non-network) work first: direct copy (en_US) and British-spelling
-            # conversion (en_GB) need no API call at all. Given its own
-            # SmoothProgress scoped just to this local work, with the same
-            # 3-second catch-up --create uses for these same two cases --
-            # so this instant, no-delay work still visibly eases forward
-            # instead of snapping straight to wherever it lands. The main
-            # run smoother (below) then takes over for the real, networked
-            # translation work.
+            # Local (non-network, non-model) work first: direct copy
+            # (en_US) and British-spelling conversion (en_GB) need no
+            # translation call at all. Given its own SmoothProgress scoped
+            # just to this local work, with the same 3-second catch-up
+            # --create uses for these same two cases -- so this instant,
+            # no-delay work still visibly eases forward instead of
+            # snapping straight to wherever it lands. The main run
+            # smoother (below) then takes over for the real translation
+            # work.
             local_tasks = [t for t in remaining if t["google_code"] in (None, GB_CONVERT)]
             if local_tasks:
                 start_offset = done_count
@@ -245,19 +224,24 @@ def cmd_update(resume=False, interactive=False):
             smoother = SmoothProgress(total, _render)
             smoother.update(done_count)
 
-            # Real network translation, one language at a time -- mirrors
-            # --create's per-language batching instead of pooling every
-            # locale that shares a Google code (e.g. es_ES + es_MX) into a
-            # single combined request. Still reported as a single running
-            # total across every language.
-            by_lang = {}
+            # Real (local model) translation, grouped by target language
+            # code -- one 'es' group covers both es_ES and es_MX, for
+            # example -- so locales that share an underlying language
+            # aren't translated twice for identical text. This used to be
+            # split apart (one language file at a time) specifically to
+            # avoid a combined batch of near-identical strings tripping
+            # Google's own outage-streak detection; that risk doesn't
+            # exist for a local model, so pooling by code is a clean win
+            # now (less redundant CPU-bound translation work) with no
+            # downside. Still reported as a single running total across
+            # every language.
+            by_google = {}
             for t in remaining:
                 if t["google_code"] in (None, GB_CONVERT):
                     continue
-                by_lang.setdefault(t["code"], []).append(t)
+                by_google.setdefault(t["google_code"], []).append(t)
 
-            for code, group in by_lang.items():
-                google_code = group[0]["google_code"]
+            for google_code, group in by_google.items():
                 texts = [base_values[t["key"]] for t in group]
                 base_offset = done_count
 
@@ -273,37 +257,10 @@ def cmd_update(resume=False, interactive=False):
                 save_temp()
                 save_progress("update", [], fingerprint, time.time() - start_run_time)
 
-                # Refresh the job profile with what's actually left after
-                # this language finishes, so the cooldown reacts to
-                # progress rather than just the original estimate.
-                remaining_bytes = sum(
-                    len(base_values[t["key"]].encode("utf-8"))
-                    for grp in by_lang.values() for t in grp
-                    if task_key(t["code"], t["key"]) not in results
-                )
-                remaining_keys = sum(
-                    1 for grp in by_lang.values() for t in grp
-                    if task_key(t["code"], t["key"]) not in results
-                )
-                set_job_profile(remaining_keys, remaining_bytes)
-
             smoother.finish()
         except (Exception, SystemExit) as err:
-            # translate.py can end a run two ways: a normal Exception
-            # bubbling out of translate_many(), or a direct sys.exit(1)
-            # from translate_value()/translate_many() once the failure
-            # streak crosses FAILURE_STREAK_THRESHOLD (declared outage) or
-            # the daily rate-limit cap is hit. sys.exit() raises SystemExit,
-            # which is a BaseException, NOT an Exception -- so it used to
-            # skip this handler entirely, silently killing the process
-            # with nothing but translate.py's own bare "Fatal Errors: N"
-            # line and no context (no progress/usage summary, no re-raised
-            # traceback). Catching SystemExit here too means every failure
-            # path -- normal exception, outage, or rate limit -- ends up
-            # going through the same fatal-error reporting below.
             fatal_error_count += 1
             time_str = format_duration(time.time() - start_run_time)
-            usage = status_report()
 
             # Render fatal output layout over current display block -- the
             # live block above is 4 lines, so move up 4 regardless of how
@@ -313,7 +270,6 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Translating {total} keys - Fatal Exception",
                 f"\033[K  Progress: 0% (Failed)",
                 f"\033[K  Time: {time_str}",
-                f"\033[K  Usage: Hourly {usage['hour_pct']:.1f}% • Daily {usage['day_pct']:.1f}% (not the cause -- see below)",
                 f"\033[K  {CLR_RED}Fatal Errors: {fatal_error_count}{CLR_RESET}",
                 f"\033[K  {CLR_DARK_GREEN}Please try again in 0 minutes{CLR_RESET}",
             ]
@@ -428,15 +384,10 @@ def cmd_update(resume=False, interactive=False):
             f"this base file must be recreated (--create) before --update can run again."
         )
 
-    report = status_report(use_cache=False)
-    print(f"\nHourly Usage: {report['hour_pct']:.1f}% - Resets in {report['hour_reset_str']}")
-    print(f"Daily Usage: {report['day_pct']:.1f}% - Resets in {report['day_reset_str']}")
-    if report["day_pct"] >= 99.0:
-        warn_red("Daily usage limit reached -- further translation requests will pause until it resets, "
-                  "to avoid a temporary IP rate limit/ban from Google Translate.")
-    elif report["hour_pct"] >= 99.0:
-        warn_red("Hourly usage limit reached -- further translation requests will pause until it resets, "
-                  "to avoid a temporary IP rate limit/ban from Google Translate.")
+    fallback_total = get_fallback_count()
+    if fallback_total:
+        print(f"\n{CLR_RED}{fallback_total} value(s) fell back to untranslated text{CLR_RESET} "
+              f"(see the run's Fallbacks count above for context).")
 
     # Display any non-fatal suppressed errors cleanly at the end of output
     if suppressed_errors:

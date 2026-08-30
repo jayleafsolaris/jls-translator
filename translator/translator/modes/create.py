@@ -6,9 +6,7 @@ from ..common import state
 from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT
 from ..common.lang_io import strip_comments_for_output, entries_dict, write_lang
 from ..common.text_protect import to_british, resolve_key_references
-from ..common.netcheck import require_internet_or_warn
 from ..common.translate import translate_many
-from ..common.ratelimit import set_job_profile, status_report
 from ..common.cache import get_active_language_codes, save_cache, write_languages_json, write_update_count, resolve_workers
 from ..common.progress import (
     load_base, sync_en_us_from_base, base_fingerprint, load_progress,
@@ -17,8 +15,6 @@ from ..common.progress import (
 )
 
 def cmd_create(resume=False, interactive=False):
-    if not require_internet_or_warn("--create"):
-        return
     base_lines = load_base()
     # Never propagate comments (section headers, notes, disabled entries)
     # or the hidden --update count marker into generated output files --
@@ -49,18 +45,6 @@ def cmd_create(resume=False, interactive=False):
                 print(f"Note: {DEFAULTS['base_lang']} has changed since that run was interrupted — "
                       "resuming anyway using the languages already completed.\n")
             print(f"Resuming --create: {len(completed)}/{lang_total} language(s) already done (accumulated time: {format_duration(elapsed_time)}).\n")
-
-    # Feed the rate limiter a rough estimate of how much real (networked)
-    # translation work is left, across every language not yet completed,
-    # so its adaptive cooldown can pace itself sensibly from the start
-    # instead of only reacting after the first hourly/daily cap is hit.
-    remaining_real_codes = [
-        (code, gc) for code, gc in all_codes
-        if code not in completed and gc not in (None, GB_CONVERT)
-    ]
-    estimated_bytes = sum(len(v.encode("utf-8")) for v in base_values.values()) * len(remaining_real_codes)
-    estimated_keys = key_total * len(remaining_real_codes)
-    set_job_profile(estimated_keys, estimated_bytes)
 
     print(f"Translating {key_total} keys into {lang_total} languages...\n")
     start_run_time = time.time()
@@ -132,18 +116,6 @@ def cmd_create(resume=False, interactive=False):
         current_total_time = elapsed_time + (time.time() - start_run_time)
         save_progress("create", completed, fingerprint, current_total_time)
 
-        # Refresh the job profile as languages finish, so the cooldown
-        # reflects what's actually left rather than the original estimate
-        # from the top of the run.
-        remaining_real_codes = [
-            (c, gc) for c, gc in all_codes
-            if c not in completed and gc not in (None, GB_CONVERT)
-        ]
-        set_job_profile(
-            key_total * len(remaining_real_codes),
-            sum(len(v.encode("utf-8")) for v in base_values.values()) * len(remaining_real_codes),
-        )
-
         if interactive and lang_idx < lang_total and not _ask_continue(code):
             save_cache(base_values)
             write_languages_json()
@@ -160,7 +132,3 @@ def cmd_create(resume=False, interactive=False):
     # the reset point for the --update run counter.
     write_update_count(0)
     print(f"\nDone. Created {lang_total} language files from {DEFAULTS['base_lang']} in {format_duration(total_duration)}.")
-
-    report = status_report(use_cache=False)
-    print(f"\nHourly Usage: {report['hour_pct']:.0f}% - Resets in {report['hour_reset_str']}")
-    print(f"Daily Usage: {report['day_pct']:.0f}% - Resets in {report['day_reset_str']}")

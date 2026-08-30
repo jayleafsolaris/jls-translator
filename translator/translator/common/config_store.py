@@ -7,12 +7,6 @@ import json
 
 from .state import PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME, DEFAULTS, GITHUB_BRANCH
 
-# Set by cmd_config_delay() (in modes/config_cmd.py) when the user changes
-# the delay, and lazily populated on first read by get_request_delay(). A
-# module attribute (not a bare global) so both this module and
-# modes/config_cmd.py can update the same cached value.
-_CONFIG_DELAY = None
-
 # Same pattern as _CONFIG_DELAY, but for the GitHub branch --upgrade
 # downloads from and the update checker compares against. Set by
 # modes/release.py's cmd_set_release_branch() when the user runs
@@ -50,12 +44,6 @@ def load_config_value(name, default=None):
 def save_config_value(name, value):
     current_config_dir().mkdir(exist_ok=True)
     config_path(name).write_text(json.dumps(value, indent=2), encoding="utf-8")
-
-def get_request_delay():
-    global _CONFIG_DELAY
-    if _CONFIG_DELAY is None:
-        _CONFIG_DELAY = load_config_value("delay", default=DEFAULTS["request_delay"])
-    return _CONFIG_DELAY
 
 def get_release_branch():
     """

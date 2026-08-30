@@ -22,4 +22,5 @@ def cmd_view():
          print(f"{p.name:<16}{_human_size(size):>10}   {key_count}{marker}")
     if base_path.exists():
         count = get_update_count()
-        print(f"\nUpdate count for this base file: {count}/{DEFAULTS['update_limit']}")
+        print(f"\n--update count for this base file: {count}/{DEFAULTS['update_limit']}")
+

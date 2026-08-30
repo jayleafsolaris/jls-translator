@@ -32,11 +32,9 @@ DEFAULTS = {
     "version_check_file": ".version_check_cache.json",
     "section_order_cache": ".section_order.json",
     "base_backup_file": ".base_backup.txt",
-    "ratelimit_file": ".ratelimit_state.json",
     "version_check_interval_minutes": 10,
     "check_cooldown_seconds": 180,  # --check (manual) cooldown, separate from the passive interval above
-    "request_delay": 0.15,   # seconds between global translation calls
-    "max_retries": 3,
+    "max_retries": 3,   # per-fragment retry count on a transient local translation failure
     "workers_min": 1,
     "workers_max": 100,
     "workers_throttle_ceiling": 20,
@@ -186,6 +184,12 @@ CONFIG_DIR_VISIBLE_NAME = "configuration"
 GB_CONVERT = "__gb_spelling__"
 
 LANGUAGES = {
+    # Values are Argos Translate's ISO 639 `to_code` (see
+    # common/translate.py) -- mostly the same 2-letter codes Google used,
+    # with a few real differences called out below. If a given code has
+    # no Argos package available at all, that language is skipped with a
+    # warning at translate time (see translate.py's TranslationUnavailableError)
+    # rather than failing the whole run.
     "en_US": None,        # English (US) — untranslated copy of base
     "id_ID": "id",        # Indonesian
     "da_DK": "da",        # Danish
@@ -198,7 +202,7 @@ LANGUAGES = {
     "it_IT": "it",        # Italian
     "hu_HU": "hu",        # Hungarian
     "nl_NL": "nl",        # Dutch
-    "nb_NO": "no",        # Norwegian (Bokmål)
+    "nb_NO": "nb",        # Norwegian (Bokmål) — Argos uses "nb", not Google's "no"
     "pl_PL": "pl",        # Polish
     "pt_BR": "pt",        # Brazilian Portuguese
     "pt_PT": "pt",        # Portuguese
@@ -212,8 +216,8 @@ LANGUAGES = {
     "ru_RU": "ru",        # Russian
     "uk_UA": "uk",        # Ukrainian
     "ja_JP": "ja",        # Japanese
-    "zh_CN": "zh-CN",     # Chinese (Simplified)
-    "zh_TW": "zh-TW",     # Chinese (Traditional)
+    "zh_CN": "zh",         # Chinese (Simplified) — Argos has no separate zh-CN/zh-TW packages
+    "zh_TW": "zh",         # Chinese (Traditional) — same underlying package as zh_CN, see above
     "ko_KR": "ko",        # Korean
 }
 
