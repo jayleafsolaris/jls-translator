@@ -63,7 +63,7 @@ PACKAGE_DIR = Path(__file__).resolve().parent
 # anything else).
 GITHUB_OWNER = "jayleafsolaris"
 GITHUB_REPO = "jls-translator"
-GITHUB_BRANCH = "unstable"
+GITHUB_BRANCH = "stable"
 
 # The pip-installed distribution name -- must match the `name` field under
 # [project] in pyproject.toml. Used to read the *installed* version back out
