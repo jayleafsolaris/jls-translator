@@ -63,16 +63,16 @@ from . import debug_log
 # --- Learned caps ------------------------------------------------------
 # Only used to seed a brand-new state file -- once a real cap has been
 # learned (see module docstring), these ranges are never consulted again.
-_INITIAL_HOURLY_CAP_RANGE = (1_000_000, 15_000_000)   # 1-15 MB seed
-_INITIAL_DAILY_CAP_RANGE = (45_000_000, 50_000_000)   # 45-50 MB seed
+_INITIAL_HOURLY_CAP_RANGE = (100_000, 1_500_000)   # 100 KB - 1.5 MB seed
+_INITIAL_DAILY_CAP_RANGE = (4_500_000, 5_000_000)   # 4.5 MB - 5.0 MB seed
 
 # Sanity floor/ceiling -- growth/shrinkage can never cross these no
 # matter how many clean windows or outages happen in a row. Wide enough
 # to give the learning process real room to move in either direction.
-_MIN_HOUR_CAP = 250_000
-_MAX_HOUR_CAP = 100_000_000
-_MIN_DAY_CAP = 5_000_000
-_MAX_DAY_CAP = 500_000_000
+_MIN_HOUR_CAP = 150_000
+_MAX_HOUR_CAP = 1_500_000
+_MIN_DAY_CAP = 4_500_000
+_MAX_DAY_CAP = 5_000_000
 
 # AIMD tuning: additive-ish growth, multiplicative (hard) backoff -- the
 # classic shape for learning a safe ceiling against an unknown, possibly
