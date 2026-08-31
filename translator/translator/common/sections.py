@@ -114,10 +114,21 @@ def parse_tree(text):
     root = Node(level=1, name=None, folder=None)
     stack = [root]
     first_header_seen = False
+    after_marker = False
     preamble = []
     markers = []
 
     for line in lines:
+        if after_marker:
+            # Once the first marker line is seen, everything past it --
+            # additional marker lines, and any trailing blank line(s) some
+            # editors/people leave at the very end of the file -- belongs
+            # after the marker(s), not to whatever section happened to be
+            # open. Otherwise a trailing blank line ends up misattributed
+            # as that section's content and reappears in the wrong place
+            # (before the marker instead of after it) on --merge.
+            markers.append(line)
+            continue
         stripped = line.rstrip("\r\n")
         m = _HEADER_RE.match(stripped)
         if m:
@@ -137,6 +148,7 @@ def parse_tree(text):
             stack.append(node)
         elif stripped.startswith(_UPDATE_MARKER_PREFIX):
             markers.append(line)
+            after_marker = True
         elif not first_header_seen:
             preamble.append(line)
         else:
@@ -230,6 +242,14 @@ def render_tree(tree, base_dir, markers=None):
         _walk(node_dict, base_dir / node_dict["folder"])
 
     if markers:
+        # The marker(s) need their own line. Normally the last reconstructed
+        # content already ends in "\n" (that's what separated it from the
+        # marker in the original file), but a keys.txt someone hand-edited
+        # can lose its trailing newline (many editors strip/skip it on
+        # save) -- without this check the marker would get glued directly
+        # onto the last value instead of the newline being restored.
+        if parts and not parts[-1].endswith("\n"):
+            parts.append("\n")
         parts.extend(markers)
 
     return "".join(parts)
