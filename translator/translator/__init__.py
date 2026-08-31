@@ -28,12 +28,11 @@ import sys
 # ----------------------------------------------------------------------
 try:
     import requests
-    import argostranslate.package
-    import argostranslate.translate
+    from deep_translator import GoogleTranslator
 except ImportError:
     print("\033[91m\nError: Missing required dependencies.\033[0m")
-    print("This script requires 'argostranslate' and 'requests' to run.")
-    print("Please install them by running:\n\n    pip install argostranslate requests\n")
+    print("This script requires 'deep_translator' and 'requests' to run.")
+    print("Please install them by running:\n\n    pip install deep_translator requests\n")
     sys.exit(1)
 
 from .cli import main
