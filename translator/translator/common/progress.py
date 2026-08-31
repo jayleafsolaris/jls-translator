@@ -146,16 +146,32 @@ class SmoothProgress:
     """
     Eases a progress bar's displayed value toward the latest real ("target")
     value instead of jumping straight to it.
+
+    Real targets only arrive in chunks (once per finished network batch),
+    so between two updates -- while a request is in flight, rate-limited,
+    or cooling down -- the bar would otherwise catch up within
+    catch_up_seconds and then sit dead flat for however long the next
+    batch takes, which reads as "frozen"/laggy even though work is still
+    happening. Once caught up, if no new (higher) target has arrived for
+    stall_creep_after seconds and real work remains, this creeps the shown
+    value forward slowly on its own -- capped at just under one whole unit
+    past the last real target, so it never visually claims a key finished
+    that hasn't. Any real update snaps the ramp back to normal, ceiling-free
+    motion toward the new target.
     """
 
-    def __init__(self, key_total, render, tick_interval=0.08, catch_up_seconds=1.0):
+    def __init__(self, key_total, render, tick_interval=0.08, catch_up_seconds=1.0,
+                 stall_creep_after=1.2, creep_rate=0.15):
         self.key_total = key_total
         self._render = render  # callable(shown_key_idx)
         self._tick_interval = tick_interval
         self._ticks_to_catch_up = max(1, round(catch_up_seconds / tick_interval))
         self._target = 0
-        self._shown = 0
+        self._shown = 0.0
         self._step = 0  # fixed per-tick increment for the current linear ramp
+        self._stall_creep_after = stall_creep_after
+        self._creep_rate = creep_rate  # phantom units/sec while stalled
+        self._last_target_update = time.time()
         self._lock = threading.Lock()
         self._stop = threading.Event()
         self._thread = threading.Thread(target=self._run, daemon=True)
@@ -166,6 +182,7 @@ class SmoothProgress:
         with self._lock:
             if target > self._target:
                 self._target = target
+                self._last_target_update = time.time()
                 # Recompute a fresh, constant step so the climb from here to
                 # this new target is a straight line, not a shrinking one.
                 gap = target - self._shown
@@ -177,11 +194,22 @@ class SmoothProgress:
                 target = self._target
                 shown = self._shown
                 step = self._step
+                stalled_for = time.time() - self._last_target_update
             if shown < target:
                 shown = min(target, shown + step)
                 with self._lock:
                     self._shown = shown
                 self._render(shown)
+            elif stalled_for > self._stall_creep_after and target < self.key_total:
+                # Caught up to the last real update but more work remains,
+                # and nothing new has landed in a while -- nudge forward
+                # slowly so the display keeps moving instead of stalling.
+                creep_ceiling = target + 0.9
+                if shown < creep_ceiling:
+                    shown = min(creep_ceiling, shown + self._creep_rate * self._tick_interval)
+                    with self._lock:
+                        self._shown = shown
+                    self._render(shown)
             self._stop.wait(self._tick_interval)
 
     def finish(self):

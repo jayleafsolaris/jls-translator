@@ -9,9 +9,10 @@ bucket that only resets at a fixed clock boundary, running --update
 in the middle of an existing window doesn't move the reset countdown at
 all (it just adds to a bucket that resets whenever it resets, regardless
 of when the most recent activity happened) -- which reads as "the
-countdown is frozen." With a sliding window, every new request pushes
-back the moment the *oldest* still-counted request ages out, so the
-countdown always reflects recent activity instead of a timestamp frozen
+countdown is frozen." With a sliding window anchored to the *most
+recent* logged request (see _next_reset_epoch()), every new request
+pushes the reset countdown further out, so it always reflects how
+recently the tool was actually used instead of a timestamp frozen
 from whenever the state file was first created.
 
 Hard caps (bytes, KB = 1000 bytes) are LEARNED, not hardcoded -- there's
@@ -242,16 +243,17 @@ def _usage_within(data, now, window_seconds):
 
 def _next_reset_epoch(data, now, window_seconds):
     """
-    The sliding window doesn't have one fixed "reset" moment -- usage
-    only drains as old entries age out. This returns when the *oldest*
-    entry still inside the window will next age out (the next moment
-    usage actually ticks down), which is exactly what shifts forward
-    every time new usage gets logged.
+    Anchored to the most recent logged usage, not the oldest -- every new
+    request pushes this further out, so the reset countdown (both what's
+    shown to the user and what reserve() actually sleeps for on an hourly
+    cap hit) always reflects how recently the tool was actually used,
+    instead of draining back down mid-run just because the very first
+    request of the window happens to be old.
     """
     in_window = [ts for ts, b in data["usage_log"] if now - ts < window_seconds]
     if not in_window:
         return now
-    return min(in_window) + window_seconds
+    return max(in_window) + window_seconds
 
 
 def _format_secs(secs):
@@ -342,8 +344,9 @@ def reserve(num_bytes):
     - Blocks immediately if a manual cooldown (--usage --24hr) is active.
     - Raises RateLimitExceededError if this request would exceed the
       daily cap.
-    - Sleeps until enough usage ages out of the hourly window if this
-      request would exceed the hourly cap (daily budget permitting).
+    - Sleeps until the hourly window clears since your most recent
+      request if this request would exceed the hourly cap (daily budget
+      permitting).
     - Otherwise applies the adaptive cooldown and logs the usage.
 
     Thread-safe -- safe to call concurrently from translate_many's
@@ -390,7 +393,7 @@ def reserve(num_bytes):
         if wait_secs is not None:
             warn_red(
                 f"Hourly translation usage limit reached -- pausing "
-                f"{_format_secs(wait_secs)} until usage ages out of the hourly window."
+                f"{_format_secs(wait_secs)} for the hourly window to clear."
             )
             debug_log.log(f"hourly cap hit -- sleeping {wait_secs:.0f}s (not stuck, this is deliberate)")
             time.sleep(min(wait_secs, _HOUR_SECONDS))

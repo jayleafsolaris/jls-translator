@@ -245,19 +245,22 @@ def cmd_update(resume=False, interactive=False):
             smoother = SmoothProgress(total, _render)
             smoother.update(done_count)
 
-            # Real network translation, one language at a time -- mirrors
-            # --create's per-language batching instead of pooling every
-            # locale that shares a Google code (e.g. es_ES + es_MX) into a
-            # single combined request. Still reported as a single running
-            # total across every language.
-            by_lang = {}
+            # Real network translation, pooled by Google code rather than by
+            # locale -- locales that share a code (e.g. es_ES + es_MX both
+            # -> "es", fr_CA + fr_FR -> "fr", pt_BR + pt_PT -> "pt") are
+            # translated together in a single combined batch instead of two
+            # full, independently rate-limited passes. translate_many()
+            # already dedupes identical text content within one call, so
+            # merging these groups means shared strings across those
+            # locales are only ever sent to Google once. Still reported as
+            # a single running total across every language.
+            by_google_code = {}
             for t in remaining:
                 if t["google_code"] in (None, GB_CONVERT):
                     continue
-                by_lang.setdefault(t["code"], []).append(t)
+                by_google_code.setdefault(t["google_code"], []).append(t)
 
-            for code, group in by_lang.items():
-                google_code = group[0]["google_code"]
+            for google_code, group in by_google_code.items():
                 texts = [base_values[t["key"]] for t in group]
                 base_offset = done_count
 
@@ -278,11 +281,11 @@ def cmd_update(resume=False, interactive=False):
                 # progress rather than just the original estimate.
                 remaining_bytes = sum(
                     len(base_values[t["key"]].encode("utf-8"))
-                    for grp in by_lang.values() for t in grp
+                    for grp in by_google_code.values() for t in grp
                     if task_key(t["code"], t["key"]) not in results
                 )
                 remaining_keys = sum(
-                    1 for grp in by_lang.values() for t in grp
+                    1 for grp in by_google_code.values() for t in grp
                     if task_key(t["code"], t["key"]) not in results
                 )
                 set_job_profile(remaining_keys, remaining_bytes)
