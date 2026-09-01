@@ -199,7 +199,6 @@ class SmoothProgress:
                 shown = min(target, shown + step)
                 with self._lock:
                     self._shown = shown
-                self._render(shown)
             elif stalled_for > self._stall_creep_after and target < self.key_total:
                 # Caught up to the last real update but more work remains,
                 # and nothing new has landed in a while -- nudge forward
@@ -209,7 +208,12 @@ class SmoothProgress:
                     shown = min(creep_ceiling, shown + self._creep_rate * self._tick_interval)
                     with self._lock:
                         self._shown = shown
-                    self._render(shown)
+            # Render every tick regardless of whether `shown` itself moved.
+            # The caller's render function also recomputes elapsed time from
+            # time.time() -- if we only rendered on progress changes, that
+            # clock would freeze the instant creep tops out (or during a
+            # long rate-limit sleep), even though real time keeps passing.
+            self._render(shown)
             self._stop.wait(self._tick_interval)
 
     def finish(self):
