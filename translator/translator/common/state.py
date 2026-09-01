@@ -7,21 +7,14 @@ module that needs it does ``from . import state`` and reads
 ``state.SCRIPT_DIR`` rather than importing the name directly, so the value
 set in cli.py is visible everywhere.
 """
-
 import hashlib
 import re
 import sys
 from pathlib import Path
-
 try:
     from importlib import metadata as importlib_metadata
 except ImportError:  # pragma: no cover -- Python < 3.8 doesn't ship this
     importlib_metadata = None
-
-# ----------------------------------------------------------------------
-# Config
-# ----------------------------------------------------------------------
-
 DEFAULTS = {
     "base_lang": "base",
     "cache_file": ".translate_cache.json",
@@ -36,155 +29,36 @@ DEFAULTS = {
     "version_check_interval_minutes": 10,
     "check_cooldown_seconds": 180,  # --check (manual) cooldown, separate from the passive interval above
     "request_delay": 0.15,   # seconds between global translation calls
-    "max_retries": 3,
+    "max_retries": 5,
     "workers_min": 1,
     "workers_max": 100,
     "workers_throttle_ceiling": 20,
     "update_limit": 50,      # max number of completed --update runs per base file
     "key_progress_delay": 0.0001,  # seconds paused after each key-by-key progress tick (--add/--remove/--check)
+    "translator_reference_section": "Translator References",  # heading name (any depth) whose
+        # entries exist purely to be translated for other entries' '{key.path}'
+        # cross-references -- never written into any generated .lang file themselves
+    "translator_reference_cache_file": ".translator_references.json",  # per-language translated
+        # values for the above, kept outside any .lang file since they never live in one
 }
-
 SCRIPT_DIR = None  # set at runtime from the saved --path
-
-# Where this script/module itself lives once pip-installed (e.g. inside
-# site-packages). Cache, progress tracking, languages.json, the
-# section-order cache (see --split/--merge, common/sections.py), and the
-# config folder all live here -- next to the package -- rather than
-# inside the project folder pointed to by --path. NOTE: this means
-# cache/config are shared across every project you point --path at; fine
-# for a single ongoing project, but keep in mind if you ever manage
-# multiple addons with this same install (in particular, the
-# section-order cache only remembers ONE project's split at a time).
 PACKAGE_DIR = Path(__file__).resolve().parent
-
-# GitHub repo this script/package is published from -- used both by
-# --upgrade (downloads the repo zip) and by the update checker (reads the
-# version out of pyproject.toml on the default branch without downloading
-# anything else).
 GITHUB_OWNER = "jayleafsolaris"
 GITHUB_REPO = "jls-translator"
 GITHUB_BRANCH = "stable"
-
-# The pip-installed distribution name -- must match the `name` field under
-# [project] in pyproject.toml. Used to read the *installed* version back out
-# via package metadata, so SCRIPT_VERSION always matches whatever version
-# was actually built into the installed package instead of drifting from a
-# second, hand-maintained copy of the number.
 PACKAGE_NAME = "roe_translator"
-
-# Hidden marker used to track how many times --update has completed against
-# the current base file. Stored as a "##"-prefixed comment at the very
-# bottom of base (parse_lang treats "##" lines as opaque comments, never as
-# real keys, so this never shows up as a translatable entry) and mirrored
-# under the same key in the translation cache, so the count can be
-# recovered and re-added to base if that marker line is ever lost (hand
-# edit, merge, partial restore, etc). Deterministic (not random) so the
-# same marker is found run over run.
 _UPDATE_COUNT_MARKER = hashlib.sha256(
     f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:update_count".encode("utf-8")
 ).hexdigest()[:25]
-
-# Same idea as _UPDATE_COUNT_MARKER above, but for --compile/--decompile
-# (see common/obfuscate.py): the key needed to reverse a --compile run is
-# stored in a trailing "##"-prefixed line using this marker, so it's
-# never mistaken for a real '## Name' heading (no space after the
-# hashes -- see common/sections.py's _HEADER_RE) and reads as an opaque
-# comment to everything else in this tool.
 _COMPILE_KEY_MARKER = hashlib.sha256(
     f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:compile_key".encode("utf-8")
 ).hexdigest()[:25]
-
 _FALLBACK_VERSION = "?.?.?"  # only used if neither pip metadata nor pyproject.toml resolve a version
-
-
-def get_script_version():
-    """
-    Reads the running script's version from installed package metadata
-    (populated by pip from pyproject.toml's [project] version at install
-    time), so there's a single source of truth instead of a hardcoded
-    string here that can drift out of sync with pyproject.toml.
-
-    If the package isn't pip-installed (e.g. running the .py file directly,
-    such as under a-Shell), importlib metadata has nothing to look up --
-    in that case, fall back to reading the version straight out of a
-    pyproject.toml sitting next to this script, so --version still reports
-    the real version instead of the dev placeholder. Only if that also
-    can't be found does it fall back to the placeholder.
-    """
-    if importlib_metadata is not None:
-        try:
-            return importlib_metadata.version(PACKAGE_NAME)
-        except importlib_metadata.PackageNotFoundError:
-            pass
-        except Exception:
-            pass
-
-    found = _find_pyproject_version()
-    if found:
-        return found
-
-    return _FALLBACK_VERSION
-
-
-def _find_pyproject_version(max_levels_up=6):
-    """
-    Walks upward from this script's own directory looking for a
-    pyproject.toml, since in a typical package layout it lives at the repo
-    root -- one or more directories above the actual module file (e.g.
-    repo/pyproject.toml vs repo/src/roe_translator/translate.py) -- not
-    necessarily right next to the script itself.
-
-    Reads the version out of either a PEP 621 `[project]` table or a
-    Poetry-style `[tool.poetry]` table, whichever is present. Returns None
-    if no pyproject.toml with a parseable version is found within
-    max_levels_up directories.
-    """
-    directory = PACKAGE_DIR
-    for _ in range(max_levels_up + 1):
-        candidate = directory / "pyproject.toml"
-        if candidate.exists():
-            try:
-                text = candidate.read_text(encoding="utf-8")
-            except Exception:
-                text = None
-            if text:
-                # Prefer a version line that appears under [project] or
-                # [tool.poetry] specifically, since a pyproject.toml can
-                # contain other "version = ..." lines (build-system
-                # requirements, tool configs, etc) that aren't the
-                # package's own version.
-                for table in (r"\[project\]", r"\[tool\.poetry\]"):
-                    section = re.search(
-                        rf'{table}(.*?)(?=\n\[|\Z)', text, re.DOTALL
-                    )
-                    if section:
-                        match = re.search(
-                            r'(?m)^\s*version\s*=\s*"([^"]+)"', section.group(1)
-                        )
-                        if match:
-                            return match.group(1)
-                # Fall back to the first bare version line anywhere in the
-                # file if neither table matched (unusual pyproject.toml
-                # layout) -- better than nothing.
-                match = re.search(r'(?m)^\s*version\s*=\s*"([^"]+)"', text)
-                if match:
-                    return match.group(1)
-            # A pyproject.toml exists here but had no usable version --
-            # stop climbing rather than risk picking up an unrelated one
-            # further up the tree.
-            return None
-        if directory.parent == directory:
-            break
-        directory = directory.parent
-    return None
-
+from ..functions.get_script_version import get_script_version
 SCRIPT_VERSION = get_script_version()
-
 CONFIG_DIR_HIDDEN_NAME = ".config"
 CONFIG_DIR_VISIBLE_NAME = "configuration"
-
 GB_CONVERT = "__gb_spelling__"
-
 LANGUAGES = {
     "en_US": None,        # English (US) — untranslated copy of base
     "id_ID": "id",        # Indonesian
@@ -216,7 +90,6 @@ LANGUAGES = {
     "zh_TW": "zh-TW",     # Chinese (Traditional)
     "ko_KR": "ko",        # Korean
 }
-
 LANGUAGE_NAMES = {
     "en_US": "English (US)", "id_ID": "Indonesian", "da_DK": "Danish", "de_DE": "German",
     "en_GB": "English (GB)", "es_ES": "Spanish", "es_MX": "Mexican Spanish",
@@ -228,13 +101,7 @@ LANGUAGE_NAMES = {
     "uk_UA": "Ukrainian", "ja_JP": "Japanese", "zh_CN": "Chinese (Simplified)",
     "zh_TW": "Chinese (Traditional)", "ko_KR": "Korean",
 }
-
-# Updated to protect actual newlines via __NL__ token during batch splits,
-# and to protect {key.path}-style base-value cross-references (e.g.
-# {ui.roe:pack.name}) so they're passed through translation untouched,
-# just like %1$s-style placeholders and section-sign color codes -- these
-# reference another key's value (resolved at runtime, not by this script)
-# rather than being translatable text themselves.
 TOKEN_PATTERN = re.compile(
     r"__NL__|§.|%\d+\$[a-zA-Z]|%[a-zA-Z]|\{[^{}]+\}|[\uE000-\uF8FF\U000F0000-\U000FFFFD\U00100000-\U0010FFFD]"
 )
+from ..functions._find_pyproject_version import _find_pyproject_version
