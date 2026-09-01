@@ -1,7 +1,11 @@
 from ..common import state
-from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, write_languages_json, get_active_language_codes, resolve_workers
+from ..common.cache import (
+    load_cache, save_cache, get_update_count, write_update_count, write_languages_json,
+    get_active_language_codes, resolve_workers,
+    load_translator_reference_cache, save_translator_reference_cache,
+)
 from ..common.config_store import warn_red
-from ..common.lang_io import parse_lang, write_lang, entries_dict
+from ..common.lang_io import parse_lang, write_lang, entries_dict, translator_reference_keys, strip_translator_references
 from ..common.netcheck import require_internet_or_warn
 from ..common.progress import load_base, sync_en_us_from_base, base_fingerprint, clear_progress, save_progress, format_duration, SmoothProgress, _report_keys, _report_finishing
 from ..common.ratelimit import set_job_profile, status_report
@@ -37,6 +41,8 @@ def cmd_update(resume=False, interactive=False):
     base_values = entries_dict(base_lines)
     cache = load_cache()
     fingerprint = base_fingerprint(base_values)
+    ref_keys = translator_reference_keys(base_lines)
+    translator_ref_cache = load_translator_reference_cache()
 
     active_codes = set(get_active_language_codes())
     existing_codes = [
@@ -64,7 +70,14 @@ def cmd_update(resume=False, interactive=False):
         token_patched_count = 0
 
         for i, (_, key, current_value, inline_comment) in enumerate(entries):
-            if key not in base_values:
+            if key not in base_values or key in ref_keys:
+                # Translator Reference keys are never real entries in a
+                # .lang file (see translator_reference_keys()) -- if one
+                # shows up here anyway it's a leftover from before this
+                # feature existed. Leave it out of normal processing
+                # entirely; it'll be dropped for good when this file is
+                # next written (see strip_translator_references() below),
+                # and its translation is tracked separately, further down.
                 continue
 
             changed_in_base = key in cache and cache[key] != base_values[key]
@@ -104,6 +117,29 @@ def cmd_update(resume=False, interactive=False):
         total_token_patched += token_patched_count
         for i in to_update:
             tasks.append({"code": code, "key": entries[i][1], "google_code": google_code})
+
+    # Translator Reference keys (see translator_reference_keys()) never
+    # live as physical entries in any .lang file, so the per-entry loop
+    # above can't discover them at all -- track them here instead,
+    # directly against base and the persisted translator-reference cache,
+    # using the same "base text changed since last translated" check as
+    # everywhere else. Added into the same `tasks` list so they get the
+    # exact same batching, worker pooling, retry/backoff, and resume
+    # support as every other translation task for free -- routed to the
+    # cache instead of a .lang file only once results come back, below.
+    for code in existing_codes:
+        if not ref_keys:
+            break
+        google_code = LANGUAGES[code]
+        lang_ref_cache = translator_ref_cache.setdefault(code, {})
+        for key in ref_keys:
+            if key not in base_values:
+                continue  # removed from base entirely -- cleaned up from the cache at the end
+            changed_in_base = key in cache and cache[key] != base_values[key]
+            stored = lang_ref_cache.get(key)
+            missing = stored is None or (google_code is not None and stored.strip() == "")
+            if changed_in_base or missing:
+                tasks.append({"code": code, "key": key, "google_code": google_code})
 
     total = len(tasks)
     if total == 0 and total_token_patched == 0:
@@ -408,6 +444,21 @@ def cmd_update(resume=False, interactive=False):
             if total:
                 _report_keys("Applying", applied, total)
 
+        # Translator Reference results never had a physical entry to land
+        # in (they were never added to data["to_update"]/entries above) --
+        # route them into the persisted cache instead, keyed by this
+        # language, so the resolution phase just below can use them and
+        # future runs can detect drift without retranslating from scratch.
+        if ref_keys:
+            lang_ref_cache = translator_ref_cache.setdefault(code, {})
+            for key in ref_keys:
+                value = results.get(task_key(code, key)) if total else None
+                if value is not None:
+                    lang_ref_cache[key] = value
+                    applied += 1
+                    if total:
+                        _report_keys("Applying", applied, total)
+
         out_lines = []
         e_idx = 0
         for line in data["target_lines"]:
@@ -416,8 +467,24 @@ def cmd_update(resume=False, interactive=False):
             else:
                 out_lines.append(entries[e_idx])
                 e_idx += 1
+        # Defensive, same as everywhere else a .lang file gets written:
+        # drop any Translator Reference key that's still physically
+        # present (a leftover from before this feature, or from --update
+        # having last touched this file before a base edit moved a key
+        # into that section) so it can't linger indefinitely.
+        out_lines = strip_translator_references(out_lines, ref_keys)
         write_lang(data["target_path"], out_lines)
         summary.append((code, changed, data["token_patched_count"]))
+
+    if ref_keys:
+        # Drop cached translations for keys no longer in base or no
+        # longer under the Translator References section -- otherwise a
+        # removed/renamed reference's stale text sits around forever.
+        for code in list(translator_ref_cache):
+            translator_ref_cache[code] = {
+                k: v for k, v in translator_ref_cache[code].items() if k in ref_keys
+            }
+        save_translator_reference_cache(translator_ref_cache)
 
     # Second phase: resolve every '{key.path}' cross-reference (see
     # common/text_protect.py's resolve_key_references()) now that each
@@ -440,6 +507,12 @@ def cmd_update(resume=False, interactive=False):
         data = lang_data[code]
         entries = data["entries"]
         current_values = {key: val for _, key, val, _ in entries}
+        # Translator Reference keys are never among `entries` (see above),
+        # so without this, a '{ui.index:blueprint}'-style reference to one
+        # would have nothing to resolve against and stay a literal
+        # unresolved marker in the output.
+        if ref_keys:
+            current_values.update(translator_ref_cache.get(code, {}))
         resolved_values = resolve_key_references(current_values)
 
         changed_refs = False
@@ -458,6 +531,7 @@ def cmd_update(resume=False, interactive=False):
                 else:
                     out_lines.append(entries[e_idx])
                     e_idx += 1
+            out_lines = strip_translator_references(out_lines, ref_keys)
             write_lang(data["target_path"], out_lines)
 
         finishing_smoother.update(i)

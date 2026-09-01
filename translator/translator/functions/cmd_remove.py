@@ -1,6 +1,6 @@
 from ..common import state
 from ..common.cache import load_cache, save_cache
-from ..common.lang_io import parse_lang, write_lang, entries_dict
+from ..common.lang_io import parse_lang, write_lang, entries_dict, translator_reference_keys
 from ..common.progress import load_base, base_fingerprint, load_progress, save_progress, clear_progress, format_duration, _report_keys, _ask_continue
 from ..common.state import DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER
 import time
@@ -9,6 +9,12 @@ import time
 def cmd_remove(resume=False, interactive=False, show_summary=False):
     base_lines = load_base()
     base_values = entries_dict(base_lines)
+    # Translator Reference entries (see translator_reference_keys()) are
+    # never meant to be a key of their own in any .lang file, even though
+    # they're real, current entries in base -- treat any leftover physical
+    # copy of one (e.g. from before this feature existed) the same as a
+    # key removed from base entirely: gone on the next --remove.
+    ref_keys = translator_reference_keys(base_lines)
 
     existing_codes = [code for code in LANGUAGES if (state.SCRIPT_DIR / f"{code}.lang").exists()]
     if not existing_codes:
@@ -62,7 +68,7 @@ def cmd_remove(resume=False, interactive=False, show_summary=False):
 
             _, key, value, inline_comment = line
 
-            if key not in base_values:
+            if key not in base_values or key in ref_keys:
                 removed_this_lang += 1
                 continue
 

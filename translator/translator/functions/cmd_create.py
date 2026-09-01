@@ -1,6 +1,9 @@
 from ..common import state
-from ..common.cache import get_active_language_codes, save_cache, write_languages_json, write_update_count, resolve_workers
-from ..common.lang_io import strip_comments_for_output, entries_dict, write_lang
+from ..common.cache import (
+    get_active_language_codes, save_cache, write_languages_json, write_update_count, resolve_workers,
+    load_translator_reference_cache, save_translator_reference_cache,
+)
+from ..common.lang_io import strip_comments_for_output, entries_dict, write_lang, translator_reference_keys, strip_translator_references
 from ..common.netcheck import require_internet_or_warn
 from ..common.progress import load_base, sync_en_us_from_base, base_fingerprint, load_progress, save_progress, clear_progress, format_duration, _report, SmoothProgress, _ask_continue
 from ..common.ratelimit import set_job_profile, status_report
@@ -21,6 +24,8 @@ def cmd_create(resume=False, interactive=False):
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
     key_total = len(base_values)
+    ref_keys = translator_reference_keys(base_lines)
+    translator_ref_cache = load_translator_reference_cache()
     active_codes = get_active_language_codes()
     if not active_codes:
         print("No active languages configured. Run --config --languages to activate some first.")
@@ -120,6 +125,22 @@ def cmd_create(resume=False, interactive=False):
             for line in out_lines
         ]
 
+        # Translator Reference entries (see translator_reference_keys())
+        # were translated above like any other key -- needed so the
+        # '{key.path}' resolution just above can splice their translated
+        # text into whatever else references them -- but they're never
+        # meant to be a key of their own in the actual .lang file. Stash
+        # their now-translated values in the persisted cache (so a later
+        # --update can detect drift/resolve references without
+        # retranslating them from scratch) before dropping them from what
+        # actually gets written.
+        if ref_keys:
+            lang_ref_cache = translator_ref_cache.setdefault(code, {})
+            for key in ref_keys:
+                if key in resolved_values:
+                    lang_ref_cache[key] = resolved_values[key]
+            out_lines = strip_translator_references(out_lines, ref_keys)
+
         write_lang(state.SCRIPT_DIR / f"{code}.lang", out_lines)
 
         completed.append(code)
@@ -141,6 +162,8 @@ def cmd_create(resume=False, interactive=False):
         if interactive and lang_idx < lang_total and not _ask_continue(code):
             save_cache(base_values)
             write_languages_json()
+            if ref_keys:
+                save_translator_reference_cache(translator_ref_cache)
             print(f"\nStopped after {code} ({len(completed)}/{lang_total} done).\n"
                   f"Total time so far: {format_duration(current_total_time)}.\n"
                   f"Run --continue to pick up where you left off.")
@@ -150,6 +173,16 @@ def cmd_create(resume=False, interactive=False):
     clear_progress()
     save_cache(base_values)
     write_languages_json()
+    if ref_keys:
+        # Drop any cached translations for keys that no longer exist in
+        # base or have moved out of the Translator References section --
+        # otherwise a removed/renamed reference's stale text would sit
+        # around forever with nothing left to ever overwrite it.
+        for code in list(translator_ref_cache):
+            translator_ref_cache[code] = {
+                k: v for k, v in translator_ref_cache[code].items() if k in ref_keys
+            }
+        save_translator_reference_cache(translator_ref_cache)
     # A full --create fully regenerates everything from base, so this is
     # the reset point for the --update run counter.
     write_update_count(0)

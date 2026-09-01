@@ -19,9 +19,11 @@ from ..functions.get_active_language_codes import get_active_language_codes
 from ..functions.get_update_count import get_update_count
 from ..functions.load_cache import load_cache
 from ..functions.load_compile_key import load_compile_key
+from ..functions.load_translator_reference_cache import load_translator_reference_cache
 from ..functions.resolve_workers import resolve_workers
 from ..functions.save_active_language_codes import save_active_language_codes
 from ..functions.save_cache import save_cache
 from ..functions.save_compile_key import save_compile_key
+from ..functions.save_translator_reference_cache import save_translator_reference_cache
 from ..functions.write_languages_json import write_languages_json
 from ..functions.write_update_count import write_update_count

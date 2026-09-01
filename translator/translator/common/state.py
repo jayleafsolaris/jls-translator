@@ -35,6 +35,11 @@ DEFAULTS = {
     "workers_throttle_ceiling": 20,
     "update_limit": 50,      # max number of completed --update runs per base file
     "key_progress_delay": 0.0001,  # seconds paused after each key-by-key progress tick (--add/--remove/--check)
+    "translator_reference_section": "Translator References",  # heading name (any depth) whose
+        # entries exist purely to be translated for other entries' '{key.path}'
+        # cross-references -- never written into any generated .lang file themselves
+    "translator_reference_cache_file": ".translator_references.json",  # per-language translated
+        # values for the above, kept outside any .lang file since they never live in one
 }
 SCRIPT_DIR = None  # set at runtime from the saved --path
 PACKAGE_DIR = Path(__file__).resolve().parent

@@ -1,6 +1,6 @@
 from ..common import state
 from ..common.cache import get_active_language_codes, write_languages_json
-from ..common.lang_io import parse_lang, write_lang, entries_dict, strip_comments_for_output
+from ..common.lang_io import parse_lang, write_lang, entries_dict, strip_comments_for_output, translator_reference_keys, strip_translator_references
 from ..common.progress import load_base, sync_en_us_from_base, base_fingerprint, load_progress, save_progress, clear_progress, format_duration, _report_keys, _ask_continue
 from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT
 from ..common.text_protect import to_british
@@ -17,9 +17,17 @@ def cmd_add(resume=False, interactive=False, show_summary=False):
     # or the hidden --update count marker into generated output files --
     # only the source-of-truth base file should carry any of that.
     template_lines = strip_comments_for_output(base_lines)
+    # Translator Reference entries (see translator_reference_keys()) are
+    # translated by --update/--create for other entries' '{key.path}'
+    # cross-references, but are never meant to be a key of their own in
+    # any .lang file -- dropping them from template_lines here means
+    # they're skipped everywhere below: never counted, never checked,
+    # never given a placeholder entry.
+    ref_keys = translator_reference_keys(base_lines)
+    template_lines = strip_translator_references(template_lines, ref_keys)
     sync_en_us_from_base(base_lines)
     base_values = entries_dict(base_lines)
-    key_total = len(base_values)
+    key_total = sum(1 for l in template_lines if l[0] == "entry")
     active_codes = get_active_language_codes()
     if not active_codes:
         print("No active languages configured. Run --config --languages to activate some first.")
