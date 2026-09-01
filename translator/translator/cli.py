@@ -41,6 +41,9 @@ base and your .lang files, e.g. RP/texts/):
                                      runs quietly on every command) on or off
     jls-translator --usage   show current hourly/daily translation usage percentages
                                      and when each resets (no --path needed)
+    jls-translator --usage --live <minutes>
+                              live-redraw the usage/reset countdown every 100ms for
+                                     the given number of minutes instead of one snapshot
     jls-translator --debug   alone: reset __debug-log.json (in this folder) to a
                                      clean empty state. Combine with --create/--update/
                                      --add/--remove/--continue/etc to print + log a
@@ -276,6 +279,10 @@ def main():
     parser.add_argument("--cooldown", dest="cooldown_hours", type=float, metavar="HOURS",
                          help="use with --usage to manually force a translation cooldown, "
                               "1-72 hours (clamped to that range)")
+    parser.add_argument("--live", dest="live_minutes", type=float, metavar="MINUTES",
+                         help="use with --usage to redraw the usage/reset countdown in place "
+                              "every 100ms for the given number of minutes, instead of a single "
+                              "static snapshot")
     parser.add_argument("--check", nargs="?", const="__now__", default=None, metavar="{true,false}",
                          help="with no value: manually check GitHub for a newer version right now "
                               "(does not change automatic checking). "
@@ -309,14 +316,15 @@ def main():
         return
 
     if args.usage:
-        if args.cooldown_hours is not None:
-            cmd_usage(cooldown_hours=args.cooldown_hours)
-        else:
-            cmd_usage()
+        cmd_usage(cooldown_hours=args.cooldown_hours, live_minutes=args.live_minutes)
         return
 
     if args.cooldown_hours is not None:
         print("--cooldown only has an effect combined with --usage, e.g. --usage --cooldown 6")
+        return
+
+    if args.live_minutes is not None:
+        print("--live only has an effect combined with --usage, e.g. --usage --live 2")
         return
 
     if args.check is not None:
