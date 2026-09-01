@@ -346,7 +346,7 @@ def cmd_update(resume=False, interactive=False):
                             for msg in suppressed:
                                 warn_red(msg)
                             raise
-                        print(f"{CLR_DIM}  (Slowed {slow_level}/{MAX_SLOW_LEVEL}){CLR_RESET}")
+                        print(f"{CLR_DIM}  (Slowed {slow_level}/{MAX_SLOW_LEVEL}){CLR_RESET}", flush=True)
                         reset_outage_state()
                         _first_render = True
                         time.sleep(_slow_delay(slow_level))
