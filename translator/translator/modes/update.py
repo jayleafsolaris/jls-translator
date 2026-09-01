@@ -1,7 +1,6 @@
 """--update: retranslate changed keys already present in each .lang file."""
 
 import contextlib
-import io
 import json
 import random
 import sys
@@ -9,6 +8,8 @@ import time
 import traceback
 
 from ..common import state
+from ..common import ratelimit as ratelimit_mod
+from ..common import translate as translate_mod
 from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT, PACKAGE_DIR
 from ..common.lang_io import parse_lang, write_lang, entries_dict
 from ..common.text_protect import tokens_only_diff, apply_token_patch, to_british, resolve_key_references
@@ -43,6 +44,36 @@ def _slow_delay(level):
     level and capped so a bad run doesn't stall for absurd lengths of
     time. 1s, 2s, 4s, ... capped at 60s."""
     return min(60.0, 2 ** (level - 1))
+
+
+@contextlib.contextmanager
+def _quiet_warnings(sink):
+    """Temporarily reroutes the warn_red() calls that live inside
+    translate.py/ratelimit.py into `sink` (a list) instead of the
+    terminal, for the duration of one retryable attempt -- so an
+    outage/rate-limit warning that fires mid-attempt doesn't get
+    announced while --update is still quietly retrying it.
+
+    Deliberately does NOT touch sys.stdout itself: translate_many()'s
+    progress_cb fires through the same stdout via the live progress
+    renderer, and swallowing that too (an earlier version of this did,
+    via redirect_stdout) breaks the progress display for the entire
+    attempt, success or not. Only the two known warn_red call sites are
+    redirected, leaving everything else untouched. Always restores the
+    real warn_red on the way out, success or failure."""
+    real_translate_warn = translate_mod.warn_red
+    real_ratelimit_warn = ratelimit_mod.warn_red
+
+    def _capture(message):
+        sink.append(message)
+
+    translate_mod.warn_red = _capture
+    ratelimit_mod.warn_red = _capture
+    try:
+        yield
+    finally:
+        translate_mod.warn_red = real_translate_warn
+        ratelimit_mod.warn_red = real_ratelimit_warn
 
 
 def cmd_update(resume=False, interactive=False):
@@ -297,24 +328,23 @@ def cmd_update(resume=False, interactive=False):
                 workers = resolve_workers(len(texts))
 
                 while True:
-                    # translate.py prints its own warning the moment it
-                    # detects an outage/rate-limit condition -- swallow
-                    # that here while we're still within the retry
-                    # budget, since a slowdown attempt should be quiet.
-                    # If this attempt is the one that finally exhausts
-                    # the budget below, whatever got captured is written
-                    # back out so the eventual fatal report isn't missing
-                    # context.
-                    captured = io.StringIO()
+                    # translate.py/ratelimit.py print their own warning the
+                    # moment they detect an outage/rate-limit condition --
+                    # swallow just that here while we're still within the
+                    # retry budget, since a slowdown attempt should be
+                    # quiet. If this attempt is the one that finally
+                    # exhausts the budget below, whatever got captured is
+                    # written back out so the eventual fatal report isn't
+                    # missing context.
+                    suppressed = []
                     try:
-                        with contextlib.redirect_stdout(captured):
+                        with _quiet_warnings(suppressed):
                             translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
                     except (Exception, SystemExit):
                         slow_level += 1
                         if slow_level > MAX_SLOW_LEVEL:
-                            leftover = captured.getvalue()
-                            if leftover:
-                                sys.stdout.write(leftover)
+                            for msg in suppressed:
+                                warn_red(msg)
                             raise
                         print(f"{CLR_DIM}  (Slowed {slow_level}/{MAX_SLOW_LEVEL}){CLR_RESET}")
                         reset_outage_state()
