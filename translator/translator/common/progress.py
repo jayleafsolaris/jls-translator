@@ -183,10 +183,14 @@ class SmoothProgress:
             if target > self._target:
                 self._target = target
                 self._last_target_update = time.time()
-                # Recompute a fresh, constant step so the climb from here to
-                # this new target is a straight line, not a shrinking one.
+                # A plain per-tick fraction of the gap -- not rounded up to
+                # a minimum of 1 -- so even a gap of a single key still
+                # eases smoothly across the full catch_up_seconds window
+                # instead of snapping there in one tick (which is what a
+                # `max(1, ...)` floor here used to force for small gaps,
+                # the common case during --update).
                 gap = target - self._shown
-                self._step = max(1, -(-gap // self._ticks_to_catch_up))  # ceil division
+                self._step = gap / self._ticks_to_catch_up
 
     def _run(self):
         while not self._stop.is_set():
