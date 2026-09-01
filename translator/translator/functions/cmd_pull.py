@@ -1,6 +1,7 @@
 from ..common import state
 from ..common.config_store import get_release_branch
 from ..common.github_api import GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix, get_branch_commit_and_tree, get_full_tree, get_blob_content, git_blob_sha
+from ..common.progress import _report_keys
 from ..common.state import GITHUB_REPO
 
 
@@ -40,8 +41,10 @@ def cmd_pull():
         return
 
     written = 0
+    total_files = len(remote_files)
     try:
-        for rel, sha in remote_files.items():
+        for done, (rel, sha) in enumerate(remote_files.items(), start=1):
+            _report_keys("Pulling", done, total_files)
             dest = local_root / rel
             if dest.exists() and git_blob_sha(dest.read_bytes()) == sha:
                 continue  # already up to date -- skip the download
@@ -50,10 +53,10 @@ def cmd_pull():
             dest.write_bytes(content)
             written += 1
     except GitHubAuthError:
-        print("Failed to pull: You are not authorized to do this")
+        print("\n\nFailed to pull: You are not authorized to do this")
         return
     except GitHubApiError as e:
-        print(f"Failed to pull: {e}")
+        print(f"\n\nFailed to pull: {e}")
         return
 
     # Mirror deletions: remove local files no longer present remotely --
@@ -70,4 +73,4 @@ def cmd_pull():
                 removed += 1
 
     note = f", removed {removed} stale local file(s)" if removed else ""
-    print(f"Pulled from '{branch}': {written} file(s) updated{note}.")
+    print(f"\n\nPulled from '{branch}': {written} file(s) updated{note}.")

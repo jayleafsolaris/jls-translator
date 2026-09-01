@@ -1,6 +1,7 @@
 from ..common import state
 from ..common.config_store import get_release_branch
 from ..common.github_api import GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix, get_branch_commit_and_tree, get_full_tree, create_blob, create_tree, create_commit, update_ref, git_blob_sha
+from ..common.progress import _report_keys
 from ..common.state import GITHUB_REPO
 from ._local_files import _local_files
 
@@ -39,8 +40,10 @@ def cmd_push():
     local_files = _local_files(local_root, remote_prefix)
 
     entries = []
+    total_files = len(local_files)
     try:
-        for path, local_path in local_files.items():
+        for done, (path, local_path) in enumerate(local_files.items(), start=1):
+            _report_keys("Pushing", done, total_files)
             content = local_path.read_bytes()
             if remote_files.get(path) == git_blob_sha(content):
                 continue  # unchanged -- don't even upload a blob for it
@@ -51,14 +54,14 @@ def cmd_push():
             if path not in local_files:
                 entries.append({"path": path, "mode": "100644", "type": "blob", "sha": None})
     except GitHubAuthError:
-        print("Failed to push: You are not authorized to do this")
+        print("\n\nFailed to push: You are not authorized to do this")
         return
     except GitHubApiError as e:
-        print(f"Failed to push: {e}")
+        print(f"\n\nFailed to push: {e}")
         return
 
     if not entries:
-        print(f"Nothing to push -- already matches '{branch}'.")
+        print(f"\n\nNothing to push -- already matches '{branch}'.")
         return
 
     changed = sum(1 for e in entries if e["sha"] is not None)
@@ -71,10 +74,10 @@ def cmd_push():
         )
         update_ref(branch, new_commit_sha)
     except GitHubAuthError:
-        print("Failed to push: You are not authorized to do this")
+        print("\n\nFailed to push: You are not authorized to do this")
         return
     except GitHubApiError as e:
-        print(f"Failed to push: {e}")
+        print(f"\n\nFailed to push: {e}")
         return
 
-    print(f"Pushed to '{branch}': {changed} file(s) updated, {removed} file(s) removed.")
+    print(f"\n\nPushed to '{branch}': {changed} file(s) updated, {removed} file(s) removed.")
