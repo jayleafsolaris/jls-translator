@@ -36,7 +36,7 @@ DEFAULTS = {
     "version_check_interval_minutes": 10,
     "check_cooldown_seconds": 180,  # --check (manual) cooldown, separate from the passive interval above
     "request_delay": 0.15,   # seconds between global translation calls
-    "max_retries": 3,
+    "max_retries": 5,
     "workers_min": 1,
     "workers_max": 100,
     "workers_throttle_ceiling": 20,

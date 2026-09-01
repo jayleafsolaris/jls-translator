@@ -1,5 +1,7 @@
 """--update: retranslate changed keys already present in each .lang file."""
 
+import contextlib
+import io
 import json
 import random
 import sys
@@ -12,7 +14,7 @@ from ..common.lang_io import parse_lang, write_lang, entries_dict
 from ..common.text_protect import tokens_only_diff, apply_token_patch, to_british, resolve_key_references
 from ..common.netcheck import require_internet_or_warn
 from ..common.config_store import warn_red
-from ..common.translate import translate_many
+from ..common.translate import translate_many, reset_outage_state
 from ..common.ratelimit import set_job_profile, status_report
 from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, write_languages_json, get_active_language_codes, resolve_workers
 from ..common.progress import (
@@ -23,7 +25,24 @@ from ..common.progress import (
 # ANSI Color Code Constants
 CLR_RED = "\033[31m"
 CLR_DARK_GREEN = "\033[32m"
+CLR_DIM = "\033[2m"
 CLR_RESET = "\033[0m"
+
+# A single google_code group failing outright (outage detected, daily cap
+# hit, or anything else translate_many/translate.py surfaces as fatal)
+# doesn't necessarily mean the run is unrecoverable -- it's often a blip
+# that clears itself given a moment. Rather than announcing the failure
+# and killing the whole --update, back off for a bit and try that same
+# group again, quietly, for up to this many escalating attempts before
+# actually giving up and falling through to the real fatal-error report.
+MAX_SLOW_LEVEL = 15
+
+
+def _slow_delay(level):
+    """Backoff delay for a given slow level (1-indexed), doubling each
+    level and capped so a bad run doesn't stall for absurd lengths of
+    time. 1s, 2s, 4s, ... capped at 60s."""
+    return min(60.0, 2 ** (level - 1))
 
 
 def cmd_update(resume=False, interactive=False):
@@ -260,6 +279,14 @@ def cmd_update(resume=False, interactive=False):
                     continue
                 by_google_code.setdefault(t["google_code"], []).append(t)
 
+            # Persists across every google_code group in this run -- a
+            # group that fails climbs this, a group that succeeds eases
+            # it back down, rather than each group starting from a clean
+            # slate. That way a run that's genuinely struggling keeps
+            # backing off further, while one that's just hit a single
+            # blip recovers to full speed quickly.
+            slow_level = 0
+
             for google_code, group in by_google_code.items():
                 texts = [base_values[t["key"]] for t in group]
                 base_offset = done_count
@@ -268,7 +295,37 @@ def cmd_update(resume=False, interactive=False):
                     smoother.update(_base_offset + group_done)
 
                 workers = resolve_workers(len(texts))
-                translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
+
+                while True:
+                    # translate.py prints its own warning the moment it
+                    # detects an outage/rate-limit condition -- swallow
+                    # that here while we're still within the retry
+                    # budget, since a slowdown attempt should be quiet.
+                    # If this attempt is the one that finally exhausts
+                    # the budget below, whatever got captured is written
+                    # back out so the eventual fatal report isn't missing
+                    # context.
+                    captured = io.StringIO()
+                    try:
+                        with contextlib.redirect_stdout(captured):
+                            translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
+                    except (Exception, SystemExit):
+                        slow_level += 1
+                        if slow_level > MAX_SLOW_LEVEL:
+                            leftover = captured.getvalue()
+                            if leftover:
+                                sys.stdout.write(leftover)
+                            raise
+                        print(f"{CLR_DIM}  (Slowed {slow_level}/{MAX_SLOW_LEVEL}){CLR_RESET}")
+                        reset_outage_state()
+                        _first_render = True
+                        time.sleep(_slow_delay(slow_level))
+                        continue
+
+                    if slow_level > 0:
+                        slow_level -= 1
+                    break
+
                 for t, value in zip(group, translated):
                     results[task_key(t["code"], t["key"])] = value
                 done_count = base_offset + len(group)
