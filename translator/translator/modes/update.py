@@ -242,16 +242,23 @@ def cmd_update(resume=False, interactive=False):
 
         start_run_time = time.time()
         _first_render = True
+        _last_line_count = 4
+        # Read (every tick) by _render below, written by the slow-down
+        # retry loop further down. 0 means "not currently slowed" -- the
+        # indicator line is simply omitted in that case. Because _render
+        # is also the ticker SmoothProgress calls on its own 80ms clock
+        # (that ticking is intentional and stays untouched), this is what
+        # lets the indicator appear/disappear/update as part of that same
+        # already-running redraw instead of fighting it with a separate
+        # print.
+        _slow_level_display = 0
 
         def _render(done, _total=total):
-            nonlocal _first_render
+            nonlocal _first_render, _last_line_count
 
             pct = (done / _total * 100) if _total else 100.0
             time_str = format_duration(time.time() - start_run_time)
             usage = status_report()  # cached -- cheap to call every tick
-
-            cursor_up = "" if _first_render else "\033[4F"
-            _first_render = False
 
             lines = [
                 f"\033[K  Translating {_total} keys...",
@@ -259,6 +266,17 @@ def cmd_update(resume=False, interactive=False):
                 f"\033[K  Time: {time_str}",
                 f"\033[K  Usage: Hourly {usage['hour_pct']:.1f}% • Daily {usage['day_pct']:.1f}%",
             ]
+            if _slow_level_display:
+                lines.append(f"\033[K  {CLR_DIM}(Slowed {_slow_level_display}/{MAX_SLOW_LEVEL}){CLR_RESET}")
+
+            # Cursor-up by however many lines the PREVIOUS tick actually
+            # drew, not a hardcoded 4 -- the slow-down line above makes
+            # this block 4 or 5 lines depending on current state, and
+            # moving up the wrong amount would either leave stray text
+            # behind or eat into the line above this block.
+            cursor_up = "" if _first_render else f"\033[{_last_line_count}F"
+            _first_render = False
+            _last_line_count = len(lines)
 
             sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
             sys.stdout.flush()
@@ -346,14 +364,21 @@ def cmd_update(resume=False, interactive=False):
                             for msg in suppressed:
                                 warn_red(msg)
                             raise
-                        print(f"{CLR_DIM}  (Slowed {slow_level}/{MAX_SLOW_LEVEL}){CLR_RESET}", flush=True)
+                        # The ticker (SmoothProgress calling _render every
+                        # tick) keeps running as normal through the sleep
+                        # below -- that's intentional. Just point it at the
+                        # new level; the next tick picks it up and folds
+                        # "(Slowed #/#)" into its existing redraw on its
+                        # own, rather than this loop printing a separate
+                        # line that the ticker would otherwise redraw over.
+                        _slow_level_display = slow_level
                         reset_outage_state()
-                        _first_render = True
                         time.sleep(_slow_delay(slow_level))
                         continue
 
                     if slow_level > 0:
                         slow_level -= 1
+                    _slow_level_display = slow_level
                     break
 
                 for t, value in zip(group, translated):
