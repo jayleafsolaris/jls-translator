@@ -154,14 +154,29 @@ class SmoothProgress:
     batch takes, which reads as "frozen"/laggy even though work is still
     happening. Once caught up, if no new (higher) target has arrived for
     stall_creep_after seconds and real work remains, this creeps the shown
-    value forward slowly on its own -- capped at just under one whole unit
-    past the last real target, so it never visually claims a key finished
-    that hasn't. Any real update snaps the ramp back to normal, ceiling-free
-    motion toward the new target.
+    value forward slowly on its own -- capped at just under one whole
+    percent of this instance's own key_total (floored at 0.9 units so
+    small totals, e.g. a typical --update run's handful of changed keys,
+    behave exactly as before), so it never visually claims a large chunk
+    of real, unfinished work as done. Any real update snaps the ramp back
+    to normal, ceiling-free motion toward the new target.
+
+    That floor matters more than it looks: a caller with a small
+    key_total (--update) needs a small absolute ceiling to stay honest,
+    but a caller composing many per-item SmoothProgress instances into one
+    larger displayed percentage (--create, one instance per language,
+    folded into an overall-run percentage) needs the ceiling to scale with
+    its own key_total -- a flat +0.9 units is a meaningfully large nudge
+    against a total of 10, but is completely invisible against a total in
+    the hundreds once diluted into that outer percentage, and reaches its
+    tiny ceiling in about 6s regardless, then sits dead flat for however
+    much longer the real stall runs. Scaling by key_total keeps both cases
+    honest while keeping both visibly alive for the length of a real stall
+    instead of just its first few seconds.
     """
 
     def __init__(self, key_total, render, tick_interval=0.08, catch_up_seconds=1.0,
-                 stall_creep_after=1.2, creep_rate=0.15):
+                 stall_creep_after=1.2, creep_rate=0.15, creep_ceiling_fraction=0.02):
         self.key_total = key_total
         self._render = render  # callable(shown_key_idx)
         self._tick_interval = tick_interval
@@ -171,6 +186,7 @@ class SmoothProgress:
         self._step = 0  # fixed per-tick increment for the current linear ramp
         self._stall_creep_after = stall_creep_after
         self._creep_rate = creep_rate  # phantom units/sec while stalled
+        self._creep_ceiling = max(0.9, key_total * creep_ceiling_fraction)
         self._last_target_update = time.time()
         self._lock = threading.Lock()
         self._stop = threading.Event()
@@ -207,7 +223,7 @@ class SmoothProgress:
                 # Caught up to the last real update but more work remains,
                 # and nothing new has landed in a while -- nudge forward
                 # slowly so the display keeps moving instead of stalling.
-                creep_ceiling = target + 0.9
+                creep_ceiling = target + self._creep_ceiling
                 if shown < creep_ceiling:
                     shown = min(creep_ceiling, shown + self._creep_rate * self._tick_interval)
                     with self._lock:
