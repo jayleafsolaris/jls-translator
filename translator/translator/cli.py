@@ -32,6 +32,9 @@ base and your .lang files, e.g. RP/texts/):
     jls-translator --release <branch>
                               set the release branch (persisted; --release alone shows it)
     jls-translator --upgrade  update the script to the latest version from GitHub
+    jls-translator --upgrade --enforce
+                              force the upgrade even if already on the latest version,
+                                     or if the remote version can't be determined
     jls-translator --check    manually check GitHub for a newer version right now
                                      (doesn't change automatic checking)
     jls-translator --check true|false

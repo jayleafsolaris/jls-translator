@@ -116,6 +116,9 @@ def main():
                          help="ask after each item whether to continue or stop "
                               "(combine with --create/--update/--add/--remove/--delete/--continue)")
     parser.add_argument("--upgrade", action="store_true", help="update the script to the latest version from GitHub")
+    parser.add_argument("--enforce", action="store_true",
+                         help="use with --upgrade to force it even if already on the latest "
+                              "version, or if the remote version can't be determined")
     parser.add_argument("--summary", action="store_true", help="show detailed per-language results for --add and --remove")
     parser.add_argument("--push", action="store_true",
                          help="push <cwd>/jls-translator/ up to this tool's own GitHub repo "
@@ -280,11 +283,11 @@ def main():
                 cmd_cache_menu()
                 return
             if mode == "upgrade":
-                cmd_upgrade()
+                cmd_upgrade(enforce=args.enforce)
                 return
 
         if mode == "upgrade":
-            cmd_upgrade()
+            cmd_upgrade(enforce=args.enforce)
         elif mode == "create":
             cmd_create(interactive=ask)
         elif mode == "update":
