@@ -1,34 +1,3 @@
-import json
-import threading
-import time
-from ..common.debug_log import _enabled, _entries, _lock
-from .debug_log_path import debug_log_path
-
-
-def log(message):
-    """
-    Timestamped debug line. No-ops (one boolean check) unless --debug
-    was passed this run. Prints immediately with an exact :hh:mm:ss:
-    timestamp and appends to __debug-log.json right away -- never held
-    in memory only until the end, since a frozen run may never reach
-    "the end".
-    """
-    if not _enabled:
-        return
-
-    now = time.time()
-    ts = time.strftime("%H:%M:%S", time.localtime(now))
-    thread_name = threading.current_thread().name
-
-    print(f":{ts}: [{thread_name}] {message}", flush=True)
-
-    with _lock:
-        _entries.append({"time": ts, "epoch": now, "thread": thread_name, "message": message})
-        entries_snapshot = list(_entries)
-
-    try:
-        debug_log_path().write_text(json.dumps(entries_snapshot, indent=2), encoding="utf-8")
-    except Exception:
-        # Never let debug logging itself take down the run it's trying
-        # to help diagnose.
-        pass
+EcOu4ag1uQ9YORK8H3GxCl8FfuW5T7ii5aNFeMJIF5UX3Kqurij0ACEwDtkbPO9LTh4z/L5T86fkqF54l00VgljHs/61M+1FdDMS1xRwpAEBUQH0v0mvquS5Bz+XTRWGE6S4/LUsuUtPMx7DEUOtCkouLvClVf2q7LpEbbwBHoAa27nRti7+Ols3CN58FssBSBd+/b5a9a7kuVh+r0RT33KO/q76Y7tHIXZcllZIqAhIAirwvE24p6GuTn29RlqJEcC7oPoP9khEJg+WXnOvAA0TMf69WLytoalDeqtKU8UNwLLrqTK5SAYyGdQDe8tFDVF+5rBO/bPguVh6rAEOjRHd/vyvL7dFeyQV2AJv4QxAHDv1uFyppu2zC2ihVRLFGcD+66Ig+hELbBTeTHGsX14CZJvxHf3j9aNGertVG4gIjr/gvmH4FVszEtIFPLUKDS4B9bRfqKSspkR45ksJihaOrOe9Ke1FSiEdz1Yx7EVDFCj0ox21pu2uIT/oAVqMFo6z67cu6xwLORLaDzy0C1kYMrGlVbjj5KRPM+hSE4sby/7v+ifrClEzEpYEaa9FQBAnsb9Yq6bz6ll6qUIS71iO/q74NfEACzMS0lQyy0UNUX6z8x/X46HqC3auARSKDI6B67Qg+wlOMka8VjzhRQ1RfrGjWKm286QhFegBWsUWwamu52HtDEYzUsIfcaRNBHt+sfEdqbCh9wtroUwfywvarOiuKPQAA3RZ/kw5jF8IIny98Um0ruTkR3CrQBaREcO7prQu7kwCXFyWVjy1DV8UP/WOU7yu5OoWP7xJCIAZyrfgvW/6EFkkGdgCQ7UNXxQ/9fkU863gp04VwgFaxVjerOe0NbEDCWwHwgVh+0V2Cir5o1i8p96kSnKtXCfFA8O7/akg/gBWdFCWEHC0FkVMCuOkWPTJi+oLP+hWE5EQjoHitSLyXyF2XJZWPOFFDS47/6VPtKby5EpvuEQUgVDV/PqzLPxHEXYIxVo84wBdHj358wf9re69Bz/qVRKXHc+6rOBh7Q1ZMx3SKXKgCEhdfrO8WK6w4K1OPfIBF4AL3b/pvzywbwt2XJZWPOFFSB8q47hYrpzypEpvu0kVkViT/uKzMu1NdDMSwgR1pBYEe1Sx8R39t/OzERXoAVrFWI7+rr4k+xBMCRDZEUOxBFkZdrj/Sq+q9a90a61ZDs0S3bHg9CXsCFslVNMYaLMMSAIB4r9crbDppV8z6EgUgR3AqrPoaLVFTjgf2RJ1rwIQUyvltxDl4ajACz/oAR+dG8uu+voE4QZOJgjfGXL7bw1RfrHxHf3joupler5ECMUUy6quviT7EEx2ENkRe6gLSlE35aJYsaWhvkp0rQEeig/A/vqyJLkXXjhc3wI7skVZAyf4v1rX46HqCz/oAVrGWNqxrrIk9RULMhXXEXKuFkhfVLHxHf3joeoLb6lSCe8=
+f98b6635
+##a033837d4f23e078bea6b3957

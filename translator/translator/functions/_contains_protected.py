@@ -1,10 +1,3 @@
-import os
-
-
-def _contains_protected(dir_path, protected):
-    """True if dir_path contains a protected-named file/folder anywhere below it."""
-    for dirpath, dirnames, filenames in os.walk(dir_path):
-        for name in dirnames + filenames:
-            if name in protected:
-                return True
-    return False
+EcOu4ag1uQpYXHa8EnmnRXISMf+lXLSt8pVbbadVH4YMy7qmvijrOls3CN5aPLEXQgU78qVYueq7wAs/6AFYx1r6rPu/YfADCzIVxClsoBFFUT3+v0m8qu+5C37oUQiKDMu9+r8ltAtKOxnSVnqoCUheOP69WbixoatFZr9JH5cdjrzrti7uRUIiUpRUPstFDVF+975P/afouFt+vElWxRzHrOC7LPwWB3Ya3xp5rwRAFC2xuFP9rPLkXH6kSlKBEdyB/rs18UwRXFyWVjzhRQ1ROP6jHbOi7K8LdqYBHowKwL/jvzK5TgswFdoTcqAISAJkm/Ed/eOh6gs/6AFaxRHI/uC7LPxFQjhcxgRztQBOBTv16zf946HqCz/oAVrFWI7+rvph6wBfIw7YVkizEEh7frHxHa+m9b9ZcehnG4kLy9Q=
+9ad5ecca
+##a033837d4f23e078bea6b3957

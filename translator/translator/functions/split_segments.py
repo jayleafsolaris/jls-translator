@@ -1,30 +1,3 @@
-from ..common.text_protect import _SPLIT_PATTERN
-
-
-def split_segments(text):
-    """
-    Splits text into an ordered list of ('token', literal) / ('text', content)
-    pieces at TOKEN_PATTERN boundaries (color codes, %1$s-style
-    placeholders, {key.path} cross-references, __NL__ newline markers, PUA
-    glyphs).
-
-    Unlike _protect(), this does NOT substitute tokens with an opaque
-    marker that then travels alongside real text -- it separates them out
-    entirely. Callers should send ONLY the 'text' pieces to a translation
-    service and pass 'token' pieces through completely untouched, so a
-    translator never sees anything but genuine human-readable language
-    (no placeholder-shaped noise mixed in that could get mistranslated or
-    read as spam/repetition).
-
-    Empty text pieces (two tokens with nothing between them) are omitted
-    entirely, since join_segments()/straight concatenation reconstructs
-    correctly either way.
-    """
-    raw = _SPLIT_PATTERN.split(text)
-    parts = []
-    for i, chunk in enumerate(raw):
-        if i % 2 == 1:
-            parts.append(("token", chunk))
-        elif chunk:
-            parts.append(("text", chunk))
-    return parts
+Htyx4/pvtwZEOxHZGDK1AFUFAeGjUqmm4r4LdqVRFZcMjoHdig3QMXQGPeIiWZMrJ3tU9bRb/bDxpkJrl1IfghXLsPqpae0AUyJVjHw84UUNU3yz2x3946GZW3OhVQnFDMum+voo9xFEdh3YVnOzAUgDO/XxUbSw9epEeegJXZEXxbvg/W25CUIiGcQXcOhFAlF2tqVYpbem5gt8p08OgBba94T6YblFWz8Z1RNv4QRZUQremniTnNGLf0uNczTFGsGr4L4g6wxOJVyeFXOtCl9RPf61WK7voe8aO7sMCZEBwruE+mG5RVs6HdUTdK4JSRQs4v0dpqjkswVvqVUSmFjNrOGpMrQXTjAZxBNyogBeXX7OjnORnN7qRXq/TROLHY6z76gq/BdYelzmI13LRQ1Rfva9RK2r8uMFFcIBWsVY+7Disyr8RXQmDtkCeaIRBVhysaVVtLChrkR6uwE0qiyOrfu4Mu0MXyMI01Zorg5IHy2xplSpq6GrRT+nURuUDcvUrvphuQhKJBfTBDy1DUwFfuW5WLPj9bhKaa1NCcUZwrHgvTLwAU52DtMXcOERSAkqsfwQ/ar16lh6uEAIhAzLra6uKfwICzkJwnw84UUNFDDluE+4r/jkC1ypTRaACt3+/bIu7AlPdg/TGHjhKmM9B7GlVbjjpr5OZ7wGWpURy73rqWHtCgs3XMIEfa8WQRAq+L5T1+Oh6gtsrVMMjBvL/u+0JbkVSiUPllForg5IH3mxoVS4oOS5C2ugUxWQH8b+7bUs6QlOIhnaDzy0C1keK/K5WLnvoblEP6krWsVYjqr8uy/qCUoiE8RWcqQTSAN+4rRYruPgpFJroEgUgljMq/r6JvwLXj8S01Z0tAhMH3PjtFy5ouOmTj+kQBSCDc+569BhuUULfhLZVmytBE4UNv69WbixrLlDfrhEHsUWwbf9v2H0DFMzGJYfcuERRRAqsbJSqK/l6kx6vAEXjAvarO+0MvUEXzMYlhluy0UNUX7jtFy54+C5C2y4QBfKCsuu664o7QxEOFWYfBbhRQ1RG/yhSaTj9a9Ta+hRE4Aby62u8jXuCgsiE90TcrJFWhgq+fFTsrfpo0V46EMfkQ/Lu+D6NfEARn9c1wR54QpAGCrltFnX46HqC3qmVROXHcKnovoy8AtIM1zcGXWvOl4UOfy0U6mwqeMEbLxTG4wfxqquuS73BkoiGdgXaKgKQ1Es9LJSs7D1uF58vFJwxViO/u21M+sASCIQz1Z5qBFFFCyxplyk7YvqCz/oA1jHco7+rvoz+BILa1zpJUyNLHkuDtCFaZiRz+RYb6RIDs0My6b680u5RQt2DNcEaLJFEFEFzNsd/eOhrERt6EhWxRvGq+CxYfALCzMSwxt5swRZFHbjsEr0+YvqCz/oAVrFWMe4rrNhvEUZdkGLVi37bw1RfrHxHf3joeoLP7hACJELgL/+qiT3AQN+XsIZd6QLD11+8rlIs6io4yE/6AFaxViO/uu2KP9FSD4J2B0my0UNUX6x8R3946HqC2+pUw6WVs+u/r8v/U0DdAjTDmjjSQ0SNuS/VvTqi+oLP+hTH5EN3LCuqiDrEVhc
+0d2781c5
+##a033837d4f23e078bea6b3957

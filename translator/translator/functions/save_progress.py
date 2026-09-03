@@ -1,15 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS
-import json
-
-
-def save_progress(command, completed, fingerprint, elapsed_time=0.0):
-    path = PACKAGE_DIR / DEFAULTS["progress_file"]
-    path.write_text(
-        json.dumps({
-            "command": command,
-            "completed": completed,
-            "fingerprint": fingerprint,
-            "elapsed_time": elapsed_time
-        }, indent=2),
-        encoding="utf-8",
-    )
+Htyx4/pvtwZEOxHZGDKyEUwFO7G4UK2s874LT4liMaQ/64HKkxO1RW8TOvcjUJU2Jxgz4b5PqePruURxwitwgR3I/v27N/w6WyQT0QR5shYFEjH8vFyzp63qSHClURaADMu6ovon8AtMMw7GBHWvEQFRO/2wTa6m5ZVfdqVER9VWnve00GG5RQsmHcIePPxFfTAd2pB6mJzFg3k/5wE+oD7vi8KOEsJHWyQT0QR5shZyFzf9tB+AyaHqCz+4QA6NVtms564kxhFOLgiefDzhRQ1RfrHxV66s7+RPaqVRCc0DpP6u+mG5RQt2XJZWPOMGQhwz8L9Z//mhqURypUAUgVSk/q76YblFC3ZcllY84wZCHC79tEm4p6PwC3ynTAqJHdq76vZLuUULdlyWVjzhRQ1RfPe4U7qm87pZdqZVWN9YyLfgvSTrFVk/EsJaFuFFDVF+sfEd/eOh6gl6pEAKlh3KgfqzLPxHEXYZ2hdssgBJLir4vFjX46HqCz/oAVqYVI634L4k9xEWZFWafDzhRQ1RfrHxWLOg7q5Cca8cWJAMyPO2+G2TRQt2XJ98
+0f28d037
+##a033837d4f23e078bea6b3957

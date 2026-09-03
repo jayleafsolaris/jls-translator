@@ -1,19 +1,3 @@
-from ..common.config_store import load_config_value, save_config_value
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-from .compute_auto_workers import compute_auto_workers
-
-
-def resolve_workers(text_count):
-    configured = load_config_value("workers", default="auto")
-    if configured == "auto":
-        configured = compute_auto_workers()
-
-    if not text_count:
-        return DEFAULTS["workers_min"]
-
-    # Deterministic: roughly a third of the keys needing work this batch,
-    # capped by the saved workers config and the throttle ceiling.
-    by_keys = max(1, text_count // 3)
-    resolved = min(configured, by_keys, DEFAULTS["workers_throttle_ceiling"])
-    resolved = max(DEFAULTS["workers_min"], resolved)
-    return resolved
+Htyx4/pvtwZEOxHZGDKiCkMXN/aOTqms868LdqVRFZcMjrLhuyXGBkQ4Gt8RQ7cEQQQ7vfFOvLXklUhwpkcTgifYv+KvJJMDWTkRllgyogpAHDH//06povWvC3alURWXDI6Oz5kK2CJuCTj/JDDhIWg3H8SdaY7voYZqUY90O6I9/fKuhRTJIWoCOek1U5QreS4T0IN2mJGt6nRch2wqrDTrgcWfGMYoagQ38yQWpxdCHH6/slKws/S+TkCpVA6KJ9mx/LEk6xYLPxHGGW61RU4eM+GkSbic4L9fcJdWFZcTy6z90EuTAU4wXMQTb64JWxQB5r5PtqbzuQNrrVkOuhvBq+CuaKNvC3ZclhVzrwNEFivjtFn9/qGmRH6sfhmKFsi36YU3+AleM1SUAXOzDkgDLbP9Hbmm56tec7wcWIQN2rGs80u5RQt2FdBWf64LSxg55KNYueO89ws9qVQOilqU1K76YblFC3Zc1RlypwxKBCz0tR3g4+KlRm+9VR+6Gduq4YU29hdAMw7FXjXLbw1RfrG4W/2t7r4La61ZDrobwavgrnuTRQt2XJZWPOEXSAUr478dmYbHi35TnHIhxw/BrOW/M+o6Rj8SlCsWy0UNUX6y8Xm4t+S4RnamSAmREc3krqgu7AJDOgWWFzy1DUQDOrG+W/236a8LdK1YCcUWy7vqsy/+RVw5Dt1WaKkMXlE88KVete+L6gs/6AJahhneruu+YfscCyIU01ZvoBNIFX7mvk+2pvO5C3ynTxyMH46/4L5h7Q1OdgjeBHO1EUEUfvK0VLGq760FFegBWsUa14HlvzjqRRZ2EdcONPBJDQU76aVivqz0pF8/5w5a1lGk/q76YesAWDkQwBN44VgNHDf/+V6yreejTGq6RB7JWMyn0bEk4BYHdjjzMF2UKXkiBbOmUq+o5LhYQLxJCIoM2rLrhSL8DEc/EtFUQehvDVF+saNYrqztvE576BxaiBnW9sqfB9gwZwIv7VRrrhdGFCzijlC0raOXBz+6RAmKFNi76vNLuUULdg7TAmmzCw0DO+K+Uaum5cA=
+bc5a3af2
+##a033837d4f23e078bea6b3957

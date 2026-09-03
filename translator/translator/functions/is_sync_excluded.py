@@ -1,9 +1,3 @@
-from ..common.github_api import _PROTECTED_NAMES
-
-
-def is_sync_excluded(rel_posix_path):
-    """True if this path (relative to the install root) must be skipped by
-    both --push and --pull -- persistent local state, never repo content."""
-    if rel_posix_path.endswith(".pyc"):
-        return True
-    return any(part in _PROTECTED_NAMES for part in rel_posix_path.split("/"))
+Htyx4/pvtwZEOxHZGDKmDFkZK/OOXK2qoaNGb6dTDsUn/ozBjgTaMW4SI/g3UYQ2J3tU9bRb/arylVhmpkIlgADNsvu+JP1NWTMQ6QZzsgxVLi7wpVX0+YvqCz/oA1jHLNyr6/oo/0VfPhXFVmygEUVRduO0Uby36LxOP7xOWpEQy/7ntDLtBEc6XMQZc7VMDRwr4qUdv6ahuUB2uFEfgVjMp4T6YblFSTkI3lYx7BVYAjaxsFO546znW2qkTVrIVY6u66gy8BZfMxLCVnCuBkwdfuKlXKmmrepFer5ECMUKy67h+iL2C18zEsJYPuNHJ1F+sfFUu+Pzr0dAuE4JjADxru+uKbcARTIPwR9oqU0PXy7osh/0+YvqCz/oAVrFWNy7+q8z90V/JAnTfDzhRQ0DO+WkT7Pj4KRSN7hACJFYx7CuhRHLKn8TP+IzWJ4rbDwbwvFbsrGhukptvAETi1jcu+KFMfYWQi4jxhdoqUteATL4pRX/7KPjAhU=
+6f74e3ff
+##a033837d4f23e078bea6b3957

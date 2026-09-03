@@ -1,5 +1,3 @@
-from ..common.config_store import _RED, _RESET
-
-
-def warn_red(message):
-    print(f"{_RED}⚠ {message}{_RESET}")
+Htyx4/pvtwZEOxHZGDKiCkMXN/aOTqms868LdqVRFZcMjoHcnwW1RXQEOeUzSMtvJxU79/FKvLHvlVl6rAkXgAvdv+m/aKNvC3ZclgZuqAtZWTizqmKPhsW3yYVoAQGIHd2t770k5B50BDnlM0i8RwR7
+e25911f2
+##a033837d4f23e078bea6b3957

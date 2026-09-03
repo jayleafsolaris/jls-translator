@@ -1,15 +1,3 @@
-def strip_comments_for_output(base_lines):
-    """
-    Returns base_lines with EVERY comment line removed -- section headers
-    like '## UI' / '### PACK DETAILS', notes, and disabled/commented-out
-    entries that start with a bare '#' -- plus the hidden --update count
-    marker (which is itself stored as a comment, so it's covered by this
-    too).
-
-    Comments are organizational scaffolding for `base` only. They should
-    never be copied into an actual, user-facing .lang file -- not the
-    untranslated en_US/en_GB copies, and not the real translated
-    languages. This is called on base's parsed lines before any of that
-    copying happens; `base` itself is never touched by this function.
-    """
-    return [line for line in base_lines if line[0] != "comment"]
+HMu4rqk16wxbCR/ZG3GkC1kCAfe+T4Ks9L5barwJGIQLy4Hisy/8FgJsdpZWPOFHD1NUsfEd/ZHkvl5tplJahxndu9G2KPcAWHYL3wJ04SB7NAzI8V6yruyvRWvoTROLHY6s67cu7wBPdlGbVm+kBlkYMf/xVbii5a9ZbMIBWsVYwrflv2G+Rgh2Kf9RPO5FClJ9svFtnIDK6m9anGAzqSuJ8q60Lu0AWHpc1xh44QFEAj/zvVi57OKlRnKtTw6AHIOx+65LuUULdhnYAm6oAF5RKvmwSf2w9atZa+hWE5EQjr+uuCDrAAtxX5FWMexFXR0r4vFJtaahokJ7rEQUxVWDq/6+IO0ACzUTwxhoy0UNUX78sE+2pvPqA2igSBmNWMetrrM16gBHMFzFAnOzAElRP+LxXP2g7qdGeqZVVsULwf7nrmbqRUg5CtMEeaVFTwh+5blUrsmh6gs/vE4VzFak1K76YbkmRDsR0xhoskVMAzuxvk+6ou+jUX68SBWLGcL+/bkg/wNEOhjfGHvhA0IDfvGzXK6m4epEcaRYVMUsxrv3+jLxCl46GLxWPOFFQxQo9KMdv6ahqURvoUQexRHAquH6IPdFSjUIwxdw7UVYAjvj/Fu8oOikTD/mTRuLH46457YkuUgGdhLZAjy1DUh7frHxHait9bhKcbtNG5Edyv7rtB7MNgQzEukxXuEGQgE39KIR/aLvrgtxp1VakRDL/vy/IPVFXyQd2AVwoBFIFVSx8R39r+CkTGqpRh+WVo6K5rMyuQxYdh/XGnCkAQ0eMLGzXK6mprkLb6lTCYAcjrLntCTqRUkzGtkEeeEEQwh+/rcdqavgviE/6AFahhfep+e0JrkNSiYM0xhv+kVNEz/itF39qvW5TnOuAROWWMC7+L8zuRFEIx/eE3jhB1RRKvm4Tv2l9KRIa6FOFMtyjv6u+mO7RyF2XJZWbqQRWAMwsYpRtK3k6k1wugEWjBbL/ue0YfsEWDMj2h9ypBYNGDixvVSzptr6dj/pHFrHG8Gz478v7Ud2XA==
+3ccc1d5b
+##a033837d4f23e078bea6b3957

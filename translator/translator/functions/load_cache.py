@@ -1,12 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-import json
-
-
-def load_cache():
-    path = PACKAGE_DIR / DEFAULTS["cache_file"]
-    if path.exists():
-        try:
-            return json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            return {}
-    return {}
+Htyx4/pvtwZEOxHZGDKyEUwFO7G4UK2s874LT4liMaQ/64HKkxO1RW8TOvcjUJU2AVES0J96iILGj3gz6H4vtTzvisuFAtYwZQIj+zdOiiB/XX7OknKQk8iGbkCDZCO6Ne+MxZ8TkwxGJhPEAjyrFkIfVJvbWbiloaZEfqx+GYQbxrum83uTRQt2XMYXaKlFEFEO0JJ2nITElW9WmgFVxTzrmM+PDc02cHQf1xV0pDpLGDL082DX46HqC3auAQqEDMbw66Io6hFYflWMfDzhRQ1RfrHxSa+6u8ALP+gBWsVYjv6u+mHrAF8jDthWdrIKQ18y/rBZruvxq1935lMfhBzxquuiNbEARTUT0h9yplgPBCr3/AX/6qjACz/oAVrFWI679rkk6RELEwTVE2y1DEIfZJvxHf3joeoLP+gBWsUKy6r7qC+5HlZcXJZWPLMAWQQs//FGoMk=
+fcae7abe
+##a033837d4f23e078bea6b3957

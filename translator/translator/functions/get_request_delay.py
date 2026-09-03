@@ -1,10 +1,3 @@
-from ..common.state import PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME, DEFAULTS, GITHUB_BRANCH
-from ..common.config_store import _CONFIG_DELAY
-from .load_config_value import load_config_value
-
-
-def get_request_delay():
-    global _CONFIG_DELAY
-    if _CONFIG_DELAY is None:
-        _CONFIG_DELAY = load_config_value("delay", default=DEFAULTS["request_delay"])
-    return _CONFIG_DELAY
+Htyx4/pvtwZEOxHZGDKyEUwFO7G4UK2s874LT4liMaQ/64HKkxO1RWgZMvA/W54hZCMBx5hulIHNj3RRiWw/yVjtkcCcCN46bx8u6T5VhSFoPwHfkHCY76GOblmJdDaxK4L+yZMV0TBpCT7kN1KCLScXLP68HfPt4qVGcqdPVIYXwLjnvR7qEUQkGZYfcbEKXwV+zpJyk4XIjXRbjW07vHLIrOG3YbcJRDcY6RVzrwNEFgHnsFGopqGjRm+nUw7FFMG/6oUi9gtNPxvpAH2tEEh7VJu1WLvj5q9fQLpEC5Ad3arRviT1BFJ+VYx8POFFDRYy/rNcsePeiWRRjmg9ujzrks+DS7lFC3YV0FZDgipjNxfWjnmYj8CTC3a7ATSKFsvkhPphuUULdlyWKV+OK2s4Gc6VeJGC2OoWP6ROG4EnzbHgvCj+Ol03EMMTNOMBSB0/6PMR/afkrEpqpFVHoT3on9uWFco+CSQZxwN5shFyFTv9sET/nqjACz/oAQiADNus4Poe2iplEDXxKViEKWwoVA==
+25df0e35
+##a033837d4f23e078bea6b3957

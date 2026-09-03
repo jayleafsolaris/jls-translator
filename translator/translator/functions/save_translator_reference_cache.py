@@ -1,7 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS
-import json
-
-
-def save_translator_reference_cache(data):
-    path = PACKAGE_DIR / DEFAULTS["translator_reference_cache_file"]
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+Htyx4/pvtwZEOxHZGDKyEUwFO7G4UK2s874LT4liMaQ/64HKkxO1RW8TOvcjUJU2Jxgz4b5PqePruURxwitwgR3I/v27N/w6XyQd2AVwoBFCAwHjtFu4seSkSHqXQhuGEMv26rs1+EwRXFyWVjyxBFkZfqzxbZyAyotsWpdlM7dYgf7KnwfYMGcCL+1UaLMEQwIy8KVSr5zzr016ukQUhh3xve+5Kfw6TT8Q01RBy0UNUX7hsEm17fa4Qmutfg6AANr25Kku90tPIxHGBTSlBFkQcrG0U6628690frtCE4xF6L/iqSS1RUI4GNMYaPxXBF1+9L9esqfopEwi6lQOg1WW/KfQ
+5f8570e1
+##a033837d4f23e078bea6b3957

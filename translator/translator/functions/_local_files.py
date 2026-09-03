@@ -1,15 +1,3 @@
-from ..common.github_api import GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix, get_branch_commit_and_tree, get_full_tree, create_blob, create_tree, create_commit, update_ref, git_blob_sha
-
-
-def _local_files(local_root, remote_prefix):
-    """Returns {remote_path: absolute_path} for every non-excluded file under local_root."""
-    files = {}
-    for p in local_root.rglob("*"):
-        if not p.is_file():
-            continue
-        rel = p.relative_to(local_root).as_posix()
-        if is_sync_excluded(rel):
-            continue
-        remote_path = f"{remote_prefix}/{rel}" if remote_prefix else rel
-        files[remote_path] = p
-    return files
+Htyx4/pvtwZEOxHZGDKmDFkZK/OOXK2qoaNGb6dTDsU/x6rGryPYEF8+OcQEc7NJDTY35ZlIv4Lxo25tuk4IyVjHrdGpOPcGdDME1RpppQBJXX73uFO5nPOvRnC8RCWVGc21770kxhVZMxrfDjDhAkgFAfOjXLOg6ZVIcKVME5Enz7DqhTXrAE56XNETaJ4DWB0yzqVPuKat6khtrUAOgCfMsuG4bbkGWTMdwhNDtRdIFHKxsk+4ovWvdHynTBeMDIL++6ol+BFOCQ7TEDDhAkQFAfO9Ur+c8qJKFcIrHoAejoHitSL4CXQwFdoTb+kJQhI//Y5Psqz15gttrUwVkR3xrvy/J/AdAmx2llY84UcPUwz0pUivrfLqUG2tTBWRHfGu764po0VKNA/ZGmm1AHIBP+W5QP2l7rgLer5ECJxYwLHg9yThBkcjGNMSPKcMQRR+5L9ZuLGhpkR8qU0llxfBqqD4Y7tvC3ZclhB1rQBeUWOxqkDX46HqC3mnU1qVWMewrrYu+gRHCQ7ZGWjvF0odMfP5H/fhqPAhP+gBWsVYjv7nvGH3Cl92DJgfb54DRB07ufgH1+Oh6gs/6AFaxViO/u21L+0MRSMZvFY84UUNUX6xo1ix47zqWzG6RBaEDMeo64U19k1HOR/XGkOzCkIFd7+wToKz7rlCZ+AIcMVYjv6u+mG5DE12FcUpb7gLTi476bJRqKfkrgNtrU1T33KO/q76YblFC3ZcllZ/rgtZGDDktDf946HqCz/oAQiAFcGq64Ux+BFDdkGWED66F0gcMeW0Yq2x5KxCZ7UOAZcdwqOs+ij/RVkzEdkCeZ4VXxQ4+KkduK/yrwttrU1wxViO/q76YbkDQjoZxS1upAhCBTvOoVypq9zqFj+4K1rFWI6s66406wsLMBXaE2/L
+e4d7af2c
+##a033837d4f23e078bea6b3957

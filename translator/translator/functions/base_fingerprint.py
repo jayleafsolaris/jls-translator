@@ -1,7 +1,3 @@
-import hashlib
-import json
-
-
-def base_fingerprint(base_values):
-    blob = json.dumps(base_values, sort_keys=True, ensure_ascii=False)
-    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+EcOu4ag1uQ1KJRTaH37LDEABMeOlHbew7qQhFcJFH4NYzL/9vx7/DEUxGcQGbqgLWVk88KJYgrXgpl56uwhA71iO/q64LfYHC2tc3AVzr0tJBDPhohW/ovKvdGmpTQ+AC4L+/bUz7TpAMwXFS0izEEhdfvS/Tqix5JVKbKtIE9g+z7L9v2iTRQt2XMQTaLQXQ1E28KJVsarj5Fh3qRNP01DMsuG4b/wLSDkY014+tBFLXGaz+BTzq+SyT3avRAmRUIfU
+d60a12bb
+##a033837d4f23e078bea6b3957

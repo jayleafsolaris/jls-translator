@@ -1,20 +1,3 @@
-from ..common.ratelimit import _DAY_SECONDS, _HOUR_SECONDS, _MAX_DAY_CAP, _MAX_HOUR_CAP, _MIN_DAY_CAP, _MIN_HOUR_CAP
-from ._adjust_cap import _adjust_cap
-from ._usage_within import _usage_within
-
-
-def _maybe_reroll_caps(data, now):
-    if now - data["cap_rolled_hour_at"] >= _HOUR_SECONDS:
-        used = _usage_within(data, now, _HOUR_SECONDS)
-        data["hour_cap"] = _adjust_cap(
-            data["hour_cap"], used, data.get("hour_window_bad", False), _MIN_HOUR_CAP, _MAX_HOUR_CAP
-        )
-        data["cap_rolled_hour_at"] = now
-        data["hour_window_bad"] = False
-    if now - data["cap_rolled_day_at"] >= _DAY_SECONDS:
-        used = _usage_within(data, now, _DAY_SECONDS)
-        data["day_cap"] = _adjust_cap(
-            data["day_cap"], used, data.get("day_window_bad", False), _MIN_DAY_CAP, _MAX_DAY_CAP
-        )
-        data["cap_rolled_day_at"] = now
-        data["day_window_bad"] = False
+Htyx4/pvtwZEOxHZGDKzBFkUMvi8VKnj6KdbcLpVWro874fRiQTaKmUSL5pWQ4kqeCMBwpR+ko3FmQc/l2w7vSfqn9eFAtg1B3Yj+zdEni1iJAzOknyN76GVZlaGfj6kIfGdz4ptuTpmHzLpPlOUN3IyH8HbW6+s7OoFQKlFEJAL2oHtuzG5DEYmE8QCPJ4ESRsr4qVivqLxwE1tp0xayyfbre+9JMYSQiIU3xg8qAhdHizl8WKosOCtTkC/SA6NEcDUhNAl/AMLCRHXD36kOl8ULP69UYKg4LpYN6xADoRUjrDhrWijbwt2XJYfeuELQgZ+vPFZvLfgkQl8qVEllxfCsuu+HvEKXiQj1wI+nEUTTH7OmXKIkd6ZblyHbz62QqT+rvphuUULdgnFE3jhWA0uK+KwWric9qNfd6FPUoEZ2r+i+i/2Egd2I/45SZM6fjQd3p95juqL6gs/6AFaxVjKv/q7GrsNRCMO6RV9sUdwUWOxjly5qfS5X0CrQArNco7+rvphuUULdlyWVnigEUwqfPm+SK+c4qtbPZUNWpALy7qi+iX4EUp4G9MCNOMNQgQszqZUs6fuvXR9qUVYyVjov+KpJLBJCwkx/zhDiSp4IwHSkG3x496HakeXaTWwKvGdz4pLuUULdlyWVjzobw1RfrHxHf3j5atffpMDGYQI8azhti38AXQ+E8MEQ6ARDyx+rPFTsrSL6gs/6AFaxVjKv/q7GrsNRCMO6QF1rwFCBgHzsFn/nqH3C1mpTQmAco7+rvoo/0VFOQuWWzylBFkQBbOyXK2c86VHc61FJYEZ14HvrmPERRVrXOkyXZg6fjQd3p95jvmL6gs/6AFaxVjbreu+YaRFdCMP1xF5nhJEBTb4vxW5ovWrBz+mTg3JWPGaz4MeyiBoGTLyJTXLRQ1RfrHxHf2n4L5KROpFG5wnzb/++By5WAsJHdIcabIRchI/4fk3/eOh6gs/6AFaxViOuu+uIMJHTzcF6RV9sUdwXX7koli576GuSmupDx2ADIb86rs4xhJCOBjZAUOjBElTcrGXXLGw5OMHP5dsM6sn6p/XhQLYNQd2I/s3RJ4hbCgB0pBt1+Oh6gs/6AFazHKO/q76YblFCzIdwhdH4wZMAQHjvlGxpuWVT36xfhuRWvP+s/ov9hIhdlyWVjzhRQ0VP+WwZv+n4LN0aKFPHooP8bzvvmPERRZ2Otcab6Rv
+f646bf32
+##a033837d4f23e078bea6b3957

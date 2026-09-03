@@ -1,19 +1,3 @@
-def strip_translator_references(lines, ref_keys):
-    """
-    Returns `lines` with any ('entry', key, ...) line whose key is in
-    ref_keys dropped entirely -- everything else (blanks, comments,
-    every other entry) passes through unchanged.
-
-    Call this right before every write_lang() of a real, user-facing
-    .lang file (never on `base` itself). Translator Reference entries
-    (see translator_reference_keys()) are translated like any other
-    entry so cross-references resolve correctly, but should never appear
-    as a key of their own in generated output -- this is the one place
-    that's actually enforced, so it's cheap to also call defensively on
-    any output built from a possibly-stale physical .lang file that
-    predates this feature (self-heals a leftover leaked entry on its
-    next write instead of needing a separate one-off cleanup pass).
-    """
-    if not ref_keys:
-        return lines
-    return [line for line in lines if not (line[0] == "entry" and line[1] in ref_keys)]
+HMu4rqk16wxbCQjEF3KyCUwFMeOOT7il5LhOcatECc0Ux7DrqW25F04wI90TZbJMF3t+sfEd/+GjwAs/6AEogAzbrOCpYfkJQjgZxRY8tgxZGX7wv0T966avRWu6WF3JWMW79/Zht0sFf1zaH3KkRVoZMeK0Hbam+OpCbOhIFO9Yjv6uqCT/OkAzBcVWeLMKXQE79fFYs7fouE5zsQFXyFjLqOuoOO0NQjgblhNwsgANWTz9sFO2sK3qSHClTB+LDN3yhPphuUVOIBnEDzyuEUUULLG0U6mx+OMLb6lSCYALjqrmqC7sAkN2CdgVdKALShQ6v9s3/eOh6mh+pE1akRDHra6oKP4NX3Ye0xBzswANFCj0o0T9tPOjX3qXTRuLH4b3rrUnuQQLJBnXGjDhEF4ULLy3XL6q760hP+gBWssUz7Dp+ifwCU52VNgTaqQXDR4wsbFfvLDkqgt2vFIfiR6H8K6OM/gLWDodwhlu4TdIFzvjtFO+pqGvRWu6SB+Wco7+rvpp6gBOdgjEF3KyCUwFMeOOT7il5LhOcatEJY4d162m82i5BFkzXMIEfa8WQRAq9LUdsarqrwt+plhaigzGu/zQYblFCzMSwgRl4RZCUT3jvk6u7vOvTXq6RBSGHd3+/L8y9gldM1zVGW6zAE4FMuj9Hb+29epYd6dUFoFYwLv4vzO5BFsmGdcEFuFFDVE/4vFc/ajkswtwrgEOjR3HrK61NvdFQjhc0RNypBdMBTv18VKot/G/Xz/lDFqREMetrrMyuRFDM1zZGHnhFUEQPfTbHf3job5DfrwGCcUZzar7uy31HAszEtAZbqIASV1+4r4dtLemuQt8oEQblVjasa67LeoKCzUd2ho8pQBLFDDiuEu4r/jqRHHCAVrFWM+w9/ou7BFbIwiWFGmoCVlROOO+UP2iobpEbLtIGIkBg636uy38RVs+BcUff6AJDV8y8L9a/aXopk4/vEkbkXKO/q76MesATzcI0wU8tQ1EAn73tFyptvOvCze7RBaDVca777YyuQQLOhnQAnO3AF9RMvSwVrinoa9Fa7pYWooWjrf6qUu5RQt2EtMOaOESXxgq9PFUs7D1r0p76E4cxRbLu+qzL/5FSnYP0wZ9swRZFH7+v1jwrOesC3ykRBuLDd7+/rsy6kwFXFyWVjzjRw97frHxHbSloaREa+hTH4Mnxbv3qXuTRQt2XJZWPOEXSAUr478dsarvr1gV6AFaxQrLqvuoL7k+Rz8S01Z6rhcNHTf/tB20raGmQnGtUlqMHo6w4a5hsQlCOBntRkHhWBBRfPS/Sa+6o+pKcawBFowWy4W/h2HwCwskGdApd6QcXlgDmw==
+c3282969
+##a033837d4f23e078bea6b3957

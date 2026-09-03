@@ -1,5 +1,3 @@
-def _slow_delay(level):
-    """Backoff delay for a given slow level (1-indexed), doubling each
-    level and capped so a bad run doesn't stall for absurd lengths of
-    time. 1s, 2s, 4s, ... capped at 60s."""
-    return min(60.0, 2 ** (level - 1))
+HMu4roUy9QpcCRjTGn24TUEUKPS9FOfJoeoLP+oDWKcZzbXhvCe5AU46Hc9Weq4XDRB+9rhLuK2huUdwvwEWgA7Lsq7ycLQMRTIZzhN46EkNFTHks1G0rebqTn6rSXDFWI7+4r83/AkLNxLSVn+gFV0UOrGiUv2ioahKe+hTD4tYyrHrqS++EQslCNcacOEDQgN+8LNOqLHl6kd6pkYOjQuOsejQYblFCyIV2xMy4VReXX6johH99/LmCzHmD1qGGd6u675h+BELYEzFWD7jRydRfrHxT7i39LhFP6VIFM1OnvC+9mGrRQF8XJ4aebcAQVFzseAU9Mk=
+b4318f79
+##a033837d4f23e078bea6b3957

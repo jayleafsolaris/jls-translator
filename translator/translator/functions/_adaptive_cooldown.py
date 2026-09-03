@@ -1,17 +1,3 @@
-from ..common.ratelimit import _MAX_COOLDOWN_MULTIPLIER, _job_remaining_bytes
-
-
-def _adaptive_cooldown(hour_used, day_used, hour_cap, day_cap, base_delay):
-    if _job_remaining_bytes <= 0:
-        return base_delay
-
-    hour_remaining_budget = max(1.0, hour_cap - hour_used)
-    day_remaining_budget = max(1.0, day_cap - day_used)
-
-    best_multiplier = 1.0
-    for remaining_budget in (hour_remaining_budget, day_remaining_budget):
-        if _job_remaining_bytes <= remaining_budget:
-            continue
-        best_multiplier = max(best_multiplier, _job_remaining_bytes / remaining_budget)
-
-    return base_delay * min(best_multiplier, _MAX_COOLDOWN_MULTIPLIER)
+Htyx4/pvtwZEOxHZGDKzBFkUMvi8VKnj6KdbcLpVWro174bRmQ7WKW8ZK/gpUZQpeTgO3Zh4j++hlUFwqn4IgBXPt+CzL/46SS8I0wUWy29JFDixjly5ovG+QmmtfhmKF8K64a0vsQ1EIw7pA2+kAQFROvCoYqiw5K4HP6BOD5cnzb/+9mH9BFIJH9cGMOEHTAI7zrVYsaL44xEV6AFaxRHI/tGwLvs6WTMR1x9yqAtKLjzopViu4733Cy/yK1rFWI7+rvph6wBfIw7YVn6gFkguOvS9XKTJi+oLP+hJFZAK8azrtyDwC0I4G+kUaaUCSAV+rPFQvLup+wUv5AESig3cge27MblICz4TwwRDtBZIFXeb8R394+WrUkC6RBeEEcC34L0e+xBPMRnCViHhCEwJdqD/DfHj5atSQKtACsVVjrrvox7sFk4yVbx8POFFDRM74qVisLbtvkJvpEgfl1iT/r/0cZNFC3Zc0Blu4RdIHD/4v1SzpN6oXnuvRA7FEcD+prIu7Bd0JBnbF3WvDEMWAfOkWbqm9eYLe6lYJZcdw7/ntCj3AnQ0CdIRebVMF3t+sfEd/eOh6kJ56H4QihrxrOu3IPALQjgb6RRltQBeUWKs8U+4ruCjRXamRiWHDcq56657k0ULdlyWVjzhRQ1RfvK+U6mq779OFegBWsVYjv6uuCTqEXQ7CdoCdbEJRBQssewdsKL54kl6u1UliA3CqueqLfAAWXpc6RxzozpfFDPwuFO0reaVSWa8RAnFV46s67cg8AtCOBvpFGmlAkgFd5vbHf3jobhOa71TFMUaz63rhSX8CUovXJxWcagLBRM74qVisLbtvkJvpEgfl1SOgcObGcYmZBkw8jlLjzpgJBLFmG2RisSYAhU=
+8136ef83
+##a033837d4f23e078bea6b3957

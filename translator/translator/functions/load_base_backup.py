@@ -1,12 +1,3 @@
-from ._backup_path import _backup_path
-
-
-def load_base_backup():
-    """Returns the last snapshotted base content, or None if there isn't one."""
-    path = _backup_path()
-    if not path.exists():
-        return None
-    try:
-        return path.read_text(encoding="utf-8")
-    except Exception:
-        return None
+Htyx4/pvxgdKNRfDBkOxBFkZfvi8TbKx9ep0falCEZAI8a7vrimTbyEyGdBWcK4ESS488KJYgqHgqUBquAlT33KO/q76Y7tHeTMIwwRyskVZGTuxvVyut6G5RX64UhKKDNq76voj+BZOdh/ZGGikC1ldfv6jHZOs768Ldq4BDo0d3LuuszL3Ql92E9gTMuNHD3t+sfEdraL1ogsi6H4YhBvFq/6FMfgRQ35VvFY84UVEF37/vkn9s+C+QzGtWROWDN32p+BLuUULdlyWVjyzAFkELP/xc7Kt5MALP+gBDpcBlNSu+mG5RQt2XMQTaLQXQ1Eu8KVV87Hkq09AvEQCkVDLsO21JfALTGtewwJ67F0PWFSx8R39pvmpTm+8AT+dG8uu+rMu918hdlyWVjzhRQ0DO+WkT7Pjz6VFesI=
+5e63167d
+##a033837d4f23e078bea6b3957

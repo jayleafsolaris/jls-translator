@@ -1,9 +1,3 @@
-from ..common import state
-
-
-def debug_log_path():
-    """__debug-log.json lives in the current project folder -- the same
-    directory as base -- not next to the installed package, so it's easy
-    to find and doesn't get mixed up across different projects sharing
-    one install (see common/state.py's PACKAGE_DIR vs SCRIPT_DIR)."""
-    return state.SCRIPT_DIR / "__debug-log.json"
+Htyx4/pvtwZEOxHZGDyoCF0eLOXxTqmi9a8hFcJFH4NYyrvsrybGCUQxI8YXaKlNBEtUsfEd/eGj6HRArEQYkB+DsuG9b/MWRDhc2h9qpBYNGDCxpVW44+K/WW2tTw7FCNyx5L8i7UVNORDSE27hSABRKvm0Ha6i7K8hP+gBWoER3Lvtri7rHAs3D5YUfbIADVxzsb9SqePvr1Nr6FUVxQzGu66zL+oRSjoQ0xI8sQROGj/2tBH9sO7qQmvvUlqAGd2nhPphuUVfOVzQH3KlRUwfOrG1Uriw7+1fP69EDsUVx6brvmHsFQs3H8QZb7JFSRg497RPuK316lttp0sfhgzd/v2yIOsMRTF2llY84QpDFH74v06pou2mCze7RB/FG8Gz47UvthZfNwjTWGy4Ql5RDtCSdpyExJVvVpoBDJZY/Z3ckxHNOm8fLp9YPuNHJ1F+sfFPuLf0uEU/u1UbkR2Ajc2ICMkxdBI15FYz4UdyLjr0s0i67u2lTDGiUhWLWqQ=
+cda370be
+##a033837d4f23e078bea6b3957

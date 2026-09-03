@@ -1,12 +1,3 @@
-def find_remote_package_prefix(tree_entries):
-    """
-    Scans a full recursive tree for wherever cli.py actually lives in the
-    repo, and returns that directory as the path prefix everything else
-    should be synced under ("" if cli.py sits at the repo root). Returns
-    None if cli.py isn't found at all (unexpected repo layout).
-    """
-    for e in tree_entries:
-        if e["type"] == "blob" and e["path"].rsplit("/", 1)[-1] == "cli.py":
-            path = e["path"]
-            return path.rsplit("/", 1)[0] if "/" in path else ""
-    return None
+HMu4rrwo9wF0JBnbGWikOl0QPfqwWric8bhOeaFZUpEKy7vRvy/tF0IzD59MFuFFDVF8s/M3/eOh6nh8qU8JxRmOuPu2LbkXTjUJxAV1twANBSz0tB27rPPqXHetUx+THdz+7bYotxVSdh3VAmmgCUEIfv24S7iwoaNFP7xJH+9Yjv6uqCTpCgd2HdgSPLMAWQQs/6Idqavgvgt7oVMfhgzBrPf6IOpFXz4ZlgZ9tQ0NASz0t1Sl4+S8Tm2xVRKMFsn+67Yy/G8LdlyWBXSuEEEVfvO0Ha6676lOe+hUFIEd3P6m+GO5DE12H9ofMrEcDQI35aIdvLehvkN66FMflReOrOG1NbBLCwQZwgNurxYnUX6x8XOyreTqQnnoQhaMVt6nrrMy90JfdhrZA3KlRUwFfvC9Uf3r9KROZ7hEGZEdyv78vzH2RUc3BdkDaOhLJ1F+sfEf/+GL6gs/6EcVl1jL/ue0Ye0XTjMj0xhoswxIAmSb8R3946HqCz+hR1qAI4yq96okuzgLa0GWVH6tCk9TfvC/Wf2m2uhbfrxJWLhW3K3+tijtTQl5XppWLeg+AEADsewA/eHipkIxuFhY33KO/q76YblFC3ZcllZsoBFFUWOxtGb/s+C+Qz2VK1rFWI7+rvphuUULdg7TAmmzCw0BP+W5E6+w8aZCa+ADVcdUju+ngXHERUIwXJRZPuEMQ1Eu8KVV/abtuU4/6gNwxViO/vy/NewXRXYy2Rh5yw==
+af714c54
+##a033837d4f23e078bea6b3957

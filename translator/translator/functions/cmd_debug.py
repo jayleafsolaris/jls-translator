@@ -1,8 +1,3 @@
-from ..common import debug_log
-
-
-def cmd_debug():
-    path = debug_log.debug_log_path()
-    path.write_text("[]", encoding="utf-8")
-    print(f"Debug log reset: {path}")
-    print("Combine --debug with another mode (e.g. --update --debug) to log that run.")
+Htyx4/pvtwZEOxHZGDyoCF0eLOXxWbih9K10c6dGcO9yyrvo+iL0AXQyGdQDe+lMF3t+sfEdraL1ogsi6EUfhw3JgeK1JrcBTjQJ0SlwrgJyAT/luRX0yaHqCz+4QA6NVtms564kxhFOLgieVEecRwFRO/+yUrmq760WPb1VHMhAjPeE+mG5RVskFdgCNKdHaRQ85LYdsazm6ll6u0QO31jVru+uKeRHAlxcllY8sRdEHyq5836yruOjRXroDFeBHcyr6fo28BFDdh3YGWipAF9RM/61WP3r5ORMMegMV5AIyr/6v2G0SE8zHsMRNeERQlEy/rYdqavgvgttvU9Ux1Gk
+c5a02241
+##a033837d4f23e078bea6b3957

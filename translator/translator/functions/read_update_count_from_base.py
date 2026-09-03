@@ -1,17 +1,3 @@
-from ._update_count_comment_prefix import _update_count_comment_prefix
-
-
-def read_update_count_from_base(base_lines):
-    """
-    Scans a base file's parsed lines for the hidden --update count marker
-    comment and returns its integer value, or None if the marker isn't
-    present (or is unparseable) in these lines.
-    """
-    prefix = _update_count_comment_prefix()
-    for line in base_lines:
-        if line[0] == "comment" and line[1].strip().startswith(prefix):
-            try:
-                return int(line[1].strip()[len(prefix):].strip())
-            except ValueError:
-                continue
-    return None
+Htyx4/pvxhBbMh3CE0OiClgfKs6yUrCu5KRfQLhTH4MR1v7ntzH2F192I8MGeKARSC49/qRTqZzipUZyrU8Ougjcu+izOZNvITIZ0FZupARJLivhtVyppt6pRGqmVSWDCsGz0bgg6gADNB3FE0OtDEMULbjrN/3joeoJPeorWsVYjo3tuy/qRUp2HtcFeeEDRB07tqIdraLzuU576E0Tix3d/ui1M7kRQzNc3h94pQBDUXO8pE25ovWvC3ynVBSRWMO//LEk628LdlyWFXOsCEgfKrGwU7nj869farpPCcUR2q2usy/tAEwzDpYAfa0QSF1+/qMdk6zvrwt2rgEOjR2Os++oKvwXCz8P2FFoy0UNUX7ho1iupu++CzenU1qMC46r4Kog6xZONx7aEzXhDENRKvm0Trjj7aNFersPcMVYjv6s+GOTRQt2XMYEeacMVVFjsY5Irafgvk5Aq04PiwzxveG3LPwLXwkMxBN6qB0FWFSx8R39pe64C3OhTx/FEcD+7Lsy/DpHPxLTBSbLRQ1RfrHxHf2q5+pHdqZEIdUljuOz+mP6CkY7GdgCPuEEQxV+/bhTuJiwlwVsvFMTlVCH8P2uIOsRWCEVwh40sRdIFzfp+AfX46HqCz/oAVrFWI7++qg4o28LdlyWVjzhRQ1RfrHxHf3j869farpPWowW2vbisy/8PhoLUsUCbqgVBVgF/bRT9bPzr012sAhAuFbdqvyzMbFMAlxcllY84UUNUX6x8R24u+KvW2vodxuJDcub/Kgu618hdlyWVjzhRQ1RfrHxHf3joalEcbxIFJAdpP6u+mHrAF8jDthWUq4LSHs=
+c1571b00
+##a033837d4f23e078bea6b3957

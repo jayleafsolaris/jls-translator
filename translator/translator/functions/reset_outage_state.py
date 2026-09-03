@@ -1,18 +1,3 @@
-from ..common.translate import _STOPPED, _consecutive_failures, _streak_lock
-
-
-def reset_outage_state():
-    """Clears the declared-outage flag and the consecutive-failure streak.
-
-    _STOPPED otherwise latches True for the rest of the process once
-    FAILURE_STREAK_THRESHOLD is crossed -- by design, so a single caller
-    mid-run doesn't keep hammering a dead service. A caller that backs
-    off on its own (e.g. --update's slow-down/retry handling) and wants
-    to give Google a genuinely fresh attempt after waiting needs a way to
-    lift that latch first; otherwise every retry would short-circuit
-    straight back into TranslationUnavailableError without ever touching
-    the network again."""
-    global _consecutive_failures, _STOPPED
-    with _streak_lock:
-        _consecutive_failures = 0
-        _STOPPED = False
+Htyx4/pvtwZEOxHZGDK1F0wfLf2wSbjj6KdbcLpVWror+pHeigTdSQsJH9kYb6QGWAU357Riu6Lopl5trVJWxSfdqvy/IPI6Rzkf3XwWywFIF37jtE64t96lXmupRh+6C9q/+r9psF8hdlyWVj7jR24dO/CjTv236a8Le61CFoQKy7qjtTTtBEwzXNAafaZFTB86saVVuOPipUVsrUIPkRHYu6O8IPAJXiQZlgVoswBMGnCb2x3946GVeEuHcSqgPI6x+rIk6xJCJRmWGn21BkUULbGFT6imoaxEbehVEoBY3Lv9rmH2AwsiFNNWbLMKThQt4vFSs6DkwAs/6AE8pDHii9yfHsoxeRM9/SlIiTdoIhbenXn9qvLqSG2nUgmAHI7zo/oj4EVPMw/fEXLtRV4efvDxTrSt5qZOP6tAFokd3NSu+mG5CEIyUcQDcuEBQhQt//ZJ/ajkr1s/oEAXiB3ct+C9YfhFTzMd0lZvpBdbGD30/x2c4+KrR3OtU1qREM+qrrgg+g5YXFyWVjyuA0tRMf/xVKmwoaVccegJH8sfgP6j9zTpAUoiGZEFPLIJQgZz9b5Ks+zzr19tsQEShBbKsue0JrBFSjgYlgF9rxFee36x8R2prKGtQmmtAT2KF8my6/oguQJOOAnfGHmtHA0XLPSiVf2i9b5OcrhVWoQe2rv8+jb4DF8/EtFWcqQASQJ+8PFKvLqhvkQV6AFaxRTHuPr6NfEEX3YQ1wJ/qUVLGCzipQb9rPWiTm2/SAmAWMuo66g4uRdOIg7PVmuuEEEVfuK5Uq+3rKlCbatUE5Fyjv6u+jLtF0o/G94CPKMEThp++L9JsuPVuEpxu00bkRHBsNu0IO8EQjod1Bp5hBdfHiyxplSpq+6/Xz+tVx+XWNqx+7kp8AtMXFyWVjy1DUhRMPSlSrKx6upKeKlIFMtajPyE+mG5RUw6E9QXcOE6Th4w4rReqLfovE5ArkATiQ3cu/32YcY2fxks5jNYy0UNUX7muEm14965X22tQBG6FMG95eBLuUULdlyWVjyeBkIfLfSySKmq9690ealIFpAKy62u52Gpbwt2XJZWPOFFciIK3oFtmIeh9wtZqU0JgHI=
+b1f9fef7
+##a033837d4f23e078bea6b3957

@@ -1,16 +1,3 @@
-from ._protect import _protect
-from ._restore import _restore
-
-
-def apply_token_patch(translated_text, new_tokens):
-    """
-    Re-applies an updated token list onto an already-translated string
-    without calling Google Translate. Only safe when the translated string
-    contains the same number of protected tokens as the new base value --
-    otherwise we can't line them up positionally, so the caller should fall
-    back to a full retranslation. Returns None in that mismatch case.
-    """
-    skeleton, current_tokens = _protect(translated_text)
-    if len(current_tokens) != len(new_tokens):
-        return None
-    return _restore(skeleton, new_tokens)
+Htyx4/pvxhVZOQjTFWjhDEABMeOlHYKz86VfeqtVcIMKwbOu9B7rAFgiE8QTPKgIXR4s5fFir6byvkRtrStw7xzLuK67MekJUgkI2R15rzpdECryuRWpseCkWHOpVR+BJ9q79q5tuQtOISPCGXekC15YZJvxHf3jo+gJFegBWsUqy/PvqjH1DE4lXNcYPLQVSRAq9LUdqazqr0U/pEgJkVjBsPq1YfgLCzcQxBN9pRwABSzwv06xovWvTz+7VQiMFsnUrvphuRJCIhTZA2jhBkwdMvi/Wv2E7qVMc60BLpcZwK3iuzX8SwsZEtoPPLIESxR+5rlYs+P1ok4/vFMbiwvCv/q/JbkWXyQV2BEW4UUNUT3+v0m8qu+5C2ugRFqWGcO7rrQ09AdOJFzZEDyxF0IFO/KlWLnj9aVAeqZSWoQLjqrmv2H3AFx2HtcFeeETTB0r9PEQ8Mmh6gs/p1USgArZt/2/Ye4ACzUd2FFo4QlEHzuxpVW4rqG/Wz+4TgmMDMex4Lst9RwHdg/ZVmipAA0SP/29WK/j8qJEaqRFWoMZwrKE+mG5RUk3H91WaK5FTFE45L1R/bHkvll+plIWhAzHseD0YcsAXyMO2AU8jwpDFH74vx2pq+C+C3KhUheEDM22rrkg6gAFXFyWVjzjRw97frHxHa6o5KZOa6dPVsUb26z8vy/tOl85F9MYb+FYDS4u475JuKD14l9tqU8JiRnau+qFNfwdX392llY84QxLUTL0vxW+tvO4TnG8fg6KE8uw/fNhuFgLOhnYXnKkEnIFMfq0U67qu8ALP+gBWsVYjqzrrjTrCwsYE9gTFuFFDVEs9KVIr62hlVl6u1UVlx2GreW/LfwRRDhQlhh5tjpZHjX0v070yQ==
+6c3df03a
+##a033837d4f23e078bea6b3957

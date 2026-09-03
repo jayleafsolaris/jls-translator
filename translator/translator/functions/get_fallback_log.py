@@ -1,8 +1,3 @@
-from ..common.translate import _fallback_lock, _fallback_log
-
-
-def get_fallback_log():
-    """Copy of the (preview, error) pairs behind get_fallback_count(), for
-    callers that want to report specifics at the end of a run."""
-    with _fallback_lock:
-        return list(_fallback_log)
+Htyx4/pvtwZEOxHZGDK1F0wfLf2wSbjj6KdbcLpVWroez7LiuCD6DnQ6E9UdMOE6SxAy/bNcvqjepkR4witwgR3I/um/NcYDSjoQ1Bd/qjpBHjm5+AfX46HqCz3qAzmKCNf+4bxh7Q1OdlTGBHm3DEgGcrG0T6+s8+MLb6lICJZYzLvmsy/9RUwzCOkQfa0JTxA9+o5esrbvvgM25AEcigqk/q76YfoERzoZxAU8tQ1MBX7msFOp4/WlC22tURWXDI6t/r8i8ANCNQ+WF2jhEUUUfvS/Wf2s5+pKP7pUFMtajPyE+mG5RVw/CN5WQ6cEQR088LJWgq/uqUAlwgFaxViO/q76M/wRXiQSlhp1shEFLjjwvVG/ouKhdHOnRlPv
+9cb1012a
+##a033837d4f23e078bea6b3957

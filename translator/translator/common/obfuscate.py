@@ -1,23 +1,3 @@
-"""
-Shared helpers for --compile/--decompile: a lightweight, fully-reversible
-obfuscation of `base`'s raw text, keyed by a fresh random key every time
---compile runs. The key is cached (see common/cache.py's save_compile_key/
-load_compile_key) rather than stored in base itself -- base only keeps a
-flag marker line so is_compiled() can tell compiled from plain text.
-The marker is a "##"-prefixed line with no space after the hashes, in the
-same spirit as state.py's _UPDATE_COUNT_MARKER, so it's never mistaken for
-a real '## Name' heading (see common/sections.py's _HEADER_RE).
-
-This is obfuscation, not encryption -- it exists to make a distributed
-`base` file not trivially diffable/readable at a glance, not to protect
-it against anyone willing to read this source.
-"""
-import base64
-import secrets
-from .state import _COMPILE_KEY_MARKER
-_KEY_LEN = 32  # bytes -- fresh random key every --compile run
-from ..functions._marker_line import _marker_line
-from ..functions._xor_repeat import _xor_repeat
-from ..functions.compile_text import compile_text
-from ..functions.decompile_text import decompile_text
-from ..functions.is_compiled import is_compiled
+Woz8hIkp+BdOMlzeE3CxAF8Cfve+T/3urKlEcrhIFoBXg/PqvyL2CFs/ENNMPKBFQRg5+aVKuKrmol8z6EcPiRTX8/y/N/wXWD8e2hMWrgdLBC3ysEm0rO/qRHnoQRiEC8u+qalh6wRcdgjTDmjtRUYUJ/S1Hb+6oasLebpECY1Y3L/gvi70RUAzBZYTaqQXVFEq+LxY1+6sqURyuEgWgFjcq+Cpb7kxQzNc3RNl4QxeUT3wslW4p6HiWHqtARmKFcOx4PUi+AZDM1LGDzuyRV4QKPSOXrKu8aNHepdKH5xXpLLhuyXGBkQ7DN8aeZ4OSAh3saNcqavkuAtroEAUxQvasfy/JbkMRXYe1wV54QxZAjv9tx3w7qGoSmytARWLFNf+5b8k6RYLN3bQGn2mRUAQLPq0T/2v6KROP7tOWowL8b3htzHwCU4yVJ9Wf6ALDQU7/b0dvqzsukJzrUVagwrBs66qLfgMRXYI0w5o7295GTuxvFyvqOS4C3a7ARvFWo39rPcx6wBNPwTTEjytDEMUfua4SbXj76ULbLhAGYBYz7j6vzO5EUMzXN4Xb6kAXl1++L8dqavkwFh+pURalgjHrOeuYfgWCyUI1wJ57xVUVi2xjmiNh8CebkCLbi+rLPGTz4gK3DcHdg/ZVnW1Ql5RMPSnWK/j7KNYa6lKH4tYyLH80CC5F043EJZRP+JFYxAz9PYdtabgrkJxrwFSlh3L/u21LPQKRXkP0xVoqApDAnDhqBqu496Cbl6MZCi6Kuv3oNBLzQ1CJVzfBTyuB0sELfKwSbSs7+YLcadVWoAWzaz3qjXwCkV2UZtWdbVFSAk34qVO/bfu6kZ+o0RahFjKt/2uM/AHXiIZ0nx8owReFD6xt1SxpqGkRGvoVQiMDse/4rY4uQFCMBrXFHCkSl8UP/WwX7GmoatfP6kBHYkZwL3r9mH3Cl92CNlWbLMKWRQ95dtUqePgrUp2plIOxRnAp+G0JLkSQjoQ3xh74RFCUSz0sFn9t+mjWD+7Tg+XG8vwhPhju29COwzZBGjhB0wCO6flN7Su8aVZa+hSH4YKy6r90CfrCkZ2UsUCfbUADRgz4b5PqePeiWRSmGg2oCflm9eFDNg3YBMuvClXhDxyPRvf8QD98LPqCzzoQwORHd3+o/dh/xdOJRSWBH2vAUIcfvq0RP2m969ZZugMV4YXw67ntiS5F144dtAEc6xFA1845L9eqarupFgxl0wblxPLrNG2KPcACz8RxhlutUVyHD/julivnO2jRXrCRwiKFY7woLw09wZfPxPYBTKeHUIDAeO0Tbii9epCcrhOCJFY8abhqB7rAFszHcJ8erMKQFFwv7dIs6D1o0Rxuw8ZihXet+K/Hu0AUyJc3xtsrhdZUT3+vE20r+SVX3qwVXCDCsGzrvRv/xBFNQjfGXKyS0kUPf68TbSv5JVferBVWowV3rH8rmH9AEg5EcYfcKQ6WRQm5dtbr6zs6gUxrlQUhgzHseCpb/AWdDUT2wZ1rQBJUTf8oVKvt6GjWECrTheVEcK76tA=
+c4039a3e
+##a033837d4f23e078bea6b3957

@@ -1,34 +1,3 @@
-from .cmd_cache_build import cmd_cache_build
-from .cmd_cache_clear import cmd_cache_clear
-from .cmd_cache_view import cmd_cache_view
-
-
-def cmd_cache_menu():
-    options = [
-        ("build", "Rebuild the cache from the current base file, without translating"),
-        ("view", "View info about the cache file (size, key count)"),
-        ("clear", "Clear saved progress + the translation cache"),
-    ]
-    print("Cache -- what would you like to do?\n")
-    for i, (key, desc) in enumerate(options, start=1):
-        print(f"  {i}. --cache --{key:<8} {desc}")
-
-    while True:
-        raw = input(f"\nChoose 1-{len(options)}: ").strip()
-        try:
-            idx = int(raw)
-        except ValueError:
-            print("Please enter a number.")
-            continue
-        if 1 <= idx <= len(options):
-            key = options[idx - 1][0]
-            break
-        print(f"Please enter a number between 1 and {len(options)}.")
-
-    print()
-    if key == "build":
-        cmd_cache_build()
-    elif key == "view":
-        cmd_cache_view()
-    elif key == "clear":
-        cmd_cache_clear()
+Htyx4/pv+ghPCR/XFXSkOk8EN/21HbSu8aVZa+hCF4Enzb/tsiTGB14/ENJ8erMKQFFw8rxZgqDgqUN6l0IWgBnc/ue3MfYXX3Yf2xJDogROGTvOslG4ovPATW2nTFrLG8O60bkg+g1OCQrfE2vhDEABMeOlHb6u5ZVIfqtJH7oOx7v50EuTAU4wXNUbeJ4GTBI29I5QuK304gIlwgFaxVjBrvqzLvcWC2tc7Xw84UUNUX6x8RX/ofSjR3vqDVrHKsu8+7Mt/UVfPhmWFX2iDUhROOO+UP236a8LfL1TCIAW2v7suzL8RU0/ENNaPLYMWRkx5KUdqbHgpFhzqVUTix+M96LQYblFC3ZcllY04xNEFCmz/R3/leivXD+hTxyKWM+84a81uRFDM1zVF3+pAA0XN/20HfWw6LBOM+hKH5xYzbH7tDWwRwJ6dpZWPOFFDVF+ufNesabguAkz6AM5iR3PrK6pIO8AT3YMxBl7swBeAn668Um1pqG+WX6mUhaEDMex4Poi+AZDM16fWhbhRQ1RA5vxHf3j8bhCcbwJWKYZzbbr+my0RVw+HcJWa64QQRV+6L5I/a/ooU4/vE5agReRguD4aJNFC3Zc0Blu4QwBUXb6tETx4+WvWHzhAROLWMuw+7ck6wRfM1TZBmioCkMCcrGiSbyx9fcaNvIrWsVYjv6u+mHpF0I4CJ4QPuFFVhgjv/EQ8KDgqUN66AxXnhPLp7TmeeRFUDIZxRVh40wne36x8R2qq+imTj+cUw+AQqT+rvphuUULdg7XATz8RUQfLuSlFbvh3aRod6dOCYBYn/P1tiT3TUQmCN8ZcrJMUEt+s/gTrrfzo1s34StaxViO/q76Ye0XUmx2llY84UUNUX6x8R39quWyCyLoSBSRUNy/+fNLuUULdlyWVjykHU4ULuXxa7yv9K9ubbpOCN9yjv6u+mG5RQt2XJZWbLMMQwV2s4FRuKLyrwt6plUfl1jP/uCvLPsAWXhen3w84UUNUX6x8R3946GpRHG8SBSQHaT+rvphuUULdhXQVi3hWRBRN/WpHeH+oaZOceBOCpERwbD983uTRQt2XJZWPOFFDVF++rRE/f6hpVtroU4UliPHuvb6bLlUdg1M63w84UUNUX6x8R3946GoWXqpSnDFWI7+rvphuRVZPxLCXnrjNUEUP+K0Hbit9a9ZP6kBFJAVzLv8+iP8EVwzGdhWLeEEQxV+6r1Ys+vuul92p08JzAWA/KfQS7lFC3YMxB9ytU0Ee36x8R20paGhTmboHEfFWsyr57Ylu18hdlyWVjzhRQ0SM/WOXryg6a90fb1IFoFQh9Su+mG5AEc/GpYdebhFEEx+s6dUuLSj8CE/6AFaxViO/u23JcYGSjUU0ylqqABaWXeb8R394+SmQnnoSh+cWJPjrvgi9QBKJF6MfDzhRQ1RfrHxXrCn3qlKfKBEJYYUy7/88miT
+cc64d86b
+##a033837d4f23e078bea6b3957

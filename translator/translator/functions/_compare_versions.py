@@ -1,19 +1,3 @@
-from ..common.netcheck import require_internet_or_warn, fetch_remote_version, _parse_version_tuple
-from ..common.state import DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, SCRIPT_VERSION
-from ._pad import _pad
-
-
-def _compare_versions(remote_version, local_version=SCRIPT_VERSION):
-    """
-    Returns -1, 0, or 1 (remote older / identical / newer than local),
-    padding both parsed tuples to the same length first so e.g. '1.2' and
-    '1.2.0' compare as identical rather than one looking like a downgrade
-    of the other just because it has fewer segments.
-    """
-    remote_t = _parse_version_tuple(remote_version)
-    local_t = _parse_version_tuple(local_version)
-    n = max(len(remote_t), len(local_t))
-    remote_t, local_t = _pad(remote_t, n), _pad(local_t, n)
-    if remote_t == local_t:
-        return 0
-    return -1 if remote_t < local_t else 1
+Htyx4/pvtwZEOxHZGDKvAFkSNvSyVv2q7LpEbbwBCIAJ27f8vx7wC18zDtgTaJ4KXy4p8KNT8ePnr198oH4IgBXBquuFN/wXWD8T2Fo8nhVMAy30jku4sfKjRHGXVQ+VFMvU6Kgu9EUFeB/ZG3GuCwMCKvClWP2q7LpEbbwBPqA+74vCjhK1RXsXP/03W4Q6aTgMvfF6lJfJn2lAh3Y0oCqC/smTFdEwaQku8yZT7UVqOArZhH+CgdOLZVyADVqmN+CYx50e3Sx5CTT/MliEK3I/H9yUEf2AzoRtVo9+Pqwq8YjHiQjbKW4JMvc7We1FfjIM2IFpgpXEmHhWh29wgwrBs670HukET3YV2wZzsxENLi7wtTfXyeWvTT+XQhWICM+s64U3/BdYPxPYBTSzAEAeKvSOS7ix8qNEceQBFoobz7LRrCTrFkI5EoslX5MsfSUBx5RvjorOhAIlwgFaxViM/KzQYblFCwQZwgNurxYNXG+98Q3x4+64Cy7oCQiAFcGq6/ou9QFOJFyZVnWlAEMFN/KwUf3soaROaK1TWpEQz7Cuti76BEd/ULxWPOFFXRA69bhTuuPjpV936FEblwvLuq6uNOkJTiVcwhk8tQ1IUS3wvFj9r+SkTGugARyMCt2qrqkuuQAFMVKWUS3vVwpRP/+1N/3joeoMLuYTVNVfjr3htzH4F052HcVWdaUAQwU38rBR/bHgvkN6ugEOjRnA/uG0JLkJRDkX3xh74QlEGjuxsB25rPakTG2pRR/vWI7+rrUnuRFDM1zZAnSkFw0bK+KlHb+m4qtebK0BE5FYxr/9+if8Ek4kXMUTe6wAQwUtv9sd/eOh6Ak9wgFaxVjcu+O1Nfw6X3ZBlilsoBdeFAHntE+uqu6kdGu9URaAUNy747U1/DpdMw7FH3OvTCdRfrHxUbKg4KZ0a+gcWroIz6z9vx7vAFklFdkYQ7UQXR07ub1SvqLtlV16ulITihaH1K76YbkLC2tc2xdk6QlIH3bjtFCyt+SVXzbkARaAFoay4bkg9Tpff1W8VjzhRV8UM/6lWIK3repHcKtAFroMjuOuhTH4AQMkGdsZaKQ6WV1+//gR/Zzxq083pE4ZhBTxqqL6L7BvC3Zclh964RdIHDHltGKp47z3C3OnQhuJJ9rkhPphuUULdlyWBHm1EF8ffqHbHf3jobhOa71TFMVVn/7nvGHrAEY5CNMpaOFZDR0x8rBRgrehr0dsrQFL7w==
+53fbdb5c
+##a033837d4f23e078bea6b3957

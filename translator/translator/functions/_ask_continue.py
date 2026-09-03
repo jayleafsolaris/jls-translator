@@ -1,8 +1,3 @@
-def _ask_continue(code):
-    while True:
-        answer = input(f"\nFinished {code}. Continue to next? [Y/n]: ").strip().lower()
-        if answer in ("", "y", "yes"):
-            return True
-        if answer in ("n", "no"):
-            return False
-        print("Please enter y or n.")
+HMu4roUg6g50NRPYAnWvEEhZPf61WPT5i+oLP+hWEowUy/7aqDT8XyF2XJZWPOFFDRAw4qZYr+O86kJxuFQOzR6MguCcKPcMWD4Z0lZnogpJFCO/8X6yrfWjRWqtAQ6KWMC79q5+uT5yeRLrTDzjTAMCKuO4TfXqr6ZEaK1TUsxyjv6u+mG5RQs/GpYXcrISSAN++L8d9eGj5gs9sQNWxVrXu/34aKNvC3ZcllY84UUNUX6xo1iptvOkC0u6VB/vWI7+rvphuUVCMFzXGG+2AF9RN//xFf+to+YLPaZOWMxCpP6u+mG5RQt2XJZWPLMAWQQs//F7vK/yryE/6AFaxViO/v6oKPcRA3Qs2hN9sgANFDDltE/9uqGlWT+mD1jMcg==
+c5591117
+##a033837d4f23e078bea6b3957

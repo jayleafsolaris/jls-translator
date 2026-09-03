@@ -1,3 +1,3 @@
-def join_segments(parts):
-    """Inverse of split_segments() when given (kind, literal_text) pairs."""
-    return "".join(content for _, content in parts)
+HMu4rrAu8At0JRnRG3mvEV5ZLvCjSa7qu8ALP+gBWMda57D4vzPqAAs5GpYFbK0MWS4t9LZQuK31uQM26FYSgBaOueesJPdFAz0V2BIw4QlEBTvjsFGCt+SyXzboURuMCt3wrPhjk0ULdlzEE2i0F0NRfLP/V7Kq7+JIcKZVH4sMjrjhqGHGSQs1E9gCea8RDRgwsaFcr7fy4yE=
+aa5d0fed
+##a033837d4f23e078bea6b3957

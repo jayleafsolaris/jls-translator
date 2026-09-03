@@ -1,12 +1,3 @@
-import hashlib
-
-
-def git_blob_sha(content_bytes):
-    """
-    Computes the same SHA-1 git itself would assign this content as a blob
-    object. Lets local files be compared against a remote tree entry's
-    `sha` directly, without ever downloading that entry's content just to
-    check whether it changed.
-    """
-    header = f"blob {len(content_bytes)}\0".encode("utf-8")
-    return hashlib.sha1(header + content_bytes).hexdigest()
+EcOu4ag1uQ1KJRTaH37LbycVO/fxWrS33qhHcKp+CY0Zhr3htDX8C18JHs8CebJMF3t+sfEd/+GjwAs/6AE5ihXeq/q/MrkRQzNcxRdxpEV+OR+84B26qvXqQmu7RBaDWNmx+7YluQRYJRXRGDy1DUQCfvK+U6mm774LfrsBG8UawrHs0GG5RQs5HtwTf7VLDT075aIdsaziq0c/rkgWgAuOvOv6IvYIWzcO0xI8oAJMGDDipR284/OvRnC8RFqRCsu7rr8v7RdScQ+8VjzhRU0CNvCxHbmq869Ia6RYVsUPx6rmtTTtRU4gGcRWeK4SQx0x8LVUs6ShvkN+vAEfiwzcp6mpYfoKRSIZ2AI8qxBeBX7lvjf946HqSHetQhHFD8a7+rIk60VCIlzVHn2vAkgVcJvxHf3jo+gJFegBWsUQy7/qvzO5WAswXtQac6NFVh07//lesq31r0Vrl0MDkR3d9/OGcbtLTjgf2RJ56UdYBTi86R/0yaHqCz+6RA6QCsD+5rsy8QlCNFLFHn3wTUUUP/W0T/3ooalEcbxEFJEnzKf6vzKwS0MzBNIfe6QWWVl3mw==
+04767b9c
+##a033837d4f23e078bea6b3957

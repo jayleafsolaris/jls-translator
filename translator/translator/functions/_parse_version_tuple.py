@@ -1,15 +1,3 @@
-import re
-
-
-def _parse_version_tuple(version_string):
-    """
-    Best-effort parse of a dotted version string into a tuple of ints for
-    comparison (e.g. '1.5.10' -> (1, 5, 10)), ignoring any non-numeric
-    suffix on a segment (e.g. '2rc1' -> 2) so odd version strings don't
-    blow up the comparison.
-    """
-    parts = []
-    for chunk in version_string.split("."):
-        m = re.match(r"\d+", chunk)
-        parts.append(int(m.group(0)) if m else 0)
-    return tuple(parts)
+EcOu4ag1uRdOXHa8EnmnRXIBP+OiWIK15LhYdqdPJZEN3rLr8jf8F1g/E9gpb7UXRB85uOs3/eOh6gk96itaxViOnOupNbQATTATxAI8sQRfAjuxvlv9oqGuRGu8RB7FDsus/bMu90VYIg7fGHvhDEMFMbGwHam28aZOP6dHWowW2q2uvC7rbwt2XJYVc6wVTAM34r5T/evk5Ewx6AZLy02A7779YbRbC35NmlYp7UUcQXe4/R20pO+lWXamRlqEFtf+4LUvtAteOxnEH3/LRQ1RfuKkW7uq+epEcehAWpYdybPrtDW5TU54G5hWO/MXTkB5sfwD/fGo6lhw6E4egVjYu/ypKPYLCyUIxB9yphYNFTH/9knX46HqC32kTg3FDd7++rIkuQZEOwzXBHWyCkNfVLHxHf3ho+ghP+gBWpUZ3Kr9+ny5PnZcXJZWPKcKX1E9+aRTtuPopAtprVMJjBfAgf2uM/ALTHgPxhp1tU0PX3y46zf946HqCz/oARfFRY6s6/Qs+BFIPlTEVEClTg9dfvK5SLOoqMALP+gBWsVYjq7vqDXqS0omDNMYeOkMQwV2/P9ar6z0ugMv4QhajB6Os66/LeoAC2ZVvFY84UVfFCrko1P9t/S6R3rgURuXDN33hA==
+0a1b0461
+##a033837d4f23e078bea6b3957

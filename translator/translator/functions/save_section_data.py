@@ -1,13 +1,3 @@
-import json
-from ._node_to_dict import _node_to_dict
-from ._section_data_path import _section_data_path
-
-
-def save_section_data(root_children, markers):
-    """Persists the tree shape (headings, levels, nesting, blank-line positions) and
-    the --update marker line(s), for --merge to read back."""
-    data = {
-        "tree": [_node_to_dict(n) for n in root_children],
-        "markers": markers,
-    }
-    _section_data_path().write_text(json.dumps(data, indent=2), encoding="utf-8")
+EcOu4ag1uQ9YORK8EG6uCA1fAf++Wbic9aV0e6FCDsURw67hqDW5OkU5GNMpaK46SRg95dtbr6zs6gVAu0QZkRHBsNG+IO0EdCYdwh48qAhdHizl8WKupuK+QnCmfh6EDM+B/rs18W8hXBjTEDyyBFsUAeK0Xqmq7qR0e6lVG80KwbH6hSLxDEcyDtMYMOEITAM19KNO9PmL6gs/6ANYxyjLrP2zMu0WCyIU01ZoswBIUS35sE2446miTn6sSBSCC4L+4r83/AlYelzYE2+1DEMWcrGzUbyt6udHdqZEWpUX3bf6sy73FgJ2HdgSFuFFDVEq+bQd8O70uk9+vERaiBncteuoYfUMRTNUxV8w4QNCA368/FC4seavC2unAQiAGcr+7Lsi8ksJdF68VjzhRUkQKvDxAP24i+oLP+gBWsVYjKr8vyS7XwsNI9gZeKQ6WR4B9bheqevv4wt5p1Nai1jHsK6oLvYRdDUU3xp4swBDLHKb8R3946HqCz/qTBuXE8us/fh7uQhKJBfTBG/tbw1RfrGsN/3joep0bK1CDowXwIHquzX4Ols3CN5eNe8SXxgq9I5JuLv14kFsp09UgQ3Drv3yJfgRSnpc3xh4pAtZTGy4/R24reKlT3amRkfHDdq4o+JjsG8=
+b320d5e4
+##a033837d4f23e078bea6b3957

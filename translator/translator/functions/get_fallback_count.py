@@ -1,9 +1,3 @@
-from ..common.translate import _fallback_count
-
-
-def get_fallback_count():
-    """Total number of values that fell back to untranslated text (real
-    outages aside) across the whole process so far. Exposed so callers
-    like --update can fold this into their own live progress display
-    instead of translate_many announcing it mid-run itself."""
-    return _fallback_count
+Htyx4/pvtwZEOxHZGDK1F0wfLf2wSbjj6KdbcLpVWroez7LiuCD6DnQ1E8MYaMtvJxU79/FauLferEpzpEMbhhPxveGvL+1NAmx2llY84UcPUwr+pVyx4++/Rn2tU1qKHo6o77Y0/BYLIhTXAjynAEEdfvOwXrbj9aULaqZVCIQW3bLvriT9RV8zBMJWNLMATB1UsfEd/az0vkp4rVJahAvHuuvzYfgGWTkPxVZoqQANBjb+vVj9s/OlSHq7UlqWF46476hvuSBTJhPFE3jhFkJRPfC9Ubix8sALP+gBFowTy/6j9zTpAUoiGZYVfa9FSx4y9fFJtary6kJxvE5akRDLt/z6Lu4LCzoVwBM8sRdCFiz0ok79p+i5W3OpWHDFWI7+57Qy7QBKMlzZEDy1F0wfLf2wSbic7KtFZuhAFIsX27Dtsy/+RUIiXNsfeOwXWB9++KVOuK/n5Ak96itaxViOrOuuNOsLCwka1xpwowROGgHyvkizt4s=
+649c0920
+##a033837d4f23e078bea6b3957

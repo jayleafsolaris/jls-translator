@@ -1,26 +1,3 @@
-from ..common import state, config_store
-from ..common.config_store import load_config_value, save_config_value, get_request_delay, config_dir_state
-from ..common.state import DEFAULTS, LANGUAGES, LANGUAGE_NAMES, PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME
-
-
-def cmd_config_delay():
-    current = get_request_delay()
-    print(f"Current setting: {current}s between API requests.")
-    print("Lowering this speeds up translation but increases the risk of getting throttled (429 errors).")
-    print(f"Default is {DEFAULTS['request_delay']}.")
-
-    while True:
-        raw = input(f"\nEnter new delay in seconds [{current}]: ").strip()
-        if not raw:
-            return
-        try:
-            val = float(raw)
-            if val < 0:
-                print("Delay cannot be negative.")
-                continue
-            save_config_value("delay", val)
-            config_store._CONFIG_DELAY = val
-            print(f"\nSaved: delay = {val}s")
-            break
-        except ValueError:
-            print("Please enter a valid number (e.g. 0.1, 0.05).")
+Htyx4/pvtwZEOxHZGDyoCF0eLOXxTqmi9a8HP6tOFIMRyYH9ri7rACEwDtkbPO9LTh4z/L5T86DupE12r34JkRfcu66zLOkKWSJc2hl9pTpOHjD3uFqCteCmXnrkAQmEDsuB7bUv/wxMCQrXGmmkSQ0WO+WOT7iy9K9Ya5dFH4kZ1/KuuS73A0IxI9Ifbp4WWRAq9Ntbr6zs6gUxq04XiBfA8P2uIO0ACz8RxhlutUVpNBjQhHGJkK3qZ16GZi+kP+uNovoN2CtsAz3xM0OPJGA0Db3xbZyAyotsWpdlM7dUjp3BlAfQInQSNeQpSog2ZDMS1I5znI7E5gtch288rD/xmseIHtEsbxI5+ClSgChoe1SbtVi74+KnT0CrThSDEcmB6r8t+BwDf0a8VjzhRU4ELOO0U6njvOpMerx+CIAJ27v9rh79AEc3BZ5fFuFFDVEu47hTqevn6GhqulMfiwyOreuuNfALTGxczRVpsxdIHyrsoh2/pvW9TnqmATu1MY6s66s0/BZfJVKUXxbhRQ1RLuO4U6nro4ZEaK1TE4sfjqrmszK5FlszGdIFPLQVDQUs8L9OsaL1o0Rx6EMPkVjHsO2oJPgWTiVcwh554RdEAjWxvlv9pOS+X3amRlqRENyx+q4t/AELfkiETzykF18eLOL4E//qi+oLP+hRCIwW2vbo+AX8A0ojEMJWdbJFVjUb15BokZfSkQxtrVAPgAvageq/LfgcDAsBmFQ1y28NUX6xplW0r+Tqf229REDvWI7+rvphuUVZNwuWSzyoC10EKrm3H4GtxKRferoBFIAPjrrrtiDgRUI4XMUTf64LSQJ+yqpeqLHzr0VrtXxAxVqH8P2uM/AVA392llY84UUNUX74tx2zrPXqWX6/G3DFWI7+rvphuUULdlzEE2i0F0N7frHxHf3joepfbbEbcMVYjv6u+mG5RQt2XMAXcOFYDRcy/rBJ9bHgvQIV6AFaxViO/q76YblFQjBcwBdw4VkNQWSb8R3946HqCz/oAVrFWI7+rqoz8Atffl7yE3CgHA0SP/+/Uqnj468Lca1GG5ER2Lug+GiTRQt2XJZWPOFFDVF+sfEd/aDupF92plQf71iO/q76YblFC3ZclgV9twByEjH/t1S6nPerR2qtCViBHcK/9/htuRNKOlW8VjzhRQ1RfrHxHf3j4qVFeaFGJZYMwazr9B7aKmUQNfEpWIQpbCh+rPFLvK+L6gs/6AFaxViO/q76MesMRSJU0FRArzZMBzv16x25pu2rUj/1AQGTGcKj/fhok0ULdlyWVjzhRQ1RfvOjWLyoi+oLP+gBWsVYy6btvzHtRX03EMMTWbMXQgNkm/Ed/eOh6gs/6AFaxQjct+Cuabs1RzMdxRM8pAtZFCyxsB2rou2jTz+mVBeHHdz+pr9v/ksLZlKHWjzxSx1Ed7/zFNc=
+37734837
+##a033837d4f23e078bea6b3957

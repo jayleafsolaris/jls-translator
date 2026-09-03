@@ -1,7 +1,3 @@
-"""--delete: delete every generated .lang file (base is kept)."""
-import sys
-import time
-from ..common import state
-from ..common.state import DEFAULTS
-from ..common.progress import load_progress, save_progress, clear_progress, format_duration, _ask_continue
-from ..functions.cmd_delete import cmd_delete
+Woz8o/cl/AlOIhmMVnikCUgFO7G0S7ix+OpMeqZECIQMy7qu9C34C0x2Gt8aeeFNTxAt9PFUruPqr1tr4Q9Yx1qkt+OqLusRCyUFxXx1rBVCAyqxpVSwpousWXClAVTLG8Gz47UvuQxGJhPEAjyyEUwFO5u3T7KuoeQFfKdMF4oWgK36uzX8RUI7DNkEaOEhaDcfxJ1pjsnnuERy6A9UhhfDs+G0b+kXRDEO0wVv4QxAATHjpR2xrOCudG+6Th2XHd2tovoy+BNOCQzEGXuzAF4CcrGyUbii85VbbadGCIAL3fKuvC7rCEoiI9IDbqARRB4wvfFivLDqlUhwplUTiw3L1OioLvRFBXgawxh/tQxCHy2/slC5nOWvR3q8RFqMFd6x/K5h+ghPCRjTGnm1ACc=
+e01bb92f
+##a033837d4f23e078bea6b3957

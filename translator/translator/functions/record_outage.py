@@ -1,20 +1,3 @@
-from ..common.ratelimit import _LOCK
-from ._load_state import _load_state
-from ._save_state import _save_state
-
-
-def record_outage():
-    """
-    Call when a genuine translation outage is detected (translate.py's
-    FAILURE_STREAK_THRESHOLD tripping) -- real evidence Google itself
-    pushed back, not just that a run hit our own self-imposed ceiling
-    (hitting our own ceiling is expected under real load and isn't
-    penalized -- see _adjust_cap()). Marks both windows currently in
-    progress so their next reroll shrinks the learned cap instead of
-    growing it.
-    """
-    with _LOCK:
-        data = _load_state()
-        data["hour_window_bad"] = True
-        data["day_window_bad"] = True
-        _save_state(data)
+Htyx4/pvtwZEOxHZGDKzBFkUMvi8VKnj6KdbcLpVWro04Z3F0CfrCkZ2Uukac6ABcgIq8KVY/arsukRtvAEliRfPutGpNfgRTlwaxBlx4UtyAj/ntGKut+C+Tj+hTAqKCtr+0akg7wB0JQjXAnnLbycVO/fxT7ig7rhPQKdUDoQfy/an4Eu5RQt2XpRUFuFFDVEd8L1R/bTpr0U/qQEdgBbbt+C/Ye0XSjgP2hdoqApDUTHkpVy6pqGjWD+sRA6AG9q76vpp7RdKOA/aF2ikS10IeeLbHf3joYxqVoR0KKAn/YrcnwDSOn8eLvMlVI4paVEq47hNrarvrQI/5Qxalx3Psq6/N/ABTjgf01ZbrgpKHTuxuEmupu2sIT/oAVqVDd22675h+wRIPVCWGHO1RUcELeXxSbWi9epKP7pUFMUQx6qutTTrRUQhEpYFea0DABgz4b5OuKehqU52pEgUgnKO/q76afEMXyIV2BE8rhBfUTHmvx2+puimQnGvAROWWMum/r8i7QBPdgnYEnmzRV8UP/3xUbKi5epKcawBE5YWiaqE+mG5RVszEtcadbsASVFzvPFOuKahlUp7olQJkSfNv/7yaLBLCxsdxB1v4QdCBTaxplSzp+69WD+rVAiXHcCq4qNh8AshdlyWVmyzCkoDO+KiHa6sob5DeqFTWosd1qquqCTrCkc6XMUebqgLRgJ+5blY/a/kq1lxrUVahhne/ue0Mu0ASjJc2RAW4UUNUTnjvkq0rebqQmvmK1rFWI78rPhLuUULdgvfAnThOmE+HdrrN/3joeoLP+gBHoQMz/6z+h71CkoyI8UCfbUABVhUsfEd/eOh6gt7qVUbvlrGsfuoHu4MRTITwSl+oAEPLH6s8WmvtuTACz/oAVrFWI66764gwkdPNwXpAXWvAUIGAfOwWf+eofcLS7pUH+9Yjv6u+mG5RXQlHcATQ7IRTAU7ubVcqaKowA==
+7ae6b8e4
+##a033837d4f23e078bea6b3957

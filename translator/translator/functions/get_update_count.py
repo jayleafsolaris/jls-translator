@@ -1,32 +1,3 @@
-from ..common import state
-from ..common.lang_io import parse_lang, write_lang, strip_update_count_markers, _update_count_comment_prefix, read_update_count_from_base
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-from .load_cache import load_cache
-from .write_update_count import write_update_count
-
-
-def get_update_count():
-    """
-    Resolves the current --update count for this base file. Prefers the
-    marker comment stored at the bottom of base; if it's missing there but
-    still present in the cache, the cached count is re-added to base right
-    away (self-healing) so the two stay in sync, and that recovered value
-    is returned. Returns 0 if neither has a record of it.
-    """
-    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
-    base_lines = parse_lang(base_path)
-    from_base = read_update_count_from_base(base_lines)
-    if from_base is not None:
-        return from_base
-
-    cache = load_cache()
-    cached_raw = cache.get(_UPDATE_COUNT_MARKER)
-    if cached_raw is not None:
-        try:
-            count = int(cached_raw)
-        except (TypeError, ValueError):
-            count = 0
-        write_update_count(count)  # re-add the missing marker to base
-        return count
-
-    return 0
+Htyx4/pvtwZEOxHZGDyoCF0eLOXxTqmi9a8hebpOF8VWgL3htyz2CwU6HdgRQ6gKDRgz4b5PqePxq1lsrX4WhBbJ8q6tM/ARTgkQ1xh77UVeBSz4oWKos+WrX3qXQhWQFtqB47sz8gBZJVCWKWmxAUwFO86yUqit9ZVIcKVMH4sM8a78vyfwHQd2DtMXeJ4QXRU/5bRivqz0pF9ArlMViCfMv/2/S/8XRDtcmFh/rghAHjC/okm8t+TqQnK4TgiRWP6fzZEA3iB0EjXkWjyFIGswC92FbvHjzYtlWJ1gPaArgv7RjxHdJH8TI/U5SY8xcjwfw5p4j++hlWhQhXEzqT3xlcuDHtQkeR055Hx6swpAUXD9vly5nOKrSHetAROICMGs+vot9gRPCR/XFXSkb0sDMfzxE6qx6L5OQL1RHoQMy4HttTT3EQs/EcYZbrVFWgM35bRiqLPlq196l0IVkBba1ITQJfwDCzEZwilpsQFMBTvOslKorfXiAiXCAVrFWIz8rNBhuUULBBnFGXC3AF5RKvm0Hb6287hOcbwBV8gN3rrvriS5BkQjEsJWeq4XDQU2+KIdv6Lyrwt5oU0fy1j+rOu8JOsWCyIU03w84UUNHD/juliv4+KlRnKtTw7FC9qx/L8luQRfdgjeEzyjClkFMfzxUrvj46tYevMBE4NYx6qpqWH0DFglFdgRPLUNSAM7sbNIqcmh6gs/u1UTiRSOrvy/MvwLX3YV2FZoqQANEj/yuVjx4/WiTj+rQBmNHcr+7bU09xELPw+WBHnsBEkVO/XxSbLj46tYeuhTE4IQ2tSu+mG5BFw3BZZeb6QJS1w29LBRtK3m4wtspwEOjR2Oqvm1YeoRSi9c3xg8shxDEnKxsFO54/WiSmvoUx+GF9i7/L8luRNKOgnTfDzhRQ0YLbGjWKm286ROe+YBKIAM26zgqWGpRUIwXNgTdbUNSAN++bBO/aKhuE58p1MexRfI/ueub5NFC3ZclFQ+y0UNUX7zsE64nPGrX3foHFqWDM+q6/QS2jdiBijpMlWTRQJRGtSXfIiP1ZlwPapACYAnwr/gvWPEbwt2XJYUfbIAch03/7RO/f6hukptu0QliRnAuaa4IOoAdCYdwh41y0UNUX73o1KwnOOrWHroHFqXHc+60a8x/QRfMyPVGWmvEXIXLP68Yr+i8q8DfalSH7oUx7DrqWiTRQt2XN8QPKcXQhwB87BOuOPouQtxp1VaqxfAu7TQYblFC3ZcllZupBFYAzCxt0+yrt6oSmytK3DFWI7+7bsi8QALa1zaGX2lOk4QPfm0FfTJoeoLP6tAGY0dyoH8uza5WAs1HdUeee8CSAV2zoRtmYLVj3Rch3Q0sSfjn9yRBMtMIXZcllZ1p0VOED35tFmCseC9C3a7ARSKDI6Q4bQko28LdlyWVjzhRVkDJ6vbHf3joeoLP+gBWsVYzbH7tDW5WAs/EsJef6AGRRQ6zqNcquqL6gs/6AFaxVjLpu2/Me1FAwIFxhNZsxdCA3Kxh1yxtuSPWW2nU1Pfco7+rvphuUULdlyWVn+uEEMFfqzxDdfjoeoLP+gBWpIKx6rrhTTpAUoiGekVc7QLWVk9/qRTqeqh6gg/ukRXhBzK/vqyJLkIQiUP3xh74QhMAzX0ox2prKGoSmytK1rFWI7+rvph6wBfIw7YVn+uEEMFVJvxHf3j869farpPWtVy
+b0be57ab
+##a033837d4f23e078bea6b3957

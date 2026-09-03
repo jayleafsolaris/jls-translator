@@ -1,11 +1,3 @@
-import base64
-from ..common.github_api import _API_ROOT
-from ._request import _request
-
-
-def create_blob(content_bytes):
-    data = _request("POST", f"{_API_ROOT}/git/blobs", json={
-        "content": base64.b64encode(content_bytes).decode("ascii"),
-        "encoding": "base64",
-    })
-    return data["sha"]
+EcOu4ag1uQdKJRmAQhanF0Icfr//XrKu7KVFMa9IDo0NzIHvqii5DEYmE8QCPJ4kfTgBw55yicnnuERy6A8llx3fq+upNbkMRiYTxAI8nhdIACv0oknXyYuuTnnoQgiAGdq70bgt9gcDNRPYAnmvEXITJ+W0TvT5i+oLP+hFG5EZjuOuhTP8FF4zD8JePpEqfiV8vfFb/7jei3tWl3M1qizT8emzNbYHRzkexVQw4Q9eHjCsqjf946HqCz/oAViGF8Cq67Q1u18LNB3FEyr1S09HavS/XrKn5OJIcKZVH4sM8bz3riTqTAUyGdUZeKRNDxAt8rhU/+qtwAs/6AFaxViO/Ou0IvYBQjgblEw84wdMAjun5R/xyaHqCz+1CHDFWI7+/L817BdFdhjXAn2aR14ZP7OMNw==
+7bd808c0
+##a033837d4f23e078bea6b3957

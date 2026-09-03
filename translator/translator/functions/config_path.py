@@ -1,5 +1,3 @@
-from .current_config_dir import current_config_dir
-
-
-def config_path(name):
-    return current_config_dir() / f"{name}.config"
+Htyx4/pv+hBZJBnYAkOiCkMXN/aOWbSxoaNGb6dTDsUb26z8vy/tOkg5EtAfe54BRANUm9tZuKWhqURxrkgdugjPqubyL/gITn9GvFY84UVfFCrko1P9oPS4WXqmVSWGF8C4570e/QxZflWWWTynR1YfP/y0QPOg7qRNdq8DcA==
+9f348924
+##a033837d4f23e078bea6b3957

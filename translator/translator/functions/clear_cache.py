@@ -1,9 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-
-
-def clear_cache():
-    path = PACKAGE_DIR / DEFAULTS["cache_file"]
-    if path.exists():
-        path.unlink()
-        return True
-    return False
+Htyx4/pvtwZEOxHZGDKyEUwFO7G4UK2s874LT4liMaQ/64HKkxO1RW8TOvcjUJU2AVES0J96iILGj3gz6H4vtTzvisuFAtYwZQIj+zdOiiB/XX7OknKQk8iGbkCDZCO6Ne+MxZ8Tk28hMhnQVn+tAEwDAfKwXrWmqeMRFegBWsUIz6rm+ny5NWoVN/cxWZ4hZCN+vvF5mIXAn2dLm3pYhhnNtuuFJ/AJTnQhvFY84UVEF37hsEm17eSyQmy8UlLMQqT+rvphuUULdgzXAnTvEEMdN/+6FfTJoeoLP+gBWsUKy6r7qC+5MVkjGbxWPOFFXxQq5KNT/YXgplh6wg==
+98ad6df5
+##a033837d4f23e078bea6b3957

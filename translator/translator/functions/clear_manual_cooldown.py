@@ -1,10 +1,3 @@
-from ..common.ratelimit import _LOCK
-from ._load_state import _load_state
-from ._save_state import _save_state
-
-
-def clear_manual_cooldown():
-    with _LOCK:
-        data = _load_state()
-        data["manual_cooldown_until"] = None
-        _save_state(data)
+Htyx4/pvtwZEOxHZGDKzBFkUMvi8VKnj6KdbcLpVWro04Z3F0CfrCkZ2Uukac6ABcgIq8KVY/arsukRtvAEliRfPutGpNfgRTlwaxBlx4UtyAj/ntGKut+C+Tj+hTAqKCtr+0akg7wB0JQjXAnnLbycVO/fxXrGm4Lh0cqlPD4QU8b3htS39Clw4VJ9MFuFFDVEp+KVV/ZzNhWhU8itaxViO/q76Yf0EXzdci1ZDrQpMFQHipVyppqnjIT/oAVrFWI7+6rs1+D4JOx3YA32tOk4eMf21Uqqt3r9Fa6FNWLhYk/7AtS/8bwt2XJZWPOFFcgI/57Rirrfgvk43rEAOhFGk
+fb6f5db4
+##a033837d4f23e078bea6b3957

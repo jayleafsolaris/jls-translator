@@ -1,19 +1,3 @@
-import requests
-from ..common.github_api import GitHubApiError, GitHubAuthError
-from ._headers import _headers
-
-
-def _request(method, url, **kwargs):
-    try:
-        resp = requests.request(method, url, headers=_headers(), timeout=15, **kwargs)
-    except requests.RequestException as e:
-        raise GitHubApiError(str(e))
-
-    # 404 is included here because GitHub returns 404 (not 403) for a
-    # private repo you can't see, to avoid confirming it exists -- from
-    # the caller's perspective that's still "not authorized".
-    if resp.status_code in (401, 403, 404):
-        raise GitHubAuthError()
-    if not resp.ok:
-        raise GitHubApiError(f"GitHub API returned {resp.status_code}: {resp.text[:200]}")
-    return resp.json() if resp.content else {}
+EcOu4ag1uRdOJwnTBWiyb0sDMfzxE/Og7qdGcKYPHYwMxqvshSDpDAs/EcYZbrVFahgq2aRfnLPoj1ltp1NWxT/HqsavI9gQXz45xARzs29LAzH88ROCq+SrT3q6UlqMFd6x/K5hxg1ONxjTBG/LbycVO/fxYq+m8L9ObLwJF4AMxrHq9mHsF0d6XJxcd7YEXxYtuOs3/eOh6l9tsRtwxViO/q76YbkXTiUMlks8swBcBDvipU7zseS7Xnq7VVKIHdq24b5tuRBZOlCWHnmgAUgDLayOVbii5a9ZbOAIVsUMx7PrtTTtWBpjUJZcNqoSTAM54vg3/eOh6k5nq0QKkVjcu/+vJOoRWHgu0wdppBZZNCbytE2pqu6kC367AR/fco7+rvphuUULJB3fBXnhIkQFFuSzfK2qxLhZcLoJCZEKhrun80uTRQt2XJVWKPFRDRgtsbhTvq/0rk576Ekflx2OvOu5IOwWTnY73wJUtAcNAzvlpE+zsKH+GyvoCRSKDI7qvulouQNEJFzXfDzhRQ1SfuGjVKui9a8Lba1RFcUBwauuuSD3Ql92D9MTMOERQlE/575UuePipUV5oVMXjBbJ/ueuYfwdQiUIxVYx7EVLAzH82x3946HpC2ugRFqGGcKy66hm6kVbMw7FBnmiEUQHO7GlVby3prkLbLxIFolYjLDhrmH4EF8+E8QfZqQBD19UsfEd/arn6ll6u1FUlgzPqvupHvoKTzNc3xg86VEdQHKx5Q3u76H+GyvhG3DFWI7+rvphuRdKPw/TVluoEWUEPNCkSbWG87hEbeAIcMVYjv7nvGH3Cl92DtMFbO8KRktUsfEd/eOh6gttqUgJgFjpt/qSNPskWz85xARzs01LUxn4pXWooaGLe1boUx+RDdyw675h4hdOJQyYBWigEVgCAfK+Wbi+u+pQba1SCssMy6b6gXurVRsLAZRfFuFFDVEs9KVIr62huE5suA8QlhfA9qf6KP9FWTMPxlh/rgtZFDDl8VixsOTqUGLC
+de11e0fb
+##a033837d4f23e078bea6b3957

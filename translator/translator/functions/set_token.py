@@ -1,12 +1,3 @@
-from ..common.config_store import load_config_value, save_config_value, current_config_dir
-import os
-from ..common.github_api import _TOKEN_CONFIG_NAME
-
-
-def set_token(token):
-    save_config_value(_TOKEN_CONFIG_NAME, token)
-    path = current_config_dir() / f"{_TOKEN_CONFIG_NAME}.config"
-    try:
-        os.chmod(path, 0o600)  # best-effort -- not every filesystem (e.g. iOS/a-Shell) supports this
-    except Exception:
-        pass
+Htyx4/pvtwZEOxHZGDKiCkMXN/aOTqms868LdqVRFZcMjrLhuyXGBkQ4Gt8RQ7cEQQQ7vfFOvLXklUhwpkcTgifYv+KvJLVFSCMOxBNytTpOHjD3uFqCp+i4IXalURWXDI6x/dAn6wpGdlKYFXOsCEIfcPa4SbW245VKb6EBE4gIwaz6+h7NKmATMuk1U48jZDYB35BwmMmLwE96rgEJgAzxquGxJPdNXzkX0xg1+28NUX6xolyrpt6pRHGuSB26Ds+y+79pxjFkHTn4KV+OK2s4Gc6ffJCGrepfcKNEFMxyjv6u+jH4EUN2QZYVabMXSB8qzrJSs6XorXR7oVNSzFiB/uj4OsYxZB05+ClfjitrOBnOn3yQhvzkSHCmRxOCWqT+rvph7RdSbHaWVjzhRQ1Rfv6iE76r7KVPN7hADo1Uju7h7HGpTAt2X5YUebIRABQ4975PqeOs5wtxp1VagA7LrPf6J/AJTiUFxQJ5rEUFFHD2/x20jNLlSjKbSR+JFIf+/a8x6QpZIg+WAnSoFidRfrHxWKWg5LpfP41ZGYAI2rfhtHuTRQt2XJZWPOEVTAItmw==
+4e6090a3
+##a033837d4f23e078bea6b3957

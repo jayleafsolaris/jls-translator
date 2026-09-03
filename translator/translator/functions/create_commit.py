@@ -1,11 +1,3 @@
-from ..common.github_api import _API_ROOT
-from ._request import _request
-
-
-def create_commit(message, tree_sha, parent_sha):
-    data = _request("POST", f"{_API_ROOT}/git/commits", json={
-        "message": message,
-        "tree": tree_sha,
-        "parents": [parent_sha],
-    })
-    return data["sha"]
+Htyx4/pvtwZEOxHZGDKmDFkZK/OOXK2qoaNGb6dTDsUn747HhRPWKn9cGsQZceFLcgM74KRYrreho0Zvp1MOxSfcu/+vJOoRIVx20hN64QZfFD/ltGK+rOynQmvgTB+WC8+56/Zh7RdOMyPFHn3tRV0QLPS/SYKw6asCJcIBWsVYyr/6u2GkRXQkGccDebIRBVMO3oJp/++hrAlkl2AqrCf8kcGOPLYCQiJT1RlxrAxZAny98VeurO/3UBXoAVrFWI7+rvgs/BZYNxvTVCbhCEgCLfC2WPHJoeoLP+gBWsVa2qzrv2OjRV8kGdMpb6kEAXt+sfEd/eOh6glvqVMfiwzd/LT6GukEWTMSwilvqQRwXVSx8R39vqjACz/oAQiADNus4Pol+BFKDV7FHn3jOCc=
+50e67f2b
+##a033837d4f23e078bea6b3957

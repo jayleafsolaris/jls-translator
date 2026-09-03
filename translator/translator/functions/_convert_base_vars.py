@@ -1,14 +1,3 @@
-import re
-
-
-def _convert_base_vars(lines):
-    """Converts user-friendly {1} syntax in base to Bedrock's %1$s."""
-    out = []
-    for line in lines:
-        if line[0] == "entry":
-            # Replaces {1} -> %1$s, {2} -> %2$s, etc.
-            new_val = re.sub(r"\{(\d+)\}", r"%\1$s", line[2])
-            out.append(("entry", line[1], new_val, line[3]))
-        else:
-            out.append(line)
-    return out
+EcOu4ag1uRdOXHa8EnmnRXISMf+nWK+33qhKbK1+DIQK3fbisy/8FgJsdpZWPOFHD1Md/r9LuLH1uQtqu0QIyB7ct+u0JfUcCy1Ny1ZvuAtZECaxuFP9oeC5Tj+8TlqnHcqs4bkqvhYLc02SBTLjRw97frHxHbK29eoWP5N8cMVYjv7otTO5CUI4GZYfcuEJRB874us3/eOh6gs/6AETg1jCt+C/Gqk4C2tBllR5rxFfCHyr2x3946HqCz/oAVrFWI3+3L8x9QRIMw+WDS28RQBPfrTgGa7vobEZYugMRMVdnPr99mH8EUh4dpZWPOFFDVF+sfEd/a3kvXRpqU1a2Fjcu6CpNPtNWXQgzV5ApU4ELSOz/R2v4aSWGju7A1bFFMew64FzxEwhdlyWVjzhRQ1RfrHxUqi3r6tbb61PHs1QjLvgrjPgRwd2EN8YeZpUcF1+/7RKgrXgpgc/pEgUgCOdg6fzS7lFC3ZcllY8pAleFGSb8R3946HqCz/oAVrFF9uqoLsx6QBFMlTaH3KkTCdRfrHxT7i39LhFP6dUDu8=
+3d41c1d5
+##a033837d4f23e078bea6b3957

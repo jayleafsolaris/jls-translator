@@ -1,7 +1,3 @@
-"""--view: list base + .lang files in this folder, with sizes and key counts."""
-from ..common import state
-from ..common.state import DEFAULTS
-from ..common.lang_io import parse_lang, entries_dict
-from ..common.progress import _human_size
-from ..common.cache import get_update_count
-from ..functions.cmd_view import cmd_view
+Woz8o/c38ABcbFzaH2+1RU8QLfTxFv3t7atFeOhHE4kd3f7ntGHtDUIlXNAZcKUAX11+5rhJtePyo1F6uwEbixyOteujYfoKXjgIxVg+40cnFyz+vB3z7eKlRnKnT1qMFd6x/K5h6hFKIhm8EG6uCA1fcPK+ULCs7+RYa6lVH8URw67hqDW5IW4QPeM6SJJvSwMx/PET86Dup0Zwpg8WhBbJgee1YfAIWzkOwlZsoBdeFAH9sFO676GvRWu6SB+WJ8q37a5L/xdEO1yYWH+uCEAeML+hT7Kk869YbOhIF5UX3KquhSnsCEo4I8UfZqRvSwMx/PET86Dup0Zwpg8ZhBvGu66zLOkKWSJc0RNonhBdFT/ltGK+rPSkXxWuUxWIWIDw6K8v+hFCORLFWH+sAXIHN/SmHbSu8aVZa+hCF4En2LfrrUs=
+42a1fa40
+##a033837d4f23e078bea6b3957

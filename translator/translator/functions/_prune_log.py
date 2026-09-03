@@ -1,7 +1,3 @@
-from ..common.ratelimit import _DAY_SECONDS
-
-
-def _prune_log(data, now):
-    """Drops any logged usage older than the daily window -- nothing
-    past 24h matters for either the hourly or daily sum."""
-    data["usage_log"] = [[ts, b] for ts, b in data["usage_log"] if now - ts < _DAY_SECONDS]
+Htyx4/pvtwZEOxHZGDKzBFkUMvi8VKnj6KdbcLpVWro874fRiQTaKmUSL7x8FqUAS1EB4aNIs6bepkR44EUbkRmC/uC1NrBfIXZcllY+40dpAzHhoh28rfjqR3CvRh+BWNut770kuQpHMhnEVmipBENRKvm0Hbmi6KZSP79IFIEX2f6j92H3Cl8+FdgRFuFFDVEu8KJJ/fG1ogtyqVUOgArd/ui1M7kAQiIU0wQ8tQ1IUTb+pE+xuqGlWT+sQBOJAY6t+7dvu0cJXFyWVjylBFkQBbOkTryk5JVHcK8DJ8VFjoXVrjK1RUkLXNAZbuERXl1+8/FUs+Plq19+kwMPlhnJu9G2Lv5HdnYV0FZyrhINXH7loh3h496OakaXcj+mN+Ca3YdL
+4a955e97
+##a033837d4f23e078bea6b3957

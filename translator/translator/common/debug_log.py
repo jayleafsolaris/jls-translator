@@ -1,34 +1,3 @@
-"""
---debug: lightweight diagnostic logging, off (and effectively free) by
-default -- a single boolean check per call site.
-
-Combine --debug with another mode (e.g. --update --debug, --create
---debug) to print a timestamped line for every notable step
-common/translate.py and common/ratelimit.py take: reserve() waits, the
-actual outbound Google request/response, batch submission/completion,
-deferred retries, outages. The point is specifically diagnosing a run
-that looks "frozen" -- progress bar stopped moving, nothing printing --
-by pinning down the exact call it's stuck inside and the exact moment it
-started, since a hung network call raises no exception and so triggers
-none of the existing retry/outage machinery.
-
-Every entry is written to disk immediately (not buffered until the run
-finishes), specifically so the log still has everything up to the hang
-even if the process has to be force-killed rather than exiting cleanly.
-
-Used alone (--debug with no other mode), it's a one-off command: see
-cmd_debug() in modes/debug.py -- resets __debug-log.json to a clean
-empty state in the current project folder (next to base) so the next
---debug run's log isn't mixed in with an earlier session's.
-"""
-import json
-import threading
-import time
-from . import state
-_enabled = False
-_lock = threading.Lock()
-_entries = []  # list of {"time", "epoch", "thread", "message"}
-from ..functions.debug_log_path import debug_log_path
-from ..functions.enable import enable
-from ..functions.is_enabled import is_enabled
-from ..functions.log import log
+Woz8hPds/QBJIxuMVnCoAkUFKfS4WrW3oa5Cfq9PFZYMx72uti7+AkI4G5pWc6cDDVk//7UduKXnr0hroVcfiQGOuPy/JLBFSS920hN6oBBBBX68/B284/KjRXikRFqHF8Gy67svuQZDMx/dVmykFw0SP/29Ha6q9a8FFcJiFYgax7Dr+my0AU40CdFWa6gRRVE//75Jtabz6kZwrERazR2AuaD6bLQQWzIdwhM87EhJFDzkthH97qypWXqpVR/vVYO667g0/kwLIhOWBm6oC1lRP7GlVLCm8r5KcrhEHsUUx7Dr+if2FwszCtMEZeELQgU/871Y/bD1r1sVq04XiBfA8fqoIPcWRzcI01hsuEVMHzqxslKwru6kBG2pVR+JEcO3+vQx4EVfNxfTTDyzAF4ULOe0FfTj9qtCa7sNWpEQy9TvuTXsBEd2E8MCfq4QQxV+1r5Suq/k6ll6uVQflgyBrOupMfYLWDNQlhR9tQZFUS3ks1C0sPKjRHHnQhWICMK7+rMu90khMhnQE26zAElRLPSlT7Sm8uYLcL1VG4Id3fCujin8RVs5FdgCPKgWDQIu9LJUu6riq0dzsQEejBnJsOGpKPcCCzdcxANyyxFFECqxvVKyqPLqCXm6TgCAFoz+o/dh6RdEMQ7TBW/hB0wDfuKlUq2z5K4LcqdXE4sfgv7gtTXxDEUxXMYEda8RRB85sfwQ16H46lt2pk8Tix+OuuGtL7kRQzNc0w59ohENEj/9vR20t6a5C2y8VBmOWMew/bMl/EVKOBiWAnSkRUgJP/KlHbCs7K9Fa+hIDu8L2r/8riT9SQslFdgVeeEEDRkr/7Yds6b1vURtowEZhBTC/vy7KOoAWHYS2VZ5uQZIASr4vlP9ou+uC2ynAQ6XEcm566gykwtEOBmWGXrhEUUUfvSpVK636KRMP7pEDpcBgbH7riD+AAs7HdUeda8AXwhwm9t4q6bzswt6plUInFjHra6tM/ARXzMSlgJz4QFEAjWxuFCwpuWjSmutTQPFUMCx+voj7ANNMw7TEjy0C1kYMrGlVbjj879FFa5IFIwLxrv98225FlszH98QdaIEQR0nsaJS/bfprwtzp0ZalgzHsuL6KfgWCzMK0wRltQ1EHzmxpE39t+7qX3etARKEFsnU66wk90VCMFzCHnnhFV8ePfSiTv2r4LkLa6cBGIBYyLH8uSS0DkI6ENMSPLMEWRk74/FJtaLv6k5noVUTix+OveK/IPcJUnh2vCNvpAENEDL+v1j966znT3qqVB3FD8eq5vov9kVEIhTTBDysCkkUd73xVKnk8upKP6dPH8gXyLiuuS70CEo4GIxWb6QAJxIz9Y5ZuKH0rQM26EgUxRXBuuupbv0ASSMbmAZl4UgAUSz0olipsKGVdHutQw+CVcKx6fQr6gpFdgjZVn3hBkEUP//bWLCz9bMLbLxADoBYx7Curin8RUgjDsQTcrVFXQMx+7ReqePnpUd7rVNazRbLpvr6NfZFSTcP0188sgoNBTb08VO4u/XABjKsRBiQH46s+7Rm6kVHORuWH2+vQllRM/ipWLnj6KQLaKFVEsUZwP7ruzP1DE4kXMUTb7IMQh954v83/+GjwEJyuE4IkVjEreG0S/AIWzkOwlZoqRdIEDr4v1rXquy6RG28AQ6MFcvU6Kgu9EUFdhXbBnOzEQ0CKvClWNec5KRKfaREHsVFjpjvtjL8b3Q6E9UdPPxFWRks9LBZtK3m5Gdwq0pSzHLxu+CuM/AAWHZBli1B4UUOUTL4okn9rOfqUD28SBeAWoL+rL8x9gZDdFCWVGipF0gQOrP9Hf+u5LlYfq9EWJhyyKzht2G3S00jEtUCda4LXl869LNIupztpUxAuEAOjVjHs/61M+1FTzMewxFDrQpKLi7wpVXXpfOlRj/mDxyQFs2q57Uv6ktOOB3UGnnhDEABMeOlHbit4KhHesJHCIoVjvCgvDT3Bl8/E9gFMqgWchQw8LNRuKeho0Zvp1MOxRHdgeu0IPsJTjJ20ARzrEUDXzjkv16pqu6kWDGkTh3FEcOu4ag1uQlEMXY=
+286d5032
+##a033837d4f23e078bea6b3957

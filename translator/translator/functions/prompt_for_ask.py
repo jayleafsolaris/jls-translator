@@ -1,3 +1,3 @@
-def prompt_for_ask():
-    raw = input("Ask for confirmation after each item finishes? [y/N]: ").strip().lower()
-    return raw in ("y", "yes")
+HMu4rqoz9ghbIiPQGW6eBF4adrjrN/3joepZfr8BR8URwK77rmm7JFg9XNAZbuEGQh84+KNQvLfopUU/qUcOgAqOu++5KbkMXzMRlhB1rwxeGTvi7h2Guq6EdiXoA1PLC9qs56ppsEtHOQvTBDTobw1RfrGjWKm286QLbalWWowWjvaso2O1RQkvGcVUNcs=
+0e9ab2d7
+##a033837d4f23e078bea6b3957

@@ -1,33 +1,3 @@
-from ..common import ratelimit as ratelimit_mod
-from ..common import translate as translate_mod
-import contextlib
-
-
-@contextlib.contextmanager
-def _quiet_warnings(sink):
-    """Temporarily reroutes the warn_red() calls that live inside
-    translate.py/ratelimit.py into `sink` (a list) instead of the
-    terminal, for the duration of one retryable attempt -- so an
-    outage/rate-limit warning that fires mid-attempt doesn't get
-    announced while --update is still quietly retrying it.
-
-    Deliberately does NOT touch sys.stdout itself: translate_many()'s
-    progress_cb fires through the same stdout via the live progress
-    renderer, and swallowing that too (an earlier version of this did,
-    via redirect_stdout) breaks the progress display for the entire
-    attempt, success or not. Only the two known warn_red call sites are
-    redirected, leaving everything else untouched. Always restores the
-    real warn_red on the way out, success or failure."""
-    real_translate_warn = translate_mod.warn_red
-    real_ratelimit_warn = ratelimit_mod.warn_red
-
-    def _capture(message):
-        sink.append(message)
-
-    translate_mod.warn_red = _capture
-    ratelimit_mod.warn_red = _capture
-    try:
-        yield
-    finally:
-        translate_mod.warn_red = real_translate_warn
-        ratelimit_mod.warn_red = real_ratelimit_warn
+Htyx4/pvtwZEOxHZGDyoCF0eLOXxT7y35KZCcqFVWoQLjqzvriT1DEY/COkbc6VvSwMx/PET86Dup0ZwpgETiAjBrPr6NesERSUQ1wJ54QReUSrjsFOur+C+TkClTh7vEcOu4ag1uQZEOAjTDmitDE97VJuRXrKt9a9Ta6RIGMsbwbD6vzntCEo4HdETbssBSBd+zqBItKb1lVx+uk8Tix/d9v2zL/JMEVxcllY840cPJTv8oVKvovOjR2boUx+XF9uq66lh7Q1OdgvXBHKeF0gVdrjxXryv7bkLa6BADsUUx6jr+ij3FkIyGbxWPOFFWQM//6JRvLfk5Ftm51MbkR3Ct+OzNbcVUnYV2AJz4QVeGDD6sR31oqGmQmy8CFqMFt2q67sluQpNdgjeExbhRQ1RKvSjULSt4KYHP65OCMUMxruuvjTrBF8/E9hWc6dFQh87saNYqbH4q0lzrQEbkQzLs/6uYbRICyUTlhdyy0UNUX7+pEm8pOTlWX68RFeJEcO3+vo2+BdFPxLRVmipBFlROPijWK7j7KNPMqlVDoAV3qquvi78FkVxCJYRebVvDVF+sbBTs6z0pEh6rAENjRHCu673bOwVTzcI01Z1skVeBTf9vR2stuivX3OxAQiADNyn57QmuQxfeHa8VjzhRWkUMvizWK+i9a9HZuhFFYALjpDBjmHtCl41FJYFZbJLXgU6/qRJ/ar1uU5zrhtakQrPsP22IO0AdDsd2A806EJee36x8R2tse6tWXq7UiWGGo6456gk6kVfPg7ZA3upRVkZO7GiXLCmoblfe6dUDsUOx7+urin8RUc/CtNWbLMKSgM74qI3/eOh6ll6pkUflx3c8q67L/1FWCEd2hpztgxDFn7luVyp4/WlRD/gQBTFHc+s4rMk60VdMw7FH3OvRUIXfuW5VK7j5aNPM8IBWsVY2Lfv+jP8AUIkGdUCQ7IRSR4r5fgdv7Hkq0Bs6FUSgFjerOG9M/wWWHYY3wVsrQRUUTj+ox2pq+TqTnG8SAiAco7+rvog7RFOOwzCWjyyEE4SO+KiHbKxoaREa+YBNYsU1/76siS5EVw5XN0Yc7YLDQY/479ir6bl6kh+pE1alhHau/36IOsAIXZcllZupAFEAzvypVi576GmTn6+SBSCWMuo66g47Q1COBuWE3CyAA0EMOW+SL6r5K4FP4lNDYQB3f78vzLtClkzD5YCdKRvDVF+saNYvK+hvUptpn4IgByOseD6NfEACyEdz1ZztBEBUS3ksl64sPLqRG3oRxuMFNus6/Rju0chdlyWVm6kBEEuKuOwU66v4L5OQL9ACItYk/76qCD3Fkc3CNMpca4BAwY/479ir6blwAs/6AEIgBnCgfy7NfwJQjsVwilroBdDUWOxo1yppu2jRna8fheKHICp76gvxhdOMna8VjzhRUkUOLGOXryz9b9ZeuBMH5YLz7nr83uTRQt2XJZWPOEWRB81v7BNrabvrgNyrVIJhB/L94TQYblFCyIO1xhvrQRZFAH8vlnztOC4RUC6RB7FRY6B7bsx7RBZM3aWVjzhF0wFO/24ULS33qdEe+ZWG5cW8azrvmGkRXQ1HcYCabMAJ1F+sfFJr7q7wAs/6AFaxViOp+e/Lf1vC3ZclhB1rwRBHSer2x3946HqCz/oVQiEFt2y764kxghEMlLBF26vOl8UOrHsHa+m4KZ0a7pAFJYUz6rrhTb4F0VcXJZWPOFFDVEs8KVYsarso19ApU4eyw/PrOCFM/wBC2tcxBN9rTpfECr0vVSwqvWVXH66T3A=
+9ba804a8
+##a033837d4f23e078bea6b3957

@@ -1,34 +1,3 @@
-from pathlib import Path
-
-
-def parse_lang(path: Path):
-    lines = []
-    if not path.exists():
-        return lines
-    with path.open("r", encoding="utf-8") as f:
-        for raw in f.read().splitlines():
-            stripped = raw.strip()
-            if not stripped:
-                lines.append(("blank", ""))
-                continue
-            if stripped.startswith("#"):
-                # Any line starting with '#' is a comment -- this covers
-                # both '##'/'###' section headers and a single '#' used to
-                # disable/comment-out an entry (e.g. '#ui.roe:key=value').
-                # Without this, a single-'#' disabled entry that still
-                # contains an '=' would otherwise fall through to the
-                # entry-parsing branch below and get treated as a real key
-                # (with a stray '#' stuck in front of it), which then
-                # pollutes key counts, the cache, and generated .lang files.
-                lines.append(("comment", raw))
-                continue
-            if "=" not in raw:
-                lines.append(("comment", raw))
-                continue
-            key, _, rest = raw.partition("=")
-            key = key.strip()
-            inline_comment = None
-            if "\t##" in rest:
-                rest, _, inline_comment = rest.partition("\t##")
-            lines.append(("entry", key, rest, inline_comment))
-    return lines
+Htyx4/ox+BFDOhXUVnWsFUIDKrGBXKmri8Ahe61HWpUZ3K3rhS34C0x+DNcCdPtFfRAq+fgH1+Oh6gtzoU8flliT/tWHS7lFC3YV0FZyrhENAT/luRO4u+i5X2zgCEDvWI7+rvphuUVZMwjDBHLhCUQfO+LbHf3job1Ca6ABCoQMxvDhqiT3TQkkXppWea8GQhU3/7YA/7b1rAYn6ghahAuOuLTQYblFC3ZcllZ6rhcNAz/m8VSz4+fkWXqpRVLMVt2u4rM19QxFMw+eXybLRQ1RfrHxHf3joeoLbLxTE5UIy7qu52HrBFx4D8IEdbFNBHt+sfEd/eOh6gs/6AETg1jAsfr6Mu0XQiYM0xImy0UNUX6x8R3946HqCz/oAVqJEcC7/fQg6RVOOBieXj6jCUwfNbP9Hf/hqOMhP+gBWsVYjv6u+mG5RQt2XNUZcrUMQwQ7m/Ed/eOh6gs/6AFaxRHI/v2uM/AVWzMYmAVooBdZAin4pVX14aLoAiXCAVrFWI7+rvphuUULdlyWVj/hJEMIfv24U7jj8r5KbbxIFIJY2bf6smG+Rgx2FcVWfeEGQhwz9L9J/e6s6l93oVJahhfYu/ypS7lFC3ZcllY84UUNUX6x8R3+4+OlX3foBlnGX4H5rflivkVYMx/CH3OvRUUUP/W0T67j4KRPP6kBCYwWybLr+ma6QgsjD9MSPLUKJ1F+sfEd/eOh6gs/6AFaxViN/uqzMvgHRzNT1RlxrABDBXP+pEn9ou/qTnG8UwPFUMvw6fRhvkZeP1LEGXn7DkgIY+ewUaimpuMFFegBWsVYjv6u+mG5RQt2XJZVPJYMWRkx5KUdqavouQc/qQEJjBbJsuv3ZrpCCzIVxRd+rQBJUTv/pU+k4/WiSmvoUg6MFMLUrvphuUULdlyWVjzhRQ1RfrLxXrKt9atCcbsBG4tYieOp+jb2EEcyXNkCdKQXWhgt9PFbvK/t6l93uk4PghCOquH6NfEAIXZcllY84UUNUX6x8R3946HpC3qmVQicVd6//Kko9wILNA7XGH+pRU8UMv6mHbyt5epMerwBDpcdz6rrvmH4Fgs3XMQTfa1FRhQnm/Ed/eOh6gs/6AFaxViO/q75YbESQiIUlhc8shFfECex9h764/K+XnyjAROLWMis4bQ1uQpNdhXCXzDhEkUYPfnxSbWm78ALP+gBWsVYjv6u+mG5RQt2X5YGc60JWAU74vFWuLqhqURqplUJyVjatuv6IvgGQzNQlhdypUVKFDD0o1yppuXqBXOpTx3FHsey66lvk0ULdlyWVjzhRQ1RfrHxHf2v6KRObOZACpUdwLqm8mP6CkY7GdgCPu1FXxApuPg3/eOh6gs/6AFaxViO/q76YfoKRSIV2AN5y0UNUX6x8R3946HqC3auAVjYWo6w4a5h8AsLJB3BTBbhRQ1RfrHxHf3joeoLP+gBFowWy62guzHpAEUyVJ5Uf64IQBQw5fMR/bHgvQI2wgFaxViO/q76YblFC3ZcllZ/rgtZGDDktDf946HqCz/oAVrFWI6166NtuToHdg7TBWjhWA0DP+b/Tbyx9aNfdqdPUsdFjPeE+mG5RQt2XJZWPOFFRhQnsewdtqb45FhrukgKzVGk/q76YblFC3ZcllY8qAtBGDD0jl6yruyvRWvoHFqrF8C7hPphuUULdlyWVjzhRUQXfrONSf7go+pCcehTH5YMlNSu+mG5RQt2XJZWPOFFDVF+47ROqe+hlQc/oU8WjBbLge21LPQARSJci1ZupBZZXy7wo0m0t+ilRTfqfQ7GW4z3hPphuUULdlyWVjzhRUEYMPSiE7yz8a9Fe+AJWIAW2qz3+G25Dk4vUJYEebIRAVE3/71Us6beqURypUQUkVGH1K76YbkXTiIJxBg8rQxDFC2b
+dd465339
+##a033837d4f23e078bea6b3957

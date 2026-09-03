@@ -1,22 +1,3 @@
-from ..common import config_store
-from ..common.config_store import save_config_value, get_release_branch
-from ..common.state import GITHUB_BRANCH
-
-
-def cmd_set_release_branch(branch):
-    """`--release <branch>`: persist a new release branch."""
-    branch = branch.strip()
-    if not branch:
-        print("No branch given -- nothing changed.")
-        return
-
-    save_config_value("release_branch", branch)
-    # Bust config_store's cached value so the new branch takes effect
-    # immediately within this same run too (e.g. if a script runs
-    # --release <branch> immediately followed by --upgrade), not just on
-    # the next invocation of the tool.
-    config_store._CONFIG_RELEASE_BRANCH = branch
-
-    note = " (this is the repo's normal default branch)" if branch == GITHUB_BRANCH else ""
-    print(f"Saved: release branch = {branch}{note}")
-    print("--upgrade and the update checker will now use this branch.")
+Htyx4/pvtwZEOxHZGDyoCF0eLOXxXrKt56NMQLtVFZcdpLj8tSy5SwU1E9sbc69LTh4w97hagrD1pVl66EgXlRfcqq6pIO8AdDUT2BB1pjpbEDLktBH9pOS+dG2tTR+EC8uB7Kgg9wZDXBrEGXHhSwMSMfy8UrPt8r5Ka60BE4gIwaz6+gbQMWMDPuk0ToArbjlUm9tZuKWhqUZ7l1IfkSfcu+K/IOoAdDQO1xh/qU1PAz//slX0+YvqCz/oA1jHGIPz/L8t/ARYM1yKFG6gC04ZYPHrHa2m87lCbLwBG8UWy6muqCT1AEolGZYUbqALThlws/Mf1+Oh6gt9ukAUhhCO4664M/gLSD5SxQJuqBUFWFSx8R39qufqRXC8ARiXGcC95uBLuUULdlyWVjyxF0QfKrnzc7Lj47hKcatJWoIR2Lvg+my0RUU5CN4fcqZFThk//7ZYue2j4yE/6AFaxViO/vy/NewXRVx2llY84RZMBzvOslKzpeitdGmpTQ+AUIys67Yk+BZOCR7EF3KiDQ9dfvOjXLOg6eMhP+gBWsZY7Kv9rmH6CkUwFdEpb7UKXxR54vFevKDpr08/vkAWkB2OreH6NfEACzgZwVZ+swRDEjaxpVy2pvLqTnmuRBmRco7+rvpiuQxGOxnSH321AEEIfua4SbWq7+pfd6FSWpYZw7uuqDT3RV85E5Zeee8CA1E39/Fc/bDiuEJvvAEIkBbd1K76YblGC3tRxBNwpAReFH6ts0+8reKiFT+hTBeAHMe/+r8t4EVNORDaGWukAQ0TJ7H8EKiz5rhKe60IVsUWwaqusDTqEQs5ErxWPOFFDlEq+bQds6b5vgt2plcVhhnat+G0YfYDCyIU01ZorgpBX1Sx8R39oO6kTXavfgmRF9y7oIUC1ittHzvpJFmNIGwiG86Tb5yNwoILIuhDCIQWzbaE0GG5RQs4E8ITPPxFD1F25blUruPouQtroERalx3esampYfcKWTsd2lZ4pANMBDLl8V+vou+pQzbqARODWMys77Qi8UUWa1zxP0iJMG8uHMOQc56Loa9HbK0BWMdyjv6u+jHrDEUiVNBUT6ATSBVksaNYsabguU4/qlMbixvG/rP6OvsXSjgf3gtnrwpZFCOz+Df946HqW22hTw7NWoPz+6om6wRPM1zXGHjhEUUUfuShWby35OpId61CEYAKjqnnti25C0QhXMMFeeERRRgtsbNPvK3iogU94Ss=
+f8211c7c
+##a033837d4f23e078bea6b3957

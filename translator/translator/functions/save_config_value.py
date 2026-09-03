@@ -1,8 +1,3 @@
-import json
-from .config_path import config_path
-from .current_config_dir import current_config_dir
-
-
-def save_config_value(name, value):
-    current_config_dir().mkdir(exist_ok=True)
-    config_path(name).write_text(json.dumps(value, indent=2), encoding="utf-8")
+EcOu4ag1uQ9YORK8EG6uCA1fPf6/W7Sk3rpKa6ABE4gIwaz6+iL2C00/G+kGfbUNJxcs/rwd86D0uFl6plUlhhfAuOe9Hv0MWXYV2wZzsxENEivjo1izt96pRHGuSB26HMeshNBL/QBNdg/XAHmeBkIfOPi2Yqui7b9ON6ZAF4BUjqjvtjT8TBFcXJZWPKIQXwM7/6VivqzvrEJ4l0UTl1CH8OOxJfAXAzME3wVongpGTArjpFj0yaHqCz+rThSDEcmB/rs18U1FNxHTXzK2F0QFO86lWKW3qaBYcKYPHpAV3q2mrCD1EE56XN8YeKQLWUxsuP0duK3ipU92pkZHxw3auKPiY7Bv
+16f76917
+##a033837d4f23e078bea6b3957

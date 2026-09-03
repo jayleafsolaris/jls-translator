@@ -1,6 +1,3 @@
-"""--compile: obfuscate base's raw text with a fresh random key each run."""
-from ..common import state
-from ..common.state import DEFAULTS
-from ..common.obfuscate import compile_text, is_compiled
-from ..common.cache import save_compile_key
-from ..functions.cmd_compile import cmd_compile
+Woz8o/ci9ghbPxDTTDyuB0sELfKwSbjj46tYeu9SWpcZ2f76vzntRVw/CN5WfeEDXxQt+fFPvK3lpUY/o0QDxR3Pveb6M+wLBXRelHx6swpAUXC/slKwru6kC3alURWXDI6t+rs1/G9NJBPbVjLvBkIcM/6/E6634L5OP6FMCooK2v7KnwfYMGcCL7wQbq4IDV9w8r5QsKzv5ER9rlQJhhnau66zLOkKWSJc1RlxsQxBFAHltEWp76GjWECrTheVEcK76tAn6wpGdlKYFXOsCEIfcPKwXrWmoaNGb6dTDsULz6jrhSL2CFs/ENMpd6QcJxcs/rwd8+3nv0V8vEgViwuAveO+HvoKRiYV2hM8qAhdHizl8V6wp96pRHK4SBaAcg==
+05443c12
+##a033837d4f23e078bea6b3957

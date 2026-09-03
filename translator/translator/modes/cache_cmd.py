@@ -1,9 +1,3 @@
-"""--cache and its subcommands: rebuild, view info about, or clear the translation cache."""
-from ..common.state import DEFAULTS, PACKAGE_DIR
-from ..common.progress import load_base, clear_progress, _human_size
-from ..common.lang_io import entries_dict
-from ..common.cache import save_cache, get_update_count, write_update_count, clear_cache, load_cache
-from ..functions.cmd_cache_build import cmd_cache_build
-from ..functions.cmd_cache_clear import cmd_cache_clear
-from ..functions.cmd_cache_menu import cmd_cache_menu
-from ..functions.cmd_cache_view import cmd_cache_view
+Woz8o/ci+AZDM1zXGHjhDFkCfuKkX76s7KdKcaxSQMUKy7z7sy39SQsgFdMBPKgLSx5+8LNSqLet6kRt6EIWgBnc/vqyJLkRWTcSxRp9tQxCH37ysF61pq/oCT3CRwiKFY7woLku9AhEOFLFAn21AA0YM+G+T6njxY9tXp1tLrZUjo7PmQrYIm4JOP8kFqcXQhx+v/9esq7spUUxuFMVggrLrf36KPQVRCQIlhpzoAFyEz/itBH9oO2vSm2XUQiKH9y7/altuTpDIxHXGEOyDFcUVPejUrDjr+RIcKVMFYtWwr/gvR7wCgs/EcYZbrVFSB8q47hYrpzlo0hrwkcIihWO8KC5LvQIRDhS1Rd/qQANGDPhvk+p4/KrXXqXQhuGEMvyrr0k7TpeJhjXAnmeBkIEMOX9Haqx6L5OQL1RHoQMy4HttTT3EQd2H9oTfbM6ThA9+bQR/a/uq09Aq0AZjR2kuPy1LLlLBTAJ2BVoqApDAnDyvFmCoOCpQ3qXQw+MFMr+57cx9hdfdh/bEkOiBE4ZO86zSLSv5cBNbadMWstWyKvguTXwCkUlUtUbeJ4GTBI29I5esabguAt2pVEVlwyOveO+HvoESD4Z6RVwpARfezjjvlD97a+sXnGrVROKFt3w7bclxgZKNRTTKXGkC1hRN/yhUq+3oalGe5dCG4YQy4Hjvy/sb00kE9tWMu8DWB895bhSs7CvqUZ7l0IbhhDLgfizJO5FQjsM2QRo4QZAFQHysF61pt68Qnq/Kw==
+9930314b
+##a033837d4f23e078bea6b3957

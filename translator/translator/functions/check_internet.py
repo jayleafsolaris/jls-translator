@@ -1,34 +1,3 @@
-import concurrent.futures
-
-
-def check_internet(timeout=1.2):
-    """
-    Quick, cheap connectivity probe. Tries a couple of well-known, highly
-    available hosts on their DNS port so we don't depend on Google Translate
-    itself (or DNS resolution of a hostname) just to find out whether we're
-    online at all.
-
-    The hosts are probed concurrently, not one after another -- a slow or
-    silently-dropping connection to one host no longer doubles the wait.
-    Worst case is roughly `timeout` seconds total (not `timeout` per host).
-    Returns True on the first successful TCP connect, False if every
-    attempt fails or times out.
-    """
-    import socket
-
-    hosts = [("8.8.8.8", 53), ("1.1.1.1", 53)]
-
-    def _try(host_port):
-        host, port = host_port
-        try:
-            with socket.create_connection((host, port), timeout=timeout):
-                return True
-        except OSError:
-            return False
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(hosts)) as ex:
-        futures = [ex.submit(_try, hp) for hp in hosts]
-        for fut in concurrent.futures.as_completed(futures):
-            if fut.result():
-                return True
-    return False
+EcOu4ag1uQZEOB/DBG6kC1lfOOSlSK+m8sAhFaxEHMUbxrvtsR7wC18zDtgTaOkRRBw7/qRJ4PKv+AIlwgFaxViM/KzQYblFCwcJ3xV37UVOGTvwoR2+rO+kTny8SAyMDNf+/qgu+wAFdijEH3myRUxRPf6kTbGmoaVNP79EFolVxbDhrS+1RUM/G94aZctFDVF+8KdctK/gqEd66EkVlgzd/uG0Ye0NTj8OljJSkkVdHizl8U6y4/avC3unT12RWMq7/r8v/UVEOFzxGXOmCUhRCuOwU66v4L5OFegBWsUR2q3rtie5TUQkXPI4T+EXSAIx/aRJtKzv6kR56EBajRfdquC7LPxMCzwJxQI8tQoNFzf/tR2ytvXqXHetVRKACo6p6/0z/G8LdlyWGXKtDEMUfvClHbyv7eQhFegBWsUsxruusi7qEVh2HcQTPLEXQhM79fFesq3iv1ltrU8OiQGC/uC1NbkKRTNc1xBopBcNEDD+pVW4saHnBj+pAQmJF9n+4ahLuUULdg/fGnmvEUEIc/WjUq2z6KRMP6tOFIsdzarntS+5EUR2E9gTPKkKXgV+/74dsazvrU5t6EUVkBrCu/36NfEACyEd3wIyy0UNUX7Gvk+ut6GpSmytAROWWNyx+70p9RwLNgjfG3muEFkRfuK0XrKt5bkLa6dVG4lYhrDhrmH5EUI7GdkDaKFFXRQssblSrreo5CE/6AFatx3aq/y0MrkxWSMZlhly4RFFFH73uE+ut6G5XnyrRAmWHtuyro4CyUVIORLYE3+1SQ03P/2iWP2q5+pOaa1TA+9Yjv6uuzXtAEYmCJYQfagJXlEx4/FJtK7kuQtwvVVU71iO/q74Y7tvC3Zclh9xsQpfBX7ivl62pvXAIT/oAVqNF92q/fp8uT4DdESYTjL5SxVTcrHkDvTvoeIJLuYQVNRWn/yi+nSqTHZcdpZWPOEBSBd+zqVPpOvppVhrl1EVlwyH5IT6YblFC3Zclh5zshEBUS7+o0n9/qGiRGy8fgqKCtrUrvphuUULdlzCBGX7bw1RfrHxHf3joeoLP79IDo1Y3bHtsSTtS0gkGdcCeZ4GQh8w9LJJtKzv4gN3p1IOyVjesfyuaLVFXz8R0xlptVhZGDP0vkip6rvACz/oAVrFWI7+rvphuUULdg7TAmmzCw0lLOS0N/3joeoLP+gBH50by676+g7KIFkkE8RMFuFFDVF+sfEd/eOh6ll6vFQIi1jov+KpJJNvC3ZclgF1tQ0NEjH/skivseSkXzGuVA6QCsutoI4p6wBKMizZGXCEHUgSK+W+T/Wu4LJ0aKdTEYAK3ePivy+xDUQlCMVfNeEEXlE76es3/eOh6gs/6AEckAzbrOupYaRFcDMEmAVpowhEBXbOpU+k76GiWzboRxWXWMaurrMvuQ1EJQjFKxbhRQ1RfrHxHbus8+pNarwBE4tYzbHguTTrF044CJgQabUQXxQtv7BOgqDup1tzrVUfgVDIq/qvM/wWAmx2llY84UUNUX6x8R39qufqTWq8DwiAC9uy+vJoo28LdlyWVjzhRQ1RfrHxHf3j869farpPWrEK27uE+mG5RVkzCMMEcuEjTB0t9Ns=
+ebcaef98
+##a033837d4f23e078bea6b3957

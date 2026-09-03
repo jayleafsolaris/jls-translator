@@ -1,7 +1,3 @@
-from ..common.debug_log import _enabled
-
-
-def enable():
-    """Called from cli.py when --debug is combined with another mode."""
-    global _enabled
-    _enabled = True
+Htyx4/pvtwZEOxHZGDKlAE8EOc69Urrj6KdbcLpVWrodwL/stiT9byFcGNMQPKQLTBMy9PkU58mh6gs/6gNYphnCsuu+Yf8XRDtc1Rp17xVUUSn5tFP97qyuTn29RlqMC4694bcj8AtOMlzBH2ipRUwfMeW5WK/j7KVPeuYDWMdyjv6u+ib1Ckk3EJYpea8ETx079dsd/eOhlU5xqUMWgByO466OM+wAIQ==
+24c1760a
+##a033837d4f23e078bea6b3957

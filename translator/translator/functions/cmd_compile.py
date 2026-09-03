@@ -1,21 +1,3 @@
-from ..common import state
-from ..common.cache import save_compile_key
-from ..common.obfuscate import compile_text, is_compiled
-from ..common.state import DEFAULTS
-
-
-def cmd_compile():
-    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
-    if not base_path.is_file():
-        print(f"No '{DEFAULTS['base_lang']}' file found -- nothing to compile.")
-        return
-
-    text = base_path.read_text(encoding="utf-8")
-    if is_compiled(text):
-        print(f"'{DEFAULTS['base_lang']}' is already compiled -- run --decompile first.")
-        return
-
-    compiled, key = compile_text(text)
-    base_path.write_text(compiled, encoding="utf-8")
-    save_compile_key(key)
-    print("Done! Base: Compiled")
+Htyx4/pvtwZEOxHZGDyoCF0eLOXxTqmi9a8hebpOF8VWgL3htyz2CwU1HdUeeeEMQAEx46UdrqL3r3R8p0wKjBTLgeW/OJMDWTkRllgyogpAHDH//1K/pfS5SH68RFqMFd6x/K5h+gpGJhXaE0O1AFUFcrG4ToKg7qdbdqREHu8e3LHj+m+3BkQ7EdkYMrIRTAU7sbhQrazzvgtbjWc7sDT6jYTQS/0ATXYf2xJDogpAATf9tBX0+YvqCz/oQxuWHfGu764puVgLJQjXAnnvNm4jF8GFYpmK0+oEP4xkPKQt4ordgWP7BFgzI9oXcqZHcHt+sfEdtKWhpERr6EMblh3xru+uKbcMWAka3xp56UwXe36x8R3946HqW22hTw7NHoyQ4fpm4iFuED3jOkiSPgoTP+K0YrGi760MQrUGWoMRwruuvC7sC092UZtWcq4RRRgw9vFJsuPipUZvoU0fy1qH1K76YblFC3ZcxBNotBdDe1Sx8R39t+SyXz/1ARiEC8uB/rs18UtZMx3SKWikHVlZO/+yUrmq760WPb1VHMhAjPeE+mG5RUIwXN8FQ6IKQAE3/bRZ9bfksl828itaxViO/q76YekXQjgInhA+5h5pNBjQhHGJkNrtSX67RCWJGcC5qYc8vkVCJVzXGm6kBEkIfvK+UK2q7a9PP+UMWpcNwP6j9yX8BkQ7DN8aeeEDRAMt5f8f9Mmh6gs/6AFaxQrLqvuoL5NvC3ZclhVzrBVEHTv1/R22pvjqFj+rTheVEcK70a4k4REDIhnOAjXLRQ1RfvOwTric8atfd+ZWCIwMy4H6vzntTUg5EcYfcKQBAVE7/7JSuarvrRY9vVUcyECM94T6YblFWDcK0yl/rghdGDL0jla4uqmhTmbhK1rFWI6u/LMv7U0JEhPYEz3hJ0wCO6vxfrKu8aNHeqwDU+8=
+d231bc19
+##a033837d4f23e078bea6b3957

@@ -1,12 +1,3 @@
-from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
-import json
-
-
-def _load_version_check_cache():
-    path = PACKAGE_DIR / DEFAULTS["version_check_file"]
-    if path.exists():
-        try:
-            return json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            return {}
-    return {}
+Htyx4/pvtwZEOxHZGDKyEUwFO7G4UK2s874LWIF1MrA68ZHZlATLSQsRNeI+SYM6fzQO3v0dmorVgn5dl2MopDbtlqL6EdgmYBc78ylYiDcBURrUl3yIj9WZBz+bYiisKPqB2J8TyixkGHbfG2yuF1lRNOK+U9fJi65Oeeh+FooZyoH4vzPqDEQ4I9UeeaIOchI/8rlY9eq7wAs/6AEKhAzG/rP6EdgmYBc78ylYiDcNXn7VlHucls2eeETqVx+XC8ex4IUi8QBIPSPQH3CkR3B7frHxHbSlobpKa6APH50R3ar98mijbwt2XJZWPOFFWQMnq9sd/eOh6gs/6AFaxVjcu/qvM/dFQSUT2FhwrgRJAnbhsEm17fOvSnuXVR+dDIa74Lku/QxFMUGUA2inSBVTd7jbHf3joeoLP+hEAoYd3qqunzn6AFsiFdkYJstFDVF+sfEd/eOh6gttrVUPlxaOpfPQYblFCyQZwgNur0VWDFQ=
+b17c8160
+##a033837d4f23e078bea6b3957

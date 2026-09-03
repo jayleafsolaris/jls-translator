@@ -1,9 +1,3 @@
-import sys
-
-
-def _curses_available():
-    try:
-        import curses  # noqa: F401
-    except ImportError:
-        return False
-    return sys.stdout.isatty() and sys.stdin.isatty()
+EcOu4ag1uRZSJXa8fHikAw0uPeSjTriw3qtdfqFNG4cUy/an4Eu5RQt2CMQPJstFDVF+sfEd/arsukRtvAEZkArdu/36YbpFRTkN10w8h1EdQFSx8R39pvmpTm+8ATOICMGs+p8z6wpZbHaWVjzhRQ1RfuO0Saix7+ptfqRSH+9Yjv6uqCTtEFk4XMUPb+8WWRUx5KUTtLDgvl9m4AhahBbK/v2jMrcWXzIV2Fh1sgRZBSe5+Dc=
+ce3ce90b
+##a033837d4f23e078bea6b3957

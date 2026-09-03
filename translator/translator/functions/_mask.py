@@ -1,4 +1,3 @@
-def _mask(token):
-    if len(token) <= 8:
-        return "*" * len(token)
-    return f"{token[:4]}…{token[-4:]}"
+HMu4roUs+BZAfgjZHXmvTBd7frHxHbSloaZOceBVFY4dwPeu5ny5XRFcXJZWPOFFDVEs9KVIr62h6AE96AtaiR3A9vq1KvwLAlxcllY8swBZBCz/8Vv/uPWlQHqmekDRJdM8Dnw67QpAMxLtWyj7OFBTVA==
+de1d1d29
+##a033837d4f23e078bea6b3957

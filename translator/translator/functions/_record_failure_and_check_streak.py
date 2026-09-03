@@ -1,14 +1,3 @@
-from ..common.translate import FAILURE_STREAK_THRESHOLD, _STOPPED, _consecutive_failures, _streak_lock
-
-
-def _record_failure_and_check_streak():
-    """Increments the run's failure streak. Returns True if this failure
-    just pushed it over FAILURE_STREAK_THRESHOLD (i.e. treat as a real
-    outage), False if it's still within normal single-item quirk territory."""
-    global _consecutive_failures, _STOPPED
-    with _streak_lock:
-        _consecutive_failures += 1
-        if _consecutive_failures >= FAILURE_STREAK_THRESHOLD and not _STOPPED:
-            _STOPPED = True
-            return True
-        return False
+Htyx4/pvtwZEOxHZGDK1F0wfLf2wSbjj6KdbcLpVWqM555LbiATGNn8EOfc9Q5UtfzQN2Z5xme+hlXhLh3EqoDyC/tG5LvcWTjUJwh9qpDpLEDf9pE+4sK3qdGy8Ux+EE/Gy4bkqk28hMhnQVkOzAE4eLPWOW7yq7b9ZepdAFIEnzbbruSrGFl8kGdcdNOhfJ1F+sfEf/+HIpEhtrUwfiwzd/vqyJLkXXjhbxVZ6oAxBBCz08U6pseSrQDHocx+RDdyw/foV6xBOdhXQVmipDF5ROPC4Uaix5MALP+gBEJAL2v7+rzLxAE92FcJWc7cAX1EY0JhxiJHElXhLmmQ7rif6ltyfEtEqZxJcnh8ypEsNBSz0sEn9ovLqSj+6RBuJco7+rvou7BFKMRmfWjyHBEECO7G4W/2q9e1YP7tVE4kUjqnnrinwCws4E8Qbfa1FXhgw9r1Y8Kr1r0Y/uVQTlxOOquuoM/ARRCQFmFQ+428NUX6xtlGyoeCmC0CrThSWHc2r+rM3/DpNNxXaA26kFgFRAcKFco2TxI4hP+gBWpIR2rauhTLtF043F+kac6IOF3t+sfEd/eOh6nR8p08JgBvbquesJMYDSj8QwwR5skUGTH6g2x3946HqCz/oSBzFJ82x4Kkk+hBfPwrTKXqgDEEELPSiHeP+oYxqVoR0KKAn/YrcnwDSOn8eLvMlVI4paVE//7Uds6z16nRMnG4qtT3q5IT6YblFC3ZcllY84UVyIgregW2Yh6H3C0u6VB/vWI7+rvphuUULdlyWBHm1EF8ffsWjSLjJoeoLP+gBWsUKy6r7qC+5I0o6D9N8
+06ac3622
+##a033837d4f23e078bea6b3957

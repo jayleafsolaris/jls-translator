@@ -1,7 +1,3 @@
-"""--split: turn base into a base/ folder hierarchy mirroring every heading depth."""
-from ..common import state
-from ..common.state import DEFAULTS
-from ..common.sections import (
-    parse_tree, find_duplicate_siblings, write_tree, save_section_data,
-)
-from ..functions.cmd_split import cmd_split
+Woz8o/cy6QlCIkaWAmmzCw0TP+K0HbSt9aULfuhDG5Ydgf7otS39AFl2FN8TbqAXThknsbxUr7HuuEJxrwEfkx3cp66yJPgBQjgblhJ5sRFFX3yz8ze7se6nCzHmQhWIFcGwrrMs6QpZIlzFAn21ACcXLP68HfPt4qVGcqdPVJYMz6rr+ij0FUQkCJYyWYckeD0Kwttbr6zs6gUxq04XiBfA8P2/Iu0MRDgPlh9xsQpfBX652x3946G6Sm27RCWRCsu7ovon8AtPCRjDBnCoBkwFO86iVL+v6KRMbOQBDZcR2rvRrjP8AAd2D9cAeZ4WSBIq+L5TgqfgvkozwghwgwrBs670b/8QRTUI3xlysktOHDrOok2xqvXqQnK4TgiRWM2z6oUy6QlCInY=
+6a22cd55
+##a033837d4f23e078bea6b3957

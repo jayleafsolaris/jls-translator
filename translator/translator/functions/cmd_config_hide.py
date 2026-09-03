@@ -1,24 +1,3 @@
-from ..common import state, config_store
-from ..common.config_store import load_config_value, save_config_value, get_request_delay, config_dir_state
-from ..common.state import DEFAULTS, LANGUAGES, LANGUAGE_NAMES, PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME
-from ._set_windows_hidden_attribute import _set_windows_hidden_attribute
-
-
-def cmd_config_hide():
-    state, path = config_dir_state()
-    if not path.exists():
-        print("No config folder exists yet -- run --config --workers or "
-              "--config --languages first, then you can toggle its visibility.")
-        return
-    if state == "hidden":
-        print(f"Config folder is already hidden: {path.name}/")
-        return
-
-    target = PACKAGE_DIR / CONFIG_DIR_HIDDEN_NAME
-    if target.exists():
-        print(f"Can't hide it -- a '{target.name}' folder already exists here for another reason.")
-        return
-
-    path.rename(target)
-    _set_windows_hidden_attribute(target, hidden=True)
-    print(f"Config folder is now hidden: {target.name}/")
+Htyx4/pvtwZEOxHZGDyoCF0eLOXxTqmi9a8HP6tOFIMRyYH9ri7rACEwDtkbPO9LTh4z/L5T86DupE12r34JkRfcu66zLOkKWSJc2hl9pTpOHjD3uFqCteCmXnrkAQmEDsuB7bUv/wxMCQrXGmmkSQ0WO+WOT7iy9K9Ya5dFH4kZ1/KuuS73A0IxI9Ifbp4WWRAq9Ntbr6zs6gUxq04XiBfA8P2uIO0ACz8RxhlutUVpNBjQhHGJkK3qZ16GZi+kP+uNovoN2CtsAz3xM0OPJGA0Db3xbZyAyotsWpdlM7dUjp3BlAfQInQSNeQpSog2ZDMS1I5znI7E5gtch288rD/xmseIHtEsbxI5+ClSgChoezjjvlD97d65TmuXVhOLHMGp/YUp8AFPMxLpF2i1F0QTK+W0HbSu8aVZa+h+CYAM8anntCX2ElgJFN8SeKQLchAq5aNUv7b1ryEVwkUfg1jNs+qFIvYLTT8b6R51pQAFWGSb8R394/K+SmutDVqVGdq2rudh+gpFMBXRKXioF3ICKvClWPXqi+oLP+hIHMUWwaquqiDtDQUzBN8FaLJNBEtUsfEd/eOh6gtvukgUkVCMkOH6IvYLTT8blhBzrQFIA370qVSut/LqUnq8AVfIWNyr4PpstAZEOBrfETzsSFoeLPq0T67j7rgLPcIBWsVYjv6u+mG5RQt2XJRbMaIKQxc39vEQ8K/gpExqqUYflljIt/ypNbVFXz4Z2FZlrhANEj//8UmypOamTj+hVQnFDset57go9QxfL1KUXxbhRQ1RfrHxHa+m9b9ZccIBWsVYx7iuqTX4EU52QYtWPqkMSRU7//MH1+Oh6gs/6AFalQrHsPryJ7smRDga3xE8pwpBFTvj8VSu4+CmWXqpRQPFEMe66r8vo0VQJh3CHjKvBEAUI77zFNfjoeoLP+gBWpcd2qv8tEuTRQt2XMIXbqYAWVFjsYF8nojAjW5AjGgoxVeOncGUB9AidBI15ClUiCFpNBDOn3yQhovqCz/oSBzFDM+s6b81twBTPw/CBTToXydRfrHxHf3jobpZdqZVUoNa7b/g/TW5DUIyGZYfaOFIAFE/sfZGqaLzrU5r5k8biB3T+a68LvUBTiRc1xpupARJCH70qVSut/LqQ3q6RFqDF9z+77Qu7Q1OJFzEE32yCkNffLjbHf3joeoLP+hTH5EN3LCE0GG5RQsmHcIeMrMAQxAz9PlJvLHmr182wgFaxVjxreuuHu4MRTITwQVDqQxJFTv/jlypt/OjSWq8RFKRGdy5665tuQ1CMhjTGCGVF1gUd5vxHf3j8bhCcbwJHMc7wbDosya5A0Q6GNMEPKgWDR8x5vFVtKflr0Ul6FoOhArJu/r0L/gITitTlF8W
+9c7c4e4e
+##a033837d4f23e078bea6b3957

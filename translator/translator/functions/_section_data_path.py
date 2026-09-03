@@ -1,5 +1,3 @@
-from ..common.state import DEFAULTS, PACKAGE_DIR, _UPDATE_COUNT_MARKER
-
-
-def _section_data_path():
-    return PACKAGE_DIR / DEFAULTS["section_order_cache"]
+Htyx4/pvtwZEOxHZGDKyEUwFO7G4UK2s874LW41nO7A0+o2i+hHYJmAXO/MpWIg3AVEBxIF5nJfElWhQnW8uujXvjMWfE5NvITIZ0FZDsgBOBTf+v2K5ovWrdG+pVRLNUZTUrvphuRdOIgnEGDyRJG46H9aUYpmK0+oEP4xkPKQt4ordgWPqAEgiFdkYQ64XSRQszrJcvqvk6HYV
+2d9878bb
+##a033837d4f23e078bea6b3957

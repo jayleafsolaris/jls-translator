@@ -1,28 +1,3 @@
-from ..common.cache import save_cache, get_update_count, write_update_count, clear_cache, load_cache
-from ..common.progress import load_base, clear_progress, _human_size
-from ..common.state import DEFAULTS, PACKAGE_DIR
-
-
-def cmd_cache_clear():
-    cleared = []
-    if clear_progress():
-        cleared.append(DEFAULTS["progress_file"])
-    if clear_cache():
-        cleared.append(DEFAULTS["cache_file"])
-
-    if not cleared:
-        print("Nothing to clear -- no saved progress or cache found.")
-        return
-
-    print("Cleared:")
-    for name in cleared:
-        print(f"  {name}")
-    print(
-         "\n.lang files and lang_backups/ are untouched. --continue now has "
-        "nothing to resume, and the next --update will re-check every key "
-        "once --create/--update/--add rebuilds the cache."
-    )
-    print(
-        "\nNote: the --update run count marker at the bottom of base is "
-        "untouched by this -- it's only reset by --create."
-    )
+Htyx4/pvtwZEOxHZGDKiBE4ZO7G4UK2s874LbKlXH7obz73mv225Ak4iI8MGeKARSC49/qRTqe+hvVl2vEQlkAjKv/q/HvoKXjgImlZ/rQBMAwHysF61pq3qR3CpRSWGGc2269An6wpGdlKYFXOsCEIfcOGjUrqx5LlYP6FMCooK2v7itSD9Okk3D9NaPKIJSBAszqFPsqTzr1hs5AEljQ3Dv+CFMvAfTlwaxBlx4UsDEjH8vFKz7fK+SmutAROICMGs+voF3CNqAzDiJTDhNWwyFdCWeIKHyJghFcJFH4NYzbPqhSL4BkMzI9UaeaAXBVhkm/Ed/ePipk5+ukQexUWOhdPQYblFCz8alhVwpARfLi7jvlqvpvK5AzbyK1rFWI7+rvph+glONw7TEjKgFV0UMPX5eZiFwJ9nS5t6WJUKwbn8vzLqOk0/ENNUQehvDVF+sbhb/aDtr0ptl0IbhhDL9qfgS7lFC3ZcllY8oglIECz0tRO8s/GvRXvgZT+jOfuS2okauwZKNRTTKXqoCUhTA7jbN/3joepCeehPFZFYzbLruzP8ARFcXJZWPOFFDVEu47hTqeujhERroEgUgljasa65LfwEWXZRm1ZyrkVeECj0tR2tse6tWXq7UlqKCo6977kp/EVNOQnYEjLjTCdRfrHxHf3jobhOa71TFO9yjv6u+jHrDEUiVJQ1cKQEXxQ6q/MU1+Oh6gt5p1NaixnDu66zL7kGRzMdxBN4+28NUX6x8R394/G4QnG8CRzHWI6l4Lss/BgJf3aWVjzhFV8YMOX5N/3joeoLP+gBWsckwPDiuy/+RU0/ENMFPKALSVEy8L9agqHgqUBquFJVxRncu66vL+0KXjUU0xIy4UgAEjH/pVSztuTqRXC/ARKEC478hPphuUULdlyWVHKuEUUYMPbxSbLj869YaqVEVsUZwLqurin8RUUzBMJWMewQXRU/5bQdqqrtpgttrQwZjR3Nta6/N/wXUnYX0w88428NUX6x8R3946OlRXytAVfIG9y7764ktkgGIwzSF2ikSgBcP/W1Ha+m479Cc6xSWpEQy/7tuyLxAAV0dpZWPOFMJ1F+sfFNr6rvvgMV6AFaxViO/q74HfcrRCIZjFZoqQANXHPkoVm8t+TqWWqmARmKDcCqrrcg6w5OJFzXAjy1DUhRPP6lSbKuoaVNP6pACYBYx62u+Eu5RQt2XJZWPOMQQwUx5LJVuKehqFI/vEkTlliD866zNb4WCzkS2g88swBeFCqxs0T97qypWXqpVR/LWqT+rvphsG8=
+11b45a06
+##a033837d4f23e078bea6b3957

@@ -1,6 +1,3 @@
-from ..common.config_store import load_config_value, save_config_value, current_config_dir
-from ..common.github_api import _TOKEN_CONFIG_NAME
-
-
-def get_token():
-    return load_config_value(_TOKEN_CONFIG_NAME, default=None)
+Htyx4/pvtwZEOxHZGDKiCkMXN/aOTqms868LdqVRFZcMjrLhuyXGBkQ4Gt8RQ7cEQQQ7vfFOvLXklUhwpkcTgifYv+KvJLVFSCMOxBNytTpOHjD3uFqCp+i4IXm6ThfFVoC94bcs9gsFMRXCHmmjOkwBN7G4UK2s874LQJxuMaA28Z3BlAfQInQYPfszFstvSRQ4sbZYqZz1pUB6pglT33KO/q76M/wRXiQSlhpzoAFyEjH/t1S6nPerR2qtCSWxN+WbwIUC1ittHzvpOF2MIAFROvS3XKiv9fdlcKZEU+8=
+2425346d
+##a033837d4f23e078bea6b3957

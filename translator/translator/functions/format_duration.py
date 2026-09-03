@@ -1,9 +1,3 @@
-def format_duration(seconds):
-    seconds = int(round(seconds))
-    if seconds < 60:
-        return f"{seconds}s"
-    minutes, secs = divmod(seconds, 60)
-    if minutes < 60:
-        return f"{minutes}m {secs}s"
-    hours, mins = divmod(minutes, 60)
-    return f"{hours}h {mins}m {secs}s"
+HMu4rrwu6whKIiPSA26gEUQeMLmiWL6s765YNvIrWsVYjq3ruS73AVh2QZYfcrVNXx4r/7UVrqbipUV7uwhT71iO/q6zJ7kWTjUT2BJv4VkNR26r2x3946HqCz/oUx+RDdywrrxj4hZONRPYEm+8Fg97frHxHbCq779fersNWpYdza2u52H9DF07E9Jeb6QGQh864v0d6/OowAs/6AETg1jDt+CvNfwWC2pcgEYmy0UNUX6x8R39seS+Xm2mARzHA8O34K81/BZWO1zNBXmiFlACfJvxHf3j6aVebbsNWogRwK2u52H9DF07E9JecagLWAU74v0d6/OowAs/6AEIgAzbrOD6J7seQzkJxAVhqUVWHDf/okCw4/q5Tny7XAnHcg==
+2200a98e
+##a033837d4f23e078bea6b3957

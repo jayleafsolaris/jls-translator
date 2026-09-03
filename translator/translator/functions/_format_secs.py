@@ -1,12 +1,3 @@
-def _format_secs(secs):
-    secs = max(0, int(secs))
-    d, rem = divmod(secs, 86400)
-    h, rem = divmod(rem, 3600)
-    m, s = divmod(rem, 60)
-
-    units = [("d", d), ("h", h), ("m", m), ("s", s)]
-    nonzero = [(label, val) for label, val in units if val]
-
-    if not nonzero:
-        return "0s"
-    return " ".join(f"{val}{label}" for label, val in nonzero)
+HMu4roUn9hdGNwjpBXmiFgUCO/KiFOfJoeoLP7tEGZZYk/7juzmxVQd2FdgCNLIATgJ3uNsd/eOhrgc/ukQXxUWOuuesLPYBAyUZ1QUw4V0bRW6h+Df946HqQzPoUx+IWJP+6rM39ApPfg7TGzDhVhtBbrjbHf3joacHP7sBR8Ucx6jjtSWxF047UJZALOhvJ1F+sfFIs6r1uQsi6HpSxxyM8q6+aLVFA3QUlFo8qUwBUXazvB/x4+zjBz/gAwnHVI6tp4dLuUULdhLZGGakF0JRY7GKFbGi469HM+hXG4lRjrjhqGH1BEkzEJpWaqAJDRgwsaRTtLfy6kJ56FcbiSWk1K76YbkMTXYS2QI8rwpDCzvjvgfX46HqCz/oAVqXHdqr/LRhu1VYdHaWVjzhF0gFK+O/Hf/jo+RBcKFPUoNa1ajvtjziCUo0GdoLPuEDQgN+/bBfuK+t6l1+pAETi1jAseCgJOsKAlw=
+3465c7be
+##a033837d4f23e078bea6b3957

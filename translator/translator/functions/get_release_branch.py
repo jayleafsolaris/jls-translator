@@ -1,19 +1,3 @@
-from ..common.state import PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME, DEFAULTS, GITHUB_BRANCH
-from ..common.config_store import _CONFIG_RELEASE_BRANCH
-from .load_config_value import load_config_value
-
-
-def get_release_branch():
-    """
-    Returns the GitHub branch --upgrade downloads from and the passive/
-    manual update checker (fetch_remote_version) compares your installed
-    version against. Defaults to GITHUB_BRANCH (the repo's normal default
-    branch, e.g. "main") until overridden by running --release <branch>,
-    which persists the choice in local config the same way --config
-    --delay persists the request delay -- so it's remembered across runs,
-    not just for the current invocation.
-    """
-    global _CONFIG_RELEASE_BRANCH
-    if _CONFIG_RELEASE_BRANCH is None:
-        _CONFIG_RELEASE_BRANCH = load_config_value("release_branch", default=GITHUB_BRANCH)
-    return _CONFIG_RELEASE_BRANCH
+Htyx4/pvtwZEOxHZGDKyEUwFO7G4UK2s874LT4liMaQ/64HKkxO1RWgZMvA/W54hZCMBx5hulIHNj3RRiWw/yVjtkcCcCN46bx8u6T5VhSFoPwHfkHCY76GOblmJdDaxK4L+yZMV0TBpCT7kN1KCLScXLP68HfPt4qVGcqdPVIYXwLjnvR7qEUQkGZYfcbEKXwV+zpJyk4XIjXRNjW0/pCvrgcyIANcmY1waxBlx4UtBHj/1jl6yreejTEC+QBaQHY6346ou6xELOhPXEkOiCkMXN/aOS7yv9K8hFcJFH4NYybv6hTP8CU43D9MpfrMEQxI2ufgH1+Oh6gs96gNwxViO/ty/NewXRSVcwh554SJEBRbksx2/seCkSHfoDFeQCMms774kuQFEIRLaGX2lFg0XLP68Hbyt5epfd60BCoQL3bf4v26TRQt2XNsXcrQEQVEr4bVcqaahqUN6q0ofl1iGuOuuIvE6WTMR2QJ5nhNIAy34vlP04+KlRm+pUx+WWNex+6hh8AtYIh3aGnmlbw1RfrGnWK+w6KVFP6lGG4wW3aqg+gX8A0ojEMIFPLUKDTYXxZlon5zDmGpRi2lazQzGu66oJOkKDCVc2BlurARBUTr0t1yor/XACz/oARiXGcC95vZh/EtMeFyUG32oCw9YfuS/SbSvoaVderpTE4Ecy7CuuDi5F144Et8Ye+FIAAM7/bRcrqah9kltqU8ZjUaC1K76YbkSQz8f3lZspBdeGC3loh2pq+TqSHenSBmAWMewrrYu+gRHdh/ZGHqoAg0FNvTxTryu5OpcfrEBV8gbwbDosyaTRQt2XJtbeKQJTAh+4bRPrqryvlg/vEkfxQrLr/u/Mu1FTzMQ1w887EgNAjGxuEn6sKG4TnKtTBiACsu6rrsi6wpYJVzEA3KySSdRfrHxU7K3oaBebLwBHIoKjqrmv2H6EFkkGdgCPKgLWx498KVUsq2vwAs/6AFYx1qk/q76Yf4JRDQd2lZDgipjNxfWjm+Yj8SLeFqXYyikNu2WhPphuUVCMFzpNVOPI2Q2AcOUcZiC0o90XZpgNKYwjrf9+g/2C05sdpZWPOFFDVF+zpJyk4XIjXRNjW0/pCvrgcyIANcmY3ZBlhpzoAFyEjH/t1S6nPerR2qtCViXHcK776kkxgdZNxLVHj7tRUkUOPCkUan+xoN/V51jJacq75DNkmiTRQt2XMQTaLQXQ1EB0p5zm4rGlXlahGQ7tj3xnNybD9otIQ==
+16a34edc
+##a033837d4f23e078bea6b3957

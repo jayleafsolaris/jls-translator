@@ -1,18 +1,3 @@
-from ..common.state import DEFAULTS, PACKAGE_DIR
-from ._backup_path import _backup_path
-
-
-def refresh_base_backup(script_dir):
-    """
-    If `base` currently exists as a plain file, snapshots its content.
-    No-op if it's missing, or currently split into a base/ folder (there's
-    nothing single-file to snapshot in that state -- the pre-split
-    snapshot, taken right before --split deletes the file, already covers
-    that transition).
-    """
-    base_path = script_dir / DEFAULTS["base_lang"]
-    if base_path.is_file():
-        try:
-            _backup_path().write_text(base_path.read_text(encoding="utf-8"), encoding="utf-8")
-        except Exception:
-            pass  # best-effort -- a backup snapshot should never block the real command
+Htyx4/pvtwZEOxHZGDKyEUwFO7G4UK2s874LW41nO7A0+o2i+hHYJmAXO/MpWIg3Jxcs/rwd85zjq0h0vVEllRnatq6zLOkKWSJc6RR9og5YAQHhsEm1yYvAT3quAQiAHty7/bIe+wRYMyPUF3+qEF1ZLfKjVK233q5CbeEbcMVYjv6s+GOTRQt2XP8QPKEHTAI78fFeqLHzr0VrpFhagADHrfqpYfgWCzdcxhp9qAsNFzf9tBH9sO+rW2ygTg6WWMeq/foi9gtfMxLCWBbhRQ1REP78Uq3j6KwLdrwGCcUVx639sy/+SQs5DpYVabMXSB8q/agdrrPto18/oU8OiljP/uy7MvxKCzAT2hJ5s0UFBTb0o1j6sIvqCz/oTxWREMew6foy8AtMOhmbEHWtAA0FMbGiU7yz8qJEa+hIFMUMxr/6+jLtBF8zXJtbPLUNSFEu47QQrrPto18V6AFaxQvAv/6pKfYRB3YI1x15r0VfGDn5pR2/puelWXroDFeWCMK3+vol/AlOIhnFVmipAA0XN/20Ef2i7bhOfqxYWoYX2Lv8qUu5RQt2CN4XaOERXxAw4rhJtKzv4wUV6AFaxVqM/IT6YblFSTcP0ylsoBFFUWOxol6vqvG+dHuhU1rKWOqbyJsU1TF4DV7UF2+kOkEQMPbzYNfjoeoLdq4BGIQLy4H+uzXxS0IlI9AfcKRNBEtUsfEd/eOh6gtrulhA71iO/q76YblFC3Zclil+oAZGBC7OoVypq6njBWi6SA6AJ9q79q5p+wRYMyPGF2ipS18UP/WOSbi79eJOcatOHowWyeOsrzX/SBN0VZpWea8GQhU3/7YA/7b1rAYn6ghwxViO/q76YbkAUzUZxgI8hB1OFC7luFKz+YvqCz/oAVrFWI7+rvox+BZYdlyVVn6kFllcO/e3Uq+3oecGP6kBGIQbxav++jL3BFslFNkCPLINQgQy9fFTuLXkuAt9pE4Zjljatuv6M/wER3Yf2RtxoAtJew==
+4b8af3cf
+##a033837d4f23e078bea6b3957
