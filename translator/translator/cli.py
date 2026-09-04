@@ -53,6 +53,9 @@ base and your .lang files, e.g. RP/texts/):
                                      where a run that looks frozen actually stopped
     jls-translator --push    push <cwd>/jls-translator/ up to this tool's own GitHub
                                      repo as one combined commit (branch: --release)
+    jls-translator --push --clean
+                              push plain, uncompiled source instead of obfuscating it --
+                                     primarily for testing
     jls-translator --pull    pull that repo down into <cwd>/jls-translator/, mirroring
                                      it exactly (adds/updates/removes files in that folder only)
     jls-translator --token   view, set, or remove the GitHub token --push/--pull use
@@ -210,4 +213,4 @@ if __name__ == "__main__":
 from .functions.main import main
 from .functions.prompt_for_ask import prompt_for_ask
 from .functions.prompt_for_mode import prompt_for_mode
-##d967ce2538f6a0557fefb33b1:78aede8eda4199652b567cb6761cc1652d715e91d13dddc381ca2b1fc8217ae5
+##d967ce2538f6a0557fefb33b1:ebd039b95a2dc0b0b126e38329ffdd4873c77dd1f466d0484af5f4d5edc20b21
