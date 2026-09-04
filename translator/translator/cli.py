@@ -15,6 +15,8 @@ base and your .lang files, e.g. RP/texts/):
     jls-translator --update   retranslate changed keys (existing keys only)
     jls-translator --add      only add missing keys (no change detection)
     jls-translator --remove   remove keys no longer in base
+    jls-translator --apply    resolve {key.path} cross-references into every active .lang
+                                     file (no translation, no network -- local text only)
     jls-translator --delete   delete every generated .lang file (base is kept)
     jls-translator --backup   zip base + all .lang files into lang_backups/
     jls-translator --restore  restore base + .lang files (+ cache/languages.json)
@@ -176,6 +178,7 @@ _MODES = [
     ("update", "Retranslate changed keys (existing keys only)"),
     ("add", "Only add missing keys (no change detection)"),
     ("remove", "Remove keys no longer in base"),
+    ("apply", "Resolve {key.path} cross-references into every active .lang file"),
     ("delete", "Delete every generated .lang file (base is kept)"),
     ("backup", "Zip all .lang files into lang_backups/"),
     ("restore", "Restore .lang files from a lang_backups/ zip"),
@@ -197,4 +200,4 @@ if __name__ == "__main__":
 from .functions.main import main
 from .functions.prompt_for_ask import prompt_for_ask
 from .functions.prompt_for_mode import prompt_for_mode
-##d967ce2538f6a0557fefb33b1:41049080940663221e3e6d8e7497f0876034e5240d25da42f3cec6b73216a408
+##d967ce2538f6a0557fefb33b1:522257f8c0ed5a33be3c06a4816a8f682ef9fba0a7cac4ff5a4ad9343afeb5ac
