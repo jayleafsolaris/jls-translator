@@ -142,22 +142,6 @@ from .common import state
 from .common.state import SCRIPT_VERSION, DEFAULTS
 from .functions._extract_code_compile_key import _extract_code_compile_key
 
-# --push rotates a hidden key -- embedded as a plain trailing comment
-# line at the very end of THIS file, not a named constant -- to a brand
-# new random one every single time it runs, and uses it to compile every
-# OTHER .py file before uploading to this tool's own repo (see
-# common/code_obfuscate.py, functions/_set_hidden_code_key.py). This is
-# deliberately not cached anywhere locally: --pull/--upgrade recover the
-# key the exact same way, by reading it straight back out of whichever
-# cli.py they just fetched/downloaded (see functions/_extract_code_compile_key.py).
-# Any checkout or install of this tool already has a copy of cli.py --
-# the one file --push never compiles -- so any machine that can run this
-# tool at all can already recover the key that protects everything else,
-# without a separate distribution step.
-#
-# This is obfuscation, not encryption: it exists so a public clone/browse
-# of the repo doesn't show plainly-readable source at a glance, not to
-# protect it against anyone willing to read this file closely.
 state._CODE_COMPILE_KEY = _extract_code_compile_key(Path(__file__).read_text(encoding="utf-8"))
 from .common.netcheck import check_for_update_notice, cmd_check_update, cmd_set_autocheck
 from .modes.config_cmd import (
@@ -213,4 +197,4 @@ if __name__ == "__main__":
 from .functions.main import main
 from .functions.prompt_for_ask import prompt_for_ask
 from .functions.prompt_for_mode import prompt_for_mode
-##d967ce2538f6a0557fefb33b1:ebd039b95a2dc0b0b126e38329ffdd4873c77dd1f466d0484af5f4d5edc20b21
+##d967ce2538f6a0557fefb33b1:919f35f986990deb115e4250826850cdc08afa68b5a72adca04518ac8ca801a4
