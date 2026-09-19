@@ -1,16 +1,3 @@
-"""--create: overwrite all active .lang files from scratch."""
-import time
-from ..common import state
-from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT
-from ..common.lang_io import strip_comments_for_output, entries_dict, write_lang
-from ..common.text_protect import to_british, resolve_key_references
-from ..common.netcheck import require_internet_or_warn
-from ..common.translate import translate_many
-from ..common.ratelimit import set_job_profile, status_report
-from ..common.cache import get_active_language_codes, save_cache, write_languages_json, write_update_count, resolve_workers
-from ..common.progress import (
-    load_base, sync_en_us_from_base, base_fingerprint, load_progress,
-    save_progress, clear_progress, format_duration, _report, SmoothProgress,
-    _ask_continue,
-)
-from ..functions.cmd_create import cmd_create
+Xqed4JdJ6LO9ATZZc/CClIklyMa6JcEOuek29LIq3AgZpZGh20T99rocPwYgv5KDlD+a3K0ygBu27Ti383y/FxH10L/OCu6/sRBZBSHwmdHVfNnAoy2OAfXse+W+LMFeD/Heud8g/KSzGHNNffybnJY91IG9NIAbsKV/+KExxwpcwfqL+3/Wgo9Zcy8S0bOkuhX//OJgpi2KxlnbhxvnKnbjzaLXCrT4vxo+Djzx2p2aPN3wpy/BBrj1eeelfsYKDuzPktlF97u5GycQDPmbg6Q9z9u+NZVD9eB44aM30A0j4dauzga6oa4cJwYM85WfnFjc3aEtwUH75nn4vDHbUAjgx7nlWui5qBAwF3P2mYGUIM6Pui++DafsYvyiNpleDuDMotZc/4m3ECo8IfqSlIk31MyrM+sJp+p7tf9w1hER6NCjlET/or8dNgA4v52ciz3I2+4yhB6g7GTwjjfbChn30ajOdfWkgwIyET2VkoOUP5qB4COOArjqeLulLNQQD+neud8K87usGiEXc+uGkJUh1s66Jb4CtOtvn7cs2hNcq5Gu1Uf3ubJbIQIn+piYljvOj6ctkQCn8TbmtCrqFBPn4L3IRfy/sBB/QyDrlYWOIeXdqzCOHaGPcOe+M5VQUubQoNdF9Pi/FDALNr+dnIs9yNvuJ4QbiuR14bgo0CEQ5NGqz0v9s4MWPAc27NjRiDPMypEjgAy94Dq1pizcChna06zUTe+3uxAgPDnsm5/Xcs3dpzSEMKD1cvSlO+odE/DRuZYK6LOvGj8VNsCDnok53929Socduug2u/892hMR6tHjylj1sa4QIBBz9pmBlCDOj+ZKwU/1pXr6sDrqHB322uGaWeO4vyo2DQzqh66dINXCkSKAHLCpNvewLdAhGuzRqt9Y6qS1GydPc/ObkJ8Nyt2hJ5MKpvY6n/F+lV4P5Mmo5VroubsHNhAgs9SSlzfb3ZEwkwCy93PmonKVGBP30qzOdf6jrhQnCjzx2NGkIN/foTKVQ/XWe/q+Kt0uDurYv99Z6frWVXNDc8CVgpAN2cCgNIgBoOA6n/hU0wwT6J/jlEzvuL8BOgw97NqSljblzLwlgBuwpX/4oTHHClzm0qnlSeizvQE2aQ==
+21b3f4f7
+##a033837d4f23e078bea6b3957

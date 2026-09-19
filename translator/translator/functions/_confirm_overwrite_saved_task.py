@@ -1,23 +1,3 @@
-def _confirm_overwrite_saved_task(command_name, saved_command):
-    """
-    Asks the user before a fresh (non---continue) --create/--update run
-    would discard an already-saved, interruption-resumable task (see
-    load_progress()/save_progress() in this module) -- otherwise starting
-    over silently throws away whatever --continue would have picked back
-    up, with no warning at all. Defaults to yes (overwrite) on a bare
-    Enter, matching this codebase's other y/n prompts (see
-    _ask_continue()).
-
-    Returns True to proceed with the fresh run (discarding the saved
-    task), False to cancel so the user can run --continue instead.
-    """
-    while True:
-        answer = input(
-            f"\nA saved {saved_command} task is still pending (run --continue to resume it). "
-            f"Starting --{command_name} now will discard it. Overwrite? [Y/n]: "
-        ).strip().lower()
-        if answer in ("", "y", "yes"):
-            return True
-        if answer in ("n", "no"):
-            return False
-        print("Please enter y or n.")
+GODZ7eVJ9bi6HCEODPCClIklyMa6Jb4ctPNz8Y4q1A0Xrdyi10f7uLgqPQI++tjRiDPMyqofggC46Hf7tXePdFyln+2YCLjc/FVzQxLsn4LbJtLK7jWSCqeldPC3MccbXOSfq8hP6b78XT0MPbLZ3Jg91NunLpQK/KU7uLIs0B8I4JDgl1/qsr0BNkMh6pr723Kaj7kvlAOxpXL8oj3UDBil3qOaS/akuRQ3Gn7slYeeNpaPpy6VCqf3Y+WlN9oQUffavs9H+7SwEHMXMuyf0dMh38rEYMFP9el59LUBxQwT4s2oyVmy//MGMhU2wISDlDXIyr0zyUb17Hi1pTbcDVzo0KnPRv///Fh+QzzrnJSJJdPcq2CSG7T3Yvy/Ob9eXKWfosxP6PavHD8GPeuYiNsm0t2hN5JPtPJ37PEp3R8I4MmoyAq3+78aPRc68YGU2yXV2qIkwQe083O1oTfWFRnhn6/bSfHc/FVzQybv2NGMO87H7i6OT6LkZPu4MNJeHfGfrNZGtPaYEDUCJvOAgtsm1Y+3JZJP/epg8KMpxxcI4Jbt1US6t/wXMhE2ldTR23L/wbolk0P16HfhsjbcEBuly6XTWbq1sxE2ATLskdaIctXbpiWTT6yqeLWhLNoTDPHM7ZJZ/7PWVXNDc8CVgpAN2cCgNIgBoOA+vPhwv3RcpZ/t6E/uo64bIEMH7YGU2ybVj74yjgyw4HK1pjfBFlzx16iaTOizrx1zESbx1NmfO8nMrzKFBrviNuG5O5UNHfPaqbAKuvb8ATIQOLbY0b0z1tyrYJUA9eZ3+7I72V4P6p+50k+6o68QIUMw/prRiSfUj+NtggC78X/7pDuVFxL2y6jbTrTc/FVzQ3G91vvbcpqPuSiIA7ClQuekO490XKWf7ZoKuva9GyAUNu3UzNs71N+7NMll9aU2tfF+lV5cpZ/t3AjGuJ1VIAIl+pDRgCHb2askvgy66Hv0vzrIXgjkzKaaQ+n2rwE6Dz+/hJSVNtPBqWDJHaDrNrj8PdoQCOzRuN8K7rn8BzYQJvKR0ZImk4HuYutP9aU2tfF+lV5cpZ+rmHnut64BOg00v9ncgDHVwqMhjwuK63f4tCOVEBPyn7rTRvb2uBwgADLtkNGSJpSPgTaEHaL3f+G0YZUlJarRkIAKuNz8VXNDc7/U0dJ8ydu8KZFH/Kt6+qY7x1ZVj5/tmgq69vxVOgVz/pqCjDfIj6cuwUf3pzq18yeXUlynxqjJCLPs1lVzQ3O/1NHbcpqP7jKEG6D3eLWFLMAbdqWf7ZoKuvb8HDVDMvGHhp4gmsagYMlNu6c6tfMw2lxVv7Xtmgq69vxVc0Nzv9SDnibP3aBgpw659nOf8X6VXlyln+3KWPO4qF1xMz/6lYKect/BuiWTT6yleefxMJtcVY8=
+aa257420
+##a033837d4f23e078bea6b3957

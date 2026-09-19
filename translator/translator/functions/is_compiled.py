@@ -1,5 +1,3 @@
-from ..common.state import _COMPILE_KEY_MARKER
-
-
-def is_compiled(text):
-    return f"##{_COMPILE_KEY_MARKER}" in text
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2ypIR+C41yfqS8W/DiZE0ASgWzf778Tbfye4pkjC26nvluDLQGlTx2rXOA6Dc/FVzQyH6gISJPJrJ7GPCFIrGWdiBF/k7I876lOVn24SXMAEecb+dn9sm39e6Sg==
+7639984b
+##a033837d4f23e078bea6b3957

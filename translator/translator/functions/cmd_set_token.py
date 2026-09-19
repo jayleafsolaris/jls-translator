@@ -1,7 +1,3 @@
-from ..common.github_api import get_token, set_token, remove_token
-from ._mask import _mask
-
-
-def cmd_set_token(token):
-    set_token(token)
-    print(f"GitHub token saved: {_mask(token)}")
+GvfQoJoEtLWzGD4MPbGTmI86z82RIZEG9ex75b4swV4b4MuSzkXxs7JZcxA266uFlDnfweJgkwq46mDwjiraFRnrtavIRff28io+AiD01JiWItXdumC+ArT2fZ/bVNEbGqXcoN516bOoKicMOPqa2Y890cqgadtl9aU2taI7wSEI6tSo1ALuubcQPUpZv9TR2yLIxqA0yQn3wn/hmSvXXgjq1KjUCum3qhA3WXPkq5yaIdGHui+KCrusa7f4VA==
+002a1030
+##a033837d4f23e078bea6b3957

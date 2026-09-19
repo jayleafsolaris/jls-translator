@@ -1,26 +1,3 @@
-from ..common.config_store import warn_red, _RESET, get_release_branch
-from ..common.netcheck import _BLUE
-from .check_internet import check_internet
-
-
-def require_internet_or_warn(flag_name):
-    """
-    Call at the top of any command that needs network access (translation
-    calls to Google Translate). Warns and returns False if offline, so the
-    caller can bail out before doing any work or touching progress/cache
-    files.
-
-    Uses a short timeout: both probe hosts are tried concurrently, so an
-    offline machine (which fails fast with "network unreachable" or
-    "connection refused" rather than hanging) is reported back almost
-    instantly. The timeout is only a ceiling for the rarer case of a
-    connection that silently drops packets instead of refusing them.
-    """
-    if check_internet(timeout=0.6):
-        return True
-    warn_red(
-        f"No internet connection detected, {flag_name} needs network access "
-        f"to function in this state!"
-    )
-    print(f"{_BLUE}Check your connection and try again!{_RESET}")
-    return False
+GvfQoJoEtLWzGD4MPbGXnpU008iRM5UAp+A2/Lwu2gwIpcisyETFpLkRf0MMzbGivgaWj6kllTCn4HrwsC3QIR733qPZQpCwrho+Q32xl56WP9XB4C6EG7btc/a6ftwTDOrNuZp12JqJMFkFIfCZ0dUx0sqtK74Gu/Fz5787wV4V6M+iyF66tbQQMAgM9pqFniDUyrpK62Wx4HC1ozvECxX32pLTRO6zrhs2Fwzwhq6MM8jB5iaNDrLaePS8O5xEdqWf7ZoIuPTWVXNDc9yVnZdy29vuNIkK9fF55fEx014d68bt2UX3u70bN0Mn95WF2zzfyqozwQGw8WH6ozWVHx/m2r7JCrKirhQ9ED/+gJiUPLCP7mDBDLTpeubxKtpeO+rQqtZPuoKuFD0QP/6AlNJ8mvivMo8c9eR48fEs0AoJ99G+mmz7uq8Qcwo1v5uXnT7TwatswRy6pWL9tFSVXlyl3KzWRv+k/BYyDXP9lZiXctXaumCDCrPqZPDxOtoXEuKfrNRTuqGzBzhDPO3UhZQn2cenLoZPpfd58qM7xg1T5t6u0k+Q9vxVcwU685GC1Viwj+5gwTqm4GW1sH7GFhP3y+3OQ/ezswAnWXP9m4WTcsrdoSKET73qZeGiftQMGaXLv9NP/va/Gj0AJu2GlJUm1tbiYJIA9eR4n/F+lV4T49mh00T/9rEUMAs68ZHR0yXSxq0owQm07Hrm8TjUDQilyKTOQrr0shAnFDztn9GOPMjKryOJDrfpc7fxMcd0XKWf7ZhJ9biyEDAXOvCa0Yk33Nq9JYVN9fd34bk7x14I7d6jmkL7uLscPQR6v52C2yDf36EylQqxpXT0sjWVHxDo0L7OILr2/FU6DSDrlZ+PPsOB7hSJCvXxf/i0McAKXOzM7dVE9q/8FHMANvaYmJU1msmhMsEbveA257As0Axc5t6+3wr1sPwUWUNzv9SSlDzUyq00iAC7pWL9sCqVDRXp2qPORuP2uAc8EyC/hJCYOd/bvWCIAabxc/S1ftoYXPfaq89Z87i7VScLNvLa+9tymo/sYsNl9aU2tbg4lR0U4Nym5UP0orkHPQYnt4CYljfV2rp90UHjrCyf8X6VXlyln+3IT+6jrhtzNyHqkfvbcpqPuSGTAYr3c/H5VJVeXKWf7ZoK/PSSGnMKPeuRg5U3zo+tL48BsOZi/L4wlRoZ8dquzk/++vwONQ8y+Kufmj/f0u4uhAqx9jb7tCrCEQ7un6zZSf+lr1VxaXO/1NHbcpqPqGKVAPXjY/uyKtwREqXWo5pe8r+vVSAXMuuR0NlYmo/uYMhl9aU2taEs3BAIrdnvwXXYmokwLiA7+pea2yvV2rxgggC763P2pTfaEFzk0amaXuiv/BQ0Ajrx1YqkAP/8ixScTfyPNrXxfscbCPDNo5ps+7qvEFk=
+7321f2a4
+##a033837d4f23e078bea6b3957

@@ -1,14 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-from .load_cache import load_cache
-
-
-def load_compile_key():
-    """Returns the cached --compile key as bytes, or None if there isn't one."""
-    cache = load_cache()
-    key_hex = cache.get(_COMPILE_KEY_MARKER)
-    if key_hex is None:
-        return None
-    try:
-        return bytes.fromhex(key_hex)
-    except ValueError:
-        return None
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2xZAd/j87wOCJ83i29pgwFSIG06Ci13L27oAHtC6SwEW58QHgLjjE64jladWDkiEMLhLNv7SpfprwjQ+sP5zJU8qaG+whMcTthv94kLCuGj5DffObkJ8N2c6tKIRPvOhm+qMqlRIT5NuS2Uv5vrl/WWk3+pLRlz3by5EjjgKl7HrwjjXQB1SshceaCrr2/ldxMTbrgYOVIZrbpiXBDLTmfvC1fphTH+rSvdNG//a3ECpDMuzUk4Im39ziYI4d9ct5+7R+3Bhc8deoyE+6v68bdBdz8JqU1XCYjcRgwU/15nf2uTuVQ1zp0Kzedfm3vx02S3qV1NHbctHKtx+JCq2lK7WyP9YWGavYqM4CxZWTOAMqH9qrur4L5eKPEqoqh6wctfF+lRcapdSow3Xys6RVOhBz0Zufnmiwj+5gwU/1pTbntCrADBKl8aLUT5D2/FVzFyHmzvvbcpqP7mDBT6fgYuCjMJUcBfHavpRM6LmxHTYbe/SRiKQ639fnSsFP9aVz7bI7xQpc096hz0/fpK4aIVlZv9TR23Kaj+4yhBug93i1nzHbG3Y=
+c563abcc
+##a033837d4f23e078bea6b3957

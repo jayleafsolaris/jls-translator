@@ -1,6 +1,3 @@
-def _match_case(original_word, replacement):
-    if original_word.isupper():
-        return replacement.upper()
-    if original_word[:1].isupper():
-        return replacement[:1].upper() + replacement[1:]
-    return replacement
+GODZ7eVH+6K/HQwAMuyR2ZQg08inLoADivJ557VylQwZ9dOs2U/3s7IBellZv9TR2zvcj6EyiAi863f5jinaDBir1r7PWuqzrl16WVm/1NHbcpqP7jKEG6D3eLWjO8USHebaoN9E7vipBSMGIbfd+9tymo+nJsEAp+xx/L8/2SEL6s2p4RCri/IcIBYj75GD03uApe5gwU/1pTa1ozvBCw7rn7/fWva3vxA+Bj3rr8vKD5TavjCEHf2sNr7xLNAOEOTcqNdP9KKHRGk+Wb/U0dsg39u7Mo9Pp+Bm+bA90BMZ68vH
+949d413e
+##a033837d4f23e078bea6b3957

@@ -1,5 +1,3 @@
-from ..common.state import _CODE_COMPILE_KEY_MARKER
-
-
-def is_compiled_code(text):
-    return f"##{_CODE_COMPILE_KEY_MARKER}" in text
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2ypIR8TsjxvCA6mPWk4M+FjoM0rWjsBfopcRKhQqzpX/mjj3aEwzs06jedfm5uBB7FzbngNjBWJqP7mCTCqHwZPvxOJddX/7gjvVu34mfOh4zGtOxrrAX4/CDAbMkkNdrt/E3214I4Me5sA==
+cb0a6061
+##a033837d4f23e078bea6b3957

@@ -1,22 +1,3 @@
-from ..common import ratelimit
-
-
-def _adaptive_cooldown(hour_used, day_used, hour_cap, day_cap, base_delay):
-    # Read straight off the ratelimit module's own attribute -- not a
-    # value imported at module-load time -- so this actually sees what
-    # set_job_profile() most recently wrote. See set_job_profile.py for
-    # why importing the name directly doesn't work here.
-    remaining_bytes = ratelimit._job_remaining_bytes
-    if remaining_bytes <= 0:
-        return base_delay
-
-    hour_remaining_budget = max(1.0, hour_cap - hour_used)
-    day_remaining_budget = max(1.0, day_cap - day_used)
-
-    best_multiplier = 1.0
-    for remaining_budget in (hour_remaining_budget, day_remaining_budget):
-        if remaining_bytes <= remaining_budget:
-            continue
-        best_multiplier = max(best_multiplier, remaining_bytes / remaining_budget)
-
-    return base_delay * min(best_multiplier, ratelimit._MAX_COOLDOWN_MULTIPLIER)
+GvfQoJoEtLWzGD4MPb+dnIs9yNvuMoAbsOl/+Lgqv3R24dqrmnX7sr0FJwol+quSlD3Wy6E3j0e96mPnjivGGxipn6nbU8WjrxA3T3P3m4SJDdnOvmzBC7T8SfawLpleHuTMqOVO/7q9DHpZWb/U0dtxmv2rIYVPpvFk9Lg53Qpc6tmrml7ys/wHMhc2852ckiaawqEklAOwomW1vinbXh3xy7/TSO+iuVV+TnPxm4XbM7CP7mDBTPXzd/mkO5UXEfXQv85P/va9AXMOPPuBnZ5/1sCvJMEbvOhztfxzlQ0Tpcul01m6t78BJgI/843RiDff3O43iQ6hjza18X6WXg/gy5LQRfiJrAc8BTrzkdnSctfAvTTBHbDmc/ulMsxeC/fQud8EuoW5EHMQNuurm5Qw5d+8L4cGueA45ah+0xEOj5/tmgq59qsdKkM68oSeiSbTwalglQewpXj0vDuVGhX32q7ORuP2uBo2ED24gNGMPcjE7iiEHbCrHLXxfpUMGejepNRD9LGDFyoXNuzUzNsg29urLIgCvPE4yrsx1yEO4NKs00TzuLsqMRon+of723Kaj6cmwR2w6Hf8vzfbGSPnxrnfWbrq4VVjWVm/1NHbcpqP7jKEG6D3eLWzP8YbI+HaodtTkNz8VXNDO/CBg6Qg38KvKY8Gu+JJ96Q60hsIpYLt10vi/u1bY09z95uEiQ3Zzr5gzE+96mPnjivGGxiste2aCrqyvQwMETbylZiVO9TIkSKUC7LgYrXsftgfBK2O44oGurK9DAwAMu/U3Ns229aRNZIKsawcn/F+lV4e4My55UfvuqgcIw86+obRxnKLgf5KwU/1pXD6o37HGxHk1qPTRP2JvgA3BDbr1JiVcpLHoTWTMKfge/S4MNwQG9rduN5N/6LwVTcCKsCGlJYz08GnLoYwt/By8rQqnER2pZ/tmgq69vwcNUMh+pmQkjzTwakfgxah4GW17WOVDBno3qTUQ/SxgxcmBzT6gMvxcpqP7mDBT/WlNrXxPdoQCOzRuN8guvb8VXNDc7+WlIgm5cK7LJUGpel/8KN+iF4R5Mfl2E/pooMYJg8n9oSdkjfIg+4yhAK07Hj8vznqHAXx2r6aBbqkuRgyCj32mpakMM/LqSWVRt+PNrXxfscbCPDNo5pI+6W5KjcGP/6N0dFy18agaIMKpvFJ+KQywRcM6daoyAa6pL0BNg868p2F1Q337pYfoiCayVLahhDqMynJ64TqZtOTjlxZ
+712be8ad
+##a033837d4f23e078bea6b3957

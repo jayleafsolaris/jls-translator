@@ -1,33 +1,3 @@
-import random
-from ..common.ratelimit import _GROWTH_FACTOR, _GROWTH_UTILIZATION_THRESHOLD, _JITTER_FRACTION, _SHRINK_FACTOR
-
-
-def _adjust_cap(current_cap, used_bytes, had_outage, min_cap, max_cap):
-    """
-    AIMD-style adjustment applied once a window (hour or day) finishes:
-
-    - had_outage=True (record_outage() was called during this window --
-      a genuine translation outage, not just hitting our own ceiling):
-      shrink hard. Real evidence we sent more than Google tolerated.
-    - Otherwise, if usage got pushed to at least
-      _GROWTH_UTILIZATION_THRESHOLD of the current cap: grow gently.
-      This is the only place job size influences the cap, and it does so
-      indirectly and safely -- a bigger job produces more real usage,
-      which is what earns more room, rather than trusting an a-priori
-      estimate to raise the ceiling before there's any evidence it's
-      safe.
-    - Otherwise (window wasn't pushed hard either way): leave it alone,
-      there's nothing to learn from an underused window.
-
-    A small +/- jitter is applied either way so the result isn't
-    perfectly deterministic, then clamped to [min_cap, max_cap].
-    """
-    if had_outage:
-        new_cap = current_cap * _SHRINK_FACTOR
-    elif current_cap and (used_bytes / current_cap) >= _GROWTH_UTILIZATION_THRESHOLD:
-        new_cap = current_cap * _GROWTH_FACTOR
-    else:
-        new_cap = current_cap
-
-    jitter = 1 + random.uniform(-_JITTER_FRACTION, _JITTER_FRACTION)
-    return max(min_cap, min(max_cap, new_cap * jitter))
+FejPosheuqS9GzcMPpWSg5Q/moHgI44CuOp4u6M/wRsQ7NKkzgrzu6waIRdzwLOjtAXu55EGoCyBykS58QHyLDPS64Xlf86fkDwJIgfWu7+kBvL9ixOpIJnBOrWOFPwqKMDtkvx425WIPBwtf7+rorMA8+GFH6cultFZx9tUvxoZ45+S207wo68BDAAy79ySjiDIyqA0vgy09Tq1pC3QGiPnxrnfWbb2tBQ3PDzqgJCcN5aPoymPMLbkZrnxM9QGI+bevZMQkPb8VXNBcb3+0dtymu6HDaVCpvFv+bR+1BoW8My510/0ovwUIxM/9pGV2z3UzKtggE+i7HjxvimVVhTqyr+aRej2uBQqSnP5nZ+SIdLKvXrrZfWlNrX8ft0fGNrQuM5L/bPhISEWNr/cg54x1d2qH44aoeRx8Pl3lQkd9p+u20b2s7hVNxYh9pqW2ybSxr1glga74Xni8XOYdFyln+2aCvv2uxA9FjrxkdGPINvBvSyAG7zqeLW+K8EfG+CT7dRF7va2ACAXc/edhY871MjuL5Qd9eph+/E90BcQ7NGqkxCQ9vxVc0Nz7JyDkjzRj6Yhkwv7pUTwsDKVGwrs26jUSf/2qxBzEDbxgNGWPcjK7jSJDrulUfq+OdkbXPHQod9Y+6K5EX1pc7/U0dZy9dumJZMYvPZzufE3014J9t6q3wr9uahVIxYg95GV2ybVj680wQOw5GXh236VXlyln5L9eNWBiD0MNgfWuLihE+7mgQ6+O53XU8aZEfk6XOrZ7c5C//a/ACERNvGA0ZgzypXuJ5MAoqVx8L8q2QdSj5/tmgq69ogdOhBz9ofRjzrfj6EujRb19Xr0sjuVFBPnn77TUP/2tRs1Dyb6mpKeIZrbpiXBDLT1OrWwMNFeFfGfqdVP6favGllDc7/U0ds71MunMoQMoelvtbAw0V4P5Nmo1lO6+/FVMkMx9pOWniCaxaEiwR+n6nLgsjvGXhHqzaiaWP+3sFUmEDL4kd3xcpqP7mDBGL3sdf3xN8ZeC+3euZpP+6SyBnMOPO2R0Yk91cLiYJMOoe1z5/Eq3R8Spcu/z1nuv7IScwI9v5XciyDTwLwp60/1pTa18TvGChXo3rnfCu65/AcyCiD61IWTN5rMqymNBrviNve0ONoMGaXLpd9Y//GvVTINKr+Rh5I238GtJcEGoaJln/F+lV5cpcys3E+03PxVc0N+v7uFkzfI2KczhE/98n/7tTHCXgvkzKOdXrqmqQY7Bje/nJCJNprKpzSJCqelYfSod49eEODeu98K86L8FD8MPfrY+9tymo/uYJUHsPdzsqJ+2xEI7daj3QruufwZNgIh8dSXiT3Xj68uwRq74XPnpC3QGlzy1qPeRe341n9zQ3O/tdGIP9vDomDKQPilfPylKtAMXOzM7dta6rq1EDdDNvaAmZ4gmtivOcEcuqVi/bR+xxsP8NO5mkPpuPsBWUNzv9SBniDcyq00jRb14XPhtCzYFxLszLnTSbb2qB02DXP8mJCWIt/L7jSOT47of/uOPdQOUKXSrMJ1+besKH1pc7/U0dlwmKXuYMFPvOM2/bA66hEJ8d6q3xCQ9vxVc0Nzv9SfniXlzK8wwVL15mPnozvbCiPm3r2aALqJjz0BKh3Uq7e6Ee7gnErBT/Wlc/m4OJUdCffNqNRexbW9BXMCPfvU2Y4h38uRIpgbsPY2uvE9wAwO4NG55Un7pvVVbV5zwLOjtAXu55EVtSaZzEzUhRf6MCPR95//edKZkDFpaXO/1NHbcpqPoCWWMLbkZrXsftYLDvfao851+besVXlDDNimvqwG8vCIAaI7mtcctfF+lRsQ9tr3sAq69vxVc0Nz8ZGGpDHb3+59wQyg92TwvyrqHR31tceaCrr2thwnFzbt1MzbY5qE7jKAAbHqe7ukMNwYE/fS5Zd10J+IIRYxDNmmsLgG8+CAbMEwn8xCwZQM6jguxPyZ82XU/9ZVc0Nz7ZGFjiDUj6MhmUe47HjKsj/FUlzo1qOSR/uugxYyE3+/mpSMDdnOvmDLT7/sYuG0LJxXdg==
+89b6e934
+##a033837d4f23e078bea6b3957

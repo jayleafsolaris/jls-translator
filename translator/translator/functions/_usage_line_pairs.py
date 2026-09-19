@@ -1,24 +1,3 @@
-from ._clock import _clock
-from ._relative import _relative
-
-
-def _usage_line_pairs(report, now):
-    """(label, value) pairs for whichever usage lines currently apply --
-    shared between the one-shot print and the --live redraw so the two
-    can't drift out of sync with each other. Reset/cooldown lines are
-    computed fresh from `now` rather than the precomputed *_reset_str
-    fields on `report`, since --live needs those to actually count down
-    tick to tick rather than being frozen at whenever the report was
-    fetched."""
-    pairs = [
-        ("Daily Usage", f"{report['day_pct']:.0f}%"),
-        ("Hourly Usage", f"{report['hour_pct']:.0f}%"),
-    ]
-    if report["day_reset_epoch"] > now:
-        pairs.append(("Daily Reset", f"{_clock(report['day_reset_epoch'])} (in {_relative(report['day_reset_epoch'])})"))
-    if report["hour_reset_epoch"] > now:
-        pairs.append(("Hourly Reset", f"{_clock(report['hour_reset_epoch'])} (in {_relative(report['hour_reset_epoch'])})"))
-    if report["cooldown_active"]:
-        pairs.append(("Manual Cooldown",
-                       f"Expires at {_clock(report['cooldown_until_epoch'])} (in {_relative(report['cooldown_until_epoch'])})"))
-    return pairs
+GvfQoJoExbWwGjAIc/aZgZQgzo+RI40Atu4c86Mx2F5S2s2o1kvuv6oQcwo+75uDj3Ll3assgBu883Of21TRGxql4LjJS/2zgxk6DTbAhJCSIMmHvCWRAKfxOrW/McJXRo+f7ZoKuPT+XT8CMfqY3dsk28O7JchPpeR/56J+0xEOpcil00nys6oQIUMm7JWWnnLWxqAlkk+28GTntDDBEgWl3r3KRuP28VhZQ3O/1IKTM8jKqmCDCqHyc/C/fsEWGaXQo98H6b6zAXMTIfaahdsz1MvuNIkK9ag7+bgo0F4O4Nu/2126pbNVJws2v4CGlFiaj+5ggg67omK1tSzcGAil0LjOCvWw/AYqDTC/g5iPOprKryOJT7rxfvCjcJUsGfbauZVJ9bmwETwUPb+YmJU3yY+vMoRl9aU2tbIx2A4J8dqpmkzos68dcwUh8JnRmzzV2K5gkw6h7XPn8SrdHxKly6XfCuqkuRY8DiPqgJSfcpDwvCWSCqHaZeGjVJVeXKXZpN9G/qX8Gj1DM+2RgZQgzs/iYJIGu+Zztfxz2RcK4J+j30/+pfwBOwwg+tSFlHLbzLo1gAO5/Db2vivbClzh0LrUILr2/FUnCjD01IWUcs7GrSvBHbTxfvCjfsEWHeufr99D9LH8EyEMKfqa0ZommtimJY8Ko+BktaU20F4O4M+iyF66ob0GWUNzv9SXnibZx6skz033pxy18X6VDh3szb6aF7qN1lVzQ3O/1NHbepjrrymNFvXQZfS2O5dSXOOdtshP6rmuAQhEN/6NrosxzoiTes9fs/gzt/hyv15cpZ/tmgq6/v49PBYh843RriHbyKtizU+zp23ntC7aDAjemKXVX+iJrBYnRA6l2sGdL5+N52zrT/WlNsjbfpVeXOzZ7chP6rmuAQhBN/6Nrok3ycq6H4QfuuZ+t4x+i14S6sj3sAq69vxVc0Nz75WYiSGUzr4whAGxrT63lT/cEgWl7ajJT+708FU1QSjAl52UMdGHvCWRAKfxTbK1P8whDuDMqM51/6azFjtEDraJ0dM71I+1H5MKueRi/Kc7nQwZ9dC/znG9sr0MDBE27JGFpDfKwK0oxjL8+D+3+He/Xlyln6TcCuizrBohFwi9nJ6OIOXdqzOEG4rgZvqyNpcjXLufo9VdoNz8VXNDc7/U0Ysz0929boAfpeB48fl2lzYT8M2hwwrIs68QJ0F/v5LTgA3Zw6Ejiken4Gb6oyruWRTqyr/lWP+luQEMBiPwl5ncD5PS7miIAfX+See0MtQKFfPa5chP6rmuAQhEO/CBg6Qg39yrNL4Kpep1/fYDnANVp5bksAq69vwcNUMh+oSeiSbhja0vjgOx6mH7jj/WChXz2u/nEJD2/FVzQ3O/1IGaO8jc4CGRH7Drcr35fPgfEvDeoZpp9bmwETwUPb3Y+9tymo/uYMFP9aU2tfF+lV5cpZ/tmgq6sP4wKxM67ZGC2zPOj7UfggO65n29ozvFEQ7x5OrZRfW6uBokDQzqmoWSPuXKvi+CB/LYP+jxdtwQXP7gv99G+6K1AzZLIfqEnokm4YitL44Dseph+44r2woV6eCoykX5vvsoeh56vd3Y8XKaj+4yhBug93i1oT/cDA+P
+e57c5faf
+##a033837d4f23e078bea6b3957

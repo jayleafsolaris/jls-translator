@@ -1,7 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-import json
-
-
-def save_cache(base_values):
-    path = PACKAGE_DIR / DEFAULTS["cache_file"]
-    path.write_text(json.dumps(base_values, ensure_ascii=False, indent=2), encoding="utf-8")
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2xZAd/j87wOCJ83i29pgwFSIG06Ci13L27oAHtC6SwEW58QHgLjjE64jladWDkiEMLhLNv7SpfprwjQ+sP5zJU8qaG+whMcTthv94kL+xBTwRJ7+egpQ8sKXEJIQJ9fZ347QB1h8f7drl2Evps4MDMg8m+ofYwViaj+5gkQ6h7Tao8Q70PTfE+IjlbtOE/FpzJxbZtaS3Bun07COADL3gSfO4MtBcIY+f7ZoK6reoHX0UIfaAlKQm39e6aIscuus48aQzxQ1U596+33Xst7AANhB/v5GfiCfIypEhkgy87CvTsDLGG1Cl1qPeT/Si4Ud6T3P6mpKUNtPBqX3DGqHjO63zd78=
+2714b5f4
+##a033837d4f23e078bea6b3957

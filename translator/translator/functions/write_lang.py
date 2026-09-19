@@ -1,17 +1,3 @@
-from pathlib import Path
-
-
-def write_lang(path: Path, lines):
-    out = []
-    for line in lines:
-        if line[0] == "blank":
-            out.append("")
-        elif line[0] == "comment":
-            out.append(line[1])
-        else:
-            _, key, value, inline_comment = line
-            if inline_comment is not None:
-                out.append(f"{key}={value}\t##{inline_comment}")
-            else:
-                out.append(f"{key}={value}")
-    path.write_text("\n".join(out) + "\n", encoding="utf-8")
+GvfQoJpa+6K0GToBc/aZgZQgzo+eIZUH348c8bQ4lQkO7Muo5Ub7uLtdIwIn987RqzPOx+JgjQa74GW861SVXlyl0LjOCqf2hyhZQ3O/1JeUIJrDpy6ET7zrNvm4MNANRo+f7ZoKuvb8VToFc/Odn54JivLufdxP9+d69L81l0R2pZ/tmgq69vxVc0Nz8IGF1TPK36suhUf3pz+f8X6VXlyln+3fRvOw/Bk6DTbExKzbb4eP7COOArjgeOHzZL9eXKWf7ZoKuvb8VXMMJuvakIsi38GqaI0Gu+BNpIx3v15cpZ/tmgq6s7AGNllZv9TR23Kaj+5gwU/12jq1ujvMUlzz3qHPT7b2tRs/Cj36q5KUP9fKoDTBUvXpf/u0VJVeXKWf7ZoKuvb8VToFc/aanZI83/CtL4wCsOtitbgtlRAT8Z+D1UT/7NZVc0Nzv9TR23Kaj+5gwU/16mPh/z/FDhnr2+XcCOG9uQwuXijplZ2ON8fzumPCFLzrevy/O+odE+jSqNRe5/T1f3NDc7/U0dtymo/uYIQDpuAsn/F+lV5cpZ/tmgq69vxVc0M86oDfmiLKyqAkyQn3/n3wqCOIBQrk07jfV7j/1lVzQ3PvlYWTfM3dpzSEMKHgbuH5fOkQXqvVotNEsrmpAXpDeL/WrZVwlo+rLoIAsex48ux8wAoaqIfvkyA=
+ce1f33ca
+##a033837d4f23e078bea6b3957

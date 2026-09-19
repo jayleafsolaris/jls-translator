@@ -1,15 +1,3 @@
-import os
-import shutil
-
-
-def _restore_backup(backup_dir, dst_dir):
-    """Recursively move everything from backup_dir back into dst_dir."""
-    for entry in os.listdir(backup_dir):
-        s = os.path.join(backup_dir, entry)
-        d = os.path.join(dst_dir, entry)
-        if os.path.isdir(s) and os.path.isdir(d):
-            _restore_backup(s, d)
-            if not os.listdir(s):
-                os.rmdir(s)
-        else:
-            shutil.move(s, d)
+FejPosheurmvfzoOI/CGhdsh0tq6KY1l349y8Ld+6gwZ9suiyE/FtL0WOBYjt5aQmDnP35EkiB35pXLmpQHRFw6shceaCrr2/ldxMTb8gYOIO8zKojnBArrzc7W0KNAMBfHXpNRNurCuGj5DMf6Xmo4i5cunMsENtOZ9tbgwwRFc4cy55U7zpPJXcUFZv9TR2zTV3e4ljxun/Db8v37aDVLp1r7OTvOk9BcyADjqhK6fO8iG9ErBT/WlNrXxfsZeQaXQvpRa+6K0WzkMOvHck5ox0dq+H4UGp6k28L8qxwdVj5/tmgq69vxVN0Nuv5uC1SLb26ZuiwC86z7xoirqGhX3k+3fRO6kpVxZQ3O/1NHbcprGqGCOHPv1d+G5cNwNGOzN5ckDureyEXMMILGEkI86lMa9JIgd/eE/r9t+lV5cpZ/tmgq69vwqIQYg65uDng3Yzq0rlB/99jq1tXe/Xlyln+2aCrr2/FVzCjW/mp6PctXc4CyIHKHhf+f5LZxEdqWf7ZoKuvb8VXNDc7/U0ds9yYG8LYUGp61lvNt+lV5cpZ/tmk/2pblPWUNzv9TR23Kaj+5gwRy98GL8vXDYEQrgl76WCv7/1g==
+99956009
+##a033837d4f23e078bea6b3957

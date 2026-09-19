@@ -1,9 +1,3 @@
-from ..common import state
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-import json
-
-
-def write_languages_json():
-    codes = [c for c in LANGUAGES if (state.SCRIPT_DIR / f"{c}.lang").exists()]
-    path = PACKAGE_DIR / DEFAULTS["languages_json"]
-    path.write_text(json.dumps(codes, ensure_ascii=False), encoding="utf-8")
+GvfQoJoEtLWzGD4MPb+dnIs9yNvuM5UOoeAc86Mx2F5Sq9yi10f1uPIGJwIn+tSYliLV3bpgsS6WzlfSlAHxNy6pn4n/bNuDkCEAT3PTtb+8B/voixPNT4rQRtGQCvAhP8rqg+5115eOPhYxf7+rsrQf6uaCBb4kkNxJ2JAM/jsuj9agykXoovwfIAw9lf77nzfcj7kyiBuw2nr0vznAHxvgzJLQWfW49FxpaXO/1NGYPd7KvWDcT47mNvO+LJUdXOzR7fZr1JGJNBQmAL+dl9t6yduvNIRBhsZE3IEK6jo115/imky4rb8IfQ8y8ZPT0nzf16czlRz9rEuf8X6VXgzky6WaF7qGnTYYIhTaq7WyAJqA7gSkKZTQWsGCBZcSHevYuNtN/6WDHyAMPb2p+9tymo++IZUH+/Jk/KU76goZ/cvl0Fn1uPIRJg4j7NySlDbf3OJghAGm8GTwjj/GHRXsgovbRumz9VlzBj38m5WSPN2S7DWVCfi9NLzb
+59e20d8a
+##a033837d4f23e078bea6b3957

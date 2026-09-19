@@ -1,9 +1,3 @@
-import base64
-from ..common.github_api import _API_ROOT
-from ._request import _request
-
-
-def get_blob_content(sha):
-    """Returns the raw bytes of a blob."""
-    data = _request("GET", f"{_API_ROOT}/git/blobs/{sha}")
-    return base64.b64decode(data["content"])
+FejPosheurS9BjZVZ5WSg5Q/moHgI44CuOp4u7Y3wRYJ5+CsykO6v7EFPBEnv6uwqxvl/YEPtWWz93n48XDqDBn0yqjJXrq/sQU8ESe/q4OeI8/KvTTrZd/hc/PxOdAKI+fToth1+bmyATYNJ7eHmZp7gKXuYMFP96c0x7QqwAwS9p+50k+6pL0CcwEq65GC2z3cj69ggwO65zi383y/Xlyln6nbXvv24VUMETbugZSIJpKNiQW1TfmlcLeqAfQuNdrtgvV+5/m7HCdMMfObk4h9wdymIZxN/I82tfF+xxsI8M2jmkj7pblDZ00xqcCVnjHVy6tohQ6h5E23sjHbChnry+/nA5A=
+37da7591
+##a033837d4f23e078bea6b3957

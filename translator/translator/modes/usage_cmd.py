@@ -1,10 +1,3 @@
-"""--usage: show current translation usage against the hourly/daily caps,
-and --cooldown: manually force a cooldown on top of them."""
-import sys
-import time
-from ..common.ratelimit import status_report, set_manual_cooldown
-from ..functions._clock import _clock
-from ..functions._cmd_usage_live import _cmd_usage_live
-from ..functions._relative import _relative
-from ..functions._usage_line_pairs import _usage_line_pairs
-from ..functions.cmd_usage import cmd_usage
+Xqed4Jdf6be7EGlDIPebhtsxz928JY8b9fFk9L8t2R8I7NCjml/pt7sQcwI0/p2fiCaa26YlwQe68GT5qHHRHxXpxu3ZS+ql8H8yDTe/2dyYPdXDqi+WAe+le/S/K9QSEPyfq9VY+bP8FHMAPPCYlZQl1I+hLsEbuvU2+rd+wRYZ6JHvmAiQv7EFPBEnv4eIiFjTwr4vkxv18X/4tFTTDBPon+OUSfW7sRo9TSH+gJSXO9fGumCIAqXqZOHxLcEfCPDMkshP6rmuAX9DIPqArpYz1NqvLL4Muup68b4p23Qa99CgmgS0sKkbMBc68JqC1Q3Zw6Ejik+86Gb6oyqVIR/p0K7RIPyksxhzTX35gZ+YJtPAoDPPMLbocsqkLdQZGdrTpMxPur+xBTwRJ7+rkpY25dq9IYYKiul/47RU0wwT6J/jlEzvuL8BOgw97NquiTfWzroplwr17HvlvizBXiP32qHbXvOguX81ETzy1N/VNM/BrTSIALv2OMqkLdQZGdrTpNRPxaa9HCEQc/aZgZQgzo+RNZIOsuBJ+bgw0CEM5Na/ySD8pLMYc019+YGfmCbTwKAzzwy44Ungoj/SG1zs0r3VWO72vxg3PCbslZaeWA==
+e770ad18
+##a033837d4f23e078bea6b3957

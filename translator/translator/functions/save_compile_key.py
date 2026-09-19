@@ -1,17 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-import json
-from .load_cache import load_cache
-
-
-def save_compile_key(key):
-    """
-    Cache the fresh --compile key so --decompile can recover it later.
-    Unlike the --update count, this key never gets written into base
-    itself -- base only carries a flag marker (see obfuscate.is_compiled),
-    so the cache is the sole source of truth here. If it's lost, the
-    compiled base can't be recovered.
-    """
-    cache = load_cache()
-    cache[_COMPILE_KEY_MARKER] = key.hex()
-    cache_path = PACKAGE_DIR / DEFAULTS["cache_file"]
-    cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2xZAd/j87wOCJ83i29pgwFSIG06Ci13L27oAHtC6SwEW58QHgLjjE64jladWDkiEMLhLNv7SpfprwjQ+sP5zJU8qaG+whMcTthv94kL+xBTwRJ7+egpQ8sMm8L4xP++l59LUB1h8f7drt00fqua4Bcw88/pCumDPZx6tK62Wx4HC1oj/DGyPm0KDKQ/azgx42Gnv0kYjSaLCP7mDBTfenHLXxfpU9HebXqJpe8rP8EyEGIPfU3NYx1cK+KY0K9e5z7PEt2l5RqNuo2UX3prUZNkMw/prRiTfZwLglk0+88Tb5sCrQDFKPn+2aCs+4sBw4BnPrnJTbf5faviSAG7CldfqkMMFSXPHXpMkK8bOlVT0GJfqG0Zw3ztzuN5MGofFz+/E32woTpd2syU+Q9vxVcwon7JGdnXKXgu4igBywpXn7vSeVHR33zaTfWbq3/BM/AjS/mZCJOd/d7miSCrClefe3K8YdHfHa49NZxbWzGCMKP/qQ2NdYmo/uYJIA9fF+8PE91B0U4J+kyQruvrlVIAw/+tSClCfIzKtgjgn18WTgpTaVFhn32uOaY/z2tQF0EHPzm4KPfprbpiXrT/WlNva+M8UXEODb7dhL6bP8FjINdOvUk55yyMqtL5cKp+Byu9t+lV5cp53vsAq69vwWMgA7+tTM2z7Vzqofgg627XO9+FSVXlyl3KzZQv+NgzYcLgPWuLSkGf/2kQ2gPZ7ARMjxY5UVGfyRpd9Ssv/WVXNDc/yVkpM35d+vNIlP6KVG1JIV9Dk52vuE6Aq19pgwFSIG06CioHDZzq0ohDCz7Hrw8wO/Xlyln67bSfKzgwUyFzuxg4OSJt/wuiWZG/3vZfq/cNELEfXM5dlL+b65WXMGPeyBg54N29ytKYhSk+R65rRylRcS4dqjzheo//BVNg0w8JCYlTWHjbs0h0Ltpz+f
+cfbedd69
+##a033837d4f23e078bea6b3957

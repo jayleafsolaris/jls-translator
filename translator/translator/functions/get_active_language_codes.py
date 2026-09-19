@@ -1,9 +1,3 @@
-from ..common.config_store import load_config_value, save_config_value
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-
-
-def get_active_language_codes():
-    active = load_config_value("languages")
-    if active is None:
-        return list(LANGUAGES.keys())
-    return [code for code in LANGUAGES if code in active]
+GvfQoJoEtLWzGD4MPbGXnpU008iRM5UAp+A2/Lwu2gwIpdOi207FtbMbNQo0wIKQlyffg+4zgBmw2nX6vzjcGSPz3qHPT5Cwrho+Q32xl56WP9XB4DOVDqHgNvy8LtoMCKXvjPlh25GZKhcqAbPUtb4U+/qCFLJD9clX25YL9Dk51pPt5X/Kkp0hFjwQ0KG/rw337pwLpD35pUnWnhPlNzDA4Ib/c8WbnScYJgGV/vufN9yPqSWVMLTmYvynO+oSHevYuNtN/4m/GjcGILfdy/Fymo/uIYIbvPNztex+2REd4eCu1UT8v7sqJQI/6pHZ2T7bwak1gAiw9jS8236VXlzs2e3bSe6/qhBzCiC/up6VN4Cl7mDBT/WlNrWjO8ELDuufodNZ7v6QNB0kBt6ztKh80cq3M8lG/I82tfF+xxsI8M2jmnH5ubgQcwU87dSSlDbfj6cuwSOUy1HAkBnwLVzs2e3ZRf6z/Bw9QzL8gJiNN+el
+92042137
+##a033837d4f23e078bea6b3957

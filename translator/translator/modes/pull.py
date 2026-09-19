@@ -1,12 +1,3 @@
-"""--pull: sync <cwd>/jls-translator/ down from this tool's own repo. Every
-file mirrors the repo exactly except .py source, which is transparently
-decompiled back to plain, readable Python on the way in (see
-common/code_obfuscate.py) -- the repo itself stores it compiled."""
-from ..common import state
-from ..common.state import GITHUB_REPO
-from ..common.config_store import get_release_branch
-from ..common.github_api import (
-    GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix,
-    get_branch_commit_and_tree, get_full_tree, get_blob_content, git_blob_sha,
-)
-from ..functions.cmd_pull import cmd_pull
+Xqed4Jda77qwT3MQKvGX0ccxzcvwb4sDpqhi57AwxhId8dC/lQr+uasbcwUh8JnRjzrT3O40jgC5omW1vinbXg7gz6KUCt+guQcqaTX2mJTbP9PdvC+THPXxfvDxLNAOE6XatdtJ7rqlVTYbMPqEhdt8ytbuM44ap+ZzufEp3Rcf7Z+kyQrupL0bIBMy7ZGfjz7DpaolggC49X/5tDqVHB3m1O3ORbqmsBQ6DX+/hpSaNtvNoiXBP6zxfvq/ftoQXPHXqJpd+6/8HD1De+yRlPEx1cKjL49Atupy8I4x1xgJ9tyszk+0pqVcc05+v4CZnnLIyr4vwQah9nP5t37GChP32r6aQ+72vxo+EzrzkZXVcJiNxCaTALilOLuyMdgTE+ufpNda9aSoVSAXMuuR+50g1cLubs8Muuh7+r9wxgod8drt00fqua4BcyQay7ykuQ3o6p4P6wmn6nu1/3DWERHo0KOUSfW4uhw0PCDrm4OectPCvi+TG/Xic+GOLNASGeTMqOVI6LeyFjtpNe2bnNt8lMyhLYwAu6tx/KU2wBwj5M+kmkP3prMHJ0N7ldTR23L9xroIlA2U8GL9lCzHEQ6pn4rTXtKjvjQjChbthp6JfprGvR+SFrvmSfCpPdkLGODb4ZpM87i4KiEGPvCAlKQi28ylIYYKivVk8Lc3zVJ2pZ/tmk3/ooMXIQI9/JyumD3Xwqc0vg674UnhozvQUlzi2rnlTO+6sConETb62NGcN87wrCyODYrmefulO9sKUKXYpM51+LqzFwwQO/7Y+9JY3N2hLcFB++Nj+7Iq3BES9pGu107FpqkZP0M68oSeiSaazKMkvh+g6Xqf
+11d15113
+##a033837d4f23e078bea6b3957

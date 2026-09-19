@@ -1,6 +1,3 @@
-import os
-
-
-def compute_auto_workers():
-    cpu = os.cpu_count() or 4
-    return max(5, min(20, cpu * 4))
+FejPosheurmvf1lpN/qS0Zg919+7NIQwtPBi+o4p2gwX4M2+kgOg3PxVc0Mw74HRxnLV3OAjkRqK5nngvyqdV1zqze2OILr2/FUhBifqhp/bP9vX5nXNT7jseL3jbpleH/XK7ZAKrv/1fw==
+6eea2314
+##a033837d4f23e078bea6b3957

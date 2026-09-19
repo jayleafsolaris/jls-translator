@@ -1,32 +1,3 @@
-"""--upgrade: fetch the latest release from GitHub and replace this install."""
-import io
-import os
-import shutil
-import sys
-import zipfile
-import requests
-from ..common.state import (
-    DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH,
-    CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, SCRIPT_VERSION,
-)
-from ..common.config_store import warn_red, get_release_branch
-from ..common.netcheck import require_internet_or_warn, fetch_remote_version, _parse_version_tuple
-_REQUIRED_TOP_LEVEL_FILES = {"LICENSE", "pyproject.toml"}
-_REQUIRED_PACKAGE_FILES = [
-    "cli.py",
-    os.path.join("common", "state.py"),
-    os.path.join("common", "config_store.py"),
-    os.path.join("common", "netcheck.py"),
-    os.path.join("modes", "upgrade.py"),
-]
-from ..functions._backup_and_clear import _backup_and_clear
-from ..functions._compare_versions import _compare_versions
-from ..functions._contains_protected import _contains_protected
-from ..functions._copy_skip_protected import _copy_skip_protected
-from ..functions._find_package_source import _find_package_source
-from ..functions._missing_required_files import _missing_required_files
-from ..functions._pad import _pad
-from ..functions._remove_non_protected import _remove_non_protected
-from ..functions._restore_backup import _restore_backup
-from ..functions._upgrade_protected_names import _upgrade_protected_names
-from ..functions.cmd_upgrade import cmd_upgrade
+Xqed4Jdf6rGuFDcGab+SlI8x0o+6KIRPueRi8KIqlQwZ6dqsyU+6sK4aPkMU9oC5jjCazqAkwR2w9Xr0sjuVChTszO3TROmivRk/TXG91vuSP8rAvDTBBrqPf/ihMccKXOrMx9NH6rmuAXMQO+qAmJdY08K+L5Mb9fZv5ts32A4T98vtwEPqsLUZNmk68oSeiSaa3asxlAqm8WWftyzaE1yrka7VR/e5slsgFzLrkdGSP8rAvDTBR9+lNrXxGvA4PdDzmekGuoadNhgiFNqrtbIAlo+JCbUngMdJ2oYQ8CxQpfiE7mLPlIMnFjMcs9S2sgby+owfoz2Uy1Xd/VSVXlyl/IL0bNORgzEaMQzXvbW/F/TwgAGsKvmlVdqfGPw5I8H2n+V804WVNx8mDNG1vL5+mvyNEqg/gdpA0IMN/DEyqbXksEzoubFVfU0w8JmclDyUzKEuhway2mXhvizQXhXoz6LIXrqhvQc9PCH6kN3bNd/bkTKEA7DkZfCOPMcfEubXx9xY9bv8W30APPKZnpV81Mq6I4kKtu42/Lwu2gwIpc2oy1/zpLkqOg0n+oafniblwLwflg6n6zq1tzvBHRTazajXRe6zgwM2ESD2m5/XcuXfrzKSCorzc+eiN9oQI/HKvdZPkImOMAI2Gs2xtaQG9f+RDKQ5kMlJ05gS8C1cuJ+2mGbTlZk7ACZxs9TTiyvK3aEqhAyhq2L6vDKXA3ba7Yjrf9OEmTEMMxLcv7C8F+XphwykPPW4Ns7bfpVeXKfcodME6q/+WVlDc7/Unoh8ys66KM8Fuux4vfM92hMR6tHvlgq4pagUJwZ9743T0n6wj+5gwQCmq2b0pTabFBPs0eWYSfW7sRo9QX+/1pKUPNzGqR+SG7r3c7uhJ5dXUI+f7ZoK9aXyBTIXO7GenpI8ko2tL4wCuus0ufF82xsI5teo2UG0pqVXek9Zv9TR2z3Jgb4hlQf773n8v3aXExPh2r6YBrr0qQU0ETL7kd+LK5iG4kq8ZbP3efjxcJsYCevcudNF9KXyKjECMPSBgaQz1MuRI40KtPc2/Lwu2gwIpeCv20nxo6wqMg03wJednjPIpagyjgL1qzjzpDDWChXq0b6Udfm5sQUyETbAgpSJIdPAoDPBBrj1eeelfuodE+jPrMhPxaC5ByAKPPGH+50g1cLubs8JoOt14bgx2w1S2tyi1F77v7IGDBMh8ICUmCbfy+4pjB+692K1jj3aEAjk1qPJdeqkswE2ACf6kPudINXC7m7PCaDrdeG4MdsNUtrcospTxaW3HCM8I+2bhZ4xzsqqYIgCpepk4fEB1hEM/OC+0UPqiawHPBc2/ICUn1jc3aEtwUH742P7sircERL2kZLcQ/SygwUyADj+k5SkIdXavCOET7zoZvqjKpUhGuzRqeVa+7W3FDQGDOybhIkx36WoMo4C9as486Qw1goV6tG+lHX3v68GOg00wIaUiifT3askvgm86XPm8TfYDhP3y+3lR/Olrxw9BAztkYCOO8jKqh+HBrngZZ+3LNoTXKuRq89E+aK1Gj0QfcCEkJ9y08K+L5Mb9dpm9LVU0wwT6J/jlEzvuL8BOgw97NquiTfXwLglvgG660nlozHBGx/x2qmaQ/emswcnQwztkZyUJN/woC+PMKX3eeG0PcEbGI/Zv9VHuvjyEyYNMOudnpUhlPC8JZIbuvdzyrM/1hUJ9Z+k11r1pKhVDBE27ICeiTflza8jihqlj3DnvjOVUFLjyqPZXvO5sgZ9PCbvk4OaNt/wvjKOG7DmYvC1AdsfEeDM7dNH6rmuAXM8Ju+Tg5o23/C+Mo4bsOZi8LUB2x8R4MzH3Fj1u/xbfQUm8ZeFkj3U3OAjjAuK8Gbyoz/RG1zs0r3VWO72vxg3PCbvk4OaNt+l
+da908582
+##a033837d4f23e078bea6b3957

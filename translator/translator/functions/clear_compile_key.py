@@ -1,14 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-import json
-from .load_cache import load_cache
-
-
-def clear_compile_key():
-    """Drops the cached --compile key, e.g. once --decompile has consumed it."""
-    cache = load_cache()
-    if _COMPILE_KEY_MARKER in cache:
-        del cache[_COMPILE_KEY_MARKER]
-        cache_path = PACKAGE_DIR / DEFAULTS["cache_file"]
-        cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
-        return True
-    return False
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2xZAd/j87wOCJ83i29pgwFSIG06Ci13L27oAHtC6SwEW58QHgLjjE64jladWDkiEMLhLNv7SpfprwjQ+sP5zJU8qaG+whMcTthv94kL+xBTwRJ7+egpQ8sMm8L4xP++l59LUB1h8f7drt00fqua4Bcw88/pCumDPZx6tK62Wx4HC1sjLQHw7a3KLXWvO6uSo4Biq33cvxcpqP7mLDTZH3eeWifsEWGaXcrNlC/7L8WH4APPKEmJc3msSrOc1PsKtxu/Ex2x0ZpZLg3k/5ubEFOg82v5yQiHLZwKAzlAKw4Tb8pXCXXF6Pn+2aCvm3vx02Q26/mJ6aNuXMryOJCv2sHLXxfpUXGqXgjvVnyp+QMAwoFsarvLoA8eqcYIgB9eZ39rk7j3RcpZ/tmgq69rgQP0Mw/peZngnl7IENsSaZwEnelAfqMz3X9Ijod5D2/FVzQ3O/1JKaMdLKkTCAG72lK7WBH/Y1PcL6kv5jyPbzVRcmFd6hva8B4Y2tIYIHsNpw/L07lyN2pZ/tmgq69vwWMgA7+quBmibSgbkyiBuw2mLwqSqdFA/q0ePeX/emr10wAjD3kd3bN9TcuzKEMLT2dfy4Y/MfEPba4ZpD9LK5GydeYbbY0Z482cCqKY8I6Kdj4bdzjVxVj5/tmgq69vxVIQYn6oaf2wbI2qtKwU/1pWTwpSvHEFzD3qHJT5A=
+ed9a22cd
+##a033837d4f23e078bea6b3957

@@ -1,21 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS
-import sys
-import time
-
-
-def _report_keys(action, done, total):
-    """
-    Prints a clean, single-line progress indicator like 'Adding Keys... [023/643]'.
-
-    Always called once per completed key (never skipped/batched), and
-    pauses briefly after each write so the counter is actually visible
-    ticking up one-by-one (1, then 2, then 3, ...) instead of flashing by
-    too fast to read on fast, local (non-network) commands like --add and
-    --remove. See DEFAULTS['key_progress_delay'].
-    """
-    width = len(str(total)) if total > 0 else 1
-    sys.stdout.write(f"\r{action} Keys... [{done:0{width}d}/{total}]".ljust(60))
-    sys.stdout.flush()
-    delay = DEFAULTS.get("key_progress_delay", 0)
-    if delay:
-        time.sleep(delay)
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2xZAd/j87wOCJ83i29pgwFSIG06Ci8TvX36EylU+m/GWfuDPFEQ7xn7nTR//c1n83BjW/q4OeItXduh+KCqz2PvSyKtwREqmfqdVE//r8ATwXMvPdy/Fymo/uYsNN36U2tfEOxxcS8czt2wr5urkUPU9z7J2fnD7fgqIpjwr19WT6tizQDQ+l1qPeQ/m3qBohQz/2n5TbdfvLqimPCPXOc+yicJtQXN6P/4kFrOLvKHRNWZXU0dty+8O5IZgc9eZ3+b070V4T69yomlr/pPwWPA4j85GFnjaaxKs5wUe74GDwo37GFRX1z6jeBfi3qBY7Bje22NGaPN6l7mDBT6XkY+a0LZUcDuzaq9ZTure6ATYRc/qVkpNyzd2nNIRPpuo24bk7lR0T8NG531i6v69VMgAn6pWdlyua2acziA254By18X6VChXm1KTUTbqjrFU8DTaylojWPdTK7mjQQ/XxfvC/fodSXPHXqNQKqfr8W31Ner+dn4gm386qYI4J9eN69KI23BAbpd20sAq69vwBPAxz+ZWCj3LOwO4yhA6xpXn78TjUDQipn6HVSfu6/F09DD2ympSPJdXdpWnBDLroe/S/OsZeEOzUqJoHt7e4EXMCPfv+0dtymoLjMoQCuvNzu/EN0BtcwfqL+3/Wgo8udAg25quBiT3d3aszkjCx4Hr0qHnoUHaln+2aCLj01lVzQ3PonZWPOpqS7iyEAf32Yuf5KtoKHemW5JpD/PaoGicCP7/K0cty38O9JcFe36U2tfEtzA1S9sup1V/u+KsHOhc2t5LTpyDBzq00iAC7+DbetCfGUFKrn5bBTvW4uU9jGCT2kIWTL97S4TuVAKHkeuiMfJsSFvDMuZIcqv/1f3NDc7+HiIh8yduqL5Qb++N64KI2nVd2pZ/tmk7/ur0Mc15z27G3ugf2+51uhgqhrTT+tCfqDg7q2L/fWemJuBA/Aiq92NHLe7CP7mDBBrOlcvC9P8xEdqWf7ZoKuvb8AToONrGHnZ43yoeqJY0OrKwc
+7af7fb43
+##a033837d4f23e078bea6b3957

@@ -1,8 +1,3 @@
-from ..common import state
-from ..common.lang_io import parse_lang, write_lang, strip_comments_for_output
-
-
-def sync_en_us_from_base(base_lines):
-    en_us_path = state.SCRIPT_DIR / "en_US.lang"
-    write_lang(en_us_path, strip_comments_for_output(list(base_lines)))
-    return en_us_path
+GvfQoJoEtLWzGD4MPb+dnIs9yNvuM5UOoeAc86Mx2F5Sq9yi10f1uPIZMg00wJ2e2zvX36EylU+l5GTmtAHZHxLik+3NWPOiuSo/Aj342NGIJsjGvh+CALjoc/ulLeoYE/fgos9e6qOof1lpN/qS0Ygr1MyRJY8woPZJ86Mx2CEe5Myokkj7pbkqPwo9+ofYwViaj+5ghAGK8GXKoT/BFly4n77OS+6z8iYQMRrPoK6/G+iP4WDDCrvaQ8b/MtQQG6e17ZoKuqGuHCcGDPOVn5x638GRNZIwpeRi/f1+xgoO7M+S2UX3u7kbJxAM+ZuDpD3P2741lUe57GXh+TzUDRna06TUT+n/9VxZQ3O/1IOeJs/doGCEAYrwZcqhP8EWdg==
+1709970c
+##a033837d4f23e078bea6b3957

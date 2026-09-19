@@ -1,14 +1,3 @@
-"""--push: sync <cwd>/jls-translator/ up to this tool's own repo, as one
-combined commit. Every .py file is compiled (obfuscated) before upload --
-see common/code_obfuscate.py -- so the repo only ever holds unreadable
-blobs of the tool's own source; --pull/--upgrade decompile it back."""
-from ..common import state
-from ..common.state import GITHUB_REPO
-from ..common.config_store import get_release_branch
-from ..common.github_api import (
-    GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix,
-    get_branch_commit_and_tree, get_full_tree, create_blob, create_tree,
-    create_commit, update_ref, git_blob_sha,
-)
-from ..functions._local_files import _local_files
-from ..functions.cmd_push import cmd_push
+Xqed4Jda76W0T3MQKvGX0ccxzcvwb4sDpqhi57AwxhId8dC/lQrvpvwBPEMn952C2ybVwKJnkk+68ni1ozvFEVCl3r6aRfSz1hY8DjH2mpSfctnAoy2IG/ulU+O0LMxeUvXG7dxD9rP8HCBDMPCZgZI+38vuaI4Ns/Bl9rAq0BpVpd2o3EXos/wAIw88/pDR1n+w3KslwQy66Hv6v3HWERjg4KLYTO+lvxQnBn3vjdHWf5rcoWCVB7ClZPChMZUREunG7d9c/6T8HTwPN+zUhJUg386qIYMDsI90+b48xl4T45+50k+6orMaP0Qgv5uGlXLJwLsyggrupTu4oSvZElOokrjKTei3uBBzBzb8m5yLO9bK7imVT7fkdf7/fJdcduPNotcKtPi/Gj4OPPHUmJYi1d26YJIbtPFzn7cs2hNcq5Gu1Uf3ubJbIBcy65HRkj/KwLw0wSic0V7AkwHnOyzKtavIRff28lswDD7ym5/VMdXBqCmGMKbxeee0ftwTDOrNuZpN/6KDBzYPNv6HlKQwyM6gI4lls/d5+PFwmx0T6NKi1AT9v6gdJgEM/oSY2zvX36EylU/9jza18X7yFwjNyq/7X+6+mQchDCGz1LaSJvLarAGRBpD3ZPqjcpUXD9rMtNRJxbOkFj8WN/qQ3ds008GqH5MKuOpi8I4u1B0X5Nio5Vros7ocK09Zv9TR2zXf25Eikw675n7KsjHYExXx4KzUTsWirhA2T3P4kYWkNM/Doh+VHbDgOrWyLNAfCODgr9ZF+Pr8FiEGMuuRro8g38riSsFP9aV157Q/wRsj5tCg10Pu+vwAIwcy65GuiTfcg+4niBuK53r6swHGFh2pteSwTOi5sVV9TTXqmpKPO9XBvW6+A7rmd/mOONwSGfafpNda9aSoVQwPPPyVnaQ008OrM+sJp+p7tf9w0wsS5suk1UTp+L8YNzwj6oeZ2zvX36EylU+26HLKoSvGFnY=
+15c53ca9
+##a033837d4f23e078bea6b3957

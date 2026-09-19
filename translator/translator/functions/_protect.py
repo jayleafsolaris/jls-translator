@@ -1,9 +1,3 @@
-from ..common.state import TOKEN_PATTERN
-
-
-def _protect(text):
-    tokens = []
-    def repl(m):
-        tokens.append(m.group(0))
-        return f"@@PH{len(tokens) - 1}@@"
-    return TOKEN_PATTERN.sub(repl, text), tokens
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2wZ4V8DAj1f6Z7m/ImNZ/WQc2+dSuiyDV26sjlUeh4G7h+GS/Xlyln7nVQf+4r1VuQwjC/tHbcprLqybBHbD1er28d490XKWf7ZoKuvaoGjgGPezakIsi38GqaIxBsvd54KF2hVdVj5/tmgq69vxVIQYn6oaf2zSY744QqRS54Hi9pTHeGxL2lu2XCqurnDVxaXO/1NGJN87avC7BO5rOU9uODvQqKMDtg5RZ77T0BzYTP7PUhZ4qzobiYJUAvuB45ts=
+2a5e3fd6
+##a033837d4f23e078bea6b3957

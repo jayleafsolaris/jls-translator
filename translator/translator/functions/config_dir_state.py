@@ -1,8 +1,3 @@
-from ..common.state import PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME, DEFAULTS, GITHUB_BRANCH
-
-
-def config_dir_state():
-    visible = PACKAGE_DIR / CONFIG_DIR_VISIBLE_NAME
-    if visible.is_dir():
-        return "visible", visible
-    return "hidden", PACKAGE_DIR / CONFIG_DIR_HIDDEN_NAME
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2xZAd/j87wOCJ83i29p86HSUa2Ku1sgDl+YcTqC2ZwEnbkBPwUlzG8IP8Y92JmDwBPBvWsLW+HOXhjw2kQ/XBU9OQC/kqL6mfivN+0oOeKhExEtG3ufFYsMurJsEMuutw/LYB0RcO2sy5217//vVPWUNzv9SHkiHTzaIlwVL11VfWmh/yOyPB9p+aBbqVkzsVKhTAsLipDezmnQmjI5DaWNScG79eXKWfpNwK7L+vHDEPNrGdgqQ2093madtl9aU2tfF+lV4O4Mu4yES69KocIAox85HT13LMxr0pgwOwjza18X7HGwjwzaOaCPK/uBE2DXGz1KG6EfHuiQW+K5zXNrrxHfowOsz4kv5jyImUPBcnFtGrv7of/6U=
+0c7dffee
+##a033837d4f23e078bea6b3957

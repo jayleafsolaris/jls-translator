@@ -1,19 +1,3 @@
-from ..cli import _MODES, _MODE_FLAG_NAME
-
-
-def prompt_for_mode():
-    print("No mode specified. What would you like to do?\n")
-    for i, (key, desc) in enumerate(_MODES, start=1):
-        flag = _MODE_FLAG_NAME.get(key, f"--{key}")
-        print(f"  {i}. {flag:<12} {desc}")
-
-    while True:
-        raw = input(f"\nChoose 1-{len(_MODES)}: ").strip()
-        try:
-            idx = int(raw)
-        except ValueError:
-            print("Please enter a number.")
-            continue
-        if 1 <= idx <= len(_MODES):
-            return _MODES[idx - 1][0]
-        print(f"Please enter a number between 1 and {len(_MODES)}.")
+GvfQoJoEtLWwHHMKPu+bg49y5eKBBKQ8+aVJ2J4a8CE6yf6K5WTbm5l/WWk3+pLRiyDVwr40vgm690n4vjrQVlW/te2aCrqmrhw9F3u9up7bP9XLq2CSH7Dmf/O4O9FQXNLXrM4K7bmpGTdDKvCB0Zc70cruNI5Pseopyb98nHRcpZ/t3EXo9rVZc0s4+o3d2zbf3K1pwQa7pXP7pDPQDB3x2uXlZ9WSmSZ/QyDrlYOPb4uG9ErBT/WlNrXxftMSHeKf8Jp115mYMAwlH96zrrUT9+rgJ4Qb/e5z7P1+01xRqMSm31Pn9PV/c0Nzv9TR23LK3aculUezpza1qjfIUFz+2aHbTaDq7UcuQyj7kYKYL5iGxErBT/WlYf24MtBeKPfKqIAguvb8VXNDc7+GkIxyh4+nLpEaoa1wt40w9hYT6syomhu3rbAQPUsM0ru1vgGT0vRgw0b79mLnuC6dV3aln+2aCrr2/AEhGmmV1NHbcpqP7mDBT/Wlf/GpfoheFevL5chL7f/WVXNDc7/U0ds3wsyrMJVPg+R64LQbxwwT94XHmgq69vxVc0Nzv9TRiyDTwbpowz+54HfmtH7QEAjgze3bCvSjsRc2EX293fvbcpqP7mDBT/WlNrWyMdsKFevKqLAKuvb8VXNDc/aS0cpyhpLuKYUX9bkrtb0721YjyPCJ/3mz7NZVc0Nzv9TR23Kaj+4yhBug93i1jhP6OjnW5KTeUrr7/EQOOGPC/tHbcpqP7mDBH6fseOH5OJcuEODevt8K/7ioECFDMr+ahJYw393uIoQbouBz+/FvlR8S4Z+21k/0/oM4HCcWzN2M1XCTpQ==
+b7d77dc7
+##a033837d4f23e078bea6b3957

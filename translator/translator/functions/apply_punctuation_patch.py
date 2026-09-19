@@ -1,21 +1,3 @@
-def apply_punctuation_patch(translated_text, old_leading, old_trailing, new_leading, new_trailing):
-    """
-    Re-applies an updated leading/trailing punctuation pair onto an
-    already-translated string without calling Google Translate. Only
-    safe when the translated string still carries the exact OLD
-    leading/trailing punctuation that punctuation_only_diff() saw on
-    base -- translators don't always preserve edge punctuation
-    byte-for-byte (curly quotes, added/dropped spacing, a mark that
-    just gets absorbed into the sentence), so the caller should fall
-    back to a full retranslation whenever this returns None.
-    """
-    core = translated_text
-    if old_leading:
-        if not core.startswith(old_leading):
-            return None
-        core = core[len(old_leading):]
-    if old_trailing:
-        if not core.endswith(old_trailing):
-            return None
-        core = core[:len(core) - len(old_trailing)]
-    return f"{new_leading}{core}{new_trailing}"
+GODZ7dta6rqlKiMWPfyAhJom08CgH5EOoeZ+vaUs1BAP6d65307ForkNJ09z8JiVpD7fzqopjwj5pXn5tQHBDB3s06TUTbb2shAkPD/6lZWSPN2D7i6EGIrxZPS4MtwQG6yFx5oKuvb+V3Fpc7/U0ak3l86+MI0GsPY29L9+wA4Y5Muo3gr2s70ROg00sICDmjvWxqAnwR+g63XhpD/BFxPrn73bQ+j2sxsnDHP+mvvbcpqPryyTCrThb7ilLNQQD+neud9OuqWoBzoNNL+DmI861dq6YIIOuel/+7Z+8hET4tOomn7ot7IGPwIn+trRtDzW1sRgwU/19nfztH7CFhnrn7nST7qirhQ9ED/+gJSfcsnbvCmPCPX2Yvy9MpUdHffNpN9ZuqK0EHMGK/6Xhdsd9uvEYMFP9elz9LU32xlT8c2s00bzuLtVIxY9/ICEmibTwKBglQe08TblpDDWCgnky6TVRMW5shkqPDf2kpfTe5rcrzfBALuPNrXxftcfD+Cf4JcK7qS9GyAPMuubg4hy3sCgZ5VPtOlh9KgtlQ4O4MyoyFz/9rkRNAZz74GfmCbPzropjgHfpTa18TzMChmo2aLIB/ivqBBzSzDqhp2CcsvaoTSEHPmld/G1O9FRGPfQvcpP/vavBTIAOvGT3dszmsKvMopPoe134dt+lV5c78q+zgr9s6gGcwIx7JuDmTfej6culQD18X7w8S3QEAjg0a7fA7b2rxpzFzv61JKaPtbKvGCSB7rwevHxONQSEI+f7ZoK+Le/HnMXPL+V0Z0n1sPuMoQbp+R45r0/wRcT65+60k/0s6oQIUMn952C2yDf27syjxz1y3n7tHC/Xlyln++YCJD2/FVzADztkdHGcs7dry6SA7Txc/GOKtAGCI+f7ZoK87D8Gj8HDPORkJ871Mj0SsFP9aU2tfF+3Bhc69C5mkn1pLlbIBcy7YCCjDvOx+YvjQuK6XP0tTfbGVW/te2aCrr2/FVzQ3O/1IOeJs/doGCvALvgHLXxfpVeXKWfrtVY//bhVTAMIfqvnZ48ksCiJL4DsORy/L85nEQhj5/tmgrzsPwaPwcM64aQkj7Twal660/1pTa18X6VFxql0aLOCvm5rhB9Bj37h4aSJtKHoSyFMKH3d/y9N9sZVb+17ZoKuvb8VXNDc7/Ug54mz92gYK8Au+ActfF+lV5cpZ+u1Vj/9uFVMAwh+q/LlzfUh60vkwr8pTu1vTvbVhPp25LOWPu/sBw9BHrC/tHbcprdqzSUHbulcLeqMNAJI+narN5D9LGhDjAMIfqJipU3zfC6MoAGuex48qx8vw==
+dc21179c
+##a033837d4f23e078bea6b3957

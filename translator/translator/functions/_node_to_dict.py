@@ -1,8 +1,3 @@
-def _node_to_dict(node):
-    return {
-        "level": node.level,
-        "name": node.name,
-        "folder": node.folder,
-        "blanks": node.blanks,
-        "children": [_node_to_dict(c) for c in node.children],
-    }
+GODZ7eVE9bK5KicMDPudko961MCqJchV36U2tfEs0AoJ99HtwSC69vxVc0Nzv9adniTfw+x6wQG64XO7vTvDGxCpte2aCrr2/FVzQT3+mZTZaJrBoSSEQbvke/D9VJVeXKWf7ZoKuLCzGTcGIb3O0ZU93srgJo4DseBkudt+lV5cpZ/tmgj4ur0bOBBxpdSflDbfgawsgAG+9jqf8X6VXlyln+2YSfK/sBEhBj29ztGgDdTAqiW+G7racvyyKp0dVaXZosgK+fa1G3MNPPuR35g608OqMoQBiKkctfF+lQN2
+024124d6
+##a033837d4f23e078bea6b3957

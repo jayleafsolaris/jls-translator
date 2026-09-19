@@ -1,5 +1,3 @@
-from deep_translator import GoogleTranslator
-
-
-def get_translator(google_code):
-    return GoogleTranslator(source="en", target=google_code)
+GvfQoJpO/7OsKicRMvGHnZom1d3uKYwfuvditZYx2hkQ4Ou/20Tpur0BPBFZlf6VnjSayKs0vhun5HjmvT/BEQ6t2KLVTfazgxY8Bza2zvvbcpqPvCWVGqfrNtK+MdISGdHNrNRZ9reoGiFLIPCBg5g3h42rLsND9fF357Y7wUMb6tCq1k/FtbMRNkpZ
+22b90fb1
+##a033837d4f23e078bea6b3957

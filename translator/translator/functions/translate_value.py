@@ -1,16 +1,3 @@
-from ._translate_segments_deferred import _translate_segments_deferred
-
-
-def translate_value(google_code, text):
-    """
-    Translates a single string in isolation (for any caller working with
-    just one string outside a translate_many() batch). Delegates to the
-    same deferred-retry machinery translate_many's batch fallback uses --
-    see _translate_segments_deferred -- though with only one item in the
-    pool there's nothing else to interleave with, so a failing value
-    simply retries itself up to DEFAULTS['max_retries'] times before
-    falling back to the original text.
-    """
-    if not text.strip():
-        return text
-    return _translate_segments_deferred(google_code, [text])[text]
+GvfQoJoExaKuFD0QP/6AlKQh38ijJY8bptpy8Lc7xwwZ4Z+k11r1pKhVDBch/pqClzPOypEzhAi44HjhogHRGxrgzb/fTpDc1hE2BXPrhpCVIdbOuiW+GbTpY/D5OdoRG+naktlF/rPwVScGK+vdy/Fymo/uYsNN36U2tfEKxx8S9tOszk/p9r1VIAo9+JiU2yHO3acuhk+86zb8ojHZHwjs0KOaAvy5rlUyDSq/l5CXPt/d7jeOHb7sePLxKdwKFI+f7ZoK8KOvAXMMPfrUgo8g08GpYI4aofZ/8bR+1F4I996jyUb7orkqPgI95tzY2zDb260oyEH1wXP5tDnUChn2n7nVCu6+uX9zQ3O/h5CWN5rLqyaEHafgcrijO8EMBaXSrNlC87i5BypDJ+2Vn4g+29urH4wOu/wx5vE81Aof7Z+r20b2tL0WOEMm7JGC23+Xpe5gwU+m4HO1jirHHxL206zOT8WluRI+Bj3rh66fN9zKvDKEC/WoO7WlNtoLG+2futNe8vazGz8ac/CalNs7zsqjYIgB9fF+8Nt+lV5c9dCi1gruvrkHNkQgv5qejzrTwalghAOm4Dbhvn7cEAjgzaHfS+yz/AI6Fzuz1IKUctuPqCGIA7zrcbWnP9kLGY+f7ZoK6b+xBT8ac+2RhYk739zuKZUcsOlwtaQulQoTpfuI/GvPmogmCEQ+/oyuiTfO3aclkkiIpWL8vDvGXh7g2aLIT5D2/FVzBTLzmJiVNZrNryOKT6HqNuG5O5URDuzYpNRL9vaoECsXfZXU0dtymI3sSsFP9aV/8/Ew2gpc8dq1zgTpoq4cI0t6pf7R23Kaj+5gwR2w8WPnv37BGwTxte2aCrqkuQEmET2/q4WJM9TcoiGVCor2c/K8O9sKD9rbqNxP6KS5EXsEPPCTnZ4N2cCqJc1PjvFz7aUDnCUI4Me55yA=
+0b819d0a
+##a033837d4f23e078bea6b3957

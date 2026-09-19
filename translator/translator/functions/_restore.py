@@ -1,8 +1,3 @@
-import re
-
-
-def _restore(text, tokens):
-    def repl(m):
-        idx = int(m.group(1))
-        return tokens[idx] if idx < len(tokens) else m.group(0)
-    return re.sub(r"@\s*@\s*PH\s*(\d+)\s*@\s*@", repl, text, flags=re.IGNORECASE)
+FejPosheuqS5f1lpN/qS0aQg39y6L5MK/fFz7aVylQoT7tqjyQOg3PxVc0M3+pLRiTfKw+YtyFXfpTa18X6VXlzs27WaF7q/sgF7Dn34hp6OIpKe52nrT/WlNrXxfpUMGfHKv9QK7rm3ED0QCPaQiaZy08nuKYUX9bk2+bQwnQoT7tqjyQO6s7AGNkM+sZODlCfKh/5p60/1pTbntCrADBKlzaiUWe+09AdxIw/s3rGnIZD/hhySRf3Zcr74AsZUPNnM5/oItvauECMPf7+AlIMmlo+oLIAIprhk8P8X8jAz1/qO+3nf/9Y=
+adc84f73
+##a033837d4f23e078bea6b3957

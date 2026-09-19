@@ -1,31 +1,3 @@
-from ..common.sections import KEYS_FILENAME
-from ._reconstruct_content import _reconstruct_content
-
-
-def render_tree(tree, base_dir, markers=None):
-    """
-    Inverse of write_tree + save_section_data: given the cached tree
-    (list of node-dicts, see _node_to_dict), the base/ folder they were
-    written under, and the cached marker lines, reassembles base's full
-    text -- blank lines restored in place, marker line(s) reappended at
-    the very end.
-    """
-    parts = []
-
-    def _walk(node_dict, dir_path):
-        parts.append("#" * node_dict["level"] + " " + node_dict["name"] + "\n")
-        keys_file = dir_path / KEYS_FILENAME
-        key_text = keys_file.read_text(encoding="utf-8") if keys_file.exists() else ""
-        parts.append(_reconstruct_content(key_text, node_dict.get("blanks", [])))
-        for child in node_dict["children"]:
-            _walk(child, dir_path / child["folder"])
-
-    for node_dict in tree:
-        _walk(node_dict, base_dir / node_dict["folder"])
-
-    if markers:
-        if parts and not parts[-1].endswith("\n"):
-            parts.append("\n")
-        parts.extend(markers)
-
-    return "".join(parts)
+GvfQoJoEtLWzGD4MPbGHlJgm08CgM8EGuPV556V+/jsl1uCL82bfmJ04Fmk17Zuc23zl3asjjgGm8WTgsirqHRPry6jUXrq/sQU8ESe/q4OeMdXBvTSTGrbxSfa+MMEbEvG1x7BO/7D8BzYNN/qGro8g38rmNJMKsKk297At0CEY7M3hmkf7pLcQIRBu0ZufnnuApe5gwU/3pzSf8X6VXjXryajIWf/2sxNzFCH2gJSkJsjKq2DKT6bkYPCOLdAdCOzQo+VO+6K9T3MEOumRn9sm0sruI4AMveBytaUs0Bt2pZ/tmgL2v68Bcww1v5qenzeXy6cjlRz5pWXwtH7qEBPh2pLORcWytRYnSn+/gJmectjOvSXOT7PqevG0LJUKFODG7c1P6LPWVXNDc+iGmI8m38HuNY8LsPc6tbAw0V4I7drt2Uv5vrkRcw4y7Z+UiXLWxqAlkkP193P0oi3QEx7p2r6aSPuluVIgQzXqmJ3xcpqP7jSEF6GlO7jxPNkfEu6fodNE/6X8BzYQJ/CGlJ9y08HuMI0OtuA6tbw/xxUZ95+h00T//q9ccxE2/oSBnjzeyqpggBvfpTa18SrdG1zz2r/DCv+4uFtZQ3O/1NPZcLCP7mDBH7T3YubxY5UlIY+17ZoKurK5E3M8JP6YmtM81curH4UGtvE6tbU3xyEM5MulkxCQ9vxVc0Nzv9SBmiDO3OAhkR+w63K9832XXlal0aLeT8WytRYnOHHzkYeePpjy7mvBTfWnNr7xMNoaGdrbpNlewfSyFD4GccLU2ttw5sHsaetP9aU2tfF+lRUZ/MyS3EP2s/xIcwc67auBmibSj+FgqiqM1knTmBLwMD3I+seaCrr2/FVzQzj6ja6PN8Lb7n3BBLD8Zcq3N9kbUvfarN517rOkAXsGPfyblZI83ZLsNZUJ+L00vPE3014X4Ma+5UzzurlbNhs67ICC03uayqIzhE/3pxy18X6VXlyln73bWO6l8hQjEzbxkNmkIN/MoS6SG6fwdeGOPdoQCODRuZJB/6+DATYbJ7PUn5Q23/CqKYIb++Jz4fl81xId69S+mAa6jYFcekpZv9TR23Kaj+4mjh315n78vTqVFxKl0aLeT8WytRYnOHH8nJiXNsjKoGK8Vd+lNrXxfpVeXKWf7Zp17bewHnsAO/aYlddy3sa8H5EOoe02uvE93RcQ4eTv3EX2srkHcT56lf7R23KayaEywQG64XPKtTfWClzs0e3OWP+z5n9zQ3O/1NHbcuXYryyKR7vqcvCOOtwdCKmfr9tZ/4m4HCFDfL+anp835cunI5U09+N5+bU7x1whrLXHmgq69rUTcw4y7Z+UiSGApe5gwU/1pTa1uDiVDh33y76aS/Sy/Bs8F3PvlYOPIeGC/x3PCrvhZeK4Kt1WXtnR75MQkPb8VXNDc7/U0dtymt+vMpUc++Rm5bQw0VZe2dHvkyC69vxVc0Nzv4SQiSbJgas4lQq74T74sCzeGw72lsewCrr2/Ac2FybtmtHZcJTFoSmPR6XkZOGid78=
+334c6c80
+##a033837d4f23e078bea6b3957

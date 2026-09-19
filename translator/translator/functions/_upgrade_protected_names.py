@@ -1,31 +1,3 @@
-from ..common.state import DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, SCRIPT_VERSION
-
-
-def _upgrade_protected_names():
-    """
-    Basenames (files or folders) inside the package that --upgrade must
-    never overwrite, delete, or merge into, no matter what happens to be
-    sitting in the downloaded repo zip under the same name, and no matter
-    how deep in the tree they actually live (e.g. common/cache.json).
-
-    This exists because the cache, progress file, languages.json, the
-    version-check cache, and the config folder all deliberately live
-    somewhere inside the installed package -- the same tree --upgrade
-    replaces with a fresh GitHub download. Any matching filename in the
-    repo would otherwise silently overwrite the user's real cache/config
-    with whatever happens to be committed (or not committed at all, which
-    is just as bad), which is exactly the "my config got wiped by
-    --upgrade" bug this guards against.
-    """
-    return {
-        DEFAULTS["cache_file"],
-        DEFAULTS["languages_json"],
-        DEFAULTS["progress_file"],
-        DEFAULTS["update_temp_file"],
-        DEFAULTS["version_check_file"],
-        DEFAULTS["section_order_cache"],
-        DEFAULTS["ratelimit_file"],
-        CONFIG_DIR_HIDDEN_NAME,
-        CONFIG_DIR_VISIBLE_NAME,
-        "temp_update",
-    }
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E20ZQY9Csw0ezhmnrblZc0FCYM272j13L95poItC2KykHblAyZXjvM64XvaMWEmSUcT3PYvaWzB/jwjBKgIZbNOrWSEfs4NcLgifN4xZ6VMRcmHcC6sLYXlo+ND68pnMJJ0ZgM6ig11vaP9m/FmJ04Fk9zzLejsgLu8JgFszycylif21TRGxql4LjKTei3uBAMEyHwgJSYJt/LkS6AArD2PrzrVJVeXKWd75gguvb8VRECIPqakJY3yY/mJogDsPY2+qN+0xEQ4dq/yQO6v7IGOgc2v4CZnnLKzq0rgAiwpWL9sCqVU1Hwz6rIS/6z/BgmECeV1NHbctTKuCWTT7rzc+emLNwKGamfqd9G/6K5WXMMIb+ZlIk134+nLpUA+aV4+vEz1AoI4M3tzUL7ovwdMhMj+pqC2ybVj6wl60/1pTbmuCrBFxLin6TUCu6+uVU3DCTxmJ6aNt/L7jKEH7qlbPyhfsAQGODN7c5C//avFD4Gc/GVnJ5+ms6gJMEBuqV79KUq0Ax2pZ/tmkL1ofwRNgYjv52f2ybSyu40kwqwpWL9tCeVHx/xyqzWRuP2sBwlBnO3kd+cfJrMoS2MALuqdfSyNtBQFvbQo5MEkNz8VXNDB/edgts3wsa9NJJPt+B19KQt0F4I7drt2Uv5vrlZcxMh8JODniHJj6gpjQr5pXr0vznAHxvgzOPQWfW48FUnCzaV1NHbcszKvDOIALuodf20Pd5eH+Tcpd8GureyEXMXO/rUkpQ83MapYIcAueFz5/E/2RJc4dqh00j/pL0BNg8qv5iYjTewj+5gwRy66HPiuTvHG1zs0b7TTv/2qB02Qzrxh4WaPtbKqmCRDrbud/K0fphTXPHXqJpZ+7u5VScRNvrU3NYnysi8IYUK36U2tfEs0A4Q5NyoyQrtv6gdcwJz+YaUiDqa6Kc0qRq3pXL6pjDZER3hke37ROP2sRQnADv2mpbbNNPDqy6AArClf/vxKt0bdqWf7ZpY/6azVSQMJvOQ0ZQm0sq8N4gcsKVl/L072woQ/J+izE/ooa4cJwZz65yU2yfJyrxnkk+n4Hf58T3UHRTgkK7VRPy/u39zQ3O/g5iPOprYpiGVCqPgZLW5P8UOGevM7c5FurS5VTAMPvKdhY833o/mL5NPu+pitbIx2BMV8cuo3gr7ovwUPw9/v4OZkjHSpe5gwU+89jb/pC3BXh32n6/bTrP6/AI7CjD31JiIct/XryOVA6ylYv20fpcTBaXcotRM87H8EjwXc+idgZ42ms23SsFP9aU7uKQu0gwd4drvmkjvsfwBOwogv5OEmiDe3O4hhg6862Xh/1SVXlylne+YILr2/FUhBifqhp/bKbCP7mDBT/WlNtGUGPQrMNHslphJ+7W0EAwFOvOR06Z+sI/uYMFP9aU20ZQY9Csw0eyWmEb7uLsAMgQ27KubiD3UjZNs60/1pTa18X6VOjnD/pj2fsmN/gUhDDTtkYKIDdzGoiXDMvmPNrXxfpVeXKX7iPxrz5qIJghBJu+QkI835durLZEws+x68PMDmXRcpZ/tmgq69pgwFSIG06CioHDMyrwziAC72nX9tD3eIRrs06iYd7bc/FVzQ3O/1NG/F/zumwy1PI6nZfCyKtwREtrQv95P6Im/FDALNr2p3fFymo/uYMFP9cFT05AL+Sov3p2/217/urUYOhcM+Z2dnnDng8RgwU/1pTa18R36MDrM+JL+Y8iJlDwXJxbRq7+6H/+DxGDBT/WlNrXxHfowOsz4kv5jyImKPAAqEdOxrrUT9+riSsFP9aU2tfF+lwoZ6M+Sz1r+t6gQcU9Zv9TR2y+w
+67e05313
+##a033837d4f23e078bea6b3957

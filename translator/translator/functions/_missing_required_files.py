@@ -1,6 +1,3 @@
-import os
-from ..modes.upgrade import _REQUIRED_PACKAGE_FILES
-
-
-def _missing_required_files(package_root):
-    return [f for f in _REQUIRED_PACKAGE_FILES if not os.path.isfile(os.path.join(package_root, f))]
+FejPosheurmvfzURPPLU39U/1curM88apeJk9LU7lRcR9dC/zgrFhJkkBioB2rCuqxP55I8HpDCTzFrQglS/dBjg2e3lR/Olrxw9BAztkYCOO8jKqh+HBrngZb2hP9YVHeLakshF9aL1T1lDc7/Ug54mz92gYLoJ9eN55/E4lRcSpeCf/3vPn44wFzwD3re6uhX/8IgJrSqGpX/z8TDaClzqzOPKS+6+8hwgBTrzkdmUIZTfrzSJQb/qf/v5LtQdF+TYqOVY9bmoWXMFerap+w==
+1ff4e559
+##a033837d4f23e078bea6b3957

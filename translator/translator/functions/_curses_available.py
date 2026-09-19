@@ -1,9 +1,3 @@
-import sys
-
-
-def _curses_available():
-    try:
-        import curses
-    except ImportError:
-        return False
-    return sys.stdout.isatty() and sys.stdin.isatty()
+FejPosheuqWlBllpWfuRl9sN2dq8M4QciuRg9Lgy1BwQ4JfkgCC69vxVJxEqpf7R23Kaj+5gwQa49XnnpX7WCw722r6wCrr2/BArADbvgNGyP8rAvDSkHafqZK/bfpVeXKWf7ZpY/6KpBz1DFf6Ygp5Ymo/uYJMKofBk+/EtzA1S9sup1V/u+LUGMhcn5tzY2zPUy+4zmBz79mLxuDCbFw/ky7nDArPc
+60a0bccf
+##a033837d4f23e078bea6b3957

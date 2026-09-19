@@ -1,10 +1,3 @@
-from ..common.config_store import load_config_value, save_config_value, current_config_dir
-from ..common.github_api import _TOKEN_CONFIG_NAME
-
-
-def remove_token():
-    path = current_config_dir() / f"{_TOKEN_CONFIG_NAME}.config"
-    if path.exists():
-        path.unlink()
-        return True
-    return False
+GvfQoJoEtLWzGD4MPbGXnpU008iRM5UAp+A2/Lwu2gwIpdOi207FtbMbNQo0wIKQlyffg+4zgBmw2nX6vzjcGSPz3qHPT7b2vwAhETbxgK6YPdTJpye+C7z3HPOjMdheUqvcotdH9bjyEjoXO+qWrpoi04+nLZEAp/E2yoUR/jsy2vyC9GzTkYM7Ei4Wlf77nzfcj7wljACj4EnhvjXQEFSshceaCrr2rBQnC3Oi1JKOIMjKoDS+DLrrcPy2AdEXDq2W7ZUK/PSnKgcsGNq6rrgd9OmHB74hlMhT6P892hAa7NjvsAq69vwcNUMj/oCZ1TfCxr00kkf8vxy18X6VXlyln73bXvL4qRs/Cj303NjxcpqP7mDBT/X3c+GkLNteKPfKqLAKuvb8BzYXJu2a0b0z1tyrSg==
+2723d04b
+##a033837d4f23e078bea6b3957

@@ -1,35 +1,3 @@
-from ..common import debug_log
-from ..common.config_store import get_request_delay, warn_red
-from ..common.ratelimit import reserve, record_extra, record_outage, RateLimitExceededError
-import time
-from ..common.translate import _LAST_REQUEST_TIME, _RATE_LIMIT_LOCK
-from .get_translator import get_translator
-
-
-def _translate_raw_api_call(google_code, text_to_send):
-    """
-    The actual network call, plus rate limiting and usage-cap reservation,
-    given plain text that's already safe to send (no protected tokens
-    embedded in it -- see _raw_translate_once below for why that matters).
-    """
-    global _LAST_REQUEST_TIME
-
-    delay = get_request_delay()
-    translator = get_translator(google_code)
-
-    debug_log.log(f"reserve() -- {len(text_to_send.encode('utf-8'))} bytes, {google_code}")
-    reserve(len(text_to_send.encode("utf-8")))
-    debug_log.log(f"reserve() cleared -- {google_code}")
-
-    with _RATE_LIMIT_LOCK:
-        now = time.time()
-        elapsed = now - _LAST_REQUEST_TIME
-        if elapsed < delay:
-            time.sleep(delay - elapsed)
-        _LAST_REQUEST_TIME = time.time()
-
-    debug_log.log(f"sending -- {google_code}, {len(text_to_send)} chars")
-    result = translator.translate(text_to_send)
-    debug_log.log(f"received -- {google_code}, {len(result)} chars")
-    record_extra(len(result.encode("utf-8")))
-    return result
+GvfQoJoEtLWzGD4MPb+dnIs9yNvuJIQNoOJJ+b45vxgO6tLtlAT5ubEYPA19/JufnTvd8L00jh2wpX/4oTHHClzi2rnlWP+nqRAgFwz7kZ2aK5aPuSGTAYr3c/HbOMcREaWR49lF97uzG30RMuuRnZI/09vuKYwfuvditaM7xhsO89rhmlj/tbMHNzw254CDmn6a3asjjh2x2nngpT/SG1Cl7azOT9a/sRwnJiv8kZSfN97qvDKOHd/se+W+LMFeCOzSqLBM6LmxVX1NMPCZnJQ8lNu8IY8cueRi8PE32A4T98vt5WbbhYgqASYCyrGirw3u5oMFzU+K11fBlAH5NzHM65L2Zdmd1hMhDD6/2paeJuXbvCGPHLnkYvqjftwTDOrNuZpN/6KDASECPeyYkI89yKXESoUKs6VJ4aM/2w0Q5Muo5Vj7oYMUIwoM/JWdl3rdwKEnjQqK5nnxtHKVChn9y5LORcWluRs3SmmV1NHbcpiN7ErBT/WlQv20ftQdCPDeoZpE/6KrGiEIc/yVnZd+mt+iNZJPp+Ri8PEy3BMV8daj3Qr7uLhVJhAy+JHcmDPKj7wlkgqn83fhuDHbUnaln+2aTfOguRtzEz/+nZ/bJt/XumCVB7TxMebxP9kMGeTbtJpZ+7C5VScMc+yRn59yksGhYJEduvFz9qU70V4I6tSo1FmQ9vxVcwY+/ZGVnzfej6cuwQahpTu48S3QG1zazazNde6kvRsgDzLrka6UPNnK7iKEA7ryNvO+LJUJFPyfudJL7vaxFCcXNu2H2NVYmo/uYMNN9482tfF+0hIT596hmnXWl48hDDEWzqG0qAbl+4cNpGXfpTa18TrQEh38n/CaTf+igwc2Eib6h4WkNt/DrznJRt+lNrXxKscfEvbTrM5F6PbhVTQGJ8CAg5o8ycOvNI4d/eJ5+rYy0CEf6tuokyCQ9vxVcwc2/YGWpD7VyOAsjgj94zTntC3QDArgl+SaB7f2pxk2DXvrkYmPDc7AkTOEAbGrc/uyMdEbVKLKudwHovH1XC5DMeaAlIh+mtSpL44IueBJ9r460ANerLXtmgq6pLkGNhEl+tydnjyS26s4lTCh6knmtDDRUBnr3KLeT7L0qQE1Tmu93djSWJqP7mCFCrfwccq9MdJQEOrY5dwI6LOvECEVNrfd0Zg+3868JYVP+Kg27rYx2hkQ4OCu1U7/q/5cWWlzv9TRjDvOx+4fsy6BwEnZmBP8KiPJ8I7xEJD2/FVzQ3O/1J+UJZqS7jSIArCrYvy8O51XdqWf7ZoKuvb8ED8CI+yRldtvmsGhN8FC9dpa1IIK6iw51OqI6X7FgpU4Fmlzv9TR23Kaj6cmwQq55GbmtDqVQlzh2qHbU6Dc/FVzQ3O/1NHbcpqPuimMCvv2evC0Lp0aGenetJoHurOwFCMQNvvd+9tymo/uYMFPislXxoUB5zst0Pqe7nXOn5Ewc15z652cnnzOxqMlyUbfjza18X7RGx7w2JLWRf34sBo0SzW9h5SVNtPBqWDMQvX+cfq+OdkbI+bQqd9XtvanGTYNe+uRiY8NzsCRM4QBsaxrtbI21AwPp5bHmgq69q4QIBY/69TM2ybIzqAzjQ6h6mS7pSzUEA/p3rnfAu6zpAEMFzzAh5SVNpOl7mDBT7HgdOC2AdkRG6vTot0C/PSuEDAGOumRldt/l4+1J44AsulzyrIx0RsBqZ+21k/0/q4QIBY/692M2zHSzrwzw0bfpTa18SzQHRP325LfUu6kvV0/Bj23hpSIJ9bb4CWPDLrhc73zK8EYUb2d5JMDkPb8VXMRNuuBg5VyyMq9NY0b3w==
+89d54b13
+##a033837d4f23e078bea6b3957

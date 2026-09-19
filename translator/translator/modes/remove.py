@@ -1,11 +1,3 @@
-"""--remove: remove keys from .lang files that are no longer in base."""
-import time
-from ..common import state
-from ..common.state import DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER
-from ..common.lang_io import parse_lang, write_lang, entries_dict
-from ..common.cache import load_cache, save_cache
-from ..common.progress import (
-    load_base, base_fingerprint, load_progress, save_progress,
-    clear_progress, format_duration, _report_keys, _ask_continue,
-)
-from ..functions.cmd_remove import cmd_remove
+Xqed4JdY/7uzAzZZc+2RnJQk34+lJZgc9eNk+rx+mxId69jt3EP2s69VJwsy69SQiTeawaFgjQC74nPn8TfbXh7kzKiUCLj01hw+EzztgNGPO9fKxCaTALilOLuyMdgTE+ufpNda9aSoVSAXMuuR+50g1cLubs8Muuh7+r9wxgod8drt00fqua4BcycW2bWktwbpg+4MoCGS0FfSlA2ZXiPQ74n7ft+JnzoGLQfAubCpGf/9xCaTALilOLuyMdgTE+uRodtE/Ym1GnMKPu+bg49yys68M4QwueR48v1+wgwV8dqS1kv0sfBVNg0n7Z2UiA3exq006wmn6nu1/3DWERHo0KOUSfu1tBBzCj7vm4OPctbAryS+DLTmfvD9fsYfCuDgrttJ8rPWEyEMPr/a35g918KhLs8fp+px57Qtxl4V6M+iyF66/tZVc0Nz85uQnw3Yzr0lzU+35GXwjjjcEBvgzb3IQ/Si8FU/DDL7q4GJPd3dqzOSQ/X2d+O0AcUME+LNqMlZttz8VXNDMPORkIkNyt2hJ5MKpvY6tbcxxxMd8eCpz1j7orUaPU9zwIaUiz3I25ErhBamqTbKsC3eIR/q0bnTRO+z8H96aTXtm5zbfJTJuy6CG7zqeOb/PdgaI/faoNVc//a1GCMMIevUkpY25d2rLY4ZsI8=
+24983af7
+##a033837d4f23e078bea6b3957

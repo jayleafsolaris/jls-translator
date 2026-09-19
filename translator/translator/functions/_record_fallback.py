@@ -1,8 +1,3 @@
-from ..common.translate import _fallback_count, _fallback_lock, _fallback_log
-
-
-def _record_fallback(preview, err):
-    global _fallback_count
-    with _fallback_lock:
-        _fallback_count += 1
-        _fallback_log.append((preview, err))
+GvfQoJoEtLWzGD4MPbGAg5o8ycOvNIRPvOhm+qMqlSEa5NOh2Ev5vYMWPBY969jRpDTbw6IigAy+2nr6sjWZXiPj3qHWSPu1tyo/DDSV/vufN9yPkTKEDLr3csq3P9kSHuTcppJa6LOqHDYUf7+Rg4l7gKXuYMFPsul597AylSEa5NOh2Ev5vYMWPBY96/7R23Ka2Kc0iU+K43f5vTzUHRfa06LZQaDc/FVzQ3O/1NGkNNvDoiKADL7adfqkMMFeV7if/LAKuvb8VXNDc8CSkJc+2M6tK74DuuI49KEu0BAYrZe9yE/sv7kCf0M27YbY0lg=
+6744e40b
+##a033837d4f23e078bea6b3957

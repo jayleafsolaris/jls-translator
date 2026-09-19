@@ -1,6 +1,3 @@
-from ..common.github_api import _API_ROOT
-from ._request import _request
-
-
-def update_ref(branch, commit_sha):
-    _request("PATCH", f"{_API_ROOT}/git/refs/heads/{branch}", json={"sha": commit_sha})
+GvfQoJoEtLWzGD4MPbGTmI86z82RIZEG9ex75b4swV4jxO+E5XjVmYh/NRE88tTfpCDf3rslkhv17HvlvizBXiP32rzPT+mi1n9ZBzb51ISLNtvbqx+TCrOtdOewMNYWUKXcotdH86KDBjsCeqX+0dtymvC8JZAasPZivfMO9Co/zZ3hmky4rYM0AyoMzbu+ry+VyKc0zh2w42W6uTvUGg+qxK/IS/S1tAhxT3P1h56Vb8GNvSiATe+ldfq8M9wKI/bXrMcDkA==
+9683e945
+##a033837d4f23e078bea6b3957

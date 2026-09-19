@@ -1,20 +1,3 @@
-from ..common.ratelimit import _DAY_SECONDS, _HOUR_SECONDS, _MAX_DAY_CAP, _MAX_HOUR_CAP, _MIN_DAY_CAP, _MIN_HOUR_CAP
-from ._adjust_cap import _adjust_cap
-from ._usage_within import _usage_within
-
-
-def _maybe_reroll_caps(data, now):
-    if now - data["cap_rolled_hour_at"] >= _HOUR_SECONDS:
-        used = _usage_within(data, now, _HOUR_SECONDS)
-        data["hour_cap"] = _adjust_cap(
-            data["hour_cap"], used, data.get("hour_window_bad", False), _MIN_HOUR_CAP, _MAX_HOUR_CAP
-        )
-        data["cap_rolled_hour_at"] = now
-        data["hour_window_bad"] = False
-    if now - data["cap_rolled_day_at"] >= _DAY_SECONDS:
-        used = _usage_within(data, now, _DAY_SECONDS)
-        data["day_cap"] = _adjust_cap(
-            data["day_cap"], used, data.get("day_window_bad", False), _MIN_DAY_CAP, _MAX_DAY_CAP
-        )
-        data["cap_rolled_day_at"] = now
-        data["day_window_bad"] = False
+GvfQoJoEtLWzGD4MPbGGkI831sajKZVPvOhm+qMqlSE4xOaS6W/ZmZIxAE9zwLy+rgDl/IsDriGR1jq1jhP0JiPB/pTladuG8FUMLhLHq7m0B+jwjQGxQ/XaW9yfAfE/Jdr8jOoGuomRPB08G9Cho6QR+//EJpMAuKU4yrA63wsP8eCu21q6v7EFPBEnv6uQnzjP3Lofgg6lj3DnvjOVUCPwzKzdT8WhtQE7Cj2/nZyLPcjb7h+UHLTic8qmN8EWFeu1x7BO/7D8Kj4CKv2Rrok3yMCiLL4MtPVlvbU/wR9QpdGizQOg3PxVc0M6+dSflCWagu4kgBu03jT2sC7qDBPp06jedfK5qQcMAie9qdHFb5rwhg+0PYrWU9aeEPEtRo+f7ZoKuvb8VSYQNvvUzNsNz9yvJ4Qwouxi/bgwnRod8d7hmkT1ofBVDCscyqauqBf54IAEskbfpTa18X6VXlzh3rnbcbi+swAhPDD+hNOmcoePkSGFBaD2YsqyP8VWdqWf7ZoKuvb8VXNDc/uVhZoJmMehNZMwtuRmt4xylQsP4Nvhmk77or1bNAYnt9aZlCfI8Lkpjwu68kn3sDqXUlzD3qHJT7P6/CoeKh3AvL6uAOXsjxDNT4rIV82OFvorLtr8jOoguvb8VXNDc7/d+9tymo/uYMFPseRi9Ip81h8M2s2i1kb/soMdPBYhwJWF2Q+aku4ujhjfpTa18X6VXlzh3rnbcbi+swAhPCT2mpWUJeXNryTDMvW4NtOwMsYbdqWf7ZpD/PayGiRDfr+QkI8z4Y2tIZEwp+p6+bQ66hod/OCszgjH9uJIczwX3q2uqBf54IAEslXfpTa18X6VXlzwzKjeCqf2gwAgAjT6q4aSJtLGoGiFDqHkOrW/McJSXNr7jON1yZOfOh0nALb+0dtymo/uYMELtPF3zvM61Acj5t69mHe66/wqMgc56oeFpDHb3+ZKwU/1pTa18X6VXlyl26zOS8H0uBQqPDD+hNOmfpravSWFQ/Xhd+GwcNIbCK2dqdtTxaG1GzcMJMCWkJ9wlo+IIY0csKw6tY4T/DAjwf6U5WnbhvBVDC4Sx6u1ugvl7I8Q60/1pTa18X6VV3aln+2aCrr2/BEyFzLE1pKaIuXdoSyNCrHacvSoAdQKXtif8JpE9aHWVXNDc7/U0ds229uvG8MLtPxJ4rgw0REL2t2s3gjH9uFVFQI/7JH7
+f646bf32
+##a033837d4f23e078bea6b3957

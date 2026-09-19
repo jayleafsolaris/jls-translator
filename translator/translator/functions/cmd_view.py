@@ -1,24 +1,3 @@
-from ..common import state
-from ..common.cache import get_update_count
-from ..common.lang_io import parse_lang, entries_dict
-from ..common.progress import _human_size
-from ..common.state import DEFAULTS
-
-
-def cmd_view():
-    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
-    files = ([base_path] if base_path.exists() else []) + sorted(state.SCRIPT_DIR.glob("*.lang"))
-    if not files:
-        print(f"No {DEFAULTS['base_lang']} or .lang files found in this directory.")
-        return
-
-    print(f"{'File':<16}{'Size':>10}   Keys")
-    print("-" * 40)
-    for p in files:
-         size = p.stat().st_size
-         key_count = len(entries_dict(parse_lang(p)))
-         marker = " (base)" if p.name == DEFAULTS["base_lang"] else ""
-         print(f"{p.name:<16}{_human_size(size):>10}   {key_count}{marker}")
-    if base_path.exists():
-        count = get_update_count()
-        print(f"\nUpdate count for this base file: {count}/{DEFAULTS['update_limit']}")
+GvfQoJoEtLWzGD4MPb+dnIs9yNvuM5UOoeAc86Mx2F5Sq9yi10f1uPIWMgA7+tSYliLV3bpghgqh2mPltT/BGyPm0LjUXpCwrho+Q32xl56WP9XB4CyAAbLaf/rxN9gOE/fL7cpL6KW5Kj8CPfjY0Z48zt2nJZIwsex14ds4xxERpZHj2UX3u7MbfRMh8JODniHJj6ctkQCn8TbKuSvYHxLazKTAT5Cwrho+Q32xl56WP9XB4DOVDqHgNvy8LtoMCKX7iPxrz5qIJllpWfuRl9sx18uRNogKoq0/r9t+lV5c596+33Xqt6gdc15z7ICQjzeU/I0SqD+B2lLcg36aXjjA+YzvZs6Fh1cxAiD6q52aPN2Nk0rBT/WlcPy9O8ZeQaWXlthL6bODBTIXO8LUmJ1y2M69Jb4ftPF+u7Qm3A0I9pfkmk/2pblVCD56v9/RiD3I26skyRyh5GLw/w32LDXV65L+Y8j4uxk8AXu93t+XM9TI7GnIZfWlNrW4OJUQE/Gfq9NG/6Xmf3NDc7/U0dtyyt2nLpVHs6dY+vEl8Ts6xOqB7nnB8b4UIAYM85WfnHXn0u4vk0/76Xf7tn7TFxDgzO3cRe+4uFU6DXPrnJiIct7GvCWCG7r3b7vzd79eXKWf7ZoKuqS5ASYRPZX+0dtymt+8KY8b/eM07vYY3BIZooXxixznrfsmOhk2uM7PymLHj+5gqgqs9jS8236VXlz1zaTUXrL08VdzSXOrxNjxcpqP7iaOHfX1Nvy/ftMXEODM97AKuvb8VXNDc7+HmIE3mpLuMM8coeRivfhwxgoj9ta33yC69vxVc0Nzv9SanivlzKE1jxv1uDb5tDCdGxLxzaTfWcWytRYnSyP+hoKeDdbOoCfJH/ysP5/xfpVeXKWf7ZpH+6S3ECFDbr/W0dMw29yracNPvOM25f8w1BMZpYLwmm7fkJ0gHzcAxNaTmiHf8KIhjwj32DbwvS3QXl6nte2aCrr2/FVzQyPtnZ+PetyNtTDPAbToc6/tb4MDB9rXuNdL9ImvHCkGe+ydi557gJH/cJxP9aVt/rQn6h0T8NG5x1H3t64eNhEuvd3723Kaj6cmwQ209nPKoT/BFlLgx6TJXun+9U9ZQ3O/1NHbcprMoTWPG/W4NvK0KuoLDOHeud91+bmpGydLepXU0dtymo/uYJEdvOtivbd86RAp9duszk+6tbMAPRdz+ZuD2ybSxr1ggw6m4DbzuDLQRFz+3KLPRO6r8w4XJhXeob2vAeGIuzCFDqHgSfm4M9wKW9jC75Mg
+e4692e1c
+##a033837d4f23e078bea6b3957

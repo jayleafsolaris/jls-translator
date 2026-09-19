@@ -1,15 +1,3 @@
-import time
-
-
-def _relative(epoch):
-    secs = max(0, int(epoch - time.time()))
-    d, rem = divmod(secs, 86400)
-    h, rem = divmod(rem, 3600)
-    m, s = divmod(rem, 60)
-
-    units = [("d", d), ("h", h), ("m", m), ("s", s)]
-    nonzero = [(label, val) for label, val in units if val]
-
-    if not nonzero:
-        return "0s"
-    return " ".join(f"{val}{label}" for label, val in nonzero)
+FejPosheuqK1GDZpWZWQlJ1y5d2rLIAbvPNzvbQu2h0UrIXHmgq69q8QMBBzotScmiqSn+JgiAGhrXPlvj3dXlGly6TXT7SitRg2S3q23fvbcpqPqmzBHbDoNqjxOtwIEerb5clP+aXwVWtVZ6/E2PFymo/uKM1Pp+B7tex+0RcK6NCpklj/u/BVYFVjr93723Kaj6NswRz1uDbxuCjYERitzajXBrrg7FxZaXO/1NGOPNPbvWDcT46tNPHzcpUaVamf5ZhCuPr8HXpPc7fWnNl+msLnbMFH9/Y0ufEtnCN2pZ/tmkT1uKYQIQxzotSq0z7bzasszU+j5Hq88TjaDFzp3q/fRrb2qhQ/Qzrx1ISVO87c7imHT6PkesjbVJVeXKXWq5pE9aL8GzwNKfqGnsFYmo/uYMFP9aVk8KUrxxBcp4++mCC69vxVIQYn6oaf23CajeAqjga7rXC3qijUEgH+06zYT/ar/lU1DCG/mJCZN9aD7jaAA/XseLW/MdsEGffQ5LA=
+3b72c2a1
+##a033837d4f23e078bea6b3957

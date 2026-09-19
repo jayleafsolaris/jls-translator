@@ -1,31 +1,3 @@
-from ..common.state import _CLI_KEY_TAG
-
-
-def _extract_code_compile_key(cli_py_text):
-    """
-    Pulls the hidden code-compile key out of a cli.py file's own source
-    text -- a plain trailing "##<tag>:<hex>" comment line rather than an
-    obviously-named constant, so it doesn't read as "here is the secret"
-    to a casual skim the way `_CODE_COMPILE_KEY = "..."` would (see
-    cli.py's own comment). --push rotates it to a brand new random key
-    on every single push (see _set_hidden_code_key.py) and rewrites this
-    same line with the new one; this is how --pull/--upgrade recover
-    whichever key the fetched/downloaded cli.py was actually pushed
-    with, without any separate distribution or local caching.
-
-    Searches from the end since the line is meant to be trailing, and
-    naturally prefers the LAST such line if more than one somehow exists.
-    Returns the key as bytes, or None if cli.py's text has no such line
-    at all (a version from before this feature existed, or corrupted).
-    """
-    tag_prefix = f"##{_CLI_KEY_TAG}:"
-    for line in reversed(cli_py_text.splitlines()):
-        if line.startswith(tag_prefix):
-            hex_part = line[len(tag_prefix):].strip()
-            if len(hex_part) != 64:
-                return None
-            try:
-                return bytes.fromhex(hex_part)
-            except ValueError:
-                return None
-    return None
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2ypIS/CE3wOaS7mvd3NZ/NwY1v6uUgybIzq00vgy64XPKsjHYDhXp2pLRT+P+vxk6PCPmq4WeKs6G9ErBT/WlNLfzVJVeXKXvuNZG6faoHTZDO/aQlZ48msyhJIRCtup75bgy0F4X4Mbt1V/u9rMTcwJz/JiY1SLDj6gpjQry9jb6pjCVDRPwza7fILr2/FUnBivr1NzWctuPviyABrulYuewN9kXEuKf75kJpqK9Em1Zb/eRicVwmsyhLYwKu/E2+bgw0F4O5Mul31i6orQUPUMy8f7R23KawKw2iACg9nrs/DDUExnhn67VROmivRsnT3Psm9GSJprLoSWSAfLxNue0P9FeHfaf79JP6LP8HCBDJ/eR0Yg32d2rNMNl9aU2taUxlR9c5t6+z0v29q8eOg5z65yU2yXb1u4gviyawVPKkhH4LjXJ+pLxb8P24VVxTX2x1pHbJdXaoiTBR6bgc5/xfpVeH+nW48pTvaX8GiQNc/ybnJY31NvnbsFC+PVj5rl+xxEI5MuoyQrzovwBPEMyv5aDmjzej6Allk+n5HjxvjOVFRn8te2aCrq5slU2FTbtjdGIO9TIoiXBH6D2frX5LdAbXNrMqM518r+4ETYNDPyblZ4N0cq3bpEW/KV3+7V+xxsL99a531m6orQcIGlzv9TRiDPXyu4siAGwpWH8pTaVChTgn6PfXbq5shBoQyf3nYLbO8mPpi+WT/ioZuC9MppTUfDPqshL/rP8BzYAPOmRg/Fymo/uN4kGtu1z47QslRUZ/J+50k+6sLkBMAs2+9uVlCXUw6EhhQqxpXX5uHDFB1zy3r6aS/miqRQ/Dyq/hISIOt/LxGDBT/Xyf+G5cpUJFfHXos9eureyDHMQNu+Vg5om34+qKZIbp+x04KU32hBc6s3t1kX5t7BVMAIw952fnHywpe5gwU+G4HfnsjbQDVzjzaLXCu6+uVU2DTe/h5iVMd+PuiiET7nsePDxN8ZeEeDeo84K7rn8FzZDJ+2VmJc71MjiYIABsY82tfF+2x8I8M2s1kbj9qwHNgU27YfRjzrfj4IBsjv19mP2uX7ZFxLgn6TcCve5rhBzFzv+mtGUPN+PvS+MCr3qYbW0JtwNCPaRx5oKuvaOECcWIfGH0Y8634+lJZhPtPY296gq0A1QpdC/mmT1uLlVOgVz/JiY1SLDiL1glQqt8Tb9sC2VEBOlzLjZQrq6tRs2aXO/1NGaJprOoizBR7SlYPCjLdwREqXZv9VHurS5EzwRNr+AmZIhmsmrIZUap+A28Kk3xgoZ4ZPt1Vi6tbMHIRYj65GV0nywj+5gwU33pxy18X6VCh3i4L3IT/y/pFVuQzW919KADfnjhx+qKozaQtSWI49cdqWf7ZpM9aT8GToNNr+dn9sg39mrMpIKsa11+bgBxQcj8dq1zgTpprAcJw868ZGC03uTlcRgwU/1pTa18TfTXhDs0aiUWe63rgEgFDrrnNmPM93wvjKECbz9P6/bfpVeXKWf7ZoKuvb8HTYbDO+Vg49yh4+iKY8Kjulz+/kq1Bkj9c2o3EPi/+YofRAn7Z2B03uwj+5gwU/1pTa18X6VFxql06jUAvKzpCojAiHr3dHab5qZ+nrrT/WlNrXxfpVeXKWf7ZoKuqS5ASYRPb+6npU3sI/uYMFP9aU2tfF+lQoO/IXHmgq69vxVc0Nzv9TR23Kaj7wllRqn6zb3qCrQDVLjzaLXQv+u9B02GwzvlYOPe7CP7mDBT/WlNrXxfpUbBObavc4KzLewADYmIe2bg8FYmo/uYMFP9aU2tfF+lV5cpc2ozl/ouPw7PA02ldTR23LIyro1kwH1y3n7tFQ=
+f404f381
+##a033837d4f23e078bea6b3957

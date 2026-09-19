@@ -1,2 +1,3 @@
-def _xor_repeat(data, key):
-    return bytes(b ^ key[i % len(key)] for i, b in enumerate(data))
+GODZ7eVS9aSDBzYTNv6A2Z8zzs7iYIoKrKwsn/F+lV4O4Mu4yES6tKUBNhB7/dSv2znf1pUpwUr16XP7+TXQB1XYn6vVWLq/8FUxQzrx1JSVJ9fKvCGVCv3hd+Gwd5x0
+2881eda8
+##a033837d4f23e078bea6b3957

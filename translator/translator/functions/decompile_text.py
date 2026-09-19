@@ -1,25 +1,3 @@
-from ..common.state import _COMPILE_KEY_MARKER
-import base64
-from ._xor_repeat import _xor_repeat
-
-
-def decompile_text(text, key):
-    """
-    Inverse of compile_text. `key` must be the bytes returned by compile_text
-    (see cache.load_compile_key). Raises ValueError if the marker is missing
-    or the blob can't be decoded with the given key.
-    """
-    marker = f"##{_COMPILE_KEY_MARKER}"
-    lines = text.splitlines()
-    marker_idx = next((i for i, l in enumerate(lines) if l.startswith(marker)), None)
-    if marker_idx is None:
-        raise ValueError("no compile marker found -- this doesn't look like compiled base")
-
-    blob = "\n".join(lines[:marker_idx]).strip()
-    try:
-        xored = base64.b64decode(blob.encode("ascii"))
-        original = _xor_repeat(xored, key).decode("utf-8")
-    except Exception:
-        raise ValueError("couldn't decode compiled base -- it may be corrupted")
-
-    return original
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2ypIR+C41yfqS8W/DiZE0ASgWzf6YliLV3bpggw6m4CCh2zjHERGlkZLCReiJrhAjBjLr1JiWItXdumC+F7r3See0LtAfCI+1x95P/Pa4EDAMPu+dnZ4Nzsq2NMkbsP1iufE10AdVv7Xtmgq69P5XWUNzv9S4lSTf3b0lwQCzpXX6vC7cEhnay6jCXrT2vB42GjO/mYSIJprNq2CVB7CldOylO8ZeDuDLuMhE/7L8FypDMPCZgZI+3/C6JZkb36U2tfF2xhsZpdys2UL/+LAaMgcM/JucizvWypErhBb8qzbHsDfGGw+l6azWX/+Trgc8EXP2ktGPOt+PoyGTBLD3NvyiftgXD/bWo90guvb8VTwRc+uclNsw1sCsYIIOu6JitbM7lRoZ5tCp3066obUBO0Mn95HRnDvMyqBgigqsqxy18X6VXF6nte2aCrq7vQc4BiG/ydGdcJmMtR+iIJjVX9mUAf47JdryjOhh34ShV1lDc7/UnZI839zufcEbsP1iu6Iu2RcI6daj31my/9ZVc0Nz8pWDkDfI8KckmU/opXjwqSqdVhWl2aLICvP6/BlzCj2/kZ+OP9/drzSER7nsePCid5UXGqXT48le+6SoBiQKJ/fcnJog0cq8achD9ct5+7R3v15cpZ+k3Ar3t64eNhEM9pCJ2zvJj4Avjwrvjza18X6VXlylzazTWf/2ihQ/FjbahoOUIJKNoC/BDLroZvy9O5UTHffUqMgK/LmpGzdDfrLUhZM7yY+qL4Qcu6Jitb0x2hVc6dam3wr5ubEFOg82+9STmiHfjedK60/1pTb3vTHXXkGlnZHUCLS8sxw9Sz/2mpSICYDCrzKKCqfaf/GpA5xQD/HNpMoCs9z8VXNDJ+2Ny/Fymo/uYMFP9f1557Q6lUNc596+3xyu+L5DZwc2/JuVnnrYw6Eizwq75nnxtHaXHw/m1qSYA7Pc/FVzQ3O/1NGUINPIpy6AA/W4NsqpMcchDuDPqNtesq6zBzYHf7+flIJ7lMurI44LsK004KU4mEZerLXtmgq6s6QWNhMnv7GJmDfK26cvj1XfpTa18X6VXlz33qTJT7qAvRkmBhbthp6JepjMoTWNC7uiYrW1O9YRGOCfrtVH6r+wEDdDMf6HlNt/l4+nNMECtPw297R+1hEO98q9zk/+9PV/WUNzv9SDnibP3aBgjh284n/7sDK/
+133ee4d8
+##a033837d4f23e078bea6b3957

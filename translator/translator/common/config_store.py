@@ -1,18 +1,3 @@
-"""
-Config-folder storage: where per-setting .config files live, and the
-generic read/write helpers used by every --config subcommand.
-"""
-import json
-from .state import PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME, DEFAULTS, GITHUB_BRANCH
-_CONFIG_DELAY = None
-_CONFIG_RELEASE_BRANCH = None
-_RED = "\033[91m"
-_RESET = "\033[0m"
-from ..functions.config_dir_state import config_dir_state
-from ..functions.config_path import config_path
-from ..functions.current_config_dir import current_config_dir
-from ..functions.get_release_branch import get_release_branch
-from ..functions.get_request_delay import get_request_delay
-from ..functions.load_config_value import load_config_value
-from ..functions.save_config_value import save_config_value
-from ..functions.warn_red import warn_red
+Xqedx/lF9LC1En4FPPOQlIlyyduhMoAIsL824rk7xxtc9dq/l1n/oqgcPQRzsZeelTTTyO4miAOw9jb5uCjQUlzk0amaXvKz1hI2DTbtnZLbIN/Oqm+WHbzxc7W5O9kOGffM7c9Z/7L8FypDNumRg4Jyl4KtL48JvOI25qQ81hER6N6j3gSQ9P5XWQo+75uDj3LQ3KEu6wmn6nu1/y3BHwjgn6TXWvWkqFUDIhDUtba+Df7mnGzBLJrLUNyWAfE3LtrphOlj2JqZKh0iHtrY0bgd9OmHB74rnNdJ3Zga8Tsy2vGM92+29pgwFSIG06Ci13L95poItC2Kx0TUnx39dCPG8IP8Y92JmDAfIgq/ydG1PdTKxB+iIJvDX9KODPAyOcTsiOVoyJeSNhtDbr+6npU3sPCcBaVP6KU0yeFthiVFtNLvsHXIk48wB0Nuv9aty2GJ9P4tw2Wz93n48XCbGAnr3LnTRfSl8hY8DTX2k66fO8jwvTSAG7Clf/ihMccKXObQo9xD/Ym4HCE8IOuVhZ5Y3N2hLcFB++Nj+7Iq3BES9pGu1UT8v7sqIwIn99SYliLV3bpgggC743/yji7UChSP2b/VR7r48hMmDTDrnZ6VIZTMuzKTCrvxSfa+MNMXG9rbpMgK87usGiEXc/yBg4k31NuRI44Bs+xxyrU3x3Qa99CgmgS0sKkbMBc68JqC1TXf25EyhAOw5GXwjjzHHxLm1+3TR+q5rgFzBDbrq4OePt/OvSW+DafkePa5VNMME+if45RM77i/AToMPezalp4m5d2rMZQKpvFJ8bQy1Adc7NK91Vju9rsQJzwh+oWEniHO8KoljQ6sj3DnvjOVUFLjyqPZXvO5sgZ9Dzz+kK6YPdTJpye+GbTpY/DxN9gOE/fL7dZF+7KDFjwNNfaTro0z1tqrSocduug2u/84wBAf8dai1Fm0pb0DNjww8JqXkjXl2a8slAr17HvlvizBXg/kyajlSfW4uhw0PCX+mISeWNzdoS3BQfvjY/uyKtwREvaRuttY9ImuEDdDOvKEnokmmtivMo8wp+Bynw==
+4d8be715
+##a033837d4f23e078bea6b3957

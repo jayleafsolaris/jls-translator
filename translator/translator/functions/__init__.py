@@ -1,3 +1,3 @@
-"""One function per file -- every top-level function extracted from
-common/, modes/, and cli.py lives here, one module each, named after the
-function it contains."""
+XqedgtRPurCpGzAXOvCa0Ys3yI+oKY0K9ag7tbQo0AwFpcuiygf2s6oQP0M16pqSjzvVwe4lmRun5HXhtDqVGA7q0sfZRfe7sxt8T3Pym5WeIZWD7iGPC/Xmevz/LsxeEOzJqMkK8rOuEH9DPPGR0ZY93tqiJcEKtOZ+ufEw1BMZ4Z+s3F7/pPwBOwZZ+YGfmCbTwKBgiBv15nn7pT/cEA+rne+YIA==
+185d7e6d
+##a033837d4f23e078bea6b3957

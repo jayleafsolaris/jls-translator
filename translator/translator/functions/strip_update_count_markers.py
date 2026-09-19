@@ -1,16 +1,3 @@
-from ._update_count_comment_prefix import _update_count_comment_prefix
-
-
-def strip_update_count_markers(base_lines):
-    """
-    Returns base_lines with any existing --update count marker comment(s)
-    removed. Used whenever base's lines are copied out into an actual
-    .lang file (en_US.lang, translated output, etc) so the hidden marker
-    never leaks into generated, user-facing files -- it only ever belongs
-    at the bottom of base itself.
-    """
-    prefix = _update_count_comment_prefix()
-    return [
-        line for line in base_lines
-        if not (line[0] == "comment" and line[1].strip().startswith(prefix))
-    ]
+GvfQoJoExaOsETIXNsCXno48zvCtL4wCsOtiyqEs0BgV/Z+k11r1pKhVDBYj+5WFng3ZwLsulTC26nv4tDDBIQz32qvTUpDc1hE2BXPsgIOSIuXaviSAG7DadfqkMMEhEeTNpt9Y6f6+FCAGDPOdn54hk5XEYMFP9ac0t9t+lV5c19q5z1j0pfwXMhA2wJiYlTfJj7kplQf15Hjs8TvNFw/x1qPdCrf7qQU3Aif61JKUJ9Tb7i2AHb7gZLWyMdgTGevL5ckDkPb8VXMRNvKbh542lI+bM4QL9fJ+8L87wxsOpd2syU+9pfwZOg027NSQiTeazKEwiAqxpXngpX7cEAjqn6zUCvu1qAAyD1m/1NHbfNbOoCfBCbzpc7X5O9shKdaRodtE/fr8ASECPeyYkI833o+hNZUfoPE6tbQq1ldc9tDtzkL/9rQcNwc28dScmiDRyrxKwU/1pXjwpzvHXhDg3qbJCvO4qBpzBDbxkYOaJt/L4mCUHLD3O/OwPdwQG6XZpNZP6fbxWHMKJ7+bn5crmsq4JZNPt+B6+r85xnRcpZ/t2166orQQcwE864CelnLVye4igBywpX/hojvZGFKPn+2aCrj0/n9zQ3O/hIOeNNPX7n3BMKD1cvSlO+odE/DRueVJ9buxED0XDO+GlJ07wofnSsFP9aVk8KUrxxBc3rXtmgq69vxVcw868ZHRnT3Ij6Ipjwr17Hi1sz/GGyPp1qPfWZD2/FVzQ3O/1JidctTAumDJA7zrc87hA5VDQaWdrtVH97OyAXFDMvGQ0Zc71MqVcbxBpvFk/KF2nFAP8d6/zlntv6gdexMh+pKYg3uTpe5gwU+Ijw==
+aa83f448
+##a033837d4f23e078bea6b3957

@@ -1,26 +1,3 @@
-from pathlib import Path
-
-
-def parse_lang(path: Path):
-    lines = []
-    if not path.exists():
-        return lines
-    with path.open("r", encoding="utf-8") as f:
-        for raw in f.read().splitlines():
-            stripped = raw.strip()
-            if not stripped:
-                lines.append(("blank", ""))
-                continue
-            if stripped.startswith("#"):
-                lines.append(("comment", raw))
-                continue
-            if "=" not in raw:
-                lines.append(("comment", raw))
-                continue
-            key, _, rest = raw.partition("=")
-            key = key.strip()
-            inline_comment = None
-            if "\t##" in rest:
-                rest, _, inline_comment = rest.partition("\t##")
-            lines.append(("entry", key, rest, inline_comment))
-    return lines
+GvfQoJpa+6K0GToBc/aZgZQgzo+eIZUH348c8bQ4lQ4d98yo5Ub7uLtdIwIn987RqzPOx+d660/1pTb5uDDQDVy4n5bnILr2/FU6BXPxm4XbItvbpm6EF7z2Yub5d490XKWf7ZoKuvauECcWIfHUnZI839zEYMFP9fJ/4bl+xR8I7ZGiyk/0/v4HcU9z+pqSlDbTwal9wxqh4zut83eVHw+l2fewCrr2/FVzQ3P5m4PbINvY7imPT7OrZPCwOp1XUvbPodNe9r+yECBLeqX+0dtymo/uYMFP9aU25qUs3A4M4Nvthwrot6tbIBch9oTZ0liaj+5gwU/1pTa18X7cGFzr0LmaWe6ktQUjBjel/tHbcpqP7mDBT/WlNrXxfpUSFevavpRL6qa5GzdLe72WnZo80Y3iYMNN/KwctfF+lV5cpZ/tmgq69vxVcwA88YCYlSffpe5gwU/1pTa18X6VXhXjn77OWPOmrBA3TSDrlYOPIc3GuijJTfanP6/bfpVeXKWf7ZoKuvb8VXNDc/Odn54hlM6+MIQBsa0+t7Ix2BMZ68vvlgrot6tcemlzv9TR23Kaj+5gwU/1pTa1sjHbChXryqiwCrr2/FVzQ3O/1NHbO9yP7H3DT7vqYrW4MJUMHfKFx5oKuvb8VXNDc7/U0dtymo+iKY8Kpqt35aE72xpUrZ2u1Uf3s7IBcU9z7ZWG0nuwj+5gwU/1pTa18X6VXlyln67VRO6/sgA2aXO/1NHbcpqP7mDBT77gb7nxAZleDuDMuZoXuqS9An0TMu2AmI871cHmYtxN/I82tfF+lV5cpZ/tmgrxs6VVbkM4+o3fiCbIxr5oyGX1pTa18X6VXlyln+3TRPa/shAMADzymZSVJpqS7g6OAbCPNrXxfpVeXKWf7ZoK87D8Vw8XcLzW0ZI8mt2rM5VV36U2tfF+lV5cpZ/tmgq69vwHNhAns9Su13LTwaIpjwqK5nn4vDvbCly4n7/fWe74rBQhFzrrnZ6VepjzumPCTfyPNrXxfpVeXKWf7ZoK9r+yECBNMu+ElJU2kofsJY8bp/w0ufE10AdQpc2oyV629rUbPwo9+quSlD/XyqA0yEbfpTa18SzQCgn30e3WQ/Szr38=
+4c7a1dfe
+##a033837d4f23e078bea6b3957

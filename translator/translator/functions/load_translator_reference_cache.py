@@ -1,24 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS
-import json
-
-
-def load_translator_reference_cache():
-    """
-    Returns {lang_code: {key: translated_value}} for every Translator
-    Reference key (see lang_io.translator_reference_keys()) translated so
-    far, for every language. These values never live inside any .lang
-    file -- see lang_io.strip_translator_references() -- so this is their
-    only persisted home, and the only way --update's otherwise
-    file-driven incremental model can know one exists, notice its base
-    text changed, or reuse it to resolve another entry's '{key.path}'
-    cross-reference without retranslating it every single run.
-    """
-    path = PACKAGE_DIR / DEFAULTS["translator_reference_cache_file"]
-    if path.exists():
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-            if isinstance(data, dict):
-                return data
-        except Exception:
-            pass
-    return {}
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2xZAd/j87wOCJ83i29pgwFSIG06Ci8TvX36EylU+/9nn721S/Ghnjn6HVS/6JqAcyDSDzlYWUIOXdqyaEHbDrdfCOPdQdFOCX5IAguvb8VXFBcZXU0dty6Mq6NZMBpqVt+bAw0iEf6tuogArhvbkMaUMn7ZWfiD7b26skvhm06WPwrCOVGBP3n6jMT+iv/CEhAj3smJCPPcil7mDBT4fgcPCjO9sdGaXUqMMKsqW5EHMPMvGTrpI9lNu8IY8cueRi+qMBxxsa4M2o1En/ibcQKhB7tt3RjyDbwb0sgBuw4TbmvlSVXlyl2azIBrqwswdzBiX6hojbPtvBqTWACLCrNsG5O8YbXPPeoc9P6fayECUGIb+YmI03msagM4gLsKV3+6h+mxId69jHmgq69rocPwZzstnRiDffj6IhjwiK7Hm7oirHFwzay7/bROm6vQE8EQztkZeeIN/BrSWSR/ylO7jxLdpeCO3WvppD6faoHTYKIZXU0dty1cGiOcEfsPdl/KIq0Bpc7dCg3wa6t7IRcxc7+tSelT7Dj7khmE/4qGPltT/BG1v2n6LOQv+kqxwgBlm/1NHbNNPDq22FHbzzc/vxN9sdDuDSqNRe+7r8GDwHNvPUkpo8msSgL5ZPuutztbQm3A0I9pPt1EXuv78Qcwon7NSTmiHfpe5gwU+h4G7h8T3dHxLi2qmWCvWk/Ac2FiD61JiPcs7A7jKEHLrpYPDxP9sRCO3av5pP9KKuDHQQc7iPmp4rlN+vNIkS8o82tfF+1gwT9szgyE/8s64QPQA2v4OYjzrV2rpgkwqh93f7ojLUChXr2O3TXrqzqhAhGnPsnZ+cPt+PvDWPQd+lNrXxfJdcdqWf7Zpa+6K0VW5DA963uroV//CKCbNP+qVS0Jcf4DIo1uTvzlj7uK8ZMhc87auDnjTf3asuggqK5nf2uTvqGBXp2u/nILr2/FU6BXPvlYWTfN/XpzOVHP2sLJ/xfpVeXKWf7c5Y4+zWVXNDc7/U0dtymo/uJIAbtKUrtbst2hBS6dCs3lmypr0BO00h+pWVpCbf17pohAG26nL8vzmIXAnx2eCCCLP/1lVzQ3O/1NHbcpqP7imHT7z2f/uiKtQQH+CXqdte+/r8EToAJ7bO+9tymo/uYMFP9aU2tfF+lV4O4Mu4yES6sr0BMmlzv9TR23Kaj6s4ggql8TbQqT3QDgjs0KOAILr2/FVzQ3O/1NHbcsrOvTPrT/WlNue0KsAMEqXEsLA=
+a9e6017c
+##a033837d4f23e078bea6b3957

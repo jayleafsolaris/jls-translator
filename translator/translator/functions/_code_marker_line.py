@@ -1,5 +1,3 @@
-from ..common.state import _CODE_COMPILE_KEY_MARKER
-
-
-def _code_marker_line():
-    return f"##{_CODE_COMPILE_KEY_MARKER}\n"
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2ypIR8TsjxvCA6mPWk4M+FjoM0rWjsBfopcRKhQqzpUn2vjrQIRHkzabfWMW6tRs2S3ql/tHbcprdqzSUHbulcLfyfc4hP8r7iOVp1ZuMPB8mDNSxqKQf+/2FBbMSies0nw==
+f7b8fd85
+##a033837d4f23e078bea6b3957

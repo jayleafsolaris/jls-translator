@@ -1,24 +1,3 @@
-from ..common import state
-from ..common.sections import load_section_data, render_tree
-from ..common.state import DEFAULTS
-import shutil
-
-
-def cmd_merge():
-    data = load_section_data()
-    if not data:
-        print("No section-tree cache found -- run --split first, or there's nothing to merge.")
-        return
-    tree, markers = data
-
-    base_dir = state.SCRIPT_DIR / DEFAULTS["base_lang"]
-    if not base_dir.is_dir():
-        print(f"No '{DEFAULTS['base_lang']}/' folder found -- nothing to merge.")
-        return
-
-    rendered = render_tree(tree, base_dir, markers)
-
-    shutil.rmtree(base_dir)
-    (state.SCRIPT_DIR / DEFAULTS["base_lang"]).write_text(rendered, encoding="utf-8")
-
-    print("Done! Base: Merged")
+GvfQoJoEtLWzGD4MPb+dnIs9yNvuM5UOoeAc86Mx2F5Sq9yi10f1uPIGNgAn9pufiHLTwr4vkxv16Xn0tQHGGx/x1qLUdf63qBR/QyH6mpWeIOXbvCWEZbP3efjxcJsdE+jSotQE6aK9ATZDOvKEnokmmuuLBqA6mdFFn7gzxREO8Z++0l/uv7B/WWk3+pLRmD/e8KMlkwiwrT+v236VXlzh3rnbCqf2sBoyBwzskZKPO9XBkSSAG7StP5/xfpVeFeOfo9VeurK9ATJZWb/U0dtymo/uMJMGu/E+t58xlQ0Z5suk1US3oq4QNkMw/peZnnLcwLsuhU/4qDbnpDCVU1H2z6HTXrqwtQcgF3+/m4PbJtLKvCXGHPXreeG5N9sZXPHQ7ddP6LG5W3FKWb/U0dtymo/uMoQboPd4n/F+lV4I99qolgr3t64eNhEgv8nRnzPOzsRKwU/1pXT0ojvqGhX3n/CaWe63qBB9MBDNvaGvDf7mnGDOT5HAUNSEEuEtJ6fdrMlPxbq9GzRBDpXU0dty08nuLo4b9ed35rQB0RcOq9a+5U7zpPRcaWlzv9TR23Kaj74yiAGhrXC3nzGVWQfB+ov7f9aCjy50ATLska6XM9TI6R2cQPKlcPq9OtAMXOPQuNROuvvxVT0MJ/edn5xyzsDuLYQdsuA4t/hUlV5cpZ/tmgros6gAIQ1ZldTR23LIyqAkhB2w4Tao8SzQEBjgzZLOWP+z9AEhBjaz1JOaId/wqimTQ/Xod+e6O8cNVY+17ZoKuqW0ACcKP7GGnI8g38rmIoAcsNpy/KN3v15cpZ/lyV77orlbACAB1qSlpBbz/e5vwSuQw1fAnQrmJV7n3r7fdfa3shJxPnqxg4OSJt/wuiWZG/33c/u1O8cbGKmfqNRJ9bK1GzReceqAl9ZqmIbESsFP9aVm57gwwVZewdCj3wu6lL0GNllz0pGDnDfejedK
+e2fa733e
+##a033837d4f23e078bea6b3957

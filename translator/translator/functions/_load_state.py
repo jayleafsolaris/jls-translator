@@ -1,19 +1,3 @@
-import json
-from ..common.ratelimit import _STATE_FILE
-from ._default_state import _default_state
-from ._now import _now
-
-
-def _load_state():
-    if _STATE_FILE.exists():
-        try:
-            data = json.loads(_STATE_FILE.read_text(encoding="utf-8"))
-            required = ("hour_cap", "day_cap", "cap_rolled_hour_at", "cap_rolled_day_at", "usage_log")
-            if all(k in data for k in required):
-                data.setdefault("manual_cooldown_until", None)
-                data.setdefault("hour_window_bad", False)
-                data.setdefault("day_window_bad", False)
-                return data
-        except Exception:
-            pass
-    return _default_state(_now())
+FejPosheuryvGj1pNe2bnNt8lMyhLYwAu6tk9KU72RcR7Mvt00fqua4BczwAy7Wlvg385oIF6wmn6nu1/wHRGxrkyqHOdemivQE2QzryhJ6JJprwqiWHDqDpYsqiKtQKGY/Zv9VHuviDGzwUc/aZgZQgzo+RLo4Y348c8bQ4lSEQ6t6p5Vnut6gQe0ppldTR23LTye4fsjuU0VPKlxf5O1Lgx6TJXun+9U9ZQ3O/1NHbcprbvDnbZfWlNrXxfpVeXKWf7d5L7rf8SHMJIPCa35c928u9aL48gcRC0I4Y/DI5q82o207ForkNJ0s28ZeenzvUyPNilBuzqC63+He/Xlyln+2aCrr2/FVzETbugZiJN96P82DJTb3qY+eOPdQOXqmf795L44m/FCNBf7/Wkpoi5d2hLI0Ksdp++qQs6h8Ip5PtmEn7poMHPA8/+pCunzPD8K80w0P1p2PmsDnQIRDq2O+TILr2/FVzQ3O/1NHbctPJ7iGNA/3uNvy/ftEfCOSfq9VYur38HD1DIfqFhJIg38vneutP9aU2tfF+lV5cpZ/tmgq6sr0BMk0g+oCVnjTb2qI0yU245HjgsDLqHRPq06nVXfSJqRsnCj+92NG1PdTK50rBT/WlNrXxfpVeXKWf7ZoK/reoFH0QNuuQlJ0zz8O6aMMHuvBkyqY32xoT8uCv2064+vwzMg8g+t3723Kaj+5gwU/1pTa18X6VXhjky6yUWf+iuBA1AibzgNnZNtvWkTeIAbHqYcqzP9FcUKX5rNZZ///WVXNDc7/U0dtymo/uYMFP9fdz4aQs214Y5MussAq69vxVc0Nz+oySniLOj4s4ggql8X/6v2S/Xlyln+2aCrr2/FVzEzLsh/vbcpqPvCWVGqfrNsq1O9MfCenLksle+6K5XQwNPOjc2NJY
+b15ba083
+##a033837d4f23e078bea6b3957

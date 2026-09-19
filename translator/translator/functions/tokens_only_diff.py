@@ -1,24 +1,3 @@
-from ._protect import _protect
-
-
-def tokens_only_diff(old_text, new_text):
-    """
-    Compares an old and new base value and checks whether the *only*
-    difference between them lives inside protected tokens (%1$s-style
-    placeholders, section-sign color codes, PUA glyphs, etc) -- i.e. every
-    bit of actual translatable text is byte-for-byte identical, only the
-    token(s) themselves changed (a swapped placeholder index, a different
-    color code, and so on).
-
-    Returns the new token list (in order) if that's the case, so the caller
-    can splice it into an already-translated string instead of retranslating.
-    Returns None if there's any other change (meaning a real retranslation
-    is needed), including the case where nothing changed at all.
-    """
-    old_skeleton, old_tokens = _protect(old_text)
-    new_skeleton, new_tokens = _protect(new_text)
-    if old_skeleton != new_skeleton:
-        return None
-    if old_tokens == new_tokens:
-        return None
-    return new_tokens
+GvfQoJoExaauGicGMOvUmJYi1d26YL4fp+pi8LIqv3R24dqrml71vbkbIDw88ZiIpDbTyahojgOx2mLwqSqZXhLgyJLOT+Ki9U9ZQ3O/1NPZcLCP7mDBLLroZvSjO8ZeHeufotZOureyEXMNNujUk5oh34+4IY0asKV3+7V+1hYZ5tS+ml3ys6gdNhFz65yU23jVwaI5y2X1pTa1tTfTGBn32qPZT7q0uQEkBjbx1IWTN9ePoimXCqalf/uiN9EbXPXNos5P+aK5EXMXPPSRn4hykor/ZJJCpvFv+bRUlV5cpc+h20n/vrMZNwYh7NjRiDfZ26cvj0Km7HH78T3aEhP3n67VTv+l8FUDNhK/k52CItLc4mCEG7asNrj8ftxQGaufqMxP6K/WVXNDc/2dhds93I+vI5UatOk24aM/2w0Q5Mus2Eb/9qgQKxdz9ofRmSvOyuMmjh3452/htH7cGhnry6TZS/b6/Bo9Dyq/gJmeWJqP7mCVAL7geL2id5UKFODSvt9G7LOvVTALMvGTlJ9yks7uM5YOpfVz8fEu2R8f4Nei1k7/pPwcPQc259jRmnLexqgmhB2w62Kf8X6VXh/q06LICvm5uBB/QzLxkNGIPZrAoGnPZd+lNrXxDNAKCffRvppe8rP8GzYUc+ubmp48msOnM5VP/ex4tb4s0RsOrJ+k3Aruvr0BdBBz65yU2zHb3KtswRy6pWL9tH7WHxDp2r+wCrr2/BYyDXPshJ2SMd+PpzTBBrvxebWwMJUfEPfarN5Tt6KuFD0QP/6AlJ9yydu8KY8I9ex45qU71Bpc6tntyE/upL0bIA8y652fnHywj+5gwT2w8WPnvy2VMBPr2u3TTLqitBAhBnTs1JCVK5rAuiiEHfXmfvS/OdBeVOjarNRD9LH8FHMRNv6Y0Yk3zt2vLpIDtPF/+r9UlV5cpda+mkT/s7gQN0p/v52fmD7Py6cuhk+h7XO1sj/GG1zy16jIT7q4swE7Cj341JKTM9TIqyTBDqGld/m9cL9eXKWf75gIkPb8VXMMP/urgpA31sq6L49D9ep68Y4q2hUZ68zthwrFpq4aJwYw69yelzbl26s4lUbfpTa18TDQCSP21KjWT+65sllzDTboq4WUOd/BvWDcT4r1ZPqlO9YKVOvauuVe/66oXFlDc7/UmJ1y1cOqH5IEsOlz4b4wlV9BpdGozXXpvbkZNhc88c7723Kaj+5gwU+n4GLgozCVMBPr2seaCrr2tRNzDD/7q4WUOd/BvWDcUvXrc+KOKtoVGevM97AKuvb8VXNDc+2RhY4g1I+AL48K36U2tfEs0AoJ99Ht1E/tiagaOAY97P4=
+e039f769
+##a033837d4f23e078bea6b3957

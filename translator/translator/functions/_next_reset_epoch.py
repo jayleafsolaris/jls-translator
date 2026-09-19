@@ -1,13 +1,3 @@
-def _next_reset_epoch(data, now, window_seconds):
-    """
-    Anchored to the most recent logged usage, not the oldest -- every new
-    request pushes this further out, so the reset countdown (both what's
-    shown to the user and what reserve() actually sleeps for on an hourly
-    cap hit) always reflects how recently the tool was actually used,
-    instead of draining back down mid-run just because the very first
-    request of the window happens to be old.
-    """
-    in_window = [ts for ts, b in data["usage_log"] if now - ts < window_seconds]
-    if not in_window:
-        return now
-    return max(in_window) + window_seconds
+GODZ7eVE/66oKiEGIPqArp4i1cymaIUOoeQ6tb8xwlJc8taj3kXtia8QMAw9+4fYwViaj+5gw033jza18X70EB/t0L/fTrqis1UnCza/mZ6IJprdqyOEAaGlevq2OdAaXPDMrN1PtvayGidDJ/eR0ZQ+3sq9NMFC+KVz47QszF4S4MjHmgq69q4QIhY27IDRiyfJx6szwRu97GW1tyvHChTgze3VX+76/AY8Qyf3kdGJN8nKumCCAKDrYvG+KdteVOfQudIK7b69AXQQWb/U0dsh0sC5LsEbuqVi/bR+wA0Z95+s1E66obQUJ0Mh+oeUiSTfh+dggAyh8Hf5vSeVDRDg2r3JCvy5rlU8DXP+mtGTPc/dojnrT/WlNvawLpUWFfGW7dtG7belBnMRNvmYlJgmyY+mL5ZPp+B18L8q2Qdc8deoml71ubBVJAIgv5WSjyfbw6I5wRqm4HK5236VXlzs0b7OT/uy/Bo1QzftlZiVO9TI7iKADL6lcvqmMJUTFeGSv89EurypBidDMfqXkI4h34+6KIRPo+Bk7PE43AwP8bXtmgq6pLkEJgYg69SenXLOx6tglga74Xni8TbUDgzg0b6aXvX2vhBzDD/72vvbcpqP7GLDZfWlNrW4MOoJFevbos0Kp/aHASBDNfCG0Y8hlo+sYIgB9eF34bAFlwsP5Nio5Ub1sf4ocwo1v5qejHKXj7ozwVP18n/7tTHCIQ/g3KLUTumL1lVzQ3P2ktGVPc6Ppy6+GLzrcvqmZL9eXKWf7ZoKuqS5ASYRPb+anoxYmo/uYJMKofBk+/Ez1AZU7NGSzUP0srMCekN4v4OYlTbV2JEzhAy663Lm2w==
+e7afe2ec
+##a033837d4f23e078bea6b3957

@@ -1,5 +1,3 @@
-from ..common.debug_log import _enabled
-
-
-def is_enabled():
-    return _enabled
+GvfQoJoEtLWzGD4MPbGQlJkn3fCiL4ZPvOhm+qMqlSEZ696v1k/+3NZ/NwY1v52CpDfUzqwshAv9rCyf8X6VXg7gy7jIRLqJuRsyAT/6kPs=
+df197ea3
+##a033837d4f23e078bea6b3957

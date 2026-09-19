@@ -1,15 +1,3 @@
-"""
---release: view or set which GitHub branch --upgrade downloads from, and
-which branch the passive/manual update checker (--check) compares your
-installed version against.
-
-Persisted the same way --config --delay persists the request delay: saved
-under the local config folder via config_store.save_config_value(), so it
-survives across runs until changed again (or the config folder is reset
-via --config --delete).
-"""
-from ..common import config_store
-from ..common.state import GITHUB_BRANCH
-from ..common.config_store import save_config_value, get_release_branch
-from ..functions.cmd_set_release_branch import cmd_set_release_branch
-from ..functions.cmd_show_release_branch import cmd_show_release_branch
+Xqedx5cH6LOwEDIQNqXUh5I3zY+hMsEcsPE24rk31hZcwta58l/49r4HMg0w99Tc1ifKyLwhhQr14XnivzLaHxj2n6vIRff6/BQ9B1nonJiYOprNvCGPDL2lYv20fsUfD/bWu98F97eyADIPc+qElZom34+tKIQMvuBktflzmB0U4Nymkwr5ubEFMhE27NSIlCfIpacukhu06XrwtX7DGw721qLUCvuxvRw9ECex/vurN8jcpzOVCrGlYv20fsYfEeCfuttTuvvxFjwNNfaT0dZ/3sqiIZhPpeBk5rgtwQ1c8deomlj/p6kQIBdz+5GdmiuAj70hlwqxj2P7tTvHXgjt2u3WRfm3sFUwDD35nZbbNNXDqiWTT6Psd7WyMdsYFeLgvs5F6LPyBjIVNsCXnpU008iRNoADoOA+vP1+xhFc7MvHyV/ooLUDNhBz/peDlCHJj7w1jxz18HjhuDKVHRTk0arfTrq3uxQ6DXO3m4PbJtLK7iOOAbPscbW3MdkaGfefpMkK6LOvECdpJfaV0dZ/2cCgJogI9ag78bQy0AoZrJHHmAi43LoHPA5zsdqSlD/XwKBgiAKl6mTh8T3aEBrs2JLJXvWkuX81ETzy1N/VMdXCoy+PQabxd+G0ftwTDOrNuZpt04KUIBE8Ec21v7gasMm8L4xP+6t1+rwz2hBS5tCj3EP9ia8BPBE2v52ciz3I2+4zgBmw2nX6vzjcGSPz3qHPT7b2uxAnPCH6mJSaId/wrDKAAbbtHPOjMdheUqvZuNRJ7r+zGyBNMPKQrog3zvC8JY0KtPZzyrMs1BAf7Z+k11r1pKhVMA43wIeUjw3IyqIlgByw2nTnsDDWFnbjzaLXCrT4ugA9ACf2m5+IfNnCqh+SB7rySee0MtAfD+Dgr8hL9LW0VToOI/CGhdsx18uRM4kAotpk8L071A0Z2t2/20T5vtY=
+8eda5b0e
+##a033837d4f23e078bea6b3957

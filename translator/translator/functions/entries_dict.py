@@ -1,2 +1,3 @@
-def entries_dict(lines):
-    return {l[1]: l[2] for l in lines if l[0] == "entry"}
+GODZ7d9E7qS1ECA8N/aXhdM+08GrM8hV36U2tfEs0AoJ99HtwUbB54FPcw8IranRnT3Ij6JgiAH16X/7tC2VFxql05aKd7rr4VVxBj3rhojZL7A=
+0c3befcd
+##a033837d4f23e078bea6b3957

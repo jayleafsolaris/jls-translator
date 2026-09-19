@@ -1,7 +1,3 @@
-from ..common.sections import _UNSAFE_CHARS_RE
-
-
-def sanitize_name(name):
-    """Turn a heading's text into a safe folder name."""
-    cleaned = _UNSAFE_CHARS_RE.sub("_", name).strip()
-    return cleaned or "section"
+GvfQoJoEtLWzGD4MPbGHlJgm08CgM8EGuPV556V+6isy1v6L/3XZnp0nADwB2v778Tbfye4zgAG88X/vtAHbHxHgl6PbR///5n9zQ3O/1tPZBs/doGCAT73gd/G4MNJZD6XLqMJeur+yATxDMr+HkJ03msmhLIUKp6V49Lw7m1xep7Xtmgq6tbAQMg02+9TM2w3v4Z0BpyqKxl7Ugw3qLDmrzLjYAriJ/llzDTLykdjVIc7dpzDJRt+lNrXxLNAKCffR7dlG/7eyEDdDPO3U04g32dunL49N3w==
+cd2dfba8
+##a033837d4f23e078bea6b3957

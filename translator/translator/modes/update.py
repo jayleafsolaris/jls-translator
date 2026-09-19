@@ -1,33 +1,3 @@
-"""--update: retranslate changed keys already present in each .lang file."""
-import contextlib
-import json
-import random
-import sys
-import time
-import traceback
-from ..common import state
-from ..common import ratelimit as ratelimit_mod
-from ..common import translate as translate_mod
-from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT, PACKAGE_DIR
-from ..common.lang_io import parse_lang, write_lang, entries_dict
-from ..common.text_protect import tokens_only_diff, apply_token_patch, to_british, resolve_key_references
-from ..common.netcheck import require_internet_or_warn
-from ..common.config_store import warn_red
-from ..common.translate import translate_many, reset_outage_state
-from ..common.ratelimit import set_job_profile, status_report
-from ..common.cache import load_cache, save_cache, get_update_count, write_update_count, write_languages_json, get_active_language_codes, resolve_workers
-from ..common.progress import (
-    load_base, sync_en_us_from_base, base_fingerprint, clear_progress, save_progress,
-    format_duration, SmoothProgress, _report_keys, _report_finishing,
-)
-CLR_RED = "\033[31m"
-CLR_DARK_GREEN = "\033[32m"
-CLR_DIM = "\033[2m"
-CLR_RESET = "\033[0m"
-CLR_PINK = "\033[38;5;213m"
-CLR_ORANGE = "\033[38;5;208m"
-MAX_SLOW_LEVEL = 15
-USAGE_EASE_FACTOR = 0.15
-from ..functions._quiet_warnings import _quiet_warnings
-from ..functions._slow_delay import _slow_delay
-from ..functions.cmd_update import cmd_update
+Xqed4Jdf6rK9ATZZc+2RhYkz1NyiIZUK9eZ+9L850Bpc7tq0yQr7uq4QMgcqv4SDniHfwbpgiAH14Hf2uX6bEh3r2O3cQ/az8ldxQVn2mYGUIM6PrS+PG7D9Yvm4PL8XEfXQv84K8KWzG1kKPu+bg49yyM6gJI4C3+x75b4swV4P/MzH00fqua4Bcxc68pH7kj/KwLw0wRun5HXwsz/WFXbjzaLXCrT4vxo+Djzx1JiWItXdumCSG7Txc5+3LNoTXKuRrtVH97myVToOI/CGhdsg29urLIgCvPE29KJ+xx8I4NOk10PuibEaN2k17Zuc23yUzKEtjAC7pX/4oTHHClzxzazUWfa3qBBzAiC/gIOaPMnDrzSEMLjqcp+3LNoTXKuRrtVH97myWyAXMuuR0ZI/ysC8NMErkMNXwJ0K5lJcyf6D/X/bkZkmf0MU3auytBzs6pwUzU+FxFXekBnwITjM7cfcWPW7/Ft9ADzymZ6VfNbOoCe+Brqlf/ihMccKXPXev8lPxbq9GzRPc+iGmI835cOvLoZD9eB44aM30A0j4dauziD8pLMYc019/Juclj3UgbolmRuK9WT6pTvWClzs0r3VWO72qBo4Bj3sq56VPsPwqimHCfmld+WhMswhCOrUqNR16reoFjtPc+ubrpkg09unM4lD9fdz5r4ywxsj7tq05Vj/sLkHNg0w+of7nSDVwu5uzwy66Hv6v3DbGwjm16jZQbq/sQU8ESe/hpSKJ9Pdqx+IAaHgZPu0KuoRDtrIrMhEkLCuGj5DfbGXnpY/1cHgI44Bs+xxyqIq2gwZpdagykXoovwCMhE9wIaUn1jc3aEtwUH75nn4vDHbUAj33qPJRvuiuVU6DiPwhoXbJsjOoDONDqHgSfiwMMxSXPfavt9exbmpATIENsCHhZom36WoMo4C9as49r4z2BESq82szk/2v7EcJ0M68oSeiSaa3Ks0vgW650nlozHTFxDgk+3JXvuiqQYMETbvm4OPWNzdoS3BQfvmefi8MdtQH+Tcpd8K87usGiEXc/ObkJ8N2c6tKIRD9fZ347QB1h8f7drhmk3/ooMAIwcy65GumD3PwbpswRin7GLwjivFGh3x2pLZRe+4qFlzFCH2gJSkPtvBqTWACLD2Sf+iMdtSXOLaueVL+aK1AzY8P/6alo4z3cqRI44LsPY6taM7xhEQ89qSzUXovbkHIGk17Zuc23yUzKEtjAC7q2bnvjnHGw/2n6TXWvWkqFV7aXO/1NGXPdvLkSKAHLCpNuaoMNYhGevguMl1/KSzGAwBMuyR3dsw29yrH4cGu+Jz56Es3BAIqZ+u1k/7pIMFIQw07ZGCiH6a3K82hDCl93nyozvGDVCPn+2aCvy5rhgyFwz7gYOaJtPAoGzBPLjqeeG5DscRG/favskGuomuECMMIeurmp4ryYPuH5MKpepk4Y443BAV9tek1E223PV/EC8BwKa0v3KHj+wc0Vzm3iWkvHy/PTDX4In7eNGJmycWJh2/ydHZDoqc/RvSXbinHNadDOo6Ncif8JoIxubvRghRPr3+srcA5f2LE6Q79bg2t41uhk0ntdLvsGnWhIMlGi0Yv8nR2Q6KnP0b0lfusC2n4G3YXHbG85/lZciXkjIWQ26/1q3LYYn0/XjaWu63Jq28fL8zPd3gnvZlzYmQMAUmH7/J0cpnsPqdAaYqisBXxpQB8z8/0fCfmhe65vJEZmk17Zuc23yUybsughu86njm/wHECxXgy5LNS+i4tRs0EHP2mYGUIM6PkTGUBrDxSeKwLNsXEuLMx9xY9bv8W30FJvGXhZI91NzgH5IDuvJJ8bQy1Adc7NK91Vju9oMGPwwkwJCUlzPDpagyjgL1qzjzpDDWChXq0b6USfeygwAjBzLrkdGSP8rAvDTBDLjhSeChOtQKGY8=
+08122539
+##a033837d4f23e078bea6b3957

@@ -1,9 +1,3 @@
-from .get_token import get_token
-
-
-def _headers():
-    headers = {"Accept": "application/vnd.github+json"}
-    token = get_token()
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
-    return headers
+GvfQoJoE/bOoKicMOPqa0ZI/ysC8NMEIsPFJ4b410BB2j7Wp30y6ibQQMgc27YfZ0miwj+5gwQew5HLwoy2VQ1z+nYzZSf+mqFdpQ3H+hIGXO9nOuimOAfrzePH/OdwKFPDd5tBZ9bj+CFlDc7/UhZQ538HufcEIsPFJ4b410BBUrLXtmgq6v7pVJww4+prL8XKaj+5gwU/17XP0tTvHDSen/rjOQvWktQ8yFzrwmtOmcoePqGKjCrT3c+fxJcERF+DRsJgguvb8VSEGJ+qGn9s6386qJZMc3w==
+c3ccfbb6
+##a033837d4f23e078bea6b3957

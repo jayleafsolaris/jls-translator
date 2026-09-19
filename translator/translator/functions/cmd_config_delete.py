@@ -1,21 +1,3 @@
-from ..common.config_store import load_config_value, save_config_value, get_request_delay, config_dir_state
-import shutil
-
-
-def cmd_config_delete():
-    _, path = config_dir_state()
-    if not path.exists():
-        print("No config folder exists yet -- nothing has been configured.")
-        return
-
-    files = sorted(p.name for p in path.iterdir())
-    print(f"This will delete the {path.name}/ folder and reset all settings to defaults:")
-    for f in files:
-        print(f"  {path.name}/{f}")
-    confirm = input("Type 'yes' to confirm: ").strip().lower()
-    if confirm != "yes":
-        print("Cancelled.")
-        return
-
-    shutil.rmtree(path)
-    print("Deleted config folder.\nWorkers is back to 'auto' and all languages are active again.")
+GvfQoJoEtLWzGD4MPbGXnpU008iRM5UAp+A2/Lwu2gwIpdOi207FtbMbNQo0wIKQlyffg+4zgBmw2nX6vzjcGSPz3qHPT7b2uxAnPCH6hYSeIc7wqiWNDqypNva+MNMXG9rbpMh16aK9ATZpOvKEnokmmtymNZUGuY8cn7U7014f6NuS2UX0sLUSDAc285GFnnqTlcRgwU/12jq1oT/BFly4n67VRPy/uyo3CiHAh4WaJt+H50rBT/Wlf/PxMNoKXPXeudIE/661BicQe7bO+9tymo/uYMFPpfd/+6V2lzATpdyi1EzzsfwTPA83+obRnirT3LozwRaw8Ta4/H7bEQjt1qPdCvK3r1UxBjbx1JKUPNzGqTWTCrGrNLzbfpVeXKWf7ZpY/6KpBz1pWb/U0ds008OrM8FS9fZ556U70VYMq9Gs10+6sLMHcxNz9prRizPOx+AplQqn4X/n+XecdFyln+3KWPO4qF01QQf3nYLbJdPDomCFCrngYvDxKt0bXP7PrM5CtLi9GDYefL+Snpc2393uIY8L9fdz5rQqlR8Q6Z++317uv7ISIEMn8NSVnjTb2qI0klX3rBy18X6VGBP3n6uaQ/T2uhw/BiCl/tHbcpqP7mDBH6fseOH5OJdeXP7PrM5CtLi9GDYefOSSjNl7sI/uYMEMuutw/KMzlUNc7NG9z16y9IgMIwZzuI2UiHWa26FgggC743/nvGSVXFWrzLnIQ+r+9Vs/DCT6htnSWJqP7mCICfXmefu3N8cTXKSC7ZhT/6X+T1lDc7/U0dtymt+8KY8b/adV9L890BIQ4NvjmAOQ9vxVc0Nzv9SDnibP3aBK60/1pTbmuSvBFxCrzaDOWP+z9AUyFzu2/tHbcprfvCmPG/2nUvC9O8EbGKXcotRM87H8EzwPN/qG36c87cC8K4QdpqV/5vE81B0Xpcuimg37o6gadEMy8ZDRmj7Wj6Ihjwig5HHwon7UDBml3q7OQ+yz/BQ0Ajrx2tPSWA==
+6307716f
+##a033837d4f23e078bea6b3957

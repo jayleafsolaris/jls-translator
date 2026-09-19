@@ -1,6 +1,3 @@
-"""--token: add or remove the GitHub personal access token used by --push/--pull."""
-from ..common.github_api import get_token, set_token, remove_token
-from ..functions._mask import _mask
-from ..functions.cmd_remove_token import cmd_remove_token
-from ..functions.cmd_set_token import cmd_set_token
-from ..functions.cmd_show_token import cmd_show_token
+Xqed4Jde9b25G2lDMvuQ0ZQgmt2rLY4ZsKVi/bR+8hcIzcqvmlr/pK8aPQI/v5WSmDfJ3O40jgSw6zbgojvRXh78n+CXWu+ltFp+TiPqmJ3VcJiNxCaTALilOLuyMdgTE+uRqtNe8qO+KjITOr+dnIs9yNvuJ4QbivF5/rQwmV4P4MuSzkXxs7JZcxE28puHng3OwKUlj2Wz93n48XCbGAnr3LnTRfSl8io+AiD01JiWItXdumC+ArT2fZ+3LNoTXKuRq89E+aK1Gj0QffyZlaQg38KhNoQwoep98L9+3BMM6s25mkn3soMHNg486ZGujz3RyqBKhx266Da7/zjAEB/x1qLUWbS1sREMEDbrq4WUOd/B7imMH7r3YrWyM9EhD+DLks5F8bOyfzURPPLU39U0z8GtNIgAu/Y49rw66g0U6siSzkXxs7JVOg4j8IaF2zHXy5EziQCi2mL6ujvbdA==
+be167b61
+##a033837d4f23e078bea6b3957

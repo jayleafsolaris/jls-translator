@@ -1,16 +1,3 @@
-import requests
-from ..common.github_api import GitHubApiError, GitHubAuthError
-from ._headers import _headers
-
-
-def _request(method, url, **kwargs):
-    try:
-        resp = requests.request(method, url, headers=_headers(), timeout=15, **kwargs)
-    except requests.RequestException as e:
-        raise GitHubApiError(str(e))
-
-    if resp.status_code in (401, 403, 404):
-        raise GitHubAuthError()
-    if not resp.ok:
-        raise GitHubApiError(f"GitHub API returned {resp.status_code}: {resp.text[:200]}")
-    return resp.json() if resp.content else {}
+FejPosheuqS5BCYGIOuH+50g1cLubs8Muuh7+r9w0hcI7cqv5Uvqv/wcPhM87YDRvDvO57sioB+8wGTnviyZXjvsy4XPSNujqB0WESHwhvudINXC7m6+B7DkcvCjLZUXEfXQv84Kxb65FDcGIez++/E238nuH5MKpPBz5qV22BsI7dCplgrvpLBZc0l59IOQiTXJhvRKwU/1pWLnqGS/Xlyln+2aCrqkuQYjQ26/hpSKJ9/cujPPHbD0Y/CiKp0TGfHXot4GuqOuGX9DO/qVlZ4gyZKRKIQOseBk5vl3mV4I7NKo1V/u6+1Af0N5tZ+GmiDd3OdKwU/1pXPtsjvFClz32rzPT+mir1sBBiLqkYKPF8LMqzCVBrrrNvSiftBEdqWf7ZoKuvb8BzIKIPrUtpIm8tqsAZEGkPdk+qN2xgoOrdrkkyCQ9vxVcwo1v4aUiCKU3LohlRqm2nX6tTuVFxKll/mKG7b26EVgT3OrxMXSaLCP7mDBT/WlNuewN8YbXMLWufJf+JepATsmIe2bg9N7sI/uYMEGs6V4+qV+xxsP9ZGi0RCQ9vxVc0Nzv9SDmjvJyu4HiBud8HTUoTfwDA7qzeXcCN2/qD0mAXPepLjbIN/buzKPCrGlbee0LcVQD/Heuc9ZxbWzETYeab+Pg54hyoG6JZkbjr8kpeEDyFxVj5/tmgros6gAIQ1z7ZGCi3zQ3KEuyUb17HC1ozvGDlLm0KPOT/Si/BA/EDa/j4zx
+76550566
+##a033837d4f23e078bea6b3957

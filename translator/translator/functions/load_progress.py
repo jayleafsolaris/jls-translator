@@ -1,12 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS
-import json
-
-
-def load_progress():
-    path = PACKAGE_DIR / DEFAULTS["progress_file"]
-    if path.exists():
-        try:
-            return json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-             return None
-    return None
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2xZAd/j87wOCJ83i29pgwFSIG06Ci8TvX36EylU+/9nn721S/Ghnjn6HVS/6JrAc8BCH6h4LTe4Cl7mDBT6XkYv3xY5UuPcb0jP1vxZKVJ3NMc9uxt7oH9vudG8Mfp+px57QtxiEa7NOomHeQ9vxVcwo1v4SQjzqUyrYpkhumrT+v236VXlyln+2aXuiv5n9zQ3O/1NHbcpqP7mCTCqHwZPvxNMYREqvTottO6f6sFCcLfe2RkJ8Nzsq2NMkKu+Z58bgw0kNe8MurlxK4//V/c0Nzv9TR23Lf160lkRv1wG72tC7BFxPrhceaCrr2/FVzQ3O/1NHbIN/buzKPT5vqePDbfpVeXPfauc9Y9PaSGj0GWQ==
+99ae36d1
+##a033837d4f23e078bea6b3957

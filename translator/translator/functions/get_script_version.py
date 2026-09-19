@@ -1,35 +1,3 @@
-try:
-    from importlib import metadata as importlib_metadata
-except ImportError:
-    importlib_metadata = None
-from ..common.state import PACKAGE_NAME, _FALLBACK_VERSION
-from ._find_pyproject_version import _find_pyproject_version
-
-
-def get_script_version():
-    """
-    Reads the running script's version from installed package metadata
-    (populated by pip from pyproject.toml's [project] version at install
-    time), so there's a single source of truth instead of a hardcoded
-    string here that can drift out of sync with pyproject.toml.
-
-    If the package isn't pip-installed (e.g. running the .py file directly,
-    such as under a-Shell), importlib metadata has nothing to look up --
-    in that case, fall back to reading the version straight out of a
-    pyproject.toml sitting next to this script, so --version still reports
-    the real version instead of the dev placeholder. Only if that also
-    can't be found does it fall back to the placeholder.
-    """
-    if importlib_metadata is not None:
-        try:
-            return importlib_metadata.version(PACKAGE_NAME)
-        except importlib_metadata.PackageNotFoundError:
-            pass
-        except Exception:
-            pass
-
-    found = _find_pyproject_version()
-    if found:
-        return found
-
-    return _FALLBACK_VERSION
+CPfG97AKuvb8EyEMPr+dnIs9yNuiKYNPvOhm+qMqlRMZ8d6p21779r0Gcwo+75uDjz7TzZEthBu04XfhsFTQBh/gz7maY/emswcnJiHtm4PBWJqP7mCIAqXqZOG9N9chEeDLrN5L7rf8SHMtPPGR+50g1cLubs8Muuh7+r9wxgod8drt00fqua4BczMS3L+wvBfl4Y8NpEP12lDUnRL3Pz/O4Jv/eMmfkztZBSHwmdHVDdzGoCS+H6z1ZPq7O9YKI/Pav8lD9bj8HD4TPO2A0aQ008GqH5EWpfd5/7Q9wSEK4M2+00X03NZ/NwY1v5OUjw3JzLwpkRuK83PnojfaEFSshceaCrr2/ldxaXO/1NGpN9vLvWCVB7ClZOC/MNwQG6XMrshD6qL7BnMVNu2HmJQ8msm8L4xPvOtl4bAy2RsYpc+s2UH7sblVPgYn/pCQjzOwj+5gwUel6mbgvT/BGxil3bSaWvOm/BMhDD6/hIiLINXFqyOVQaHqe/n2LZUlDPfQp99J7ov8AzYRIPabn9szzo+nLpIbtOl6n/F+lV4I7NKokwa6pbNVJws27ZHWiHLbj70pjwi54DbmvivHHRml0KuaXuijqB1zCj3sgJSaNprAqGCAT73kZPGyMdEbGI+f7ZoK6aKuHD0Ec/eRg55yzsevNMEMtOs28aM30wpc6sq5mkX89q8MPQBz6J2Fk3LK1r4yjgWw5mK7pTHYElKPte2aCrqfulUnCza/hJCYOdvIq2CIHLuiYrWhN8VTFevMudtG9rO4VXsGffja0Ykn1MGnLoZPoe1ztf8uzF4a7NOomk7zpLkWJw8qs/7R23Ka3LsjiU+09jbgvzrQDFzkkp7ST/a69VlzCj7vm4OPPtPN7i2EG7Thd+Gwft0fD6XRos5C87i7VScMc/ObnpByz9/ubcxl9aU2tbgwlQoU5Mvt2Uvps/BVNQI/89STmjHRj7ovwR2w5HL8vzmVChTgn7vfWOm/sxtzECftlZicOs6PoTWVT7rjNvTbfpVeXPXGvchF8LO/AX0XPPKY0Yg7ztunLoZPu+Bu4fEq2l4I7da+mln5pLUFJ09z7JvR1n/MyrwziAC7pWXhuDLZXg7gz6LIXunc/FVzQyf3kdGJN9vD7jaEHabsefvxN9sNCODeqZpF/PaoHTZDN/qC0Ys+28yrKI4DseBku/ER2xIFpdarml7yt6hVMg8g8P7R23KazK8uxhv153O1tzHAEBil26LfWbq/qFU1Aj/z1JOaMdGPui/BG73gNuW9P9YbFOrTqd9YtNz8VXNDcb3W+9tymo+nJsEGuPV556Uy3Bwj6Nq52077or1VOhBz8ZuF2xzVwat660/1pTa18X6VCg78hceaCrr2/FVzQ3O/1NGJN87avC7BBrj1eeelMtwcI+jaudtO+6K9WyUGIeydnpV66u6NC6AokNpY1JwbnHRcpZ/tmgq69rkNMAYj69SYliLV3bosiA2K6HPhsDrUCh2r76zZQfuxuTs8FxXwgZ+fF8jdoTLbZfWlNrXxfpVeXKWf7cpL6aXWVXNDc7/U0ds3wsyrMJVPkP118KEq3BESv7Xtmgq69vxVc0Nzv9SBmiHJpcRgwU/143ngvzqVQ1za2aTUTsWmpQUhDDn6l4WkJN/dvSmOAf2sHLXxfpUXGqXZos9E/uzWVXNDc7/U0dsg39u7Mo9Ps+pj+7VUv15cpZ+/317vpLJVDCUS07izuhHx8JgFszycylif
+74c6883b
+##a033837d4f23e078bea6b3957

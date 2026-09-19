@@ -1,22 +1,3 @@
-import sys
-import time
-from .format_duration import format_duration
-
-
-def _report(lang_idx, lang_total, code, key_idx, key_total, start_time=None, prev_elapsed=0.0, note=""):
-    overall_pct = ((lang_idx - 1) + (key_idx / key_total if key_total else 1)) / lang_total * 100
-
-    if start_time is not None:
-        time_str = format_duration(prev_elapsed + (time.time() - start_time))
-    else:
-        time_str = format_duration(prev_elapsed)
-
-    is_final = lang_idx >= lang_total and key_idx >= key_total
-    if is_final:
-        line = f"[{lang_idx}/{lang_total}] {overall_pct:5.1f}% - Time: {time_str}"
-    else:
-        line = f"[{lang_idx}/{lang_total}] {overall_pct:5.1f}% ({code}) - Time: {time_str}"
-    if note:
-        line += f" {note}"
-    sys.stdout.write("\r" + line.ljust(85))
-    sys.stdout.flush()
+FejPosheuqWlBlkKPu+bg49yzsajJesJp+p7tf842gwR5MuS3l/ot6gcPA1z9pmBlCDOj6gvkwK08UnxpCzUChXq0cewIP6zulUMETbvm4OPetbOoCe+BrH9OrW9P9sZI/HQudtGtva/GjcGf7+flIIN08u2bMEEsPxJ4b4q1BJQpcy521juiagcPgZu0Zufnn6a37wllzCw6XflojvRQ0yrj+GaRPWiuUhxQXql/tHbcprAuCWTDrnpSeWyKpVDXK2XodtE/Ym1EStDfr/F2Nt5moelJZgwvOFutf5+3hsF2suizkv29rUTcwg25quFlCbbw+4ljRywpSe8+H6aXhDk0arlXvWivRlzSXOuxMHxWJqP7mCICfX2YvSjKuoKFeja7dNZurizAXMtPPGRy/Fymo/uYMFP9fF/+LQBxgoOpYLt3EXou70BDAcm7ZWFkj3Uh74yhBmK4Hr0oS3QGlyun+XOQ/ez8gE6Dja33dHWcsnbrzKVMKHse/D4d79eXKWfqNZZ/+zWVXNDc7/U0dsm08KrH5Ibp6UrtbcxxxMd8eCpz1j7orUaPUsj7ZGHpDfWzr4zhAv8jxy18X6VFw/a2aTUS/b24VU/Aj34q5ifKpqR82CNDrviSeG+KtQSXOTRqZpB/6+DHDcbc6HJ0ZA3w/C6L5UOuY82tfF+3Bhc7MyS3EP0t7BPWUNzv9TR23Kaw6cuhE/opXC3iiXZHxLi4KTeUuf5pxkyDTTAgJ6PM9bSk2CaAKPgZPS9MuoOH/GF+JQb/Kv5VX5DB/aZlMFywdunLYQwpvFk6PNUlV5cpdqhyU+g3PxVc0Nzv9TRlzvUyu59wQn33m35sDDSIRXhx7CVUfa3shIMFzzrlZ2GD5rUoTaEHbTpesqhPcFESauOq8cPuv6nFjwHNuLd0dZy7sajJdtPrvF/+LQBxgoO+J3Hmgq69rUTcw0865HL8XKaj+5gwU/16X/7tH6eQ1zjne3BRPWiuQhxaXO/1NGIK8mBvTSFAKDxOOKjN8EbVKfjv5gKsfawHD0GffOehIgmkpf7achl9aU2taInxlAP8duiz160sLAAIAt7tv4=
+d4896c6e
+##a033837d4f23e078bea6b3957

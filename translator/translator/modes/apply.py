@@ -1,9 +1,3 @@
-"""--apply: resolve {key.path} cross-references into every active .lang
-file. Local text substitution only -- no translation, no network."""
-from ..common import state
-from ..common.cache import load_translator_reference_cache, save_translator_reference_cache, get_active_language_codes
-from ..common.lang_io import parse_lang, write_lang, translator_reference_keys, strip_translator_references
-from ..common.progress import load_base, format_duration, SmoothProgress, _report_applying
-from ..common.state import LANGUAGES
-from ..common.text_protect import resolve_key_references
-from ..functions.cmd_apply import cmd_apply
+Xqed4JdL6qawDGlDIfqHnpck34+1K4QW+/V34bkjlR0O6sy+l1j/sLkHNg0w+ofRkjzOwO4llwqn/Db0sircCBmlkaHbRP3cuhw/Bn2/uJ6YM9aPuiWZG/X2Y/eiKtwKCfHWotQK9biwDHNOfr+antsmyM6gM40Ooex5+/1+2xFc69q5zUXovfJXcUFZ+YaelnKUga0vjAK66zb8vC7aDAilzLnbXv/cugc8DnOx2pKUP9fAoG6CDrbtc7W4M8URDvGfodVL/omoBzINIPOVhZQg5d2rJoQdsOt18I491B0U4JPtyUvss4MBIQI97JiQjz3I8Lwlhwqn4Hj2tAHWHx/t2uGaTf+igxQwFzrpka6XM9TIuyGGCormefG0Lb8YDurS7ZQE+bmxGDwNffOVn5wN08DuKYwfuvditaE/xw0Z2tOs1E229qsHOhc2wJiQlTWWj7oygAGm6XfhvizqDBnj2r/fRPmzgx42GiCz1IKPINPfkTSTDrv2evSlMcchDuDZqMhP9LW5BlkFIfCZ0dV82cCjLY4B+/Vk+rYs0A0PpdagykXoovwZPAI3wJaQiDeWj6gvkwK08UnxpCzUChXq0eGaefe5swE7MyHwk4OeIcmD7h+TCqXqZOGOP8UOEPzWo90g/KSzGHNNffybnJY91IG9NIAbsKV/+KExxwpcyf6D/X/bkZkmWQUh8JnR1XzZwKMtjgH78XPtpQHFDBPx2q7OCvO7rBohF3PtkYKUPszKkSuEFor3c/O0LNAQH+DMx9xY9bv8W30FJvGXhZI91NzgI4wLiuRm5b0nlRcR9dC/zgr5u7gqMhMj8437
+156482fd
+##a033837d4f23e078bea6b3957

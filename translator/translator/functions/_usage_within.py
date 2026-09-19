@@ -1,2 +1,3 @@
-def _usage_within(data, now, window_seconds):
-    return sum(b for ts, b in data["usage_log"] if now - ts < window_seconds)
+GODZ7eVf6be7EAwUOuucmJV63s66Ic1Pu+phufEp3BAY6siSyU/5ubIRIEppldTR23LIyro1kwH19mP4+TyVGBP3n7nJBrq0/Bw9Qzf+gJCgcM/cryeEMLnqcbeMftwYXOvQupoHuqKvVW9DJPaalZQl5dyrI44BsfY/nw==
+bf64e1d2
+##a033837d4f23e078bea6b3957

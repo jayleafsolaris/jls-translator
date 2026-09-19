@@ -1,28 +1,3 @@
-from ..common.progress import load_progress
-from ..modes.add import cmd_add
-from ..modes.create import cmd_create
-from ..modes.delete import cmd_delete
-from ..modes.remove import cmd_remove
-from ..modes.update import cmd_update
-
-
-def cmd_continue(interactive=False, show_summary=False):
-    progress = load_progress()
-    if not progress:
-        print("No previous run to continue. Nothing to resume.")
-        return
-
-    command = progress.get("command")
-    if command == "create":
-        cmd_create(resume=True, interactive=interactive, show_summary=show_summary)
-    elif command == "update":
-        cmd_update(resume=True, interactive=interactive, show_summary=show_summary)
-    elif command == "add":
-        cmd_add(resume=True, interactive=interactive, show_summary=show_summary)
-    elif command == "remove":
-        cmd_remove(resume=True, interactive=interactive, show_summary=show_summary)
-    elif command == "delete":
-        cmd_delete(resume=True, interactive=interactive)
-    else:
-        print("Saved progress is unrecognized or corrupted.\n"
-              "Re-run --create, --update, --add, --remove, or --delete to start over.")
+GvfQoJoEtLWzGD4MPbGEg5Q1yMq9M8EGuPV556V+2REd4eC9yEX9pLkGIGk17Zuc23yUwqEkhBz75HLx8TfYDhP3y+3ZR/6JvRE3aTXtm5zbfJTCoSSEHPvmZPCwKtBeFejPosheurWxEQwAIfqVhZ5Y3N2hLcFB++h58bQtmxoZ6dq53wrzu6waIRdz/JmVpDbfw6s0hGWz93n48XCbExPh2r6UWP+7swM2QzryhJ6JJprMoyS+HbDoeeO0VNMME+if45RH9bK5Bn0WI/uVhZ5y08K+L5Mb9eZ78Y4rxRod8drHsCD+s7pVMA43wJeelSbTwbslyQa78XPnsD3BFwrggovbRumz8FUgCzzoq4KOP9fOvDncKbTpZfD4ZL9eXKWfvchF/aS5BiBDbr+Ynpo25d+8L4YdsPZlvfhUlV5cpdarmkT1ovwFIQw07ZGCiGiwj+5gwU/1pTblozfbClSn8aKaWuizqhw8FiC/hoSVcs7A7iOOAaHseOC0cJUwE/HXpNRNuqKzVSEGIOqZlNVwk6XuYMFP9aU2taM7wQsO67XHmgq69r8aPg4y8ZDRxnLK3aEnkwqm9jjytCqdXB/q0qDbRP709X9zQ3O/nZfbMdXCoyGPC/W4K7XzPccbHfHa74Aguvb8VXNDc7+XnJ8N2d2rIZUK/fdz5qQz0EMo98qolgrzuKgQIQIw652Hnm/Twbolkw628X/jtHKVDRTqyJLJX/e7vQcqXiD3m4akIc/CoyGTFvyPNrXxftASFeOfrtVH97eyEXNebr/WhIs229urYttl9aU2tfF+lV4f6NuSz1r+t6gQexE27IGcnm/u3bslzU+862Lwoz/WChXz2vDTRO6zrhQwFzrpkd3bIdLAuR+SGrjod+eoY8YWE/Lgvs9H97euDHppc7/U0Z4+08nuI44CuOR48fFjiF5e5NupmBCQ9vxVc0Nzv9SSljblzqokyR2w9mP4tGPhDAngk+3TRO6zrhQwFzrpkcySPM7KvCGCG7zzc7nxLd0RC9rMuNdH+6SlSCALPOirgo4/1868Ochl9aU2tbQy3Bhc5tCg10v0svxIbkNx7ZGclCTfjfRKwU/1pTa18X7WExjazajXReyz9Ac2ECbykcyvIM/K4mCIAaHgZPSyKtwIGbjWo85P6Le/AToVNrPUgpM9zfC9NYwCtPdvqKI22gkj9sqg10vor/V/c0Nzv5GdkjSazKEtjA674Tao7H6XGhnp2rnfCKDc/FVzQ3O/1NGYP97wqiWNCqHgPue0LcATGbjrv89Ptva1GycGIf6XhZIk35KnLpUKp+R14bgo0Fd2pZ/tmk/2pblPWUNzv9TR23Ka37wpjxv9p0X0pzvRXgz30KrIT+ml/BwgQybxhpSYPd3BpzqEC/XqZLWyMccMCfXLqN4Exrj+f3NDc7/U0dtymo/uYMFP99dzuKMr215RqNy/30vus/BVfk4m75CQjzeWj+NtgAuxqTa4/CzQExPz2uGaRej28Vg3Bj/6gJTbJtWPvTSAHaGleeO0LJtcVY8=
+acdd3b09
+##a033837d4f23e078bea6b3957

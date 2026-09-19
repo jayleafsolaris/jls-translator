@@ -1,8 +1,3 @@
-from ..common.github_api import get_token, set_token, remove_token
-
-
-def cmd_remove_token():
-    if remove_token():
-        print("GitHub token removed.")
-    else:
-        print("No GitHub token was set.")
+GvfQoJoEtLWzGD4MPbGTmI86z82RIZEG9ex75b4swV4b4MuSzkXxs7JZcxA266uFlDnfweJgkwq46mDwjiraFRnrtcewTv+w/BY+BwztkZyUJN/wui+KCrutP6/bfpVeXOzZ7chP97mqEAwXPPSRn9N7gKXuYMFP9aU2taEs3BAIrZ2K017So75VJww4+prRiTfXwLglhUH3rBy18X6VGxD22vewCrr2/FVzQ3PvhpiVJpKNgC/BKLzxXuCzfsERF+DR7c1L6favECdNcbb+
+6a40deb5
+##a033837d4f23e078bea6b3957

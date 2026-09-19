@@ -1,9 +1,3 @@
-import json
-from ..common.ratelimit import _STATE_FILE
-
-
-def _save_state(data):
-    try:
-        _STATE_FILE.write_text(json.dumps(data), encoding="utf-8")
-    except Exception:
-        pass
+FejPosheuryvGj1pNe2bnNt8lMyhLYwAu6tk9KU72RcR7Mvt00fqua4BczwAy7Wlvg385oIF62Xf4XPz8QHGHwrg4L7OS+6z9BEyFzK2zvvbcpqPujKYVd+lNrXxfpVeXNrsmft+34maPB8mfeiGmI835durOJVHv/Z5+/86wBMM9pep2177//BVNg0w8JCYlTWHjbs0h0Ltpz+f8X6VXhn93KjKXrqTpBY2Eyf2m5/BWJqP7mDBT/WlZvSiLb8=
+2946068d
+##a033837d4f23e078bea6b3957

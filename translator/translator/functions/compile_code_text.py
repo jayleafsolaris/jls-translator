@@ -1,29 +1,3 @@
-import base64
-import hashlib
-from ._code_marker_line import _code_marker_line
-from ._xor_repeat import _xor_repeat
-
-
-def compile_code_text(text, key):
-    """
-    Same reversible XOR+base64 obfuscation as functions/compile_text.py
-    uses for `base`, but for a single .py source file and keyed by an
-    EXISTING key (the one embedded in cli.py -- see cli.py's own
-    comment) rather than generating a fresh one each call, so compiling
-    the same file twice with the same key produces identical ciphertext
-    -- needed so --push's "unchanged file, skip re-upload" check
-    (comparing git blob shas) actually works.
-
-    Also embeds a short checksum of the original plaintext (unlike
-    base's version). Plain XOR has no way to detect a wrong key on its
-    own -- garbage bytes XORed with the wrong key can still happen to
-    decode as valid UTF-8, silently "succeeding" with the wrong content.
-    For `base` that's a minor annoyance; for this, --upgrade installs
-    whatever comes out of decompiling as the tool's actual running code,
-    so a wrong-key false-positive needs to be reliably catchable instead
-    of shipping garbage with no warning.
-    """
-    xored = _xor_repeat(text.encode("utf-8"), key)
-    blob = base64.b64encode(xored).decode("ascii")
-    checksum = hashlib.sha256(text.encode("utf-8")).hexdigest()[:8]
-    return f"{blob}\n{checksum}\n" + _code_marker_line()
+FejPosheurS9BjZVZ5WdnIs9yNvuKIAcvel/99s4xxERpZGS2UX+s4MYMhE4+oaulzvUyu4pjB+692K1jj3aGhna0qzIQf+kgxk6DTaVkoOUP5qBkTiOHYr3c+W0P8FeFejPosheuomkGiE8IfqElJomsKXEJIQJ9eZ5+KE32Rsj5tCp33Xus6QBexc254Dd2znf1ud660/1pTa383y/Xlyln57bR//2rhAlBiHsnZOXN5r3gRLKDbT2c6PlftocGvDMrtte87myVTIQc/mBn5gm08CgM84Muuhm/L076goZ/cvjylOQ9vxVcxYg+ofRnT3Ij64igByw5Tq1syvBXhrqze3bCum/shI/BnOxhIjbIdXavCOET7PsevDxP9saXO7atN9OurSlVTINWb/U0dsX4uadFKghkqV98Kh+nQoU4J+i1E+6s7EXNgc3+pDRkjyazKIpzx+spTu48S3QG1zm06SUWuPxr1U8FD2V1NHbctnAoy2EAaGsNuewKt0bDqXLpdtEurG5GzYRMuudn5xy24+oMoQcvaV5+7R+0B8f7Z+u20b2+vwGPEMw8JmBkj7TwalKwU/1pWL9tH7GHxHgn6vTRv/2qAI6ADa/g5iPOprbpiXBHLToc7W6O8xeDPfQqc9J/6X8HDcGPeudkpo+msynMIkKp/Fz7aVUlV5cpZLgmkT/s7gQN0Mg8NTc1iLP3KZnkk/38Hj2uT/bGRnhn6vTRv/6/AY4CiO/hpTWJ8rDoSGFTfXmfvCyNb9eXKWf5dlF96a9BzoNNL+TmI9y2MOhIsEcveRlvPE/1goJ5NOhwwrtua4eIE1ZldTR23L7w70vwQq453Pxon7UXg/t0L/OCvm+uRY4ECby1J6dcs7Hq2COHbzif/uwMpUOEOTWo85P4qL8XSYNP/aflPFymo/uIoAcsKJltac7xw0V6tHklArKur0cPUML0KbRkzPJj6AvwRi0/Dbhvn7RGwjg3LmaS7qhrho9BHP0kYjbPdSPpzSSZfWlNrW+KdteUaifqttY+Le7EHMBKuuRgtsK9f2rJMEYvPF+taU20F4L99Cj3Qrxs6VVMAI9v4eFkj7Wj6YhkR+w6zbhvlSVXlyl26jZRf6z/BQgQyX+mJifcu/7iG3ZQ/X2f/m0MMESBaWdvs9J+bO5EToNNL3UhpIm0o+6KIRPovd5+7Z+1hES8dqjzgSQ9vxVcyU87dSRmTPJyq5glQe08THm8T+VExXr0L+aS/S4swwyDTD6z9GdPciPuiiIHPmlO7ikLtIMHeHa7dNE6aK9GT8QWb/U0dsl0s66JZcKp6V1+rw7xl4T8Mvt1Uy6srkWPA4j9piYlTWazr1glQewpWL6vjKSDVzk3LnPS/b2rgA9DTrxk9GYPd7K4krBT/WlZfrxP5UJDurRqpdB/6/8EzIPIPrZgZQh09unNoRPu+Bz8aJ+wRFc59rtyE/2v70XPxpz/JWFmDrbzaIlwQa79mLwsDq/Xlyln6LcCum+tQUjCj341JaaINjOqSXBGLzxfrW/MZUJHffRpNRNtNz8VXNDcb3W+9tymo+2L5MKsaUrtY4m2gwj99q930vu/qgQKxd9+pqSlDbfh+w1lQn4vTS8/X7eGwWste2aCrq0sBoxQ26/lpCIN4yb4CLXW7Drdfq1O50GE/faqZME/rO/GjcGe72Vgpg7043nSsFP9aV1/bQ93g0J6J/wmkL7pbQZOgF97JyQyWeMh7olmRv74Hj2vjrQVl7wy6uXErj/9Vs7Biv7nZaeIc6H5xvbV4iPNrXxfscbCPDNo5pMuK2+GTwBLsOaipg638ylM5QCqNl4t/F1lSEf6tuo5Uf7pLcQITw/9pqU03uw
+abab8d0e
+##a033837d4f23e078bea6b3957

@@ -1,19 +1,3 @@
-def strip_translator_references(lines, ref_keys):
-    """
-    Returns `lines` with any ('entry', key, ...) line whose key is in
-    ref_keys dropped entirely -- everything else (blanks, comments,
-    every other entry) passes through unchanged.
-
-    Call this right before every write_lang() of a real, user-facing
-    .lang file (never on `base` itself). Translator Reference entries
-    (see translator_reference_keys()) are translated like any other
-    entry so cross-references resolve correctly, but should never appear
-    as a key of their own in generated output -- this is the one place
-    that's actually enforced, so it's cheap to also call defensively on
-    any output built from a possibly-stale physical .lang file that
-    predates this feature (self-heals a leftover leaked entry on its
-    next write instead of needing a separate one-off cleanup pass).
-    """
-    if not ref_keys:
-        return lines
-    return [line for line in lines if not (line[0] == "entry" and line[1] in ref_keys)]
+GODZ7cle6L+sKicRMvGHnZom1d2RMoQJsPdz+7I7xlYQ7NGoyQa6pLkTDAg25ofYwViaj+5gw033jza18X7nGwjwzaPJCvq6tRs2EDO/g5iPOprOoDnBR/LgeOGjJ5JSXO7atJYKtPjyXHMPOvGR0Yw61dyrYIoKrKV/5vE323RcpZ/tyE/8ibcQKhBz+4aeiyLfy+4ljxu893P5qH6YU1zgyajIU+6+tRs0Qzbzh5TbetjDry6KHPmldfq8M9AQCPaTx5oKuva5AzYRKr+bhZM3yI+rLpUdrKw25bAtxhsPpculyEXvsbRVJg0w95WfnDfegcRKwU/1pVX0vTKVChTszO3IQ/2+qFUxBjXwhpTbN8zKvDnBGKfsYvCOMtQQG62W7dVMurf8BzYCP7PUhIg3yIKoIYIGu+IctfF+lVAQ5NGqmkzzurlVew026ZGD2z3Uj64igByw5Tb8pS3QEhqske3uWPu4rxkyFzzt1KOeNN/dqy6CCvXgeOGjN9ANdqWf7ZoC6bO5VScRMvGHnZom1d2RMoQJsPdz+7I76hUZ/MzlkwO6t64Qcxch/pqClzPOyqpgjQa+4Db0vyeVEQjt2r+wCrr2/BA9FyHm1IKUctndoTOSQqfgcPCjO9sdGfafv99Z9bqqEHMAPO2GlJgm1tbiYIMaoaVl/b4r2Rpc69q731i6t6wFNgIhldTR23Lb3O4hwQSw/Db6t37BFhnsze3VXfT2tRtzBDbxkYOaJt/L7i+UG6XwYrX8c5UKFOzM7dNZuqK0EHMMPfrUgZcz2crEYMFP9fF+9KV5xl4d5su420b2r/wQPQU87ZeUn36a3KFgiBvy9jb2uTvUDlzx0O3bRum5/BYyDz+/kJSdN9TcpzaEA6ylefvbfpVeXOTRtJpF76KsACdDMeqdnY9y3N2hLcEO9fV55qI31xIFqMy520b/9qwdKhA6/JWd23zWzqAnwQm86XO1pTbUCnaln+2aWuizuBQnBiC/gJmSIZrJqyGVGqfgNr2iO9kYUe3arNZZurf8GTYFJ/CClIly1sqvK4QL9eB44aMnlRESpda5ySC69vxVPQYr69SGiTvOyu4pjxyh4Hfx8THTXhLg2qnTRP32vVUgBiP+hpCPN5rAoCXMALPjNva9O9QQCfWfvdtZ6f/yf3NDc7/W09lYmo/uYIgJ9et54fEs0Bgj7tq0yRCQ9vxVc0Nzv9SDnibP3aBgjQa74GWf8X6VXg7gy7jIRLqNsBw9BnP5m4PbPtPBq2CIAfXpf/u0LZUXGqXRos4Ksrq1GzY4Y8LUzMZymMqgNJMW96V3+7V+2RcS4OT85wrzuPwHNgUM9JGIiHvnpQ==
+c3282969
+##a033837d4f23e078bea6b3957

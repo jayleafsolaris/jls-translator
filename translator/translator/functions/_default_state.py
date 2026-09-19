@@ -1,15 +1,3 @@
-import random
-from ..common.ratelimit import _INITIAL_DAILY_CAP_RANGE, _INITIAL_HOURLY_CAP_RANGE
-
-
-def _default_state(now):
-    return {
-        "hour_cap": random.uniform(*_INITIAL_HOURLY_CAP_RANGE),
-        "day_cap": random.uniform(*_INITIAL_DAILY_CAP_RANGE),
-        "cap_rolled_hour_at": now,
-        "cap_rolled_day_at": now,
-        "hour_window_bad": False,
-        "day_window_bad": False,
-        "usage_log": [],
-        "manual_cooldown_until": None,
-    }
+FejPosheuqS9GzcMPpWSg5Q/moHgI44CuOp4u6M/wRsQ7NKkzgrzu6waIRdzwL2/sgbz7oIfpS6cyU/Kkh/lIS7E8Yr/BrqJlTsaNxreuK6zHe/9ghm+LJTVSceQEPI7do+1qd9Muom4EDUCJvOArogm29uraI8Aoqwsn/F+lV4O4Mu4yES6rdZVc0Nzv9TR23DSwLsyvgy09TSv8SzUEBjq0uPPRPOwswc+S3nAvb+yBvPugh+pIIDXWsyOHfQuI9f+g/1vs/rWVXNDc7/U0dtw3s63H4IOpacstaM/2xoT6JG41EP8ua4Ye0kM1rq4rxv745EEoCaZ3EnWkA7qLD3L+IiTBpD2/FVzQ3O/1NOYM8rwvC+NA7DhSf2+K8chHfGd95pE9aHwf3NDc7/U0dtymMyvML4duul68LUB0R8F2t65mBC6uLMCf2lzv9TR23Kaj+wojhqn2mH8vzraCSPn3qmYELqQvRkgBn+V1NHbcpqP7mDDC7T8SeK4MNERC9rdrN4IoPaaFD8QNrP+0dtymo/uYMFNoPZ38rQB2REbp4Xt4Xe23PxVc0Nzv9TR2T/bwbshjTC26nn5tTHCECPw0bnTRrjs/Ds8DTaz/tHbcprSxA==
+2d4fda2a
+##a033837d4f23e078bea6b3957

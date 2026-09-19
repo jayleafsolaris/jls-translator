@@ -1,6 +1,3 @@
-from ..common.config_store import load_config_value, save_config_value
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-
-
-def save_active_language_codes(codes):
-    save_config_value("languages", [code for code in LANGUAGES if code in codes])
+GvfQoJoEtLWzGD4MPbGXnpU008iRM5UAp+A2/Lwu2gwIpdOi207FtbMbNQo0wIKQlyffg+4zgBmw2nX6vzjcGSPz3qHPT5Cwrho+Q32xl56WP9XB4DOVDqHgNvy8LtoMCKXvjPlh25GZKhcqAbPUtb4U+/qCFLJD9clX25YL9Dk51pPt5X/Kkp0hFjwQ0KG/rw337pwLpD35pUnWnhPlNzDA4Ib/c8WbnScYJgGV/vufN9yPvSGXCorkdeG4KNAhEOTRqs9L/bODFjwHNuzckpQ239zneutP9aU25rAo0CEf6tGr003FoL0ZJgZ7vZiQlTXPzqklkk35pU32vjrQXhrqze3ZRf6z/Bw9Qx/eurauE/3qnWCICfXmefG0ftwQXObQqd9Zx//W
+c5a000e6
+##a033837d4f23e078bea6b3957

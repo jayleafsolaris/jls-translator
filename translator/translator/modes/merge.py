@@ -1,6 +1,3 @@
-"""--merge: rebuild base from the base/ folder hierarchy created by --split."""
-import shutil
-from ..common import state
-from ..common.state import DEFAULTS
-from ..common.sections import load_section_data, render_tree
-from ..functions.cmd_merge import cmd_merge
+Xqed4JdH/6S7EGlDIfqWhJI+3o+sIZIK9eNk+rx+wRYZpd2syU+19roaPwc27dSZkjfIzrwjiRb15mTwsCrQGlznxu2XB+mmsBwnTXG91vuSP8rAvDTBHL3wYvy9VNMME+if45RJ9buxGj1DOvKEnokmmty6IZUK3+Nk+rx+m1Af6tKg1US0pagUJwZz9pmBlCDOj4oFpy6AyULG2zjHERGlkePZRfe7sxt9EDb8gJiUPMmPpy2RAKfxNvm+P9EhD+DcudNF9Im4FCcCf7+GlJU2392RNJMKsI9w574zlVBS48qj2V7zubIGfQA++6ucniDdyu4pjB+692K1sjPRIRHgzarfIA==
+4c0e29f6
+##a033837d4f23e078bea6b3957

@@ -1,18 +1,3 @@
-from ..common import ratelimit
-
-
-def set_job_profile(remaining_keys, remaining_bytes):
-    """
-    Call at the start of a --create/--update run (and again to refresh)
-    with a rough estimate of how much translation work is left. Only
-    shapes the adaptive cooldown -- never the hard caps.
-
-    Writes onto the `ratelimit` module's own attributes (not a local
-    name) so `_adaptive_cooldown()` -- which reads them the same way --
-    actually sees the update. A plain `from ..common.ratelimit import
-    _job_remaining_bytes` + `global` here would only rebind a name in
-    THIS file's namespace, never touching ratelimit.py's real variable.
-    """
-    with ratelimit._LOCK:
-        ratelimit._job_remaining_keys = max(0, remaining_keys)
-        ratelimit._job_remaining_bytes = max(0, remaining_bytes)
+GvfQoJoEtLWzGD4MPb+dnIs9yNvuMoAbsOl/+Lgqv3R24dqrmln/ooMfPAEM74aenTvWyuYyhAK07Hj8vznqFRn8zOGaWP+7vRw9Cj34q5OCJt/c53rrT/WlNrfzfL9eXKWfjttG9va9AXMXO/rUgo8zyNvuL4dPtKU7uLIs0B8I4JDgl1/qsr0BNkMh6prR0zPUy+4hhg686zbhvn7HGxr32r7SA5D2/FVzFDrrnNGacsjAuyeJT7D2Yvy8P8EbXOrZ7dJF7faxADALc+uGkJUh1s66KY4B9fJ557p+3A1c6dqrzgS6mbIZKmlzv9TRiDrb36szwRu94Db0tT/FChXz2u3ZRfW6uBokDXOy2dGVN8zKvGCVB7ClfvSjOpUdHfXM47Aguvb8VQQROuuRgts91NuhYJUHsKV257Aq0BIV6Na52gr3ubgAPwZ07NSejDyazro0kwa38GLwon6dEBPxn6yaRvW1vRlZQ3O/1J+aP9+G7jOOT7Xad/GwLsEXCuDgrtVF9rKzAj1Lev/U3NZyzcenI4lPp+B38aJ+wRYZ6J+50k+6pb0YNkMk/o3R1n+wj+5gwQ628WP0vTLMXg/g2r6aXvKz/AAjBzLrkd/bE5rfoiGIAfXlcOe+M5VQUubQoNdF9PiuFCcGP/aZmI9y08K+L5Mb36U2tfEB3xEe2s2o10vzuLUbNDwx5oCUiDKahO4ghgO653f5sX7dGw7gn7rVX/ay/Bo9Dyq/hpSZO9TL7iHBAbToc7W4ML9eXKWfmfJjyfa6HD8GdOzUn5o/39y+IYIK+aV48Kc7x14I6squ0kP0sfwHMhc2852ckiaU37dnkk+n4Hf58SjUDBXk3aHfBJD2/FVzQXG9/tHbcprYpzSJT6fkYvC9N9gXCKvggfVp0ezWVXNDc7/U0dsg29urLIgCvPE4yrsx1yEO4NKs00TzuLsqOAYq7NTM2z/b1+ZwzU+n4Hv0uDDcEBva1KjDWbPc/FVzQ3O/1NGJM87KoimMBqGrSf++POoMGejepNRD9LGDFyoXNuzUzNs/29fmcM1Pp+B79Lgw3BAb2t20zk/p/9Y=
+231af550
+##a033837d4f23e078bea6b3957

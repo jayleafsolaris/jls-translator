@@ -1,18 +1,3 @@
-"""
-A dumb, always-on safety net for `base`: a last-known-good snapshot of
-its raw content, refreshed on every single run of the tool (before AND
-after whatever command actually executes), so that if `base` ever goes
-missing -- hand-deleted, wiped by a bad mirror op, whatever -- there's
-always something to offer restoring from.
-
-This doesn't try to tell "good" content from "bad" content, and it isn't
-scoped per-project -- it just remembers whatever `base` looked like the
-last time ANY command saw it as a plain file, same sharing caveat as the
-translation cache and section-order cache (see state.py's PACKAGE_DIR
-comment). If you bounce between multiple projects with one install, only
-the most recently touched project's `base` is backed up here.
-"""
-from .state import DEFAULTS, PACKAGE_DIR
-from ..functions._backup_path import _backup_path
-from ..functions.load_base_backup import load_base_backup
-from ..functions.refresh_base_backup import refresh_base_backup
+Xqedx/sK/qOxF39DMvODkIIhl8CgYJIOs+Bi7PEw0Apc49C/mkr4t68QM1lz/tSdmiHOgqUujhi7qHH6vjqVDRLkz77SRe72sxNZCifs1IOaJZrMoS6VCrvxOrWjO9MMGfbXqN4K9bj8ECUGIebUgpI83cOrYJMau6V58/Eq3Rtc8dCi1gqytLkTPBE2v7W/v1jbybolk0+i7XfhtCjQDFzm0KDXS/Sy/BQwFyb+mJ2Cct/XqyOUG7D2P7nxLdpeCO3euZpD/Pa8FzIQNv/UlI03yI+pL4Qc3+h/5qI32xlcqJLt0kv0svERNg8265GV13LNxr4lhU+3/Db08TzUGlzo1r/IRej2swV/QyT3lYWeJN/d7m3MT6Htc+e0ecZ0HenIrMNZuqWzGDYXO/aaltsm1Y+hJocKp6Vk8KIq2gwV69jt3Fj1u/J/WTc79ofRnz3f3KBnlU+h92+1pTGVChnp0+2YTfW5uFdzADzxgJSVJprJvC+MT/fnd/HzftYREvHao84GureyEXMKJ7+dgpV1zqW9I44fsOE25bQsmA4O6tWo2V66+/FVOhdz9YGCj3LIyqMljA2w92W1pjbUChnz2r+aSvi3rxAzQz/wm5qeNprDpyuET6Htc5+9P8YKXPHWoN8K25iFVTAMPvKVn59yyc65YIgb9eRltbB+xRId7NHt3EP2s/BVIAI++tSCkzPIxqAnwQy083P0pX7UDVzx16iwXui3sgY/Aif2m5/bMdvMpiXBDrvhNua0PcEXE+uSoshO/6T8FjIAO/rU2Yg334+9NIAbsKtm7PYtlS49xvSM/W/FkpUnWQA88pmUlSaTge4Jh0+s6mO1szHAEB/gn6/fXu2zuRtzDibzgJiLPt+PvjKOBbDmYubxKdwKFKXQo98K87ivATIPP7PUnpU+w6W6KIRPuOpl4fEs0B0Z68uhwwruuakWOwY3v4SDlDjfzLpnkk+153fmtD6VFw+l3azZQf+y/AAjQzv6hpTVWJiN7EqHHbroNruiKtQKGaXWoMpF6KL8MRYlEsq4pah+mv+PA6ouksBJ0ZgMvxgO6tLtlAT8o7IWJwo88YffpDDbzKU1kTCl5GL98TfYDhP3y+3lSPu1twAjPCP+gJnxNMjAo2DPQbPwePalN9oQD6vTottOxbS9BjY8Mf6Xmo4imsajMI4doaV6+rA66hwd9tqS2Ev5vakFWQUh8JnR1Xzc2qAjlQa662W7ozvTDBn215LYS+mzgxcyADjqhNGSP8rAvDTBHbDjZPCiNuocHfbakthL+b2pBVk=
+95652207
+##a033837d4f23e078bea6b3957

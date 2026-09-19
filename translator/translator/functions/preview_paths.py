@@ -1,12 +1,3 @@
-from ..common.sections import KEYS_FILENAME
-
-
-def preview_paths(node, prefix):
-    """Returns the list of keys.txt paths --split would write, for confirmation prompts."""
-    paths = []
-    for child in node.children:
-        child_prefix = f"{prefix}/{child.folder}"
-        if child.key_text.strip():
-            paths.append(f"{child_prefix}/{KEYS_FILENAME}")
-        paths.extend(preview_paths(child, child_prefix))
-    return paths
+GvfQoJoEtLWzGD4MPbGHlJgm08CgM8EGuPV556V+/jsl1uCL82bfmJ04FmlZlZCUnXLK3as2iAqi2mb0pTbGVhLq26iWCuqkuRM6G3ql/tHbcpqN7GKzCqHwZPuifsEWGaXTpMleurm6VTgGKuzahYMmmt+vNIkc9ag75qEy3Apc8tC41k66oa4cJwZ/v5KeiXLZwKAmiB245GL8vjCVDg7q0r3OWbT0/ldZQ3O/1IGaJtLc7n3BNIiPNrXxftMRDqXcpdNG/va1G3MNPPuR35g608OqMoQB7482tfF+lV5cpdyl00b+iawHNgU659TM2zSY1L4yhAm8/Wu6qj3dFxDhkavVRv6zrghxaXO/1NHbcpqPpybBDL3sevH/NdAHI/Hatc4E6aKuHCNLeqX+0dtymo/uYMFP9aU25bAq3Q1S5M+930T+/rpXKAA79piVpCLIyqgpmRL6/l3QiA3qODXJ+oP7Z9+r/lxZQ3O/1NHbcprfrzSJHPvgbuG0MNFWDPfau9NP7YmsFCcLILeXmZI+3oPuI4kGueFJ5aM70xcErJbHmgq69q4QJxYh8dSBmibS3MQ=
+2f0ae29c
+##a033837d4f23e078bea6b3957

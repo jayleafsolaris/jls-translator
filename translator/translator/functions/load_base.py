@@ -1,13 +1,3 @@
-from ..common import state
-from ..common.lang_io import parse_lang, write_lang, strip_comments_for_output
-from ..common.state import PACKAGE_DIR, DEFAULTS
-import sys
-from ._convert_base_vars import _convert_base_vars
-
-
-def load_base():
-    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
-    if not base_path.exists():
-        sys.exit(f"Error: base file not found (expected '{DEFAULTS['base_lang']}' in {state.SCRIPT_DIR})")
-    lines = parse_lang(base_path)
-    return _convert_base_vars(lines)
+GvfQoJoEtLWzGD4MPb+dnIs9yNvuM5UOoeAc86Mx2F5Sq9yi10f1uPIZMg00wJ2e2zvX36EylU+l5GTmtAHZHxLik+3NWPOiuSo/Aj342NGIJsjGvh+CALjoc/ulLeoYE/fgos9e6qOofzURPPLU39Ux1cKjL49BpvF34bR+3BMM6s25mnrblZc0FCYM272j13L+6ogBtCOB1hz8vC7aDAilzLTJIPyksxhzTQz8m5+NN8jbkSKAHLDaYPSjLZUXEfXQv84KxbWzGyUGIeurk5oh3/C4IZMc348c8bQ4lRIT5NuS2Evps/RcaWlzv9TRmTPJypEwgBu9pSu1oirUChmr7I7oY8qCgzEaMXOw1LW+FPv6ghSyNPfnd+a0AdkfEuKdkLAKuvb8HDVDPfCA0ZkzycqRMIAbvatz7bgtwQ1UrIXHmgq69vxVc0Mg5offnirT2+Ymwyqn93nn637XHw/gn6vTRv/2shonQzXwgZ+fcpLKtjCEDKHgcrX2JfE7OsTqge55wfG+FCAGDPOVn5x159LpYIgB9f5l4bAq0FAvxu2E6n7FkpUnLkpxtv7R23Kaw6cuhBz1uDblsCzGGyPp3qPdAvi3rxAMEzLrnNjxcpqP7jKEG6D3eLWOPdoQCuDNueVI+6W5KiUCIezcnZI839znSg==
+3119446c
+##a033837d4f23e078bea6b3957

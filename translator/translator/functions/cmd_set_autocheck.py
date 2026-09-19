@@ -1,21 +1,3 @@
-from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
-from ._load_version_check_cache import _load_version_check_cache
-from ._save_version_check_cache import _save_version_check_cache
-
-
-def cmd_set_autocheck(enabled):
-    """
-    Turns the passive/automatic update check (the one that silently runs
-    at the top of every command) on or off, via `--check true` / `--check
-    false`. Does not itself hit the network or change the cached remote
-    version -- it only flips the stored flag that check_for_update_notice()
-    consults.
-    """
-    cache = _load_version_check_cache()
-    cache["autocheck_enabled"] = enabled
-    _save_version_check_cache(cache)
-    if enabled:
-        print(f"Automatic update checks are now enabled (checks at most every "
-              f"{DEFAULTS['version_check_interval_minutes']} minutes).")
-    else:
-        print("Automatic update checks are now disabled. Run --check anytime to check manually.")
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E20pgK/Ss+2vCa9G/I+vwyGjcbyrauqRfq4OJgpiaBzUPXjhznPzLG9+GaetuVlzQUJgzbvaPXcv7qiAG0I4HWOrWCHec3LNHgm/94yZ+TO1kFIfCZ0dUN1sCvJL4ZsPdl/L4w6h0U4Nym5Un7tbQQcwo+75uDj3Llw6EhhTCj4GTmuDHbIR/t2q7Rdfm3vx02aTXtm5zbfOXcrzaEMKPgZOa4MdshH+3artF1+be/HTZDOvKEnokmmvC9IZcKivNz56I32hAj5teo2UHFtb0WOwZZlf6VnjSazKMkvhyw8Un0pCraHRTg3KaST/S3vhk2B3ql/tHbcpqN7GLrT/WlNsGkLNsNXPHXqJpa+6WvHCUGfP6BhZQ/29unI8EapeF34bR+1hYZ5tTtkl7ys/waPQZz65yQj3LJxqIljxu5/DbnpDDGdFyln+3bXrqitBBzFzzv1J6dct/ZqzKYT7bqe/iwMNFXXOrR7dVYurm6E39DJfaV0Zt/l8ymJYIE9fFk4LQ+lVFc5ZLg2UL/tbd/c0Nzv5KQlyHfz+BgpQCw9jb7viqVFwj22qHcCvK/qFUnCza/mpSPJdXdpWCOHfXmfvS/OdBeCO3a7dlL+b65EXMRNvKbhZ5Ymo/uYJcKp/Z/+r9+mFNc7Mvt1UT2r/wTPwoj7NSFkzea3LovkwqxpXD5sDmVChTky+3ZQv+1tyo1DCHAgYGfM87KkS6OG7zmc734VJVeXKXcotRZ77qoBn1pc7/U0dlwmKXuYMFPtuR1/bR+iF4j6dCs3nXss64GOgw9wJeZnjHR8K0hggewrT+f8X6VXh/k3KXfcbi3qQE8ADv6l5qkN9TOrCyEC/fYNqjxO9sfHunaqbAKuvb8KiACJfqrh54gycahLr4MveB1/o491B0U4Jeu20nys/V/c0Nzv52X2zfUzqwshAvvjza18X6VXlylz7/TRO7+ulcSFifwmZCPO9mPuzCFDqHgNva5O9YVD6Xev98K9LmrVTYNMv2YlJ9yksymJYIEpqV34fEz2g0Ipdq731jj9v5/c0Nzv9TR23Kaj+5gwU+zp23RlBj0KzDR7JadXP+krxw8DQz8nJSYOeXGoDSEHaPkesq8N9sLCODM6udXuru1GyYXNuzd39l7sI/uYMEKufZzr9t+lV5cpZ/tmlrov7IBe0ES6oCeljPOxq1glB+x5GLw8T3dGx/uzO3bWP/2shokQzf2h5CZPt/L4GCzGrulO7iyNtAdF6Xeo8Ne87u5VScMc/yclJg5msKvLpQOuelvu/N3vw==
+a950aa2d
+##a033837d4f23e078bea6b3957

@@ -1,16 +1,3 @@
-from ..common.config_store import warn_red, _RESET, get_release_branch
-from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
-
-
-def _branch_suffix():
-    """
-    A short " (Current Branch: X)" annotation appended to update-notice
-    messages whenever the release branch has been overridden away from
-    the repo's normal default (GITHUB_BRANCH) -- so a custom branch's
-    version checks are clearly labeled, while the common default-branch
-    case stays exactly as quiet/plain as before.
-    """
-    branch = get_release_branch()
-    if branch == GITHUB_BRANCH:
-        return ""
-    return f" (Current Branch: {branch})"
+GvfQoJoEtLWzGD4MPbGXnpU008iRM5UAp+A2/Lwu2gwIpcisyETFpLkRf0MMzbGivgaWj6kllTCn4HrwsC3QIR733qPZQpCwrho+Q32xl56WP9XB4DOVDqHgNvy8LtoMCKX4hO5iz5SDOgQtFs3Y0bwb7uebAr49kNVZufEZ/Co00P2S+HjbmJ89f0MD3re6uhX/8IoJs0P1wVPTkAv5Ki+pn575eNOGiCoFJgHMvb61WLClqiWHT4rnZPS/Pd0hD/DZq9NSsv/mf3NDc7/W09lYmo/uYKBPpu1556V+l15Uxsq/yE/0ovw3IQI9/JzL2wqTje4hjwG68XfhuDHbXh31z6jUTv+y/AE8QybvkJCPN5fBoTSIDLCPNrXxftgbD/beqt9ZuqG0ED0GJfqG0Y8634+8JY0KtPZztbMs1BAf7Z+l21m6tLkQPUM86ZGDiTvey6suwQ6i5G+1tyzaE3aln+2aXvKz/Ac2Ezy4h9GVPcjCryzBC7Djd+C9KpVWO8zrhe9oxZSONB0gG7bU3NZyycDuIcEMoPZi+rx+1wwd69ylnVmQ9vxVcxU27YeYlDyazKYlggSmpXfntH7WEhnkzaHDCva3vhA/Bjez1IaTO9bK7jSJCvXmefi8MdteGODZrM9G7vu+BzINMPf+0dtymsyvM4RPpvF37KJ+0AYd5suhwwr7pfwEJgo269uBlzPTwe4hkk+34HD6ozubdFyln+2YCLjc/FVzQzHtlZ+YOpqS7ieEG4r3c/m0P8YbI+fNrNRJ8v71f3NDc7+dl9swyM6gI4lP6Lg20pgK/Ss+2v2f+2TZnuZ/c0Nzv9TR23LIyro1kwH1pzSf8X6VXg7gy7jIRLqw/lV7ICbthpSVJprtvCGPDL2/Nu6zLNQQH+3C5Jgg
+f53aad7f
+##a033837d4f23e078bea6b3957

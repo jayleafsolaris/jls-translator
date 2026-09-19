@@ -1,17 +1,3 @@
-from ..common.config_store import load_config_value, save_config_value
-from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
-from .compute_auto_workers import compute_auto_workers
-
-
-def resolve_workers(text_count):
-    configured = load_config_value("workers", default="auto")
-    if configured == "auto":
-        configured = compute_auto_workers()
-
-    if not text_count:
-        return DEFAULTS["workers_min"]
-
-    by_keys = max(1, text_count // 3)
-    resolved = min(configured, by_keys, DEFAULTS["workers_throttle_ceiling"])
-    resolved = max(DEFAULTS["workers_min"], resolved)
-    return resolved
+GvfQoJoEtLWzGD4MPbGXnpU008iRM5UAp+A2/Lwu2gwIpdOi207FtbMbNQo0wIKQlyffg+4zgBmw2nX6vzjcGSPz3qHPT5Cwrho+Q32xl56WP9XB4DOVDqHgNvy8LtoMCKXvjPlh25GZKhcqAbPUtb4U+/qCFLJD9clX25YL9Dk51pPt5X/Kkp0hFjwQ0KG/rw337pwLpD35pUnWnhPlNzDA4Ib/c8WbnScYJgGVkoOUP5qBrS+MH6Dxc8qwK8ERI/LQv9FP6KX8HD4TPO2A0Zg919+7NIQwtPBi+o4p2gwX4M2+sCCQsrkTcxE27JudjTfl2KEyigqn9j7htCbBIR/qyqPOA6Dc/FVzQzDwmpeSNc/dqyTBUvXpefS1AdYREuPWquVc+7qpEHtBJPCGmp4gyY3iYIUKs+Rj+aVjlx8J8dDvkyC69vxVOgVz/JufnTvd2rwlhU/ouDa3sCvBEV6/te2aCrr2/FVzADzxkpicJ8jKqmDcT7bqe+WkKtAhHfDLouVd9aS3ECEQe7b++9tymo+nJsEBuvE24bQmwSEf6sqjzhCQ9vxVc0Nzv9SDnibP3aBgpSqTxEPZhQ3uXAvqzabfWOmJsRw9QQ6V/tHbcprNtx+KCqz2NqjxM9QGVLST7c5P4qKDFjwWPevU3tRyiYbEYMFP9fdz5r4ywxsYpYLt10P0/r8aPQU6+IGDnjaWj6w5vgSw/GW58RrwOD3Q85npcbihswc4BiHsq4WTINXbuiyEMLbgf/m4MNJcIay17ZoKuqS5BjwPJfqQ0cZy1862aKUqk8RD2YUN7lwL6s2m31jpibEcPUEOs9SDniHVw7glhUbfpTa18SzQCgn30e3IT+m5sAM2B1k=
+fb3c63a5
+##a033837d4f23e078bea6b3957

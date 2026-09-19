@@ -1,10 +1,3 @@
-from ..common.github_api import _API_ROOT
-from ._request import _request
-
-
-def get_branch_commit_and_tree(branch):
-    """Returns (commit_sha, tree_sha) for the given branch's current HEAD."""
-    ref = _request("GET", f"{_API_ROOT}/git/refs/heads/{branch}")
-    commit_sha = ref["object"]["sha"]
-    commit = _request("GET", f"{_API_ROOT}/git/commits/{commit_sha}")
-    return commit_sha, commit["tree"]["sha"]
+GvfQoJoEtLWzGD4MPbGTmI86z82RIZEG9ex75b4swV4jxO+E5XjVmYh/NRE88tTfpCDf3rslkhv17HvlvizBXiP32rzPT+mi1n9ZBzb51JaeJuXNvCGPDL3adfq8M9wKI+TRqeVe6LO5XTERMvGXmdJosI/uYMFN96dE8KUrxxAPpZeu1Uf3v6gqIAsys9SFiTff8L0ogEb143nn8SrdG1zi1rvfRLq0rhQ9ADu4h9GYJ8jdqy6VT53AV9H/fJdcdqWf7ZpY/7D8SHM8IfqFhJ4hzofsB6Q796k28/Ml6j8szOCf9WXOq/MSOhd87ZGXiH3Syq8kkkCu52T0vz3dA16ste2aCrq1sxg+CifAh5macoePvCWHNPfqdP+0PcFcId6dvtJLuIvWVXNDc/ybnJY7zo/zYL4dsPRj8KIqnVw7wOvvlgr89KcqEjMawKa+tAbHgKkplUC26nv4uCrGUQfm0KDXQ+6Jrx0yHnG2/tHbcprdqzSUHbuldfq8M9wKI/bXrJYK+bmxGDoXCL2Ag543mPKVYpIHtKdLnw==
+6aabdad0
+##a033837d4f23e078bea6b3957

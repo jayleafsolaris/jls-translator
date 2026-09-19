@@ -1,10 +1,3 @@
-from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
-import json
-
-
-def _save_version_check_cache(data):
-    path = PACKAGE_DIR / DEFAULTS["version_check_file"]
-    try:
-        path.write_text(json.dumps(data), encoding="utf-8")
-    except Exception:
-        pass
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E20pgK/Ss+2vCa9G/I+vwyGjcbyrauqRfq4OJgpiaBzUPXjhznPzLG9+GaetuVlzQUJgzbvaPXcv7qiAG0I4HWOrWCHec3LNHgm/94yZ+TO1kKPu+bg49y0NyhLutl3+Fz8/EBxh8K4OC731jpv7MbDAA7+peapDHbzKYlyQu08Xe861SVXlylz6zOQrrr/CUSIBjes7SkFvP97m/BK5DDV8CdCuYlXvPav8lD9biDFjsGMPSrl5I+342TSsFP9aVi56hkv15cpZ/tmgq6pr0BO00k7Z2Fng3OyrY0yQWm6ni7tSvYDg+t26zOS7P6/BA9ADz7nZ+cb5jauibMV/esHLXxfpUbBObavc4K366/ECMXOvCay/Fymo/uYMFP9fV35qJU
+222905a6
+##a033837d4f23e078bea6b3957

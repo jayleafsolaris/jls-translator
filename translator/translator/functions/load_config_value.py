@@ -1,12 +1,3 @@
-import json
-from .config_path import config_path
-
-
-def load_config_value(name, default=None):
-    path = config_path(name)
-    if path.exists():
-        try:
-            return json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            return default
-    return default
+FejPosheuryvGj1pNe2bnNt82cCgJogIivV34bl+3BMM6s25mkn1uLocNDwj/oCZ8Viwy6smwQO65HLKsjHbGBXi4LvbRu+z9BsyDjaz1JWeNNvaojTcIbrrc7zrVJVeXKXPrM5Cuuv8FjwNNfaTroszzsfmLoACsKwctfF+lRcapc+szkK0s6QcIBcgt93L8XKaj+5gwU/18WTs61SVXlyln+2aCrr2/FUhBifqhp/bOMnAoG6NALThZb2hP8EWUvfarN517rOkAXsGPfyblZI83ZLsNZUJ+L00vPhUlV5cpZ/tmgr/rr8QIxdz2oySniLOxqEu22X1pTa18X6VXlyln+3IT+6jrhtzBzb5lYSXJrCP7mDBHbDxY+e/ftEbGuTKoc4g
+7348b49c
+##a033837d4f23e078bea6b3957

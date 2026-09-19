@@ -1,7 +1,3 @@
-from ..common.translate import _consecutive_failures, _streak_lock
-
-
-def _record_success():
-    global _consecutive_failures
-    with _streak_lock:
-        _consecutive_failures = 0
+GvfQoJoEtLWzGD4MPbGAg5o8ycOvNIRPvOhm+qMqlSEf6tG+30nvorUDNjw1/p2djiDf3OJgvhyh93P0ugHZER/utcewTv+w/CohBjDwhpWkIc/MrSWSHP2sLJ/xfpVeG+nQr9tGuom/Gj0QNvyBhZIk3/CoIYgDoPdz5tt+lV5c8ta50grFpagHNgI4wJiemDmApe5gwU/1pTa1jj3aEA/g3LjOQ+yzgxMyCj/qhpSIcoeP/ko=
+24ac4616
+##a033837d4f23e078bea6b3957

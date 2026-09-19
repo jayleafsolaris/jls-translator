@@ -1,9 +1,3 @@
-from ..common.state import PACKAGE_DIR, DEFAULTS
-
-
-def clear_progress():
-    path = PACKAGE_DIR / DEFAULTS["progress_file"]
-    if path.exists():
-        path.unlink()
-        return True
-    return False
+GvfQoJoEtLWzGD4MPbGHhZom34+nLZEAp/E2xZAd/j87wOCJ83i29pgwFSIG06Ci8Viwy6smwQy54Hfnji7HERv32r7JArPs1lVzQ3PvlYWTcoePngGiJJTCU8qVF+deU6X7iPxrz5qIJghBI+2blok3ydyRJogDsKdLn/F+lV4V45+9217y+LkNOhAn7NzYwViaj+5gwU/1pWb0pTabCxLp1qPRArPc/FVzQ3O/1NGJN87avC7BO6fwc5/xfpVeDuDLuMhEupC9GSAGWQ==
+1c6623ce
+##a033837d4f23e078bea6b3957

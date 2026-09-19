@@ -1,34 +1,3 @@
-from ..common.ratelimit import status_report, set_manual_cooldown
-import time
-from ._clock import _clock
-from ._cmd_usage_live import _cmd_usage_live
-from ._relative import _relative
-from ._usage_line_pairs import _usage_line_pairs
-
-
-def cmd_usage(cooldown_hours=None, live_minutes=None):
-    if cooldown_hours is not None:
-        clamped = max(1.0, min(72.0, cooldown_hours))
-        now = time.time()
-        until_epoch = set_manual_cooldown(cooldown_hours)
-        requested_until = now + clamped * 3600
-        note = ""
-        if clamped != cooldown_hours:
-            note = f" (requested {cooldown_hours:g}h, clamped to the 1-72h range)"
-        if until_epoch > requested_until + 1:
-            print(f"An existing cooldown already runs later than {clamped:g}h -- left unchanged.")
-        else:
-            print(f"Cooldown enforced for {clamped:g}h{note}.")
-        print(f"Translations are blocked until {_clock(until_epoch)} (in {_relative(until_epoch)}).")
-        if live_minutes is None:
-            return
-        print()
-
-    if live_minutes is not None:
-        _cmd_usage_live(live_minutes)
-        return
-
-    report = status_report(use_cache=False)
-    now = time.time()
-    for label, value in _usage_line_pairs(report, now):
-        print(f"{label}: {value}")
+GvfQoJoEtLWzGD4MPbGGkI831sajKZVPvOhm+qMqlQ0I5Mu4yXXos6waIRd/v4eUjw3XzqA1gAOK5nn6vTraCRKP1qDKReii/AE6DjaVkoOUP5qBkSONALbuNvy8LtoMCKXgrtZF+b3WEyEMPr/arpg/3vC7M4AIsNp6/Kc7lRcR9dC/zgrFtbERDBYg/pOUpD7T2atKhx266Da7jizQEh3x1rvfCvO7rBohF3PAhpSXM87GuCXrCafqe7X/AcANHeLaktZD9LODBTIKIezUmJYi1d26YL4apuRx8I4y3BAZ2s+s01jp3NZ/NwY1v5ecnw3P3K8nhEe26nn5tTHCECPt0LjIWaeYsxs2T3PznYeeDdfGoDWVCqa4WPq/O5xEdqWf7ZpD/Pa/GjwPN/CDn6Q61dq8M8EGpqV4+qV++xES4IXHmgq69vxVc0Mw85Wcizfej/NgjA6trSe74XKVExXrl/qIBKr6/BY8DD/7m4aVDdLAuzKSRvyPNrXxfpVeXKXRos0Kp/aoHD4GfeudnJ56k6XuYMFP9aU2taQwwRcQ2tq91Uny9uFVIAYnwJmQlSfbw5EjjgC54Xniv3bWERPp26LNRMW+swAhEHqV1NHbcpqP7mCTCqTwc+alO9EhCevLpNYKp/ayGiRDeL+XnZo/ysqqYMtP5rMmpdt+lV5cpZ/tmkT1orlVbkNxvf7R23Kaj+5gwQazpXX5sDPFGxilnvCaSfW5sBE8FD3AnJ6OIMmVxGDBT/WlNrXxfpVeXOvQud8Kp/a6V3NLIfqFhJ4hzsqqYJoMuup68b4p2yEU6sq/yRD9q7RZcwA//pmBnjaa26FglQewpSe45mzdXg7k0arfA7jc/FVzQ3O/1NGSNJraoDSIA4rgZvqyNpVAXPfavM9P6aK5EQwWPeudndt5mp70SsFP9aU2tfF+lV5cpc+/00Tu/rpXEg1z+oyYiCbTwalgggC66XL6pjCVHxD32qzeU7qkqRsgQz/+gJSJcs7Hry7BFLbpd/ihO9FEG/jX7ZcHurq5EydDJvGXmZo83cqqbsNG36U2tfF+lV5c4NO+3xCQ9vxVc0Nzv9TR23Ka37wpjxv94zTWvjHZGhPy0e3fRPy5rhY2B3P5m4PbKdnDry2RCrG/cei5JdsRCODC45gDkPb8VXNDc7/UgYk71NvmJsM7p+R45r0/wRcT68zt21j/9r4ZPAA4+pDRjjzOxqJgmjC26Xn2unbAEAjs05LfWvW1tFwuQ3v2mtGADcjKoiGVBqPgPuC/KtwSI+DPotlCs6v1W3FKWb/U0dtymo/uKYdPuexg8I4z3BAJ8dq+mkPp9pIaPQZpldTR23Kaj+5gwU/1pWTwpSvHEHaln+2aCrr2/AUhCj3r3NjxWJqP7mCICfXpf+O0AdgXEvDLqMkK86X8GzwXc9Gbn55osI/uYMFP9aU2yrIz0SEJ9t6q33X2v6oQew866ZGuljvU2rolkkbfpTa18X6VXlz32rnPWPTc1lVzQ3PtkYGUIM6P82CSG7TxY+aOLNAOE/fL5c9Z/4m/FDALNqKykJch34bEYMFP9et54vFjlQoV6NrjzkP3s/RcWUNzv9SXlCCaw68ihAP5pWD0vSvQXhXrn5LPWfuxuSo/Cj36q4GaO8jc5jKEH7r3YrnxMNoJVb+17ZoKuvb8VXMTIfaahdM0mNSiIYMKufgstaoo1BIJ4MLvkyA=
+f82d75dd
+##a033837d4f23e078bea6b3957

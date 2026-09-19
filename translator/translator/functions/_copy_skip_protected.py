@@ -1,22 +1,3 @@
-import os
-import shutil
-
-
-def _copy_skip_protected(src_dir, dst_dir, protected, skipped):
-    """
-    Recursively copy src_dir's contents into dst_dir, skipping (not
-    overwriting) any file or directory whose basename is in `protected`,
-    at any depth -- mirrors _backup_and_clear so persistent files that
-    survived the backup step are never clobbered by the fresh copy.
-    """
-    os.makedirs(dst_dir, exist_ok=True)
-    for entry in os.listdir(src_dir):
-        if entry in protected:
-            skipped.append(entry)
-            continue
-        s = os.path.join(src_dir, entry)
-        d = os.path.join(dst_dir, entry)
-        if os.path.isdir(s):
-            _copy_skip_protected(s, d, protected, skipped)
-        else:
-            shutil.copy2(s, d)
+FejPosheurmvfzoOI/CGhdsh0tq6KY1l349y8Ld+6h0T9caSyUHzpoMFIQwn+peFnjaS3Lwjvgu89zq1tS3BIRjszeGaWui5qBAwFzb72NGIOdPfviWFRu+PNrXxfpdcXo+f7ZoKyLO/ACEQOumRnYJy2cC+OcEcp+ZJ8bgskg1c5tCjzk/0oq9VOg0n8NSViCbly6cyzU+m7n/loTfbGVyt0aLOILr2/FU8FTbtg4OSJtPBqWnBDrv8NvO4MtBeE/efqdNY/7WoGiEac+icnog3ms2vM4QBtOhztbgtlRcSpd+9yEXus78BNgczs/7R23KazrpggAGspXLwoSrdXlGon6DTWOi5rgZzPDH+l5qOIuXOoCS+DLngd+fxLdpeDODNvtNZ7rOyAXMFOvORgtsm0s66SsFP9aVl4KMo3AgZ4Z+50k+6tL0WOBYjv4eFniKazrwlwQGw83Pn8T3ZER7n2r/fTrq0pVUnCza/koOeIdKPrS+RFvuPNrXxfpdcXo+f7ZoK9aXyGDIINvudg4h63ty6H4UGp6k28Kk3xgoj6tTw7ljvs/V/c0Nzv5KeiXLfwboymE+86zb6onDZFw/x26TIAumkvyo3CiG2zvvbcpqP7mDBT7zjNvC/KscHXOzR7cpY9aK5FicGN6X+0dtymo/uYMFP9aU25ro3xQ4Z4ZGsylr/uLhdNg0n7Y3Y8XKaj+5gwU/1pTa18T3aEAjs0bjfILr2/FVzQ3O/h9HGctXc4DCAG72rfPq4MJ0NDubgqdNYtva5GycRKrb+0dtymo/uYMEL9bg2+qJwxR8I7ZGn1UP0/rgGJzw39obd2zfU27w5yGX1pTa18X6VXhXjn6LJBOq3qB19CiD7nYPTIZOVxGDBT/WlNrXxfpVeXNrcospTxaW3HCM8I+2bhZ4xzsqqaJJD9eE6taEs2goZ5suo3ga6pbccIxM2+93723Kaj+5gwU+w6WXw61SVXlyln+2aCrr2/FUgCybrnZ3VMdXft3LJHPmlcrzb
+6efd697c
+##a033837d4f23e078bea6b3957

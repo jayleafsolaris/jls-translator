@@ -1,18 +1,3 @@
-def find_duplicate_siblings(node, path=""):
-    """
-    Returns a list of human-readable strings describing any set of
-    sibling headings (same parent) that sanitize to the same folder
-    name -- these would silently collide/overwrite each other on disk.
-    """
-    problems = []
-    by_folder = {}
-    for child in node.children:
-        by_folder.setdefault(child.folder, []).append(child.name)
-    for folder, names in by_folder.items():
-        if len(names) > 1:
-            where = f"{path}/{folder}" if path else folder
-            problems.append(f"{where} <- {', '.join(names)}")
-    for child in node.children:
-        child_path = f"{path}/{child.folder}" if path else child.folder
-        problems.extend(find_duplicate_siblings(child, child_path))
-    return problems
+GODZ7dxD9LKDESYTP/aXkI835dynIo0Gu+Jlvb8x0RtQpc+szkKn9P5caWlzv9TR2XCYpe5gwU+H4GLgozDGXh2l06TJXrq5ulU7Fj7+mtyJN9vLryKNCvX2Yue4MNINXOHavtlY87S1GzRDMvGN0Yg3zo+hJutP9aU25rg82RcS4p+l30v+v7ISIEN77JWcnnLKzrwljxv8pWL9sCqVDR3r1rnTUP/2qBpzFzv61IKaP9+PqC+NC7D3HLXxfpUQHeja7ZcHuqK0ECAGc+ibhJc2mtynLIQBoelvtbIx2RIV4dri1Vz/pKsHOhc2v5GQmDqawLoohB316ni1tTfGFVKPn+2aCrj0/n9zQ3O/hIOUMNbKozPBUvXeS5/xfpVeHvzgq9VG/rOuVW5DKOL+0dtymsmhMsEMvex68fE3214S6tuolEnyv7ARIQY9pf7R23Kaj+5gwQ2s2nD6vTrQDFL22rneT/y3qRknSzD3nZ2ffNzAoiSEHfmlTcj4cNQODODRqZJJ8r+wEX0NMvKR2PFymo/uJo4d9eN5+bU7x1Jc696g31m6v7JVMRoM+ZudnzfIgac0hAKmrT+v236VXlyln+2aQ/z2sBA9Sz3+mZSIe5qR7nHbZfWlNrXxfpVeXKWf7c1C/6S5VW5DNb2PgZom0tLhO4cAueFz56x8lRcapc+szkK6s7AGNkM18JiVniCwj+5gwU/1pTa18X6VDg7q3aHfR+n4vQUjBj373JfZKc3HqzKEEvW5O7WqeZleW6vVotNEsri9GDYQeuLW2PFymo/uJo4d9eZ+/L06lRcSpdGi3k+0tbQcPwch+prL8XKaj+5gwU/15n78vTrqDh3x1+2HCvz0pwUyFzvi24qYOtPDqm6HALnhc+esfJUXGqXPrM5CurOwBjZDMPednZ983MCiJIQd36U2tfF+lV5c9c2i2Eb/u69bNhsn+pqV0zTTwaofhRql6X/2sCrQIQ/s3aHTRP2l9BY7Cj/72NGYOtPDqh+RDqHtP7zbfpVeXPfauc9Y9PasBzwBP/qZgvE=
+b67f4ef7
+##a033837d4f23e078bea6b3957

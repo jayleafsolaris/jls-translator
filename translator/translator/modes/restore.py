@@ -1,8 +1,3 @@
-"""--restore: restore base + .lang files (+ split section folders + cache/languages.json) from a lang_backups/ zip."""
-import shutil
-import zipfile
-from ..common import state
-from ..common.state import DEFAULTS, PACKAGE_DIR
-from ..common.progress import _human_size
-_PACKAGE_SCOPED = {DEFAULTS["cache_file"], DEFAULTS["languages_json"], DEFAULTS["section_order_cache"]}
-from ..functions.cmd_restore import cmd_restore
+Xqed4JdY/6WoGiEGab+GlIgm1d2rYIMOpuA2vvFw2R8S4p+r00b/pfxdeEMg75iYj3LJyq00iAC7pXD6vTrQDA+llO3ZS/m+uVo/Aj34gZCcN8mBpDOOAfylcOe+M5UfXOneo911+Le/HiYTILDUi5IilI3sYusGuPV556V+xhYJ8dahsEP3prMHJ0Mp9oSXkj7fpagyjgL1qzj2vjPYERKl1qDKReii/AYnAif6/peJPdeP4G6CALjoefv/LcEfCOCfpNda9aSoVRcmFd6hva8Blo+eAaIklMJTypUX53Qa99CgmgS0tbMYPgw9sYSDlDXIyr0zwQa49XnnpX7qFgno3qPlWfOsuX8MMxLcv7C8F+X8jQ+xKpGlK7WqGvA4PdDzmelxuLW9FjsGDPmdnZ5w54PuBKQplNBawYIFlxId69i4203/pYMfIAw9vand2xb/6Y8VrTuG3jTmtD3BFxPr4KLITv+kgxYyADv61qyGWNzdoS3BQfvjY/uyKtwREvaRrtdOxaS5BicMIfrUmJYi1d26YIICsdpk8KIq2gwZjw==
+44f8dd9e
+##a033837d4f23e078bea6b3957

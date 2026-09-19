@@ -1,22 +1,3 @@
-"""
-Shared helpers for compiling/decompiling the tool's OWN .py source on the
-way to and from GitHub (see functions/cmd_push.py, cmd_pull.py,
-cmd_upgrade.py) -- the same lightweight, fully-reversible XOR+base64
-obfuscation as common/obfuscate.py uses for `base`, keyed by its own
-constant embedded directly in cli.py (see cli.py's own comment) rather than
-base's fresh-random-every-run key, so it never collides with compiling
-base -- the two can be in either state independently.
-
-This is obfuscation, not encryption -- it exists so a public clone/browse
-of the repo doesn't show plainly-readable source at a glance, not to
-protect it against anyone willing to read this source (or cli.py, which
-carries the key in the clear on purpose -- see cli.py). Any machine that
-has a copy of cli.py -- which is to say, any machine that can run this
-tool at all -- can freely --pull/--upgrade and get real, working Python
-back, without any separate key-caching step.
-"""
-from .state import _CODE_COMPILE_KEY_MARKER
-from ..functions._code_marker_line import _code_marker_line
-from ..functions.compile_code_text import compile_code_text
-from ..functions.decompile_code_text import decompile_code_text
-from ..functions.is_compiled_code import is_compiled_code
+Xqedx+lC+6S5EXMLNvOElIkhmsmhMsEMuuhm/L032xlT4dqu1Ufqv7AcPQRz65yU2ybVwKJnkk+a0li1/y7MXg/qyr/ZT7q5slUnCzaVg5CCcs7A7iGPC/XjZPq8fvIXCM3Kr5oC6bO5VTUWPfyAmJQ8yYCtLYUwpfBl/f8uzFJc5tKp5VrvurBbIxp/lZecnw3P36kygAuwq2bs+H6YU1zx16iaWfu7uVU/CjT3gIaeO93HumzBCaDpeuz8LNAIGffMpNhG//aEOgFIMf6HlM1msMCsJpQctuRi/L4wlR8Ppdyi10f1uPMaMQUm7JeQjzeU37dglByw9jbzviyVHh7kzKjaBrq9uQw2B3P9jdGSJsmPoTePZbbqeOalP9sKXODSr99O/rO4VTcKIfqXhZcrmsagYIIDvKtm7PF2xhsZpdyh0wTqr/sGcwwk8dSSlD/XyqA0yE+n5GL9tCyVChTk0cfYS+mz+wZzBSH6h5nWINvBqi+MQrDzc+eoc8cLEqXUqMMGuqWzVToXc/GRh54gmsyhLI0GseBltaY3wRZc5tCgykP2v7ISWQEy7JHR1n+a26YlwRui6jb2sDCVHBml1qOaT/OitBAhQyDrlYWectPBqiWRCrvhc/ulMsxQdo/rpdNZur+vVTwBNeqHkpom08CgbMEBuvE28L89xwcM8dai1Aq3+/wcJ0M2552CjyGa3KFggE+l8HT5uD2VHRDq0aiVSOi5qwY2aTz51IWTN5rdqzCOT7Hqc+a/ecFeD+3Quppa9re1Gz8afu2RkJ8z2MOrYJIAoPd18PE/wV4dpdih20T5s/BVPQwnv4Ce8SLIwLolghv17GK1sDnUFxL2y+3bROO5shBzFDrzmJiVNZrboWCTCrThNuG5N8ZeD+rKv9lPuv6zB3MAP/bagYJ+mtimKYIH3+Z356M30A1c8deomkH/r/wcPUMn95HRmD7fzrxgjgH19WPnoTHGG1yoku3JT//2vxk6TSPm3d/bE9TW7i2ADL3sePDxKt0fCI/XrMkK+/a/GiMac/CS0Zg+04G+OcFC+KVh/bg93V4V9p+51Qrpt6VZcwI95tScmjHSxqAlwRu95GK1sj/bXg7w0e3OQvOl1gE8DD+/lYXbM9bD7m3MT7bkeLW3LNAbEPyf4Jda77qwWn5OJu+Tg5o234+vLoVPsuBitaM71BJQpciiyEHzuLtVAxon95uf8TDbzKVswRi88X76pCqVHxL8n77fWvukvQE2Qzj6jdyYM9nHpy6GT6bxc+X/VJdcXo/Zv9VHuvivATIXNr+dnIs9yNvuH6IgkcBJ1p4T5TcwwOCG/3PFm50nGCYBlZKDlD+ageAmlAG28X/6vy2bIR/q26jlR/uktxAhPD/2mpTbO9ffoTKVT4rmefG0AdgfDu7av+VG87i5fzURPPLU39U0z8GtNIgAu/Y49r4zxRcQ4OCu1U7/iagQKxdz9pmBlCDOj60vjB+86XPKsjHRGyPx2rXOIPyksxhzTX35gZ+YJtPAoDPPC7DmefihN9kbI+bQqd917rOkAXMKPu+bg49y3sqtL4wfvOlzyrIx0Rsj8dq1ziD8pLMYc019+YGfmCbTwKAzzwam2nX6vC7cEhnh4K7VTv/2tRgjDCHr1JiIDdnAozCIA7DhSfa+OtB0
+820ece70
+##a033837d4f23e078bea6b3957

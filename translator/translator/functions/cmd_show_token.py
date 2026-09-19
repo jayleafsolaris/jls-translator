@@ -1,10 +1,3 @@
-from ..common.github_api import get_token, set_token, remove_token
-from ._mask import _mask
-
-
-def cmd_show_token():
-    token = get_token()
-    if token:
-        print(f"GitHub token is set: {_mask(token)}")
-    else:
-        print("No GitHub token is set. Use --token <TOKEN> to add one.")
+GvfQoJoEtLWzGD4MPbGTmI86z82RIZEG9ex75b4swV4b4MuSzkXxs7JZcxA266uFlDnfweJgkwq46mDwjiraFRnrtavIRff28io+AiD01JiWItXdumC+ArT2fZ/bVNEbGqXcoN516b6zAgwXPPSRn9N7gKXuYMFPoep98L9+iF4b4MuSzkXxs7Jdemlzv9TRkjSa26ErhAHvjza18X6VXlylz7/TRO7+ulcUCifXgZPbJtXEqy7BBqalZfClZJUFI+jevtEC7rm3ED1KLr3d+9tymo+rLJIK7482tfF+lV5cpc+/00Tu/v47PEMU9oC5jjCa26ErhAH17GW1ojvBUFzQzKiaB7eisx42DXOjoL6wF/SR7jSOT7ThcrW+MNBQXqy1
+7667941f
+##a033837d4f23e078bea6b3957

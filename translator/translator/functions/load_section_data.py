@@ -1,20 +1,3 @@
-import json
-from ._section_data_path import _section_data_path
-
-
-def load_section_data():
-    """Returns (tree, markers) from the last --split, or None if there's no usable cache."""
-    path = _section_data_path()
-    if not path.exists():
-        return None
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-    tree = data.get("tree")
-    if not isinstance(tree, list):
-        return None
-    markers = data.get("markers")
-    if not isinstance(markers, list):
-        markers = []
-    return tree, markers
+FejPosheuryvGj1pNe2bnNt85dyrI5UGuutJ8bAq1CEM5MulmkP3prMHJ0MM7JGSjzvVwZEkgBu02mb0pTa/dHbh2quaRvW3uCogBjDrnZ6VDd7OuiHJRu+PNrXxfpdcXtfauc9Y9KX8XScRNvrY0ZYzyMSrMpJG9eNk+rx+wRYZpdOsyV66+/EGIw8669jRlCCa4aEuhE+84zbhuTvHG1v2n6PVCu+lvRc/BnP8lZKTN5SN7GLrT/WlNuWwKt1eQaXgvt9J7r+zGwwHMuuVroszzsfmaetP9aU2/Ld+2xEIpc+szkK0s6QcIBcgt93L8XKaj+5gwU/193PhpCzbXjLq0aiwCrr2/AEhGmmV1NHbcpqP7mCFDqHkNqjxNMYREqvTottO6f6sFCcLfe2RkJ8Nzsq2NMkKu+Z58bgw0kNe8MurlxK4//V/c0Nzv5GJmDfK2+4FmQyw9WL8vjCPdFyln+2aCrr2rhAnFiHx1L+UPN+l7mDBT6H3c/DxY5UaHfHe491P7v7+ASEGNr3d+9tymo+nJsEBuvE2/KI32w0I5NGu3wLupLkQf0M/9oeF0miwj+5gwU/1pTbntCrADBKl8aLUT5D2/FVzDjLtn5SJIZqS7iSAG7SrcfCldpcTHffUqMhZuP/WVXNDc/aS0ZU9zo+nM4gBpvF3+7I7nRMd99SoyFm29rAcIBd6pf7R23Kaj+5gwQK0933woy2VQ1ze4seaCrr2rhAnFiHx1IWJN9+D7i2AHb7gZObb
+3806415c
+##a033837d4f23e078bea6b3957

@@ -1,19 +1,3 @@
-from ..common.netcheck import require_internet_or_warn, fetch_remote_version, _parse_version_tuple
-from ..common.state import DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, SCRIPT_VERSION
-from ._pad import _pad
-
-
-def _compare_versions(remote_version, local_version=SCRIPT_VERSION):
-    """
-    Returns -1, 0, or 1 (remote older / identical / newer than local),
-    padding both parsed tuples to the same length first so e.g. '1.2' and
-    '1.2.0' compare as identical rather than one looking like a downgrade
-    of the other just because it has fewer segments.
-    """
-    remote_t = _parse_version_tuple(remote_version)
-    local_t = _parse_version_tuple(local_version)
-    n = max(len(remote_t), len(local_t))
-    remote_t, local_t = _pad(remote_t, n), _pad(local_t, n)
-    if remote_t == local_t:
-        return 0
-    return -1 if remote_t < local_t else 1
+GvfQoJoEtLWzGD4MPbGalI8x0sqtK8EGuPV556V+xxsN8Na/33XzuKgQIQ0266ueiQ3NzrwuzU+z4GL2uQHHGxHqy6jlXP+krxw8DX+/q4GaIMnKkTaEHabsefuOKsAOEOC1q8hF9/byWzAMPvKbn9Uhzs66JcEGuPV556V+8Ts6xOqB7nm29ow0ECgS2LGuvxvog+4HqDud0FTKngn7Oy6pn4rzftKDnioBJgPQ2NG8G+7nmwK+LYfEWNaZcpU9M8v5hP113p+OKhsqF9uxv6Qc++KLbMEsmstQ3JYB8Tcu2umE6WPYmpkqHSIe2tjRqBHo5p4UvjmQ10XcnhC/GA7q0u2Udeq3uFU6DiPwhoXbDcrOqkrrZbHgcLWOPdoTDOTNqOVc/6SvHDwNILeGlJY9zsqRNoQdpux5+/1+2REf5NOSzE/opbUaPV4A3Ka4qwbl+YsSsiaayz+v236VXlynne+wCrr2/Cc2FybtmoLbf4uD7nDNT7r3NqTxdscbEerLqJpF9rK5B3NMc/aQlJUm08yvLMFA9etz4rQslQoU5NHt1kX5t7Bcf2lzv9TRizPey6cuhk+36mL98S7UDA/g2+3OX+q6uQZzFzy/gJmecsnOoyXBA7DrceG5ftMXDvbL7clFurPyEn1DdK7aw9xy28GqSsFP9aUxpP9sm05bpdyi11r7pLlVMhBz9pCUlSbTzK8swR208X7wo37BFh3rn6LUT7q6sxo4Cj341J2SOd+Pr2CFAKLrceewOtB0XKWf7dVMuqK0EHMMJ/eRg9s4z9y6YIMKtuRj5rR+3Apc7d6+mkz/obkHcxA2+JmUlSbJgcRgwU/1pzS3236VXlz32qDVXv+JqFVuQwzvlYOIN+XZqzKSBrrrSeGkLtkbVPfaoNVe/4mqECEQOvCa2PFymo/uLI4MtOlJ4fFjlSEM5M2+33Xss64GOgw9wICEiz7fh6Ivgg652mDwoy3cERKste2aCrq4/EhzDjLn3J2ePJLdqy2OG7DaYrz9ftkbEq3TotlL9omoXHppc7/U0Yk318C6Jb4b+aV6+rI/2SEIpYLt5Vr7svQHNg4865Guj36awedswTCl5HK9vTHWHxDay+GaRLPc/FVzQzr51IOeP9Xbqx+VT+i4Nvm+PdQSI/GFx5oKuvb8VXNDIfqAhIk8mp/EYMFP9fdz4aQs215RtJ+k3Aros7EaJwYM69TN2z7VzK8svhv14HrmtH6EdA==
+53fbdb5c
+##a033837d4f23e078bea6b3957
