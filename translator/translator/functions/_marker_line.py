@@ -1,3 +1,5 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSVjujKtcd8A7t6kuUpk+0Gk1841nleJgIWguuHz0EnBd7J4AO6TGUYoirLu3ZIoctckzDPc8U3k4fUK4xEzunO0U9syzCDeMG8/NFiKt/qSYkMw==
-0a60e613
-##a033837d4f23e078bea6b3957
+from ..common.state import _COMPILE_KEY_MARKER
+
+
+def _marker_line():
+    return f"##{_COMPILE_KEY_MARKER}\n"

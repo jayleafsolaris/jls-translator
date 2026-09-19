@@ -1,3 +1,14 @@
-Ms4k34Eg45ptmCVpV58wjhGUCBxCnAIzBINSehmaAtg33SjaxCLtnmeBF3NJ1TKbF6MOU16fBnBWgABgDIk48iTYKsbEUa6Wd5s8KhnSP4oTjjJfSpIaOVrXHmYZiDjkNd8j16tov5Zv1WYoWt4+gh2SQ0xZnhUuE4QBKRGBF+gmyGvezm+ppmCUO2MVkTCDF50fY1uDHTsEkgF6VMw47yHRKtz+faSDZ/8udFbcc8FcnwJRRp4ccgWDE30dzA7qJNM5xoFKiL9DoARSap1zvzO/Jn1stC0YP6V4A3KIAuF03ybW/m2smmqQF3BQ1CTHW8ZnHAvRUiwXgxopRcw3xhf3CvXkUYmwUNVnJn30Fa4nsDlvcNMRPRWfF1YehQviduFBkoEu7ZBk1SZpTZEjjgaUQ1lTmAEoBd9bM3LMR6d0nGuSgX6/kGyBYGAb/zzPEZ0OVE7RFDUaklJvF5kJ43SUMPbkSIysTqEbXR7SMowamTJaQp0XeyuKWydYzm2ndJxrkoEu7dki1WgmGddxvQeSTREGkhM/HpJSJFWOEu442GeSznzt1C+WOmNYxTbAX9EYTE+QBjlZ2l9oHIhH4T3OOMaPLOTzItVoJhmRc88AmRlJWZ94fFbXUmoZjw/idIFr3s5vqaZhlCtuXJl65VLcTRxYmAg5VspSeRmYD6knyCrGiSfjinaqO29D1FnPUtxNTFmYHChekVByCI0T73rSKt/ENPHLNogzWVHEPo4cox5VUZRaLx+NFyBC0l/6dJxryc1ro9FhlCtuXJguzxGdDlROlVI3E45aelHOTo0=
-d737ef1d
-##a033837d4f23e078bea6b3957
+from ..common.cache import save_cache, get_update_count, write_update_count, clear_cache, load_cache
+from ..common.progress import load_base, clear_progress, _human_size
+from ..common.state import DEFAULTS, PACKAGE_DIR
+
+
+def cmd_cache_view():
+    path = PACKAGE_DIR / DEFAULTS["cache_file"]
+    if not path.exists():
+        print(f"No cache file found ({DEFAULTS['cache_file']}). "
+              f"Run --cache --build, or --create/--update/--add first.")
+        return
+    cache = load_cache()
+    size = path.stat().st_size
+    print(f"{path.name:<24}{_human_size(size):>8}   {len(cache)} cached key(s)")

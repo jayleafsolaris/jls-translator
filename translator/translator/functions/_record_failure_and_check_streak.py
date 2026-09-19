@@ -1,3 +1,14 @@
-Ms4k34Eg45ptmCVpV58nnROSHlBKhRd8H5oCZgqYR8EV9Qfn80uSqlanDUdy7genILk+dGS9NnBWqCFdN7w3whCQa+3CYaOKZ5Y9clDHNrAUnQRQXoMXL1rXLXoMngLmP+Mn3cJlx/MIkS1gGe4hihGTH1h0lxM1GoIAbCeNCeML3yPXwmWSinaHLWdSmXrVeNxNHAvTUH4/mRF7HYEC6SDPa8bJa+2Ld5tvdRnXMoYeiR9ZC4IGLhOWGSdYvgLzIc4lwYFav4xn1SFgGcU7hgHcC11CnQcuE/1SKVjMDfInyGvC1H2lnGbVIXIZ3iWKANwrfWK9Jw4zqCFdKqkmzAvoA+DkXYW2TrFoLlCfNsFSiB9ZSoVSPQXXEykKiQbrXpxrkoFhuI1jki0vFZEVjh6PCBxCl1I1AtABKQuYDus4nDzb1WaklyKbJ3RU0D/PAZUDW0eUXzUCkh8pCZkO9T+cP9fTfKSNbYcxKBuTceVS3E0cTJ0dPhebUlYbgwn0Md8+xsh4qKZklCFqTMM2nF7cMm9/viIMM7N4KVjMR/A9yCOS/n25i2eUI1lV3jCESPZNHAvRUnxW1y1qF4IU4jfJP9vXa5KfY5wkc0vUIM9ZwU0NIdFSfFbXUilYhQGnC98k3NJrrox2nD5jZtcyhh6JH1lY0UxhVrEzQDS5NcIL7x/g5E+Gpla9GkNq+RyjNtwMUk/RHDMC1y1aLKM31xH4cbiBLu3ZItVoJhmRc88trzlze6E3GFbKUl0KmQKNdJxrkoEu7dki1WgmS9QnmgCSTWhZhBdWVtdSKVjMR6cm2T/H02Dtv2OZO2Mz
-06ac3622
-##a033837d4f23e078bea6b3957
+from ..common.translate import FAILURE_STREAK_THRESHOLD, _STOPPED, _consecutive_failures, _streak_lock
+
+
+def _record_failure_and_check_streak():
+    """Increments the run's failure streak. Returns True if this failure
+    just pushed it over FAILURE_STREAK_THRESHOLD (i.e. treat as a real
+    outage), False if it's still within normal single-item quirk territory."""
+    global _consecutive_failures, _STOPPED
+    with _streak_lock:
+        _consecutive_failures += 1
+        if _consecutive_failures >= FAILURE_STREAK_THRESHOLD and not _STOPPED:
+            _STOPPED = True
+            return True
+        return False

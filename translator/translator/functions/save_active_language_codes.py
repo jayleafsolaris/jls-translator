@@ -1,3 +1,6 @@
-Ms4k34Eg45ptmCVpV58wgByaBFt0ggYzBJJSYBWcCPUgnCfdwGqSmm2bLm9e7iWOHokIEAuCEyoTqBFmFooO4AvKKt7Ua8efcJolJhefMIAfkQJSBYIGPQKSUmAVnAj1IJwb8+JFjL5HqgxPa51zqze6LGlnpSFwVrszRz+5JsAR72eS/ludvUOhDVl6/gahJqMgfXm6Nw5a1y1KN6E3zhj5FPnkV5K0Q6cDQ2u7WeUWmQscWJAEOSmWEX0RmgLYON0l1dRvqpxdlidiXMJ7jB2YCE8Cy3h8VtdSehmaAtg30yXUyGmSj2OZPWMRkz+OHJsYXUyUAX5a1ylqF4gCpzLTOZLCYamcIpwmJnXwHagnvSp5eNEbOlaUHW0dzA7pdN8k1sR9kNAI
-c5a000e6
-##a033837d4f23e078bea6b3957
+from ..common.config_store import load_config_value, save_config_value
+from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
+
+
+def save_active_language_codes(codes):
+    save_config_value("languages", [code for code in LANGUAGES if code in codes])

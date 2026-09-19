@@ -1,3 +1,5 @@
-Ms4k34Egroxwhy1oTe4wgByaBFt0lRsuVp4feReeE6c3yTnAxGC5pmGaJmBQ1gyLG45nNiGVFzpWlB1nHoUA2CTdP9qJYKyUZ9xyDBmRc88AmRlJWZ9SPwOFAGwWmDjkO9It28ZRqZBw3WEmFpE1zQmSDFFOjFw/GZkUYB/ObQ==
-9f348924
-##a033837d4f23e078bea6b3957
+from .current_config_dir import current_config_dir
+
+
+def config_path(name):
+    return current_config_dir() / f"{name}.config"

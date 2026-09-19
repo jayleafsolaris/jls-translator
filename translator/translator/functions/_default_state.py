@@ -1,3 +1,15 @@
-PdE73dN67YtjmyxpVLs1nR2RTRIFkh0xG5gcJwqNE+I41Sbb1S6klHKaOnIZ7hqhO6gkfWeuNh0/uytWO6032Ab9BfXkIu2mS7sBUnDwH7A6szhuZ6gtHzenLVs5oiDCXrZB1sRo7aZmkC5nTN0nsAGIDEhO2RwzAd5IA1jMR6cm2T/H02DtggjVaCYZkXPPUt4FU16DLT8Xh1AzWJ4G6TDTJpzUYKSfbYclLhPuGqE7qCR9Z646EyOlPlAnrybXC+4K/OZL5NUI1WgmGZFzz1LeCV1SrhE9BtVIKQqNCeM70WXHz2erlnCYYCxm+B2mJrUscHS1MxU6ri1KObw41RXyDPeIIsfZItVoJhmRc80RnR1jWZ4eMBOTLWEXmRXYNchpiIFgoo4u/2gmGZFzz1LcT19KgS0uGZsebByzA+Yt4yrGgzTtl22CZAwZkXPPUtxNHAmZHSkEqAVgFogI8AveKtaDNO2/Y5k7YxW7c89S3E0cC9FQOBeOLX4RggPoI+Mp08Us99lElCR1XJ1Zz1LcTRwL0VJ+A4QTbh2zC+gznnGS+lPh8yLVaCYZkXPPUJEMUl6QHgMVmB1lHIMQ6QvJJcbIYu/DIrsnaFydWc9S3E1BIQ==
-2d4fda2a
-##a033837d4f23e078bea6b3957
+import random
+from ..common.ratelimit import _INITIAL_DAILY_CAP_RANGE, _INITIAL_HOURLY_CAP_RANGE
+
+
+def _default_state(now):
+    return {
+        "hour_cap": random.uniform(*_INITIAL_HOURLY_CAP_RANGE),
+        "day_cap": random.uniform(*_INITIAL_DAILY_CAP_RANGE),
+        "cap_rolled_hour_at": now,
+        "cap_rolled_day_at": now,
+        "hour_window_bad": False,
+        "day_window_bad": False,
+        "usage_log": [],
+        "manual_cooldown_until": None,
+    }

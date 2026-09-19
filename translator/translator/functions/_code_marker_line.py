@@ -1,3 +1,5 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSVjujI8IL/wT/8UeBvF2+DV9m/BK9Obk/NiH7FjkQ1y1qF4gC2DndOdnEfJKVa5stLhCLWc9S3E1OToUHLhjXFCtbzxzYF/MP9/5NgrRSvARDZvoWti2xLG5gtCAhKplQAw==
-f7b8fd85
-##a033837d4f23e078bea6b3957
+from ..common.state import _CODE_COMPILE_KEY_MARKER
+
+
+def _code_marker_line():
+    return f"##{_CODE_COMPILE_KEY_MARKER}\n"

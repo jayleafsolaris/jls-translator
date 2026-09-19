@@ -1,3 +1,23 @@
-MNktkv5topdknDprZt4ligCLH1VflC0vF4EXbSeYBvQ/lCjdzGOsl2aqJmdU1H/PAZ0bWU+uETMbmhNnHMVdjXSca5KDLO/zItVoJnjCOJxSiAVZC4QBOQTXEGwegxXidN1r1NNrvpEi3SZpV5x+whGTA0hCnwc5X9dfJBueAuYg2WSfjHu9nWOBLSZLxD3lUtxNHFyeBzAS1xZgC48G9TCcKtyBb6GLZ5QsfxTCMpkXmEEcQp8GOQSFB3kMhQjpec4uwdRjrJtukGhyWMI4z1qPCFkh0VJ8VpsdaByzF/U72znX0n3l0C2GKXBc7iOdHZsfWViCWnVWnhwpDIQO9HTRJNbUYqjQIthlJlbFO4oAiwRPTtEBKBeFBmAWi22ndJxr3ddrv9lxnCRjV8U/llKIBU5EhgF8F4ATcFibD+Yg2T3X0y7g1GGaJnJQ3yaKUosCSUeVUjQXgRcpCIUE7DHYa9DAbabzItVoJkzBf88FlRlUC58dfAGWAGcRggCnNchr081i49lGkC5nTN0nnFKIAhxSlAF8XpgEbAqbFe4g2WKSzmDtmCKXKXRcu3PPUtwoUl+UAHBWmhN9G4QO6TOcP9rIfe2abZEtZFjCNsgB3AJIQ5QAfA/YHCkIngjqJMg4kol9qJwI1WgmGe4ynBmjDlNFhRsyA5JaIFHCbY10nGuS82u5jHCbOyZtwyaKUogCHFuDHT8TkhYpD4UT73TII9eBaL+ccZ1odEzfc8cWlR5fSoMWNRiQUn0QiUf0Ncou1qsu7dkigSl1Uph/zzSdAU9O0QYzVpQTZxuJC6cn02vGyWvtjHGQOiZa0D3PAIkDHAbcETMYgxtnDYlH7jrPP9fAauPzItVoJhuTceVS3E0cXJkbMBPXJnsNiV2NdJxrkoEu7dljmztxXMNz0lKVA0xehVpWVtdSKVjMR6d0nGuSxyyRl0PVO2dP1DfPCY8MSk6VLT8Zmh9oFogapyDdONmBZ77ZcYEhalWRI4ocmARSTNFaLgOZUiRVjwjpINUlx8QuuZYihy11TNw2zxuIRBIL03h8VtdSKVjMR6d0nGvUg125mHCBIWhekX7CCZ8CUUaQHDgpmRNkHZFH6TvLa8XIYqHZZpw7ZVjDN88biEMcZIcXLgGFG30d00fcDZMl75su7/Mi1WgmGZFzz1vSHkhZmAJ0X9keZg+JFa99tmuSgS7t2SLVIWAZ0D2cBZkfHEKfUnRU1V4pWpVFq3SeMtfSLOTDCNVoJhmRc89S3E0cC4MXKAOFHCksnhLiXpxrkoEu7dkinC4mWN8gmBeOTVVF0Vp+GNVeKVqCCKV9hkGSgS7t2SLVaCYZkXOdF4gYTkXRND0ahBcDWMxHp3Sca5LRfKSXdt1qVlXUMpwX3AhSX5QAfA/XHXtYgkmlfbY=
-aa257420
-##a033837d4f23e078bea6b3957
+def _confirm_overwrite_saved_task(command_name, saved_command):
+    """
+    Asks the user before a fresh (non---continue) --create/--update run
+    would discard an already-saved, interruption-resumable task (see
+    load_progress()/save_progress() in this module) -- otherwise starting
+    over silently throws away whatever --continue would have picked back
+    up, with no warning at all. Defaults to yes (overwrite) on a bare
+    Enter, matching this codebase's other y/n prompts (see
+    _ask_continue()).
+
+    Returns True to proceed with the fresh run (discarding the saved
+    task), False to cancel so the user can run --continue instead.
+    """
+    while True:
+        answer = input(
+            f"\nA saved {saved_command} task is still pending (run --continue to resume it). "
+            f"Starting --{command_name} now will discard it. Overwrite? [Y/n]: "
+        ).strip().lower()
+        if answer in ("", "y", "yes"):
+            return True
+        if answer in ("n", "no"):
+            return False
+        print("Please enter y or n.")

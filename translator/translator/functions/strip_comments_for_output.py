@@ -1,3 +1,15 @@
-MNktktJ6v5ByqitpVNw2gQaPMlpEgy0zA4MCfAzEBeYn2RTeyGCoiivPQiYZkXPNUN5nHAvRUg4Tgwd7Fp9H5TXPLu3NZ6OccdU/b03Zc6okuT9lC5IdMRuSHH1YgA7pMZw518xhu5xm1WUrGcI2jAaVAlILmRc9EpIAenLMR6d00CLZxC7q2iHVHU8ekXzPVd9OHwuhMx891zZMLK0uywebZ5LPYbmccdloZ1fVc4sbjwxeR5QWcxWYH2QdghPiMJEkx9UE7dki1S1oTcM6igHcGVRKhVIvApYAfVibDvM8nCqSw2+/nCLSayEZnH7PApAYTwuFGjlWnxttHIkJp3mRPsLFb7mcIpYnc1fFWc9S3E1RSoMZOQTXWn4QhQTvdNU4ksh6vpxuk2h1Td4hihbcDE8LkFI/GZofbBaYS6cn02vb1Sm+2WGaPmNL1DfPEIVNSEOYAVZW11IpDIMIrnq2QZKBLu26bZglY1fFIM8TjggcRIMVPRieCGgMhQjpNdBrwcJvq59tmSxvV9ZziR2OTVxJkAE5FtcdZxSVSacA1C7LgX2llneZLAwZkXPPHJkbWVnREDlWlB15EYkDpz3SP92Bb6PZY5Y8c1jdf88HjwhOBpcTPx+ZFSlWgAbpM5wt281r7dQv1SZpTZEnhxf2TRwL0QcyAoUTZwuABvMx2GvXz1GYqi2QJll+83OMHYwEWVjdUj0Yk1JnF5hH8zzZa8DEb6HZdocpaErdMpsXmGccC9FSMBeZFXwZiwL0epwf2sh97ZBx1StnVd02i1KTAxxJkAE5UYRSeRmeFOIwnCfbz2u+2WCQLmlL1HOOHIVNU03RBjQXg3gpWMxH5DvMMtvPae2RY4U4Y1fCaM8SngxPTpFSNQKEF2UezA70dNIuxMR87Y1tgCtuXNVzjQvcGVRCglI6A5kRfRGDCalenGuSgSzv2wjVaCYZwzabB44DHHCdGzIT1xRmCswL7jrZa9vPLq+YcZAXalDfNpxSlQscR5gcOS3HLylZ0UelN9Mm38Rgudtf/w==
-3ccc1d5b
-##a033837d4f23e078bea6b3957
+def strip_comments_for_output(base_lines):
+    """
+    Returns base_lines with EVERY comment line removed -- section headers
+    like '## UI' / '### PACK DETAILS', notes, and disabled/commented-out
+    entries that start with a bare '#' -- plus the hidden --update count
+    marker (which is itself stored as a comment, so it's covered by this
+    too).
+
+    Comments are organizational scaffolding for `base` only. They should
+    never be copied into an actual, user-facing .lang file -- not the
+    untranslated en_US/en_GB copies, and not the real translated
+    languages. This is called on base's parsed lines before any of that
+    copying happens; `base` itself is never touched by this function.
+    """
+    return [line for line in base_lines if line[0] != "comment"]

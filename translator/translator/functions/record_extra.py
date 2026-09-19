@@ -1,3 +1,23 @@
-Ms4k34Eg45ptmCVpV58hjgaZAVVGmAZ8H5oCZgqYR9gY8wj5q2i/lm/VZllV3jKLLY8ZXV+UUjUbhx17DMw46zvdL+3SeqyNZ/8udFbcc8EtkQxFSZQtLhOFHWUUswTmJM9r28x+oot21RdrWMgxii2OCE5EnR4DFZYCenKKFeg5nGXtz2G62WuYOGlLxXOwHJMaNk2DHTFW2S15CpkJ4gvQJNWBZ6CJbYc8JmbBIZocmTJQRJZ4OgSYHylWsxTmItkUwdVvuZwinCV2VsMnzy2PDEpOrgEoF4MXA3LmA+IynDnXwmG/nV2QMHJL0HuBB5EyXlKFFy9fzXgpWMxHpXaeQZKBLu24ZpE7JljVN4YGlQJSSp1SPg+DF3pYxAKpM5Jrxslr7Y1wlCZ1VdAnihbcH1lYgR0yBZJSeRmVC+g12GeSzmChgAjVaCYZ2j2ABZJNXU2FFy5WgxpsWJ4C9iHZOMaBbaKUcpktclzCes8Gk01IQ5RSLxqeFmAWi0fyJ90s14Fiop4s1QZjT9Qh5VLcTRxJnR0/HYRSaBaIR+kxyi7AgXyskHGQOygzkXPPUt5PHiHRUnxWnhQpFpkK2DbFP9fSLvHEIsVyDBmRc89S3E0cWZQGKQSZeClYzEfwPcgjkv5CgrpJz0ImGZFzz1LcTVJEhlJhVqgcZg/ETo10nGuSgS7t2WaUPGcZjHOwHpMMWHSCBj0CklogcsxHp3Sca5KBUb2Ld5stWVXeNMcWnRldB9EcMwHeeClYzEendJxr7cxvtJtnqjpjS94/gy2fDExY2RY9ApZeKRaDEK5enGuSgS7t2SKRKXJY6nGaAZ0KWXSdHTtUqlxoCJwC6TCUENzOeeHZbIAlWVvIJ4oBoUQ2C9FSfFbXUiknnwbxMeM4xsB6qNFmlDxnELs=
-4b22738e
-##a033837d4f23e078bea6b3957
+from ..common.ratelimit import _LOCK
+from ._load_state import _load_state
+from ._maybe_reroll_caps import _maybe_reroll_caps
+from ._now import _now
+from ._prune_log import _prune_log
+from ._save_state import _save_state
+
+
+def record_extra(num_bytes):
+    """
+    Adds additional bytes (e.g. the translated response payload, only
+    known after the request completes) to the sliding usage log. Never
+    blocks and never raises.
+    """
+    if num_bytes <= 0:
+        return
+    with _LOCK:
+        now = _now()
+        data = _load_state()
+        _prune_log(data, now)
+        _maybe_reroll_caps(data, now)
+        data["usage_log"].append([now, num_bytes])
+        _save_state(data)

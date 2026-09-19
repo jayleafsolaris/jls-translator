@@ -1,3 +1,24 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8eJUATESDBnwchB1ncuZt4zHaa97Ob6mmdocpaErdMpsdjjJOTpcXLhOZEWwnjwbkPNljm5sE7dki1WokG7tzz1LcP1lfhAAyBdcJZRmCANg30y/Xmy62kmeMciZNwzKBAZAMSE6VLSoXmwdsBZFH4TvOa9fXa7+AIqE6Z1fCP44Gkx82C9FSfCSSFGwKiQnkMZwg19gu5YpnkGhqWN80sBuTQ0hZkBwvGpYGZgqzFeIy2TnXz22opmmQMXURmHrPBo4MUlidEygTk1J6F+ZHp3ScLdPTIu2fbYdoY0/UIZZSkAxSTIQTOxPZUl0QiRTidMoq3tRrvtlskD5jS5E/hgSZTVVFghs4E9cTZwHMSes10iy4gS7t2WScJGMZnH7PAZkIHEeQHDspnh0nC5gV7iTjP8DAYL6VY4EndGbDNokXjghSSJQBdF/XXyRYnwinINQiwYFnvtl2nS1vS7tzz1LcAlJHiFIsE4UBYAuYAuN01CTfxCLtmGyRaHJR1HOAHJAUHFyQC3xb2gd5HI0T4nPPa93VZqiLdZw7YzORc89SmgRQTtwWLh+BF2dYhQnkJtkm1896rJUimCdiXN1zjBOSTVdFngV8GZkXKR2UDvQgz2eSz2G5kGGQaG9NwnONE48INgvRUnwCkgp9WI8P5jrbLtaNLqKLIoctc0rUc4YG3BlTC4MXLxmbBGxYjQnoINQuwIFro41wjG91GZYohBeFQ0xKhRohUf1SKVjMBPU7zzif02urnHCQJmVckSSGBpQCSV/RADkChRNnC4AG8z3SLJLIeu2cdJA6fxnCOoEVkAgcWYQccnzXUilYzkWlXpxrkoF+rI1q1XUmafAQpDO7KGNvuCB8Wdc2TD6tMssA7xCQ1Xysl3GZKXJWwwydF5oITk6fETkplBNqEIk44T3QLpD8BO3ZItUhYBnBMpsa0ghEQoIGL17eSANYzEendJxrktV8tMMI1WgmGZFzz1LcTRwLlRMoF9dPKRKfCOl60CTTxX3liWOBIChL1DKLLYgIRF/ZFzIVmBZgFotapSHILZ+ZLOTQCNVoJhmRc89S3E0cC5gUfB+EG2cLmAbpN9lj1sB6rNUikSFlTZhp5VLcTRwL0VJ8VtdSKVjMR6cm2T/H02DtnWOBKQwZkXPPUtxNHE6JETkGg1JMAI8C9yDVJNybBO3ZItVoJhmRc89S3B1dWIJ4fFbXUnsdmBL1Opwwz6s=
-a9e6017c
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS
+import json
+
+
+def load_translator_reference_cache():
+    """
+    Returns {lang_code: {key: translated_value}} for every Translator
+    Reference key (see lang_io.translator_reference_keys()) translated so
+    far, for every language. These values never live inside any .lang
+    file -- see lang_io.strip_translator_references() -- so this is their
+    only persisted home, and the only way --update's otherwise
+    file-driven incremental model can know one exists, notice its base
+    text changed, or reuse it to resolve another entry's '{key.path}'
+    cross-reference without retranslating it every single run.
+    """
+    path = PACKAGE_DIR / DEFAULTS["translator_reference_cache_file"]
+    if path.exists():
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(data, dict):
+                return data
+        except Exception:
+            pass
+    return {}

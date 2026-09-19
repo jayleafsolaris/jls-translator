@@ -1,3 +1,49 @@
-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
-e726327b
-##a033837d4f23e078bea6b3957
+from ..common import state, config_store
+from ..common.config_store import load_config_value, save_config_value, get_request_delay, config_dir_state
+from .cmd_config_delay import cmd_config_delay
+from .cmd_config_delete import cmd_config_delete
+from .cmd_config_hide import cmd_config_hide
+from .cmd_config_languages import cmd_config_languages
+from .cmd_config_show import cmd_config_show
+from .cmd_config_workers import cmd_config_workers
+
+
+def cmd_config_menu():
+    state, path = config_dir_state()
+    options = [
+        ("workers", "Configure concurrent translation worker count"),
+        ("languages", "View/edit which languages are actively translated"),
+        ("delay", "Configure the global rate-limit delay (speed)"),
+        ("show", "Make the config folder visible"),
+        ("hide", "Make the config folder hidden"),
+        ("delete", "Delete the entire config folder (reset everything)"),
+    ]
+    print(f"Config -- what would you like to do?\n(currently {state}: {path.name}/)\n")
+    for i, (key, desc) in enumerate(options, start=1):
+        print(f"  {i}. --config --{key:<10} {desc}")
+
+    while True:
+        raw = input(f"\nChoose 1-{len(options)}: ").strip()
+        try:
+            idx = int(raw)
+        except ValueError:
+            print("Please enter a number.")
+            continue
+        if 1 <= idx <= len(options):
+            key = options[idx - 1][0]
+            break
+        print(f"Please enter a number between 1 and {len(options)}.")
+
+    print()
+    if key == "workers":
+        cmd_config_workers()
+    elif key == "languages":
+        cmd_config_languages()
+    elif key == "delay":
+        cmd_config_delay()
+    elif key == "show":
+        cmd_config_show()
+    elif key == "hide":
+        cmd_config_hide()
+    elif key == "delete":
+        cmd_config_delete()

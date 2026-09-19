@@ -1,3 +1,9 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8ePZnWE6XUj8akhN7J5wV6DPOLsHSJuTDCNVoJhnBMpsa3FAce7AxFzewN1Y8pTWne5wP9+dPmLVWphMkScM8iACZHk90lxswE9UvA1jMR6c92mvCwHql12eNIXVNwnvGSPZNHAvRUnxW1wJoDIRJ8jrQItzKJuTzItVoJhmRc88AmRlJWZ9SCASCFwNYzEenJtk/x9Ng7b9jmTtjMw==
-1c6623ce
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS
+
+
+def clear_progress():
+    path = PACKAGE_DIR / DEFAULTS["progress_file"]
+    if path.exists():
+        path.unlink()
+        return True
+    return False

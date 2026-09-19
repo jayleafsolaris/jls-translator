@@ -1,3 +1,45 @@
-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
-0fc202ea
-##a033837d4f23e078bea6b3957
+from ..common.config_store import warn_red, _RESET, get_release_branch
+from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
+import re
+import requests
+import time
+
+
+def fetch_remote_version(timeout=4.0, bypass_cache=False):
+    """
+    Reads just the `version = "..."` line out of pyproject.toml on
+    whichever GitHub branch is currently selected as the release branch
+    (see config_store.get_release_branch() -- defaults to GITHUB_BRANCH,
+    overridable via --release <branch>), without downloading the whole
+    repo (that's what --upgrade is for). Returns None on any failure --
+    offline, rate-limited, the file moved, a bad connection -- so callers
+    can silently skip the update notice instead of erroring out over
+    something this minor.
+
+    bypass_cache=True adds a cache-busting query parameter and no-cache
+    headers to the request. raw.githubusercontent.com is served through
+    Fastly's CDN, which caches responses for a few minutes on its own --
+    without this, two checks close together (passive then manual, or two
+    manual --check runs) can both hit that same cached response and come
+    back identical, which looks exactly like "the check is respecting a
+    cooldown" even though this function itself never consults
+    DEFAULTS['version_check_interval_minutes'] or any last-checked time
+    at all. Used by cmd_check_update() (a bare --check) and by
+    check_for_update_notice() whenever force=True (--version), since both
+    are explicitly supposed to always be live.
+    """
+    branch = get_release_branch()
+    url = f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/{branch}/pyproject.toml"
+    headers = {}
+    if bypass_cache:
+        url += f"?_={int(time.time() * 1000)}"
+        headers = {"Cache-Control": "no-cache", "Pragma": "no-cache"}
+    try:
+        resp = requests.get(url, timeout=timeout, headers=headers)
+        resp.raise_for_status()
+        match = re.search(r'(?m)^\s*version\s*=\s*"([^"]+)"', resp.text)
+        if match:
+            return match.group(1)
+    except Exception:
+        pass
+    return None

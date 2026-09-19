@@ -1,3 +1,63 @@
-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
-f658bad2
-##a033837d4f23e078bea6b3957
+from ..common.ratelimit import _CACHE_TTL_SECONDS, _DAY_SECONDS, _HOUR_SECONDS, _LOCK, _cache_lock, _cached_report, _cached_report_time
+from ._format_secs import _format_secs
+from ._load_state import _load_state
+from ._maybe_reroll_caps import _maybe_reroll_caps
+from ._next_reset_epoch import _next_reset_epoch
+from ._now import _now
+from ._prune_log import _prune_log
+from ._save_state import _save_state
+from ._usage_within import _usage_within
+
+
+def status_report(use_cache=True):
+    """
+    Snapshot of current usage: hour/day percentage used, when each
+    window's usage will next tick down, and whether a manual cooldown
+    is active. Cached for _CACHE_TTL_SECONDS so a live progress display
+    can call this every tick without hitting disk every tick -- pass
+    use_cache=False for a guaranteed-fresh read (--usage, end-of-run
+    summaries).
+    """
+    global _cached_report, _cached_report_time
+
+    now = _now()
+    if use_cache:
+        with _cache_lock:
+            if _cached_report is not None and (now - _cached_report_time) < _CACHE_TTL_SECONDS:
+                return _cached_report
+
+    with _LOCK:
+        data = _load_state()
+        _prune_log(data, now)
+        _maybe_reroll_caps(data, now)
+        _save_state(data)
+
+        day_used = _usage_within(data, now, _DAY_SECONDS)
+        hour_used = _usage_within(data, now, _HOUR_SECONDS)
+        hour_cap = data["hour_cap"]
+        day_cap = data["day_cap"]
+        hour_reset_epoch = _next_reset_epoch(data, now, _HOUR_SECONDS)
+        day_reset_epoch = _next_reset_epoch(data, now, _DAY_SECONDS)
+        cooldown_until = data.get("manual_cooldown_until")
+
+    hour_pct = 100.0 * hour_used / hour_cap if hour_cap else 0.0
+    day_pct = 100.0 * day_used / day_cap if day_cap else 0.0
+    cooldown_active = bool(cooldown_until and now < cooldown_until)
+
+    report = {
+        "hour_pct": min(100.0, hour_pct),
+        "day_pct": min(100.0, day_pct),
+        "hour_reset_str": _format_secs(hour_reset_epoch - now),
+        "day_reset_str": _format_secs(day_reset_epoch - now),
+        "hour_reset_epoch": hour_reset_epoch,
+        "day_reset_epoch": day_reset_epoch,
+        "cooldown_active": cooldown_active,
+        "cooldown_until_epoch": cooldown_until if cooldown_active else None,
+        "cooldown_reset_str": _format_secs(cooldown_until - now) if cooldown_active else None,
+    }
+
+    with _cache_lock:
+        _cached_report = report
+        _cached_report_time = now
+
+    return report

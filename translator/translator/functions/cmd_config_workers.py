@@ -1,3 +1,52 @@
-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
-534a6b37
-##a033837d4f23e078bea6b3957
+from ..common.cache import compute_auto_workers, get_active_language_codes, save_active_language_codes
+from ..common.config_store import load_config_value, save_config_value, get_request_delay, config_dir_state
+from ..common.state import DEFAULTS, LANGUAGES, LANGUAGE_NAMES, PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME
+
+
+def cmd_config_workers():
+    current = load_config_value("workers", default="auto")
+    auto_now = compute_auto_workers()
+
+    print(f"Current setting: {current}" + (f" (resolves to {auto_now} right now)" if current == "auto" else ""))
+    print(f"\nEnter a number from {DEFAULTS['workers_min']}-{DEFAULTS['workers_max']}, or 'auto' "
+          f"to let the script pick based on your CPU and each run's size.")
+    print("Higher values translate faster but are more likely to get throttled by Google.\n")
+
+    while True:
+        raw = input(f"Workers [{current}]: ").strip().lower()
+        if not raw:
+            raw = str(current)
+
+        if raw == "auto":
+             value = "auto"
+             break
+
+        try:
+            n = int(raw)
+        except ValueError:
+            print("Please enter a whole number, or 'auto'.")
+            continue
+
+        if not (DEFAULTS["workers_min"] <= n <= DEFAULTS["workers_max"]):
+            print(f"Please enter a number between {DEFAULTS['workers_min']} and {DEFAULTS['workers_max']}.")
+            continue
+
+        if n > DEFAULTS["workers_throttle_ceiling"]:
+            confirm = input(
+                f"{n} workers is high and likely to get throttled by Google Translate.\n"
+                f"Use it anyway?\n[y/N]: "
+            ).strip().lower()
+            if confirm not in ("y", "yes"):
+                continue
+
+        value = n
+        break
+
+    save_config_value("workers", value)
+
+    if value == "auto":
+        print(f"\nSaved: workers = auto (currently resolves to {compute_auto_workers()}, "
+              f"and will shrink further for languages with fewer keys than that).")
+    else:
+        print(f"\nSaved: workers = {value} "
+              f"(will shrink at runtime if a language has fewer keys than that, or warn/cap if too high).")

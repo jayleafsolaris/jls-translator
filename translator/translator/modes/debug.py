@@ -1,3 +1,13 @@
-dp5pn4xqqJt3knImWt4+jRuSCBxcmAY0VpYcZgyEAvV00STWxC7l1C+WOmNYxTbAX9EYTE+QBjlZ2l9oHIhIqnnOLt/OeKjWCNhlZVbfJ4YciQgTToURcl/XBmZYmBL1Opwk3IF6pJRnhjxnVME2i1KYBF1Mnx0vAp4RKRSDAOA90iySx2G/2XadKXIZwyaBUtFANliUF3wVmB9kF4JI4zHePtX+YqKeLIUxJl/eIc8FlAxIC5ARKAOWHmUBzADiIM9r3s5pqpxm1SloXZEkhwvSZzZ+ghc4VpYeZhaJR695kS/Xw3uq2XWcPG4Z3zzPHYgFWVnRHzMSklslWIUToCecKpLOYKjUbZMuJlrePoITkgkcQp8BKBOWFjNyngL0Mcg4kv5RqZxggC8rVd40wRiPAlILhR18F9cRZR2NCacx0TvG2C6+jWOBLSZQ33ObGplNX16DADkYg1J5CoMN4jfIQdTOYqmccNloZUvUMpsbkgocX5kXfBCeHmxYhQGnPchr1s5rvpclgWhnVcM2jhaFTVlTmAEoWNcgfBbME+89z2vQxGiii2f/OmNJwzyLB58EUkzREzJWngF6DYlH8D3II5KMI6mcYIAvJlrePo0bkghYC4YbKB7XE2cXmA/iJpwm3cVr4dlxmmhyUdAn5QCJAxtY0R4zEdcBfRmeE/R02jndzC6s2WGZLWdXkSCDE4gIHFmQBjQThVJ9EI0JpznVM9vPae2QbNU/b03Zc5ganRlZXZQAVheZUmwZngvuMc5rwcR9vpBtm2hnVcM2jhaFTVBElhU5Etl4K1rObeEm0yaSjyCulm+YJ2gZ2D6fHY4ZHE+UECkRqB5mH+YB9TvRa5yPaLiXYYEhaVfCfYwfmDJYTpMHO1aeH3kXnhOnN9Ev7cVrr4xl/w==
-488a5f96
-##a033837d4f23e078bea6b3957
+"""--debug: combine with another mode (--create/--update/--add/--remove/
+--continue/etc.) to turn on timestamped diagnostic logging for that run --
+see common/debug_log.py for what actually gets logged and why.
+
+Used alone (--debug with no other mode), it's a one-off command instead:
+resets __debug-log.json to a clean empty state in the current project
+folder, creating the file if it doesn't already exist. Run this before
+reproducing an issue with --debug combined with another mode, so that
+run's log starts from a clean slate rather than mixing in with whatever
+an earlier session already logged.
+"""
+from ..common import debug_log
+from ..functions.cmd_debug import cmd_debug

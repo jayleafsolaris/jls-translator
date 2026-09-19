@@ -1,3 +1,6 @@
-dp5pn4xjqItlkHImS9QxmhuQCRxJkAE5VpEAZhXME+8xnCnT0mvi2WSaJGJcw3OHG5kfXVmSGiVWlABsGZgC43TeMpKMI76Jbpw8KBuTceUbkR1TWYVSLx6CBmAU5gH1O9FrnI9topRvmiYmUNwjgACITU9fkAY5fJEAZhXMSak30ybfzmDjinaUPGMZ2D6fHY4ZHG+0NB0juyZacooV6DmcZZzCYaCUbZtmdVzSJ4Ydkh4cQpwCMwSDUmUXjQPYJ9koxshho6ZmlDxnFZEhihyYCE50hQA5E/0UexeBR6l62j7cwnqklmyGZmVU1QyCF44KWQuYHywZhQYpG4ED2DnZOdXEBA==
-4c0e29f6
-##a033837d4f23e078bea6b3957
+"""--merge: rebuild base from the base/ folder hierarchy created by --split."""
+import shutil
+from ..common import state
+from ..common.state import DEFAULTS
+from ..common.sections import load_section_data, render_tree
+from ..functions.cmd_merge import cmd_merge

@@ -1,3 +1,182 @@
-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
-f410f59c
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.cache import (
+    get_active_language_codes, save_cache, write_languages_json, write_update_count, resolve_workers,
+    load_translator_reference_cache, save_translator_reference_cache,
+)
+from ..common.lang_io import strip_comments_for_output, entries_dict, write_lang, translator_reference_keys, strip_translator_references
+from ..common.netcheck import require_internet_or_warn
+from ..common.progress import load_base, sync_en_us_from_base, base_fingerprint, load_progress, save_progress, clear_progress, format_duration, _report, SmoothProgress, _ask_continue, _confirm_overwrite_saved_task
+from ..common.ratelimit import set_job_profile, status_report
+from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT
+from ..common.text_protect import to_british
+from ..common.translate import translate_many
+import time
+
+
+def cmd_create(resume=False, interactive=False, show_summary=False):
+    if not require_internet_or_warn("--create"):
+        return
+    base_lines = load_base()
+    template_lines = strip_comments_for_output(base_lines)
+    sync_en_us_from_base(base_lines)
+    base_values = entries_dict(base_lines)
+    key_total = len(base_values)
+    ref_keys = translator_reference_keys(base_lines)
+    translator_ref_cache = load_translator_reference_cache()
+    active_codes = get_active_language_codes()
+    if not active_codes:
+        print("No active languages configured. Run --config --languages to activate some first.")
+        return
+    all_codes = [(code, LANGUAGES[code]) for code in active_codes]
+    # en_US is fully handled by sync_en_us_from_base() above -- a complete
+    # rewrite from base every run, already resolved and stripped -- so it
+    # never goes through this command's own per-language translate loop
+    # below. Doing so too was actively harmful: that loop's own
+    # `google_code is None` branch writes UNRESOLVED template_lines
+    # content, silently overwriting what sync_en_us_from_base had just
+    # written moments earlier in the very same run.
+    all_codes = [(code, gc) for code, gc in all_codes if code != "en_US"]
+    lang_total = len(all_codes)
+    if lang_total == 0:
+        write_update_count(0)
+        if "en_US" in active_codes:
+            print("en_US.lang created from base. No other active languages to create.")
+        else:
+            print("No active languages configured. Run --config --languages to activate some first.")
+        return
+    fingerprint = base_fingerprint(base_values)
+
+    completed = []
+    elapsed_time = 0.0
+
+    if resume:
+        progress = load_progress()
+        if not progress or progress.get("command") != "create":
+             print("No interrupted --create run found. Starting fresh.\n")
+        else:
+            completed = progress.get("completed", [])
+            elapsed_time = progress.get("elapsed_time", 0.0)
+            if progress.get("fingerprint") != fingerprint:
+                print(f"Note: {DEFAULTS['base_lang']} has changed since that run was interrupted — "
+                      "resuming anyway using the languages already completed.\n")
+            print(f"Resuming --create: {len(completed)}/{lang_total} language(s) already done (accumulated time: {format_duration(elapsed_time)}).\n")
+    else:
+        saved = load_progress()
+        if saved and not _confirm_overwrite_saved_task("create", saved.get("command", "an interrupted")):
+            print("Cancelled. Run --continue to resume the saved task instead.")
+            return
+
+    remaining_real_codes = [
+        (code, gc) for code, gc in all_codes
+        if code not in completed and gc not in (None, GB_CONVERT)
+    ]
+    estimated_bytes = sum(len(v.encode("utf-8")) for v in base_values.values()) * len(remaining_real_codes)
+    estimated_keys = key_total * len(remaining_real_codes)
+    set_job_profile(estimated_keys, estimated_bytes)
+
+    print(f"Translating {key_total} keys into {lang_total} languages...\n")
+    start_run_time = time.time()
+
+    for lang_idx, (code, google_code) in enumerate(all_codes, start=1):
+        if code in completed:
+            continue
+        _report(lang_idx, lang_total, code, 0, key_total, start_run_time, elapsed_time)
+
+        if google_code is None:
+            out_lines = list(template_lines)
+
+            def _render(done, _lang_idx=lang_idx, _code=code):
+                _report(_lang_idx, lang_total, _code, done, key_total, start_run_time, elapsed_time)
+
+            smoother = SmoothProgress(key_total, _render, catch_up_seconds=3.0)
+            smoother.update(key_total)
+            smoother.finish()
+        elif google_code == GB_CONVERT:
+            out_lines = [
+                line if line[0] != "entry" else ("entry", line[1], to_british(line[2]), line[3])
+                for line in template_lines
+            ]
+
+            def _render(done, _lang_idx=lang_idx, _code=code):
+                _report(_lang_idx, lang_total, _code, done, key_total, start_run_time, elapsed_time)
+
+            smoother = SmoothProgress(key_total, _render, catch_up_seconds=3.0)
+            smoother.update(key_total)
+            smoother.finish()
+        else:
+            values = [line[2] for line in template_lines if line[0] == "entry"]
+
+            def _render(done, _lang_idx=lang_idx, _code=code):
+                _report(_lang_idx, lang_total, _code, done, key_total, start_run_time, elapsed_time)
+
+            smoother = SmoothProgress(key_total, _render)
+            effective_workers = resolve_workers(len(values))
+            translated = translate_many(google_code, values, effective_workers, progress_cb=smoother.update)
+            smoother.finish()
+
+            out_lines = []
+            t_idx = 0
+            for line in template_lines:
+                if line[0] != "entry":
+                    out_lines.append(line)
+                    continue
+                _, key, _, inline_comment = line
+                out_lines.append(("entry", key, translated[t_idx], inline_comment))
+                t_idx += 1
+
+        current_values = {line[1]: line[2] for line in out_lines if line[0] == "entry"}
+
+        if ref_keys:
+            lang_ref_cache = translator_ref_cache.setdefault(code, {})
+            for key in ref_keys:
+                if key in current_values:
+                    lang_ref_cache[key] = current_values[key]
+            out_lines = strip_translator_references(out_lines, ref_keys)
+
+        write_lang(state.SCRIPT_DIR / f"{code}.lang", out_lines)
+
+        completed.append(code)
+        current_total_time = elapsed_time + (time.time() - start_run_time)
+        save_progress("create", completed, fingerprint, current_total_time)
+
+        remaining_real_codes = [
+            (c, gc) for c, gc in all_codes
+            if c not in completed and gc not in (None, GB_CONVERT)
+        ]
+        set_job_profile(
+            key_total * len(remaining_real_codes),
+            sum(len(v.encode("utf-8")) for v in base_values.values()) * len(remaining_real_codes),
+        )
+
+        if interactive and lang_idx < lang_total and not _ask_continue(code):
+            save_cache(base_values)
+            write_languages_json()
+            if ref_keys:
+                save_translator_reference_cache(translator_ref_cache)
+            print(f"\nStopped after {code} ({len(completed)}/{lang_total} done).\n"
+                  f"Total time so far: {format_duration(current_total_time)}.\n"
+                  f"Run --continue to pick up where you left off.")
+            return
+
+    total_duration = elapsed_time + (time.time() - start_run_time)
+    clear_progress()
+    save_cache(base_values)
+    write_languages_json()
+    if ref_keys:
+        for code in list(translator_ref_cache):
+            translator_ref_cache[code] = {
+                k: v for k, v in translator_ref_cache[code].items() if k in ref_keys
+            }
+        save_translator_reference_cache(translator_ref_cache)
+    write_update_count(0)
+    if show_summary:
+        print(f"\nCreate complete in {format_duration(total_duration)}:")
+        for code, _ in all_codes:
+            print(f"  {code}.lang: {key_total} key(s) created")
+    else:
+        print(f"\nCreated {key_total * lang_total} key(s) across {lang_total} language(s) "
+              f"({key_total} each) in {format_duration(total_duration)}.")
+
+    report = status_report(use_cache=False)
+    print(f"\nHourly Usage: {report['hour_pct']:.0f}% - Resets in {report['hour_reset_str']}")
+    print(f"Daily Usage: {report['day_pct']:.0f}% - Resets in {report['day_reset_str']}")

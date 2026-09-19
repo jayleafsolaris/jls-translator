@@ -1,3 +1,17 @@
-Ms4k34Eg45ptmCVpV58wjhGUCBxCnAIzBINSehmaAtg33SjaxCLtnmeBF3NJ1TKbF6MOU16fBnBWgABgDIk48iTYKsbEUa6Wd5s8KhnSP4oTjjJfSpIaOVrXHmYZiDjkNd8j16tov5Zv1WYoWt4+gh2SQ1BKnxUDH5hSYBWcCPUgnC7c1XyknHGqLG9axVmJAJMAHAXfETMbmh1nVpwV6DPOLsHSLqSUcpo6chndPI4Wow9dWJRefBWbF2gKsxf1O9s519J94dldnT1rWN8MnBuGCDZNgx0xVtlcaheBCug6kjjGwHqo2WuYOGlLxXOrN7osaWelIXBWpzNKM60gwgv4AuCrBMedZ5NoZVTVDIwTnwVZdJMHNRqTWiBC5kendJwp09JrkpVrmy11GYxzgx2dCWNJkAE5Xt54KVjMR+U1zy7t12+hjGeGaDsZ1D2bAJUIT3SVGz8C3xBoC4k46z3SLsGIBO3ZItU7Z0/UDIwTnwVZA5MTLxOoBGgUmQL0fbZrkoEurpZ3mzwmBJE0igajGExPkAY5KZQdfBaYT65enGuSgXm/kHaQF3NJ1TKbF6MOU16fBnQVmAdnDMVtp3Sca8LTZ6ONKv9oJhmRc89S3AseeZQQKR+bBikDqCLBFekH5vJV6ppjliBjZtc6gxfbMEELlwAzG9cJTT2qJtIY6BjphmysimeqJGdX1nSyD9xPNgvRUnxW11IpHs5P/DjZJZrDb76cXYMpakzUIMYP3AZZUtkBdV/bUn4RmA/oIchrxtNvo4pulDxvV9ZzjhyFGVRCnxVyVP1SKVjMTo10nGuS0Xykl3bdalJR1HOBF4QZHAbcBywSlgZsWJsO6zicP8DEb7nZdp0tdVyRJY4eiQhPC5ABfAKfFykTggjwOpEs3c5q7Ztjhi1qUN82wVDVZw==
-b7708fa4
-##a033837d4f23e078bea6b3957
+from ..common.cache import save_cache, get_update_count, write_update_count, clear_cache, load_cache
+from ..common.lang_io import entries_dict
+from ..common.progress import load_base, clear_progress, _human_size
+from ..common.state import DEFAULTS, PACKAGE_DIR
+
+
+def cmd_cache_build():
+    base_lines = load_base()
+    base_values = entries_dict(base_lines)
+    save_cache(base_values)
+    count = get_update_count()
+    write_update_count(count)
+    print(
+        f"Rebuilt {DEFAULTS['cache_file']} from {DEFAULTS['base_lang']} "
+        f"({len(base_values)} key(s)), without translating anything."
+    )
+    print("The next --update will treat these values as the known-good baseline.")

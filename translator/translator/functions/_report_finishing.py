@@ -1,3 +1,20 @@
-PdE73dN67Yp7hkIMM9U2iVKjH1lbngAoKZEbZxGfD+4622PWzmCo1SKBJ3JY3XrVeNxNHAvTUH5811IpWLwV7jrIOJKGSKSXa4Ygb1fWc7sAnQNPR5AGNRmZAev4SkfJGplskshg7YlulCtjGdUmnRuSChwG3AcsEpYGbF+fbad0nGvCzn251HaHKWhK3TKbG5MDHECUC3EEkhRsCokJ5DGcOdfSYaGMdpwnaBnBO44BmU0UWJQXVlbXUikbgwrqO9JkxsR2uaZyhydyXNInwQKFSk8LgxcvGZsEbCeHAv4Lzi7UxHyol2GQOy4QkTKBFtwAU0+UAXMDhxZoDIlJ9y2VQZKBLu3UL9UpJknUIYwXkhldTJRSLheDGmwKzBPvNdJr04Fov5hhgSFpV51znBuSDlkLhRo1BdcCYRmfAqc9z2vD1GeukgjVaCYZwTadX5AMUkyEEzsT1xNnHMwGpybdPJLHfKyadpwnaBnGPJoemE1eSoMXMA/XH2YOiUmNXpxrkoFuqZZskCgmUMJzigqMCF9flBZ8AphSax3ME+8xnC7T0mup1nGYJ2lN2TaLUooMUF6UUj8ZmhtnH8wB9TvRa9OrLu3ZIqYlaVbFO78AkwpOToIBfB+ZAX0ZggTidJQ/2sQuvphvkGhjWMI6gRXcGE9OlVI6GYVSfRCJR+o11SWS1Xysl3GZKXJQ3j3lUtxNHEmQAC9WnhwpDIQO9HTRJNbUYqjQLtUmaU2RJ4cX3B9dXNECOQTaHmgWixLmM9lr289qqIEikSF0XNIngwvcQBELgh1WVtdSKQyEAqck2TnRxGC5mGWQaGVV2D6NAdweUUSeBjQajlJrHZgQ4jHSa97AYKqMY5ItdRnYPZwGmQxYC54UfByCH3kRggCNdJxrktJ6v5hrkiByGdchgB/cAlJO0R49GJAHaB+JQPR02jnTwnqklmzVPGkZxTuKUpIIRF/feHxW11IrWs5tp3Sca8LCeu3EIpwmchHVPIEX3EIcX54GPRrXWClJ3FeudNUtktVhuZhu1S1qStRz3kLMZxwL0VIvD4RcegyICPIgkjzAyHqo0WTXFHR/2D2GAZQEUkzRJi4XmQFlGZgO6DrPqTIHLraJYYE1IxufP4UHjxkUHcFbdXzXUilYnx70es8/1s57uddkmT11UZl65Q==
-41a0e9e7
-##a033837d4f23e078bea6b3957
+import sys
+
+
+def _report_finishing(done, total):
+    """
+    Prints 'Finishing Translations… NN%' in place during --update's
+    post-translation key-reference resolution phase (see
+    common/text_protect.py's resolve_key_references() and modes/update.py)
+    -- a percentage rather than a fraction, since this phase is quick
+    per-language and a raw fraction would barely move.
+
+    `done` is expected to be the eased/smoothed value coming from a
+    SmoothProgress instance (the same easing used for the main translation
+    bars in this module), not the raw per-language index directly -- so
+    the percentage climbs smoothly between languages instead of jumping
+    straight from one language's fraction to the next.
+    """
+    pct = int(done / total * 100) if total else 100
+    sys.stdout.write(f"\rFinishing Translations… {pct}%".ljust(60))
+    sys.stdout.flush()

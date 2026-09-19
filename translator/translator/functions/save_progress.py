@@ -1,3 +1,15 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8eJUATESDBnwchB1ncuZt4zHaa8HAeKimcocnYUvUIJxanwJRRpAcOFrXEWYVnAviINkvnoFopJdlkDp2S9g9m17cCFBKgQE5EqgGYBWJWrd6jGKIqy7t2SKFKXJRkW7PIr0ud2q2NwMyviApV8wjwhL9Hv71XZbbcocnYUvUIJwtmgRQTtMvVlbXUikIjRPvess529Vrko1njTwuM5Fzz1LcTRwLmwEzGNkWfBWcFK8vtmuSgS7t2SLVaCYZkXGMHZEAXUWVUGZWlB1kFY0J43i2a5KBLu3ZItVoJhmRcYwdkR1QToUXOFTNUmoXgRfrMcgu1o0E7dki1WgmGZFzz1LcT1pCnxU5BIcAYBaYRb102iLcxmu/iXCcJnIVu3PPUtxNHAvRUnxW11BsFI0X9DHYFMbIY6jbONUtaljBIIoWoxlVRpR4fFbXUilYzEf6eJwi3MVro40/x2EqM5Fzz1LcTRwLlBw/GZMbZx/RRfIg2maKgyLH2SLVaC8z
-0f28d037
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS
+import json
+
+
+def save_progress(command, completed, fingerprint, elapsed_time=0.0):
+    path = PACKAGE_DIR / DEFAULTS["progress_file"]
+    path.write_text(
+        json.dumps({
+            "command": command,
+            "completed": completed,
+            "fingerprint": fingerprint,
+            "elapsed_time": elapsed_time
+        }, indent=2),
+        encoding="utf-8",
+    )

@@ -1,3 +1,10 @@
-Ms4k34Eg45ptmCVpV58wgByaBFt0ggYzBJJSYBWcCPUgnCfdwGqSmm2bLm9e7iWOHokIEAuCEyoTqBFmFooO4AvKKt7Ua+HZYYA6dFzfJ7ARkwNaQpYtOB+FeG8KgwqnepIo3cxjopcskiFyUcQxsBOMBBxCnAIzBINSViyjLMIa4wj970iEvl27CUt8u1nlFpkLHFmUHzMAki19F4cC6XyVcbiBLu3ZcpQ8bhmMc4wHjh9ZRYUtPxmZFGAfswPuJpRiko4uq9t5qhxJcvQdsDGzI3piti0SN7o3dFaPCOky1SyQqy7t2SKcLiZJ0CeHXJkVVViFAXRfzXgpWMxHp3Sca8LAeqXXd5skb1fae8Z43E0cC9FSfFaFF30NngmnAM4+16su7dkihy1yTMM9zzSdAU9O+w==
-2723d04b
-##a033837d4f23e078bea6b3957
+from ..common.config_store import load_config_value, save_config_value, current_config_dir
+from ..common.github_api import _TOKEN_CONFIG_NAME
+
+
+def remove_token():
+    path = current_config_dir() / f"{_TOKEN_CONFIG_NAME}.config"
+    if path.exists():
+        path.unlink()
+        return True
+    return False

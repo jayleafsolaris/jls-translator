@@ -1,3 +1,18 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLkh0yEJ4VVguYCPUxti3AzmPt1yyWJ2tU3j3BEZMDWkKWLS8CmABsWIUK9zvOP5LSb7ucXZYnaF/YNLAEnQFJTt1SOxODLXsdgALmJ9kU0NNvo5pq/y50VtxzwVyfAlFGnhxyBYMTfR3MDuok0znGgUmErUqgCll74xKhMbRnNiGVFzpWlB9tJ58C8wvOLt7Eb76cXZc6Z1fSO8cQjgxSSJlbZnzXUilYzkWlNJFmwMRiqJhxkGg6W8MygRGUU1wR0QI5BIQbegzMBqc62TyS02uhnGOGLSZbwzKBEZRDHgnTeHxW11JrCo0J5DycdpLDfKyXYZ1mdU3DOp9a1WccC9FSNRDXHGYMzAX1NdIo2psE7dki1WgmGZEjnRuSGRQJvx18FIUTZxuER+A9yi7cgSPg2WyaPG5Q3zTPEZQMUkyUFnJU3ngpWMxHp3Sca8DEeriLbP9CJhmRc5wTighjSJ4cOh+QLX8ZgBLifJ45181rrIpnqip0WN8wh1DQTV5ZkBw/Ht54KVjMR+Q70i3bxlG+jW2HLShm8hyhNLUqY3m0Phk3pDdWOr4myRf0a4+BbL+YbJYgDDORc89SkgJITtFPfFTXWn0QhRSnPc9rxslr7YtnhSchSpE9gACRDFALlRc6F4IefViOFeY63yObgy6knyKXOmdX0jvPT8FNe2KlOgk0qDBbOaIkz3TZJ8HELu/bCNVoJhnBIYYciEVaCaITKhOTSCkKiQviNc8uksN8rJdhnWg7GcoxnROSDlRWihwzApIPK1HmR6d0nDvAyGC50SDYZXNJ1iGOFplNXUWVUigeklJ8CIgG8zGcKNrEbaaccNU/b1Xdc4Edi01JWJRSKB6eASkangbpN9RlkIgE
-cdaad6c7
-##a033837d4f23e078bea6b3957
+from ..common import config_store
+from ..common.config_store import save_config_value, get_release_branch
+from ..common.state import GITHUB_BRANCH
+
+
+def cmd_set_release_branch(branch):
+    """`--release <branch>`: persist a new release branch."""
+    branch = branch.strip()
+    if not branch:
+        print("No branch given -- nothing changed.")
+        return
+
+    save_config_value("release_branch", branch)
+    config_store._CONFIG_RELEASE_BRANCH = branch
+
+    note = " (this is the repo's normal default branch)" if branch == GITHUB_BRANCH else ""
+    print(f"Saved: release branch = {branch}{note}")
+    print("--upgrade and the update checker will now use this branch.")

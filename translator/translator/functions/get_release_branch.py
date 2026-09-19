@@ -1,3 +1,19 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UG6BkBw9gyrO64yamKiOx46si1HOaEiq3T/BPznR4qmRrwaWXH4F6s3sjJyarw3cFazN085uSvTB5Br9ehahaxAqgpUeP8Qp3iaH1NG0VxyFZgfZBeCSeQ70i3bxlG+jW2HLSZQ3COAAIhNY2i+PBo/sC1bPaAixgf5FPDzT4O6Sv8udFbcc8EekwxYdJIdMhCeFVYOjQvyMZwi39Fhv40imSdnXe4wgByaBFt0hxMwA5J4A3KIAuF02y7G/nyolWeUO2Nm0yGOHJ8FFALLeHxW11IrWs5tp3Sca+DEeriLbIZoclHUc6gbiCVJSdEQLheZEWFYwUryJNs508Vr7Z1tgiZqVtA3nFKaH1NG0RMyEtcGYR3MF+YnzyLExCHH2SLVaGtY3yaOHtwYTE+QBjlWlBpsG4cC9XSULdfVbaWmcJAlaU3UDJkXjh5VRJ9bfBWYH3kZngL0dMUkx9MupJdxgSlqVdQ35VLcTRxdlAAvH5gcKRmLBu46zz+cgUqon2OAJHJKkSeAUrskaGOkMAM0pTNHO6RHryDULpLTa72WJYZoaFbDPo4e3AlZTZAHMAL9UilYzAX1NdIo2o0uqNdl22gkVNA6gVDVTUlFhRswVpgEbAqeDuMw2SWSw3fti3ebJm9X1nPCX44IUE6QATlWyxB7GYIE72qQQZKBLu2OapwrbhnBNp0BlR5IWNEGNBPXEWEXhQTidNUlks1hrphu1StpV9c6iFKIBVkLghMxE9cFaAHMSqo30yXUyGnH2SLVaCsU1TaDE4VNTE6DATUFgwEpDIQCpybZOsfEfbnZZpAkZ0CRfsJSjwIcQoVVL1aFF2QdgQXiJtkvksBtv5Zxhmh0TN8gw3jcTRwLnx0oVp0HegzMAegmnD/axC6ujHCHLWhNkTqBBJMOXV+YHTJY/VIpWMxFpXa2a5KBLqqVbZcpahnuEKA8uiR7dKM3EDO2IUwnrjXGGv8DuIEu7dlrk2hZev4dqTu7Mm5uvTcdJbItSyqtKcQcnCLBgUCil2fPQiYZkXPPUtxNY2i+PBo/sC1bPaAixgf5FPDzT4O6StV1JlXeMostnwJSTZgVAwCWHnwdxEX1MdAu09JrkptwlCZlUZN/zxaZC11enQZhMb4mQS2uOMUG/QXx6SfH2SLVaHRcxSadHNwyf2S/NBUxqCBMNKkm1BHjCeDgQI6xCA==
-16a34edc
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME, DEFAULTS, GITHUB_BRANCH
+from ..common.config_store import _CONFIG_RELEASE_BRANCH
+from .load_config_value import load_config_value
+
+
+def get_release_branch():
+    """
+    Returns the GitHub branch --upgrade downloads from and the passive/
+    manual update checker (fetch_remote_version) compares your installed
+    version against. Defaults to GITHUB_BRANCH (the repo's normal default
+    branch, e.g. "main") until overridden by running --release <branch>,
+    which persists the choice in local config the same way --config
+    --delay persists the request delay -- so it's remembered across runs,
+    not just for the current invocation.
+    """
+    global _CONFIG_RELEASE_BRANCH
+    if _CONFIG_RELEASE_BRANCH is None:
+        _CONFIG_RELEASE_BRANCH = load_config_value("release_branch", default=GITHUB_BRANCH)
+    return _CONFIG_RELEASE_BRANCH

@@ -1,3 +1,62 @@
-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
-c1a8168a
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.progress import load_progress, save_progress, clear_progress, format_duration, _ask_continue
+from ..common.state import DEFAULTS
+import sys
+import time
+
+
+def cmd_delete(resume=False, interactive=False):
+    targets = [
+        p for p in state.SCRIPT_DIR.glob("*.lang")
+        if p.name != DEFAULTS["base_lang"]
+    ]
+
+    completed = []
+    elapsed_time = 0.0
+
+    if resume:
+        progress = load_progress()
+        if not progress or progress.get("command") != "delete":
+            print("No interrupted --delete run found.\nStarting fresh.\n")
+        else:
+            completed = progress.get("completed", [])
+            elapsed_time = progress.get("elapsed_time", 0.0)
+            print(f"Resuming --delete: {len(completed)} file(s) already deleted (accumulated time: {format_duration(elapsed_time)}).\n")
+
+    targets_to_delete = [p for p in targets if p.name not in completed]
+
+    if not targets_to_delete and not resume:
+        print("No translated .lang files to delete.")
+        return
+
+    if not resume:
+        print(f"This will delete {len(targets_to_delete)} file(s):")
+        for p in targets_to_delete:
+            print(f"  {p.name}")
+        confirm = input("Type 'yes' to confirm: ").strip().lower()
+        if confirm != "yes":
+            print("Cancelled.")
+            return
+
+    start_run_time = time.time()
+    for lang_idx, p in enumerate(targets_to_delete, start=1):
+        if p.exists():
+            p.unlink()
+        
+        completed.append(p.name)
+        current_total_time = elapsed_time + (time.time() - start_run_time)
+        save_progress("delete", completed, "none", current_total_time)
+
+        sys.stdout.write(f"\rDeleted {p.name}... time: {format_duration(current_total_time)}".ljust(85))
+        sys.stdout.flush()
+
+        if interactive and lang_idx < len(targets_to_delete) and not _ask_continue(p.name):
+            print(f"\nStopped after {p.name} ({len(completed)} done).\n"
+                  f"Total time so far: {format_duration(current_total_time)}.\n"
+                  f"Run --continue to pick up where you left off.")
+            return
+
+    total_duration = elapsed_time + (time.time() - start_run_time)
+    clear_progress()
+    print(f"\nDeleted {len(completed)} .lang file(s) in {format_duration(total_duration)}. "
+          f"The base file ('{DEFAULTS['base_lang']}') was untouched.")

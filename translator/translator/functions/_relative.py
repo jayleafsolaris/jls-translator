@@ -1,3 +1,15 @@
-PdE73dN67Y1rmC0MM7s3ihTcMk5OnRMoH4EXIR2cCOQ8lXG4gS7t2XGQK3UZjHOCE4RFDAfRGzIC3xd5F48Pp3mcP9vMa+ONa5gtLhCYeuVS3E0cT91SLhOaUjRYiA7xOdMvmtJrroou1XAwDYFjxnjcTRwLmV58BJIfKUXMA+4i0STWiXyolC7VezAJgXrlUtxNHEbdUi9WylJtEZoK6DCUOdfMIu3PMtxCDBmRc88HkgRIWNFPfC3fUG1awEfjfZBrmoNm79UinWEqGZlxglDQTVEC3VJ0VIRQJVifTtpenGuSgWCil3iQOmkZjHO0WpAMXk6dXnwAlh4gWIoI9XTQKtDEYuHZdJQkJlDfc5oclRlPC5gUfACWHlRy5kendJwi1IFgoo0imydoQ9QhgEj2TRwL0VJ8VtcAbAyZFel0nnvBgwTt2SLVOmNNxCGBUt5NHgWbHTUY3xQrA5oG6ynHJ9PDa6GEINUuaUuRP44QmQEQC4cTMFaeHCkWgwn9Mc4km6s=
-3b72c2a1
-##a033837d4f23e078bea6b3957
+import time
+
+
+def _relative(epoch):
+    secs = max(0, int(epoch - time.time()))
+    d, rem = divmod(secs, 86400)
+    h, rem = divmod(rem, 3600)
+    m, s = divmod(rem, 60)
+
+    units = [("d", d), ("h", h), ("m", m), ("s", s)]
+    nonzero = [(label, val) for label, val in units if val]
+
+    if not nonzero:
+        return "0s"
+    return " ".join(f"{val}{label}" for label, val in nonzero)

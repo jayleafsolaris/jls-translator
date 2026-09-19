@@ -1,3 +1,43 @@
-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
-32611f59
-##a033837d4f23e078bea6b3957
+from ..common.state import DEFAULTS, LANGUAGES, LANGUAGE_NAMES, PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME
+
+
+def _edit_active_languages_text(codes, active_set):
+    selected = set(active_set)
+    while True:
+        print()
+        for i, code in enumerate(codes, start=1):
+            marker = "I" if code in selected else "O"
+            name = LANGUAGE_NAMES.get(code, "")
+            print(f"  {i:>2}. [{marker}] {code:<8} {name}")
+        print("\n[I] = active (in)   [O] = inactive (out)")
+        raw = input(
+            "Enter number(s) to toggle (comma-separated), 'a' to toggle all, "
+            "'done' to save, 'q' to cancel: "
+        ).strip().lower()
+
+        if raw in ("q", "quit", "cancel"):
+            return None
+        if raw in ("done", "d", ""):
+            return selected
+        if raw in ("a", "all"):
+            selected = set() if len(selected) == len(codes) else set(codes)
+            continue
+
+        parts = [p.strip() for p in raw.split(",") if p.strip()]
+        idxs = []
+        ok = True
+        for p in parts:
+            if not p.isdigit() or not (1 <= int(p) <= len(codes)):
+                print(f"'{p}' isn't a valid number 1-{len(codes)}.")
+                ok = False
+                break
+            idxs.append(int(p))
+        if not ok:
+            continue
+
+        for i in idxs:
+            code = codes[i - 1]
+            if code in selected:
+                selected.discard(code)
+            else:
+                selected.add(code)

@@ -1,3 +1,29 @@
-PdE73dN67Ztjhi0wDbs6ggKTH0gLmRMvHpsba3KKFeg5nGXtwmGpnF2YKXRS1CGwHpUDWQuYHywZhQYpJ48I4zHjJtPTZaiLXZkhaFy7NZ0dkU0SdIkdLimFF3kdjROnPdE73dN67aZ6mjpZS9QjihOIZzYhlRc6VpQdZAiFC+IL3yTWxFG5nHqBYHJcySfDUpcIRQLLeHxW11IrWs5tp3Sca+HAY6jZcJA+Y0vCOo0emU1kZKNZPheEFz9MzAjlMsk40cB6pJZs1Sl1GdcmgRGIBFNFgl0/GZoCYBSJOPMxxD+c0XfH2SLVaHNK1CDPFJMfHEuTEy8Tl14pGpkTpzLTOZLALr6QbJIkYxmfI5ZSjwJJWZIXfBCeHmxYjQnjdNcuy8Rq7Zt71SloM5Fzz1K5NXV4pTsSMdcZbAHMT/M82Wvdz2vtnG+XLWJd1DfPG5JNX0eYXCwP118kWJ8C4nTfJ9uPfrTecdUncVe7c89S3A5TRpwXMgLeUnsZmA/iJpw/2sBg7Z5nmy10WMU6gRXcDBxNgxcvHtcdZx3MAuY31GvRwGKh1SKGJyZa3j6fG5AEUkz7UnxW1wZhHcwU5jnZa9TIYqjZdoIhZVyRJIYGlE1IQ5RSLxeaFykTiR6nJM4k1tRtqIoinCxjV8U6jBOQTV9CgRo5BIMXcQzmR6d0nGafgWConGaQLCZK3nPCX4wYT0PWAXxUghxqEI0J4DHYa9TIYqjVIoYjb0mRIYpfiR1QRJAWflaUGmwbh22ndJxrmsJhoIljhyFoXpE0hgbcD1BEk1IvHpYBIFiNBPMh3Sfe2C66lnCeOygzu3PPUtwsUFieUjkblRdtC8wGpyfUJMDVLq6RZ5YjdUzcc4AU3BlUTtEdLh+QG2cZgEf3ON0i3NVrtY0i3T1oVdg4injcTRwLkxMvE9ABKQ6JFfQ90yWbjy6dlWOcJiZh/gHPGp0eHEWeUisXjlJ9F8wD4iDZKMaBb+2OcJomYRnaNpZSkwMcQoUBVlbXUikXmwmneZFr1cB8r5hlkGhkQMU2nFKkIm5OlVIrH4MaKQyEAqcjziTcxi6mnHvVK2dXkSCbG5ABHEOQAiwTmVJ9F+ZHp3ScL9fCYamcIpQ7Jk/QP4YW3DhobdxKcFaEG2UdghPrLZxpwdRtrpxnkSFoXpNzmBuIBRxfmRd8AYUdZx/MBOg6yC7c1SDH2SLVaEBWw3OPEJ0eWUvRBjQXg1V6WI1H6j3SJMCBb6OXbYwpaFrUaM8Ukx8cX5kbL1rXXyQNnAD1Ndgukshgvo1jmSR1M5Fzz1KLBV1flAQ5BNcRZhWJFKc7yT+SzmjtnWeWJ2tJ2D+GHJtNXVjRBjQT1wZmF4BA9HTdKMbUb6HZcIAmaFDfNM8RkwlZB/tSfFbXAWZYjUfwJtMl1YxlqIAikylqStR+nx2PBEhChxd8GJIXbQvME+h03i6S02uhkGOXJH8Z0jKbEZQMXkeUUjUYhAZsGYhtp3Sca93HLr6Ra4U4b1fWc4gTjg9dTJRSKx+DGikWg0fwNc4l289p4/Mi1WgmG5Nx5VLcTRxTngA5EtdPKSeUCPULzi7CxG+50XaQMHIX1D2MHZgIFAmEBjpbz1AgVMwM4i2VQZKBLu2bbpoqJgSRMY4BmVsIBZNEaBOZEWYciU//O84u1oggqZxhmixjEZMynBGVBB4C+1J8VtcRYR2PDPQh0WuPgWasimqZIWQXwjuOQMlbFF+UCihYkhxqF4gCr3bJP9SMNu/QK9sgY0HVOogXjxkUAqpIZCv9UilYzBXiIMk53IFo74JgmSdkRO09lBGUCF9AggcxC6scK1jHR9g30y/X/mOsi2mQOllV2D2KWtVn
-abab8d0e
-##a033837d4f23e078bea6b3957
+import base64
+import hashlib
+from ._code_marker_line import _code_marker_line
+from ._xor_repeat import _xor_repeat
+
+
+def compile_code_text(text, key):
+    """
+    Same reversible XOR+base64 obfuscation as functions/compile_text.py
+    uses for `base`, but for a single .py source file and keyed by an
+    EXISTING key (the one embedded in cli.py -- see cli.py's own
+    comment) rather than generating a fresh one each call, so compiling
+    the same file twice with the same key produces identical ciphertext
+    -- needed so --push's "unchanged file, skip re-upload" check
+    (comparing git blob shas) actually works.
+
+    Also embeds a short checksum of the original plaintext (unlike
+    base's version). Plain XOR has no way to detect a wrong key on its
+    own -- garbage bytes XORed with the wrong key can still happen to
+    decode as valid UTF-8, silently "succeeding" with the wrong content.
+    For `base` that's a minor annoyance; for this, --upgrade installs
+    whatever comes out of decompiling as the tool's actual running code,
+    so a wrong-key false-positive needs to be reliably catchable instead
+    of shipping garbage with no warning.
+    """
+    xored = _xor_repeat(text.encode("utf-8"), key)
+    blob = base64.b64encode(xored).decode("ascii")
+    checksum = hashlib.sha256(text.encode("utf-8")).hexdigest()[:8]
+    return f"{blob}\n{checksum}\n" + _code_marker_line()

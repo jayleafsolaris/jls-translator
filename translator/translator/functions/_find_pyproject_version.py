@@ -1,3 +1,44 @@
-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
-3ebbeaad
-##a033837d4f23e078bea6b3957
+import re
+from ..common.state import PACKAGE_DIR
+
+
+def _find_pyproject_version(max_levels_up=6):
+    """
+    Walks upward from this script's own directory looking for a
+    pyproject.toml, since in a typical package layout it lives at the repo
+    root -- one or more directories above the actual module file (e.g.
+    repo/pyproject.toml vs repo/src/roe_translator/translate.py) -- not
+    necessarily right next to the script itself.
+
+    Reads the version out of either a PEP 621 `[project]` table or a
+    Poetry-style `[tool.poetry]` table, whichever is present. Returns None
+    if no pyproject.toml with a parseable version is found within
+    max_levels_up directories.
+    """
+    directory = PACKAGE_DIR
+    for _ in range(max_levels_up + 1):
+        candidate = directory / "pyproject.toml"
+        if candidate.exists():
+            try:
+                text = candidate.read_text(encoding="utf-8")
+            except Exception:
+                text = None
+            if text:
+                for table in (r"\[project\]", r"\[tool\.poetry\]"):
+                    section = re.search(
+                        rf'{table}(.*?)(?=\n\[|\Z)', text, re.DOTALL
+                    )
+                    if section:
+                        match = re.search(
+                            r'(?m)^\s*version\s*=\s*"([^"]+)"', section.group(1)
+                        )
+                        if match:
+                            return match.group(1)
+                match = re.search(r'(?m)^\s*version\s*=\s*"([^"]+)"', text)
+                if match:
+                    return match.group(1)
+            return None
+        if directory.parent == directory:
+            break
+        directory = directory.parent
+    return None

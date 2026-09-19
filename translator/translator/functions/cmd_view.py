@@ -1,3 +1,24 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJ4bwqDCqd6kijdzGOilyyWKWVR1HOGH4wCTl/RFTkCqAd5HI0T4gvfJMfPesefcJolJhefMIAfkQJSBZ0TMhGoG2ZYhQr3O84/ktFvv4pnqiRnV9Z/zxeSGU5ClAEDEp4RfXKKFeg5nGWcwmGglG2bZnZL3jSdF48eHEKcAjMEg1JWEJkK5jrjONvba8efcJolJhefMIAfkQJSBYIGPQKSUmAVnAj1IJwP9+dPmLVWpkIMM9U2iVKfAFh0hxs5Ad9bM3LMR6d03irBxFG9mHadaDsZwieOBplDb2ijOwwiqDZAKsxIpxD5DfP0QpmqWdcqZ0rUDIMTkgoedvtSfFbXFGAUiRSnaZxj6cNvvpxdhSlyUexzhhTcD11YlC0sF4MaJx2UDvQgz2ObgWuhimfVE1sQkXjPAZMfSE6VWi8ClgZsVr8k1R3sH+3lR5/XZZknZBGTecEenQNbCdhbVlbXUikRikfpO8hr1MhiqIo4/2gmGZFzz1LcHU5CnwZ0ENU8ZliXI8IS/R7+9V2W3mCUO2Nm3TKBFdswQQueAHxYmxNnH8wB7jjZOJLHYbiXZtUhaBnFO4YB3AlVWZQRKBmFCydaxW2ndJxrkoEu7YtngT10V7tZz1LcTUxZmBwoXpFQcl+qDusxm3GOkDiwgiWmIXxclmnRQ8wQHAvROTkPhFAgcsxHp3TMOdvPeuXbL9doLBmFY8Z43E0cC5cdLlaHUmAWzAHuONk4iKsu7dki1WgmGZEghgiZTQELgVwvApYGIVHCFPMLzyLIxATt2SLVaCYZkXOEF4UyX0SEHChWylJlHYJP4jrIOdvEfZKda5Y8LknQIZwXowFdRZZaLF/eWwNYzEendJxrkoFjrItpkDomBJFxz1qeDE9O2FB8H5FSeVaCBuoxnHaPgUqIv0OgBFJq6nGNE48IY0eQHDtUqlJsFJ8Cp3aeQZKBLu3ZItVoJknDOoEG1AseUIFcMheaFzNE3VH6L+Mjx8xvo6ZxnDJjEcI6lRfVVwIawQ98VtcJYh2VOOQ7ySXG3HWgmHCeLXREk3rlUtxNHEKXUj4XhBdWCI0T73rZM9vSer7RK89CJhmRc89S3E1fRIQcKFbKUm4dmDjyJNgqxsRRrpZ3mzwuELtzz1LcTRwL0QIuH5kGIR7OO+kBzC/T1Wvtmm2AJnIZ1zydUogFVVjRED0FklJvEYACvXTHKN3UYLmELY4MQ3/wBqMmrzYbXoEWPQKSLWURgQ7zc+E2kIgE
-e4692e1c
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.cache import get_update_count
+from ..common.lang_io import parse_lang, entries_dict
+from ..common.progress import _human_size
+from ..common.state import DEFAULTS
+
+
+def cmd_view():
+    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    files = ([base_path] if base_path.exists() else []) + sorted(state.SCRIPT_DIR.glob("*.lang"))
+    if not files:
+        print(f"No {DEFAULTS['base_lang']} or .lang files found in this directory.")
+        return
+
+    print(f"{'File':<16}{'Size':>10}   Keys")
+    print("-" * 40)
+    for p in files:
+         size = p.stat().st_size
+         key_count = len(entries_dict(parse_lang(p)))
+         marker = " (base)" if p.name == DEFAULTS["base_lang"] else ""
+         print(f"{p.name:<16}{_human_size(size):>10}   {key_count}{marker}")
+    if base_path.exists():
+        count = get_update_count()
+        print(f"\nUpdate count for this base file: {count}/{DEFAULTS['update_limit']}")

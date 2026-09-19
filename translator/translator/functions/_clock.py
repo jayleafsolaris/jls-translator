@@ -1,3 +1,5 @@
-PdE73dN67Y1rmC0MM7s3ihTcMl9HnhE3XpICZhuETr1enGuSgXyojXeHJiZN2D6KXI8ZTk2FGzET31AsMdZCynSZO5CNLrmQb5BmalbSMoMGlQBZA5QCMxWfWyBWgBTzJtU7moM+79AI
-960c6625
-##a033837d4f23e078bea6b3957
+import time
+
+
+def _clock(epoch):
+    return time.strftime("%I:%M %p", time.localtime(epoch)).lstrip("0")

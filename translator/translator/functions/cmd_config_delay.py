@@ -1,3 +1,26 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJeKRuDCeE92xTB1WG/nAiTOmlUkX3BEZMAUUSfXD8ZmRRgH7MU8zvOLpLIY72WcIFoalbQN7ARkwNaQpYtKhebB2xUzBTmItkU0c5gq5Blqj5nVcQ2w1KbCEh0gxctA5IBfSeIAus1xWeSwmGjn2uSF2JQwwycBp0ZWSGXADMb11wnG4MK6jvSZcHVb7mcIpwldlbDJ882uSt9fr0mD1rXPkg2qzLGE/kYnoFCjLdFoAlBfO4drj+5PhALoTMfPbY1TCeoLtV4nAj970iEvl2xAVRm5xq8O74heXS/MxEz21JKN6IhzhPjD/vzUYWwRrENSGb/EqI39mc2T5QUfBWaFlYbgwnhPdsU1sRirIAq3HIMGZFzzxGJH05OnwZ8S9cVbAyzFeIlyS7B1VGpnG6UMS4Qu3PPUtwdTkKfBnQQ1TF8Cp4C6SCcONfVeqSXZc9ofVrEIZ0XkhlBWNEQOQKAF2wWzCbXHZw519B7qIp2hmYkELtzz1LcHU5CnwZ0VLsdfh2eDukznD/ayH3tinKQLWJKkSafUogfXUWCHj0Cnh1nWI4S83TVJdHTa6yKZ4ZoclHUc50bjwYcRJdSOxODBmAWi0fzPM4kxtViqJ0i3Xw0AJE2nQCTH08C31B1fNdSKVicFe46yGPUg0qon2OAJHIZ2CDPCbgoemqkPgglrFV7HZ0S4ifIFNbEYqyAJag1KBuYWeVS3E0cXJkbMBPXJnsNiV2NdJxrkoEu7dlwlD8mBJE6gQKJGRRN0y4yM5kGbArMCeIjnC/XzW+02WubaHVc0jyBFo9NZ1CSBy4Ekhx9BbFdp3aVZcHVfKSJKtxCJhmRc89S3E1VTdEcMwLXAGgP1m2ndJxrkoEu7dki1Wh0XMUmnRz2TRwL0VJ8VtcGewHWbad0nGuSgS7t2SLVaHBY3XPSUpoBU0qFWi4XgFsDWMxHp3Sca5KBLu3Za5NocFjdc9NSzFc2C9FSfFbXUilYzEendJxrktF8pJd23WpCXN0yllKfDFJFngZ8FJJSZx2LBvM9yi6cgyfH2SLVaCYZkXPPUtxNHAvRUj8ZmQZgFpkCjXSca5KBLu3ZItVoJkrQJYotnwJSTZgVAwCWHnwdxEXjMdAqy4Mi7Y9jmWEMGZFzz1LcTRwL0VJ8FZgcbxGLOPQg0znXj1GOtkyzAUFm9RajM6VNAQuHEzB811IpWMxHp3Sca5KBfr+QbIFgYBvtPbwTighYEdEWORqWCylFzBzxNdA2wYMnx9ki1WgmGZFzz1LcTV5ZlBM3fNdSKVjMR6d02TPRxH652VSUJHNc9CGdHY5XNgvRUnxW11IpWMxHpyTOItzVJu+pbpApdVyRNoEGmR8cStEEPRqeFikWmQrlMc5rmsQgqtcixWY3FZFjwULJRBIJ2Hg=
-37734837
-##a033837d4f23e078bea6b3957
+from ..common import state, config_store
+from ..common.config_store import load_config_value, save_config_value, get_request_delay, config_dir_state
+from ..common.state import DEFAULTS, LANGUAGES, LANGUAGE_NAMES, PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME
+
+
+def cmd_config_delay():
+    current = get_request_delay()
+    print(f"Current setting: {current}s between API requests.")
+    print("Lowering this speeds up translation but increases the risk of getting throttled (429 errors).")
+    print(f"Default is {DEFAULTS['request_delay']}.")
+
+    while True:
+        raw = input(f"\nEnter new delay in seconds [{current}]: ").strip()
+        if not raw:
+            return
+        try:
+            val = float(raw)
+            if val < 0:
+                print("Delay cannot be negative.")
+                continue
+            save_config_value("delay", val)
+            config_store._CONFIG_DELAY = val
+            print(f"\nSaved: delay = {val}s")
+            break
+        except ValueError:
+            print("Please enter a valid number (e.g. 0.1, 0.05).")

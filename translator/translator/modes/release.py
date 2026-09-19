@@ -1,3 +1,15 @@
-dp5puIwjv5xukCl1XItzmRuZGhxEg1IvE4NSfhCFBO90+yLG6Xuv2WCHKWha2XPCX4kdW1mQFjlWkx1+FoAI5jDPa9TTYaDVIpQmYjPGO4YRlE1eWZAcPx7XBmEdzBfmJ88ixMQhoJhsgClqGcQjixOICBxImRc/HZIAKVDBSuQ82SjZiC6ulm+FKXRcwnOWHYkfNkKfASgXmx5sHMwR4ibPIt3PLqyeY5wmdU2fWeUimR9PQoIGORLXBmEdzBTmOdlrxcB37dQvlidoX9g0z1/RCVlHkAt8BpIAehGfE/R0yCPXgXyoiHeQO3IZ1TaDE4VXHFiQBDkS/QdnHIkVpyDULpLNYa6YbtUraVfXOohSmgJQT5QAfACeEykbgwnhPdsUwdVhv5wshilwXO4wgByaBFt0hxMwA5JaIFTMFOh01T+40nu/j2uDLXUZ0DCdHY8eHFmEHC9Wghx9EYBH5DzdJdXEau2YZZQhaBmZPJ1SiAVZC5IdMhCeFSkegwvjMc5r29Iuv5xxkDwMT9gyz1/RDlNFlxs7VtpfbR2AAvMxlWW4gyzv82SHJ2sZn32MHZEAU0XRGzEGmAB9WI8I6TLVLO3SeqKLZ/8udFbcc8FcnwJRRp4ccgWDE30dzA7qJNM5xoFJhK1KoApZe+MSoTG0Z1pZnh98WNkRZhWBCOl63yTcx2eqpnGBJ3RckTqCApMfSAuCEyoTqBFmFooO4AvKKt7Ua+HZZZA8WUvUP4oTjwhjSYMTMhWfeG8KgwqnepItx89tuZBtmzsoWtw3sAGZGWNZlB45F4QXVhqeBuk31GvbzH6ii3bVK2td7iCKBqMfWUeUEy8TqBB7GYIE717aOd3MLuPXZIAmZU3YPIEB0g5RT64BNBmALXsdgALmJ9kU0NNvo5pq1SFrSd4hm1KfAFh0ghozAagAbBSJBvQx4ynAwGCukQg=
-8eda5b0e
-##a033837d4f23e078bea6b3957
+"""
+--release: view or set which GitHub branch --upgrade downloads from, and
+which branch the passive/manual update checker (--check) compares your
+installed version against.
+
+Persisted the same way --config --delay persists the request delay: saved
+under the local config folder via config_store.save_config_value(), so it
+survives across runs until changed again (or the config folder is reset
+via --config --delete).
+"""
+from ..common import config_store
+from ..common.state import GITHUB_BRANCH
+from ..common.config_store import save_config_value, get_release_branch
+from ..functions.cmd_set_release_branch import cmd_set_release_branch
+from ..functions.cmd_show_release_branch import cmd_show_release_branch

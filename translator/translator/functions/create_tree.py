@@ -1,3 +1,12 @@
-Ms4k34Eg45ptmCVpV580hgaUGF50kAI1Vp4feReeE6cL/Rv7/lyCtlb/LnRW3HPBLY4ITV6UAShWnh95F54TpwvOLsPUa76NCP9CYlzXc4wAmQxITq4GLhOSWmsZnwLYIM4u1/59pZgu1S1oTcM6igHVVzYL0VJ8VNVQbBaYFe4xz3GSzWe+jSKaLiZCkyOOBpRPEAvTHzMSklAlWM4T/iTZaZ6BLL6RY9c1Jl3YMJsB0k19C9MBNBfVUmYezCnoOtlBkoEu7Z1nmS1yXMJzmxqdGRxbkAY0VpEAZhXME+8xnDnX0nuhjWubLyZNwzaKUtQfWUeQBjUAklJ9F8wF5ifZFMbTa6jQLNdqJDORc89SmAxIStFPfCmFF3gNiRTzfJ4b/fJa79Uik2p9ZvADpi2uInN/jF07H4NdfQqJAvR2kGvY0mGjxHn/aCYZkXPPUtxPXkqCFwMChRdsWtZH5TXPLu3VfKicXYYgZxW7c89S3E0cC9FQKASSFytCzALpIM4i19Iix9ki1Wh7ELtzz1LcH1lfhAAyVpMTfRm3RfQ83Wnvqw==
-7807d3e8
-##a033837d4f23e078bea6b3957
+from ..common.github_api import _API_ROOT
+from ._request import _request
+
+
+def create_tree(base_tree_sha, entries):
+    """entries: list of {"path", "mode", "type", "sha"} dicts. A "sha" of None
+    deletes that path from the resulting tree (relative to base_tree)."""
+    data = _request("POST", f"{_API_ROOT}/git/trees", json={
+        "base_tree": base_tree_sha,
+        "tree": entries,
+    })
+    return data["sha"]

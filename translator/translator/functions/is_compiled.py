@@ -1,3 +1,5 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSVjujKtcd8A7t6kuUpk+0Gk1841nleJgIWguYAQMVmB95EYAC43zILsrVJ/fzItVoJkvUJ5oAkk1aCdJRJym0PUQopSvCC/cO6/5DjKtJsBp7G5E6gVKICERf+w==
-7639984b
-##a033837d4f23e078bea6b3957
+from ..common.state import _COMPILE_KEY_MARKER
+
+
+def is_compiled(text):
+    return f"##{_COMPILE_KEY_MARKER}" in text

@@ -1,3 +1,7 @@
-dp5pn4xqqJVngS08GdU2gxeICBxOhxcuD9cVbBaJFeYg2S+Sj2Ksl2XVLm9V1HPHEJ0eWQuYAXwdkgJ9UcJFpXa2It/RYb+NIoYxdTPYPp8djhkcX5gfOXyRAGYVzEmpN9Mm385g7ZBvhSd0TZEgmxOICDZNgx0xVtlcaheBCug6kjjGwHqo2WuYOGlLxXOrN7osaWelIVYQhR1kWMJJ5DvRJt3PIL2LbZI6Y0rCc4YfjAJOX9EeMxeTLXkKgwD1Mc84noF9rI9nqjh0VtYhigGPQRxInRc9BKgCexeLFeInz2eSx2G/lGOBF2JMwzKbG5MDEAuuEy8dqBFmFpgO6SHZQdTTYaDZLNsuc1fSJ4Ydkh4SSJwWAxKSHmwMiUfuOcwkwNUurpRmqixjVdQning=
-e01bb92f
-##a033837d4f23e078bea6b3957
+"""--delete: delete every generated .lang file (base is kept)."""
+import sys
+import time
+from ..common import state
+from ..common.state import DEFAULTS
+from ..common.progress import load_progress, save_progress, clear_progress, format_duration, _ask_continue
+from ..functions.cmd_delete import cmd_delete

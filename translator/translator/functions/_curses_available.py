@@ -1,3 +1,9 @@
-PdE73dN67Yp7hkIMM9U2iVKjDklZghcvKZYEaBGABuU42WObmwTt2SLVPHRAi1nPUtxNHAvRUjUbhx17DMwE8ibPLsGrLu3ZIpAwZVzBJ887kR1TWYU3LgSYADNyzEendJxrkoF8qI13hyYmf9A/nBf2TRwL0QA5AoIAZ1ifHvR6zz/Wznu512uGKXJNyHvGUp0DWAuCCy9YhAZtEYJJ7ifdP8bYJuTz
-60a0bccf
-##a033837d4f23e078bea6b3957
+import sys
+
+
+def _curses_available():
+    try:
+        import curses
+    except ImportError:
+        return False
+    return sys.stdout.isatty() and sys.stdin.isatty()

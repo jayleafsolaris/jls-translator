@@ -1,3 +1,9 @@
-PdE73dN67Ztjhi0wDbs1nR2RTRIFkh0xG5gcJx+FE+8h3hTT0WftkG+FJ3RNkQyuIrUybmS+JlYQhR1kWMI49THNPtfSeu2Qb4UndE2RDJ0XjRhZWIV4VnyTF29YiwLzC94n3cNRrpZsgS1oTZkghxPVVzYL0VJ8VNVQWx2YEvU6z2vGyWvti2OCaGRAxTacUpMLHErREDAZlVwrWs5tp3Sca9bAeqzZP9UXdFzAJooBiEUebLQmflrXFCsDsybXHeMZ/e5asNZlnDwpW908jQHTFk9DkA9+X/1SKVjMFeIgyTncgWysimfDfChbh2eLF58CWE7ZFj0ClikrG4MJ8zHSP5D8J8c=
-37da7591
-##a033837d4f23e078bea6b3957
+import base64
+from ..common.github_api import _API_ROOT
+from ._request import _request
+
+
+def get_blob_content(sha):
+    """Returns the raw bytes of a blob."""
+    data = _request("GET", f"{_API_ROOT}/git/blobs/{sha}")
+    return base64.b64decode(data["content"])

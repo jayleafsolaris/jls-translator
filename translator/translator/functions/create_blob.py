@@ -1,3 +1,11 @@
-PdE73dN67Ztjhi0wDbs1nR2RTRIFkh0xG5gcJx+FE+8h3hTT0WftkG+FJ3RNkQyuIrUybmS+JlYQhR1kWMI49THNPtfSeu2Qb4UndE2RDJ0XjRhZWIV4VnyTF29YjxXiNcgu7cNiopsqlidoTdQ9my2eFEhOgltmfNdSKViIBvM1nHaS/nyoiHeQO3IRkwOgIahPEAuXUCcptiJAJ74oyADBZNXIeuKbbpoqdRudc4UBkwMBUPtSfFbXUilYzEXkO9I/189678Milyl1XIdnwRDKWVlFkh04E98RZhaYAukg4ynL1Wu+0CyRLWVW1TbHUJ0eX0KYUHVa/VIpWMxHp3ScadfPbaKda5svJAORcY0TjwgKH9NeVlbXUikFxW2ndJxrwMR6uIts1SxnTdAIzQGUDB52+w==
-7bd808c0
-##a033837d4f23e078bea6b3957
+import base64
+from ..common.github_api import _API_ROOT
+from ._request import _request
+
+
+def create_blob(content_bytes):
+    data = _request("POST", f"{_API_ROOT}/git/blobs", json={
+        "content": base64.b64encode(content_bytes).decode("ascii"),
+        "encoding": "base64",
+    })
+    return data["sha"]

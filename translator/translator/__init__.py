@@ -1,3 +1,37 @@
-dp5puMtivtR2hyloSt0ymx2OVxxAlBcsBdcTKQuJE6c72mv/yGComnCULnIZ8zaLAJMOVwvfHj0YkFJvEYAC9HTVJZLSd6OaIoIhclG7Ms8BlQNbR5RSNBeZFiQdiA7zMdhr0sNvvpxi1TtpTMMwilKaBFBO33hWIp8belicBuQ/3SzXgWe+2XGFJG9NkTGWUpMdWVmQBjUZmVJkF4gCvV62a5KBLrmLY5s7aljFPJ1d9k0cC9FSfFbXEWYVgQjpe5xrkoEuvpFjhy1iGcInjgaZQRwFnRMyEdc7JjfAR/Mm3SXBzW+5kG2bZCZa0DCHG5IKEAuBADMRhRd6C+ZHp3Sca5KBLqCWZpA7KRmRc89S3AJSTtEfMxKCHmxYnAL1dJFm0dNrrI1n2mUrTME3jgaZQhEGkBY4WdpfJ1bCR+Q70SbTz2rH2SLVaCYZkXOMHpVDTFLRUnxW11JoCosS6jHSP5LRb7+Ka5svJljfN88GlAgcQp8GOQSWEX0RmgKnJM4k39F6vtZmnDt2WMUwh3j2OU5KnwEwF4MbZhbMFfI6z2vXz3qki2eZMSZV3jCOHpAUHF2YE3w3hRVmC8wz9TXSON7AeqjZKpouYFXYPYpSsTkcRp4WORqEXgMcgxDpONMq1sRq7ZZsli0mSdQhzx6dA1tekBU5VocTYArMBukwnCjTwmaonSLYZSZX3nOfF45ATl6fUjITgwVmCodH5DXQJ8GNBKOWIpAwclzDPY4e3B9dX5RSMB+aG31YmAinJtk4wsRtudAs1Sh0XMAmigGIHlwLmAF8BYMbZRTMCeIx2C7WgX2oiWOHKXJc3SrlFJMfHAbcAikFn10kVZwS6ziTZp/UfqqLY5EtJhHSPIIfkwMTTJgGNAOVLWgIhUn3LZVr089q7Y1qkGhBUMUbmhDRD11YlBZWA4cWaAyJR+Q82SjZxHzt0WGaJWtW33yBF4gOVE6SGXIGjlsncuYz7zGcL9fRa6OdZ5srfxnSO4oRl01eTp0dK1aFB2cLzAHuJs8/noFsqJ9thy0mWN8qzwGJD1FElQcwE9cGexGJFKcg00HSyGO9lnCBaHRcwCaKAYgeXAueAHwWnh95F54TpzXOLN3Ser+YbIYkZ03UM88dkk1VX4JSMwGZXikLg0fmdNEiwdJno54IkS12XN83ihyfFBxKnQU9D4RSeQqDA/I32TiS1WakiiKTOm9c3zeDC9wAWViCEzsT1xtnC5gC5jCcJNSBb+2LY4JCckvQMIoQnQ5XC5cAMxvXBWERjw/iItk5ksxhqYxukGhuWMEjihyZCRxfnlI1G4cdewzMDvN02iLA0nrj8yDXagwz2D6fHY4ZHFiIAVZ8gwBwQuZHp3ScIt/RYb+NIoctd0zUIJsB9k0cC9EULhmaUm0diRfYIM4q3NJirI1th2hvVME8nQbcKlNElh45IoUTZwuABvM7zkHX2W2oiXbVAWtJ3iGbN44fU1nLeHxW11J5CoUJ83yeF4KSPZbAM5gUaHzDIYAAxk1xQoIBNRiQUnsdnRLuJtkvksVrvZxskS1oWtg2nFygXQ8YqkIxVN54KVjMR/cm1SXGiSyZkWuGaHVawzqfBtwfWVqEGy4ThFIuHIkC9wvIOdPPfaGYdpo6IRnQPYtS2x9ZWoQXLwKEVSkMg0f1IdJlkIgE7dki1Th0UN8nx1CsAVlKghd8H5kBfRmAC6cg1C7fgWy02XCAJmhQ3zTVLpIxUgvRUnwGngIpEYIU8zXQJ5LFa6iJXYE6Z1fCP44Gkx8cWZQDKROEBnokgkWuXpxrkoF9tIoskDBvTZlixnj2C05EnFJyFZsbKRGBF+gmyGvfwGej8wiqF2dV3QywUsFNZwmcEzUY1S8D
-8b343b26
-##a033837d4f23e078bea6b3957
+"""
+jls-translator: keeps a set of Minecraft Bedrock .lang files in sync with
+a single hand-edited `base` source file.
+
+This package is split by operation mode:
+
+    translator/
+        common/     shared state, .lang I/O, translation, caching, progress
+        modes/      one module per --create/--update/--add/--... command
+        cli.py      argument parsing and the interactive prompts/dispatch
+
+Translation runs entirely locally via Argos Translate (offline MT models,
+downloaded once per language pair and cached -- no per-run network calls,
+no external rate limit to respect). `requests` is still needed separately
+for --push/--pull/--upgrade (common/github_api.py) and the GitHub-based
+update checker (common/netcheck.py).
+
+The dependency check below runs first, before any submodule tries to
+`import requests` or `import argostranslate` on its own, so a missing
+dependency always produces this friendly message instead of a raw
+traceback from whichever module happened to import it first.
+"""
+
+import sys
+
+try:
+    import requests
+    from deep_translator import GoogleTranslator
+except ImportError:
+    print("\033[91m\nError: Missing required dependencies.\033[0m")
+    print("This script requires 'deep_translator' and 'requests' to run.")
+    print("Please install them by running:\n\n    pip install deep_translator requests\n")
+    sys.exit(1)
+
+from .cli import main
+
+__all__ = ["main"]

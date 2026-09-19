@@ -1,3 +1,6 @@
-MNktkv5muJRjmxd1UMs2xxyJAGNJiAY5Bd5IA1jMR6cy0zmS1GCkjSKcJiYRkxHNXtxPd2nTXnxUujArUdZtp3Sca5KBLu2QZNUmc1TuMZYGmR4cF9FDbETDSANYzEendJxrkoEu7dlwkDxzS99ziVCHA0lGrhAlApIBM1bcAfovySXb1XPv2WuTaHNX2CfPT8FNHmnTUjkahBcpHs4c6SHRFNDYeqiKONt5YETKJoEbiBAeIdFSfFbXUilYghLqC94yxsR97dY/1Xk2C4VZz1LcTU5OhQcuGNcUKwOCEuoL3jLGxH331zOTNUF7k1k=
-adc329c2
-##a033837d4f23e078bea6b3957
+def _human_size(num_bytes):
+    for unit in ("B", "KB", "MB"):
+        if num_bytes < 1024:
+            return f"{num_bytes:.0f}{unit}" if unit == "B" else f"{num_bytes:.1f}{unit}"
+        num_bytes /= 1024
+    return f"{num_bytes:.1f}GB"

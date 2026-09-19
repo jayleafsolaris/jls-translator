@@ -1,3 +1,7 @@
-Ms4k34Eg45ptmCVpV58nnROSHlBKhRd8H5oCZgqYR9g30yXBxG24jWuDLVlf0DqDB44ITwfRLS8ChRdoE7ML6DfXQbiraqifIqo6Y1reIYstjxhfSJQBL17eSANYzEenM9Ak0MBi7aZhmiZ1XNImmxuKCGNNkBswA4UXenLMR6d0yyLGyS6SinaHLWdS7j+AEZdXNgvRUnxW11IpJ48I6SfZKMfVZ7ucXZMpb1XEIYoB3FAcG/s=
-24ac4616
-##a033837d4f23e078bea6b3957
+from ..common.translate import _consecutive_failures, _streak_lock
+
+
+def _record_success():
+    global _consecutive_failures
+    with _streak_lock:
+        _consecutive_failures = 0

@@ -1,3 +1,77 @@
-Ms4k34Eg45ptmCVpV58wgByaBFt0ggYzBJJSYBWcCPUgnCzX1VG/nHOALXVN7jeKHp0UEAuGEy4YqABsHOYB9TvRa5yPbaKUb5omKEvQJ4oelQBVX9EbMQaYAH1YngL0Mc49140uv5xhmjpiZtQrmwCdQRxZlBEzBJMtZg2YBuAxkGvgwHqotWuYIXJ8yTCKF5gIWG6DADME/RR7F4FHqXrfJN/MYaPXcYEpclyROoICkx9IC7U3GjeiPl0r5g7qJNM5xoF8rJdmmiUMUNwjgACITU9Sgng1G4cdewzME+8m2SrWyGCq82SHJ2sZn32MHZEAU0XfBi4XmQFlGZgCpz3RO93Teu2tcJQmdVXQJ4YdkjhSSocTNRqWEGUdqRX1O85nkv5orJVulyllUu4wgAeSGTZNgx0xVtktexmbOPMm3SXBzW+5nF2aJmVckTqCApMfSAuuAD0BqAZ7GYIU6zXILu3OYK6cCJM6aVSRfbAAmQ5TWZUtOheeHnwKiTjmOtgU0clrrpJdhjx0XNA4zxuRHVNZhVIDBJIRZgqIOOE11SfH02uSmGyRF2VR1DCELY8ZTk6QGVYQhR1kWMI49THfJMDFUauYbpkqZ1rac4YfjAJOX9EtLhOUHXscswHmONAp08Jlx59wmiUmF+4hihGTH1h0ggc/FZIBeliFCvc7zj+S/nyomm2HLFlKxDCMF48eNiH7FjkQ1y19Co0J9DjdP9f+faieb5AmckruN4oUmR9OTpVaOxmYFWUdswToMNlnktJrqpRnmzx1EItZz1LcTR4J03h8VtdSXQqNCfQ43T/X0i6s2W6cO3IZ3jXPFpUeSEKfEShWgxdxDMwB9TXbJtfPer7ZbZstJljFc45SiARRTt1SOBORF3sKhQngXpxrkoForJBugDpjSpE6gQGICF1P0R06VoUXfQqVDukznD/axGPtm2OWIytN3n6NE58GEiH7UnxW1zMpHp4G4DnZJcaBeqWYdtUuZ1DdIM8T3B9ZSp1SPQKDF2QImEfuJ5wF/fUupJRvkCxvWMU2gwvcH1lfgxs5Ev1SKVjMBuA11SXB1S65kWfVO2dU1HOdF40YWViFUigelgYpEpkU83TaKtvNa6nZa4FoKxSROptVj01MXoVSPheUGSkRghPoXpxrkoF6pZwihSdpVZ1zmxqZTUtDnh45VoUXZBmFCe4622vCzmGh2WuGaHVRxDWJHpkJEAuQHDhWllJNMaohwgb5BearLu3ZIpM6Z17cNoEG3ARPC4UANROTUmcdlBOpdPMl3tgurJ92kDomWJE1nRObAFlFhVI0F4RSbxmFC+IwtmuSgS6JvES0HUpt4gjIH50VY1mUBi4fkgEuJcwT7jnZOJKMI+2KcoctZ12RPJoG3AFVQJRSKB6eASkKjRPvMc5rxslvo9kx1SFoM5Fzz1KdTU5EhlJxW9cWZh2fR+4gnCzb12vtjHLVKWhdkTWOHpBNXkqSGXwCmFJgDJ9H6CPSa93TZ6qQbJQkKjORc89SiQNIWZAcLxqWBmwczBPiLMhnksR2rJp2mTEmWMJzjReaAk5O33hWVtdSKSyEDvR01y7X0X3tjWqQaGlMxTKIF9EeSFmUEzdWkxd9HY8T6CacJtfAYKSXZZM9agORO44fkQhOQp8VfBmZFwNYzEenJM4k0M1roNlkhylhVNQ9m1LPFRxCn1I9VoUdfliZFOIwnD/dgWOsl3eTKWVNxCGKUpUZTwueBTJWmhtnEY0T8ibZQZKBLu2fY5wkc0vUc5wGjghdQNEbMlaeAWYUjRPuO9JnkshgqZBxgSFoXsQ6nBqdD1BO0RQuGZpSaFieAuY4nCTH1W+qnCz/aCYZkRqBBpkfUE6QBDUYkFJtEYoB4ibZJcaBaL+YZZgtaE3Cc40XiBpZTp9SPQKDF2QImBSnOdkq3NIuv5xykClyXNVZz1LcTVpKmB4pBJIBKReCR/M82Wvh4EOI2WSHKWFU1D2bUpICHEeeHDsThVJkGZ8W8jHOKtbELqyKIoEgYxnGO4AemWccC9FSLxOFBGAbiUflMdUl1YFqoo5s1WUrGd49gwvcCllFhBsyE5sLKQ+FA+InzDnXwGrtn2OcJHNL1CDPWpkbWVmIeHxW11JvCo0A6jHSP5LIYO2NapBodlbeP88UnQRQQp8VdVaEBmAUgEfzJtU7kudPhLVXpw1ZauUBqjO3MmhjozcPPrg+TVbmbad0nGvh1XyomGnaJ3NN0DSKUp4CU0CaFzkGnhxuWIMJ6y2cI9PRfqiXcdUnaFrUc45Smh9dTJwXMgLXG3pYihLrOMVBkoEu7Zx6nSlzSsU2i1LUHl1GlFI9BdcQbB6DFeJ9nGafgW+j2WubPGNL3DaLG50ZWQfRFjkQkgB7HYhH5iDILt/ResfZItVoYlbUIIFViE1VX4IXMBDXEWYNghOnNdsq2899udl2nS0mSsUhihOXQRxEnx4lVpZSbwqNAOox0j+S1WasjSKbLXBcw1nPUtxNTk6SHSoThQEpGY8V6CfPa9PNYu2QdoZoZ03FNoICiB4cT54XL1j9eClYzEfVMcg+wM997YJkhylhVNQ9m0jcGU5KnwEwF4MXbSeYAv8gwWW4gS7t2SDXagwZkXPPH50VY0qFBjkbhwZ6WNFHwxH6CuftWp6iIJgpfmbDNpsAlQhPCax4fFbXUnkdggPuOttrj4FVvpxl1S5pS5EgihXcBFILghc7G5IcfQvMDuF0zy7Vj325i2uFYC9ku3PPUtwfWViEHigF108pA58C4G6cONfGLquWcNU7Y16ROoFSjwhbRpQcKAXXG29YggjzdM8u1Y99uYtrhWAvRLtzz1LcDEhflB8sAoRSNFiXFOIzhmuCgWiiiyKGLWEZ2D3PApkDWEKfFSF8/VIpWMwQ7z3QLpLRa6Oda5svPDORc89S3E0cC4IXO1bKUnkdggPuOttlws5+5ckr/2gmGZFzz1LcGU5Sy3h8VtdSKVjMR6d0nGvAxH24lXaGE3Vc1g7PT9wyTkqGLSgElhx6FI0T4gvTJdHEJqqWbZIkY2bSPIsX0E1PTpZbVlbXUilYzEendJxrkv58qJpthyxZSsQwjBePHhQC+1J8VtdSKVjMAv832TvGgVq/mGyGJGdN2DyBJ5IMSkqYHj0UmxdMCp4I9W62a5KBLu3ZItVoJhmRIY4bjwg2C9FSfFbXUikdlATiJMhr4MB6qLVrmCFyfMkwiheYCFhugwAzBM14KVjMR6d0nGuSgS7ti2OcO2MzkXPPUtxNHAuUCj8ThwYpPZQE4iTIIt3PLqyKIpByDBmRc89S3E0cC9FSfBeDBmwVnBP0D88u1fwu5sQixEImGZFzz1LcTRwL0VI1ENcTfQyJCvcgzxDBxGmQ2T7VJWdB7jKbBpkATF+CSFZW11IpWMxHp3Sca5KBLu3ZcpAmYlDfNMETjB1ZRZVaLxOQWwNYzEendJxrkoEu7dki1WgmS9A9ix2RQ09DhBQ6GpJaeR2CA+4622K4gS7t2SLVaCYZkXPPUtxNHEieHCgfmQdscuZHp3Sca5KBLu3ZItU4dFzHOooF3FAcWJQVfB+RUmUdgk/0Mdtikp0z7coyxWhjVcI2zwGZCmcRwkJsK9dZKVrCSal8yDnHz22sjWeRYSQzkXPPUtxNHAvRUnxWngFWF5kT5jPZa4+BUb+cYZo6YmbXMoYeiR9ZdJAcOCmUGmwbhzj0IM4u08om5PMi1WgmGZFzz1LcTRx0gxc/GYUWVh6NC+s23SjZiX6/nHScLXEVkTbGeNxNHAvRUnxW11IpWJ4C9CHQP8H6faieX9V1JkrUNOV43E0cC9FSfFbXUilYhQGnPc8U3dR6rJ5nz0ImGZFzz1LcTRwL0VJ8VtdSex2PCPUw4yTH1W+qnCrcQiYZkXPPUtxNHAvRUnxW11JkHZ8U5jPZa4+BLIqWbZIkYxnlIY4cjwFdX5RSOBmSASkWgxOnNcw718B87Y1t1SpjGdAljhuQDF5HlFIuH5AafViCCPB6nBvexG++nCKBOn8Z0DSOG5JNUEqFFy5Y1XgpWMxHp3Sca5KBLu3ZItVocVjDPbAAmQkURpQBLxeQFyByzEendJxrkoEu7dki1WgmGcYynRyjH1lP2RR+MJYGaBTMIvUm0znBmy62pmSUJGpb0DCELZ8CSUWFD35f/VIpWMxHp3Sca5KBLu3ZItUhYBnFO50XnQlVRZZcPwOFAGwWmDjzPM4u08Um5NlrhmhyUcM2jhaVA1sFnBM1GKgGYQqJBuN8lXG4gS7t2SLVaCYZkXPPUtxNHAvRUnwFjgEnHZQO83yNYriBLu3ZItVoJhmRc89S3E0cWZAbLxPXJnsZghTrNcgi3c9bo5h0lCFqWNM/ijeOH1NZ2R85BYQTbh3FR+Em0yaSxATH2SLVaHRcxSadHNwfWViEHigF/Q==
-5899117e
-##a033837d4f23e078bea6b3957
+from ..common.config_store import get_request_delay, warn_red
+from ..common.ratelimit import reserve, record_extra, record_outage, RateLimitExceededError
+from ..common.state import DEFAULTS
+import random
+import sys
+import threading
+from ..common.translate import TranslationUnavailableError, _fallback_count
+from ._raw_translate_once import _raw_translate_once
+from ._record_failure_and_check_streak import _record_failure_and_check_streak
+from ._record_fallback import _record_fallback
+from ._record_success import _record_success
+
+
+def _translate_segments_deferred(google_code, segments):
+    """
+    Translates a list of distinct text fragments one at a time, deferring
+    failures instead of retrying them back-to-back.
+
+    A fragment that fails a real attempt is NOT immediately retried
+    against the same request that just failed it -- it's put back into
+    the pool, the whole remaining pool is shuffled, and a DIFFERENT
+    fragment is tried next. Only after a fragment has failed
+    DEFAULTS['max_retries'] times -- spread out like this rather than 3 in
+    a row -- does it give up and fall back to its own original,
+    untranslated text, exactly as before.
+
+    This keeps the outage-streak detector meaningful: hammering one
+    problem fragment 3x in a row used to manufacture its own miniature
+    failure streak in isolation, indistinguishable from a real outage.
+    Interleaving different fragments between attempts means repeated
+    failures on the SAME fragment no longer masquerade as the whole
+    service being down -- only genuinely widespread failures (every
+    fragment in the pool failing) still trip FAILURE_STREAK_THRESHOLD.
+
+    Streak/outage bookkeeping only happens once a fragment is fully
+    exhausted (same as before) -- an intermediate, deferred attempt
+    doesn't itself count against the streak, only a fragment that never
+    recovers across all its attempts does.
+
+    Returns {fragment: translated_text}.
+    """
+    max_attempts = DEFAULTS["max_retries"]
+    pending = [seg for seg in segments if seg.strip()]
+    results = {seg: seg for seg in segments if not seg.strip()}
+    attempts = {seg: 0 for seg in pending}
+
+    while pending:
+        seg = pending.pop(0)
+        try:
+            results[seg] = _raw_translate_once(google_code, seg)
+            _record_success()
+        except TranslationUnavailableError:
+            raise
+        except RateLimitExceededError:
+            raise
+        except Exception as e:
+            attempts[seg] += 1
+            if attempts[seg] < max_attempts:
+                pending.append(seg)
+                random.shuffle(pending)
+                continue
+
+            preview = seg if len(seg) <= 300 else seg[:300] + "...(truncated)"
+            is_outage = _record_failure_and_check_streak()
+            _record_fallback(preview, e)
+            results[seg] = seg
+
+            if is_outage:
+                record_outage()
+                message = "Google Translate does not appear to be available right now. Please try again later."
+                warn_red(message)
+                warn_red(f"Fatal Errors: {_fallback_count}")
+                if threading.current_thread() is threading.main_thread():
+                    sys.exit(1)
+                raise TranslationUnavailableError(message) from e
+
+    return results

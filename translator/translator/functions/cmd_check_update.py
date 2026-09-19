@@ -1,3 +1,72 @@
-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
-b642df62
-##a033837d4f23e078bea6b3957
+from ..common.config_store import warn_red, _RESET, get_release_branch
+from ..common.progress import format_duration
+from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
+import time
+from ..common.netcheck import _BLUE
+from ._branch_suffix import _branch_suffix
+from ._load_version_check_cache import _load_version_check_cache
+from ._parse_version_tuple import _parse_version_tuple
+from ._save_version_check_cache import _save_version_check_cache
+from .fetch_remote_version import fetch_remote_version
+
+
+def cmd_check_update():
+    """
+    Manually, immediately checks GitHub for a newer version -- always hits
+    the network (ignoring DEFAULTS['version_check_interval_minutes']) and
+    prints the result either way. This is `--check` used with no value.
+
+    Gated by its own separate cooldown (DEFAULTS['check_cooldown_seconds'],
+    3 minutes) tracked as "last_manual_check" in the same version-check
+    cache file -- independent of the passive checker's interval/timestamp,
+    so this can't be spammed regardless of what raw.githubusercontent.com's
+    CDN does on its end. The cooldown starts counting from the moment a
+    check is actually attempted (not from a successful result), so a
+    string of offline attempts is throttled too.
+
+    Makes exactly one network attempt (fetch_remote_version, with
+    bypass_cache=True so raw.githubusercontent.com's CDN can't hand back a
+    stale cached response) rather than a separate "are we online" probe
+    followed by the real request, so an offline connection is reported
+    quickly instead of after two stacked timeouts.
+
+    Purely informational: it does NOT change whether the passive/automatic
+    checker keeps running on other commands -- use `--check true` or
+    `--check false` for that.
+    """
+    cache = _load_version_check_cache()
+    now = time.time()
+    cooldown = DEFAULTS["check_cooldown_seconds"]
+    elapsed = now - cache.get("last_manual_check", 0)
+    if elapsed < cooldown:
+        print(f"You can’t check for updates yet! Try again in {format_duration(cooldown - elapsed)}")
+        return
+
+    cache["last_manual_check"] = now
+    _save_version_check_cache(cache)
+
+    print(f"Checking for updates{_branch_suffix()}...")
+
+    remote = fetch_remote_version(timeout=3.0, bypass_cache=True)
+    now = time.time()
+
+    if not remote:
+        warn_red("Couldn't reach GitHub - no internet connection, or GitHub is unreachable.")
+        return
+
+    cache["remote_version"] = remote
+    cache["last_checked"] = now
+    _save_version_check_cache(cache)
+
+    try:
+        is_newer = _parse_version_tuple(remote) > _parse_version_tuple(SCRIPT_VERSION)
+    except Exception:
+        is_newer = None
+
+    if is_newer:
+        print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote}{_branch_suffix()} "
+              f">> run --upgrade to update.{_RESET}")
+    elif is_newer is False:
+        print(f"Up to date: v{SCRIPT_VERSION} is the latest version.")
+    else:
+        print(f"Current version: v{SCRIPT_VERSION} (latest on GitHub: v{remote}, couldn't compare).")

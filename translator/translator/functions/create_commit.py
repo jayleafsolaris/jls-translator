@@ -1,3 +1,11 @@
-Ms4k34Eg45ptmCVpV580hgaUGF50kAI1Vp4feReeE6cL/Rv7/lyCtlb/LnRW3HPBLY4ITV6UAShWnh95F54TpwvOLsPUa76NCP9CYlzXc4wAmQxITq4RMxuaG31QgQL0J90s140uuYtnkBd1UdB/zwKdH1lFhS0vHpZbM3LMR6d02CrGwC7w2V2HLXdM1CCbWt49c3ilUHBWkVByJ603zgvuBP31c+Kea4FnZVbcPoYGj08QC5sBMxjKCQNYzEendJxrkoNjqIpxlC9jG4tzghePHl1MlF5WVtdSKVjMR6d2yDnXxCz32XaHLWNmwjuOXvZNHAvRUnxW11B5GZ4C6SDPaYiBVb2YcJAmcmbCO44v0GccC9FSIV/9UilYzBXiIMk53IFqrI1jrmp1UdBxsng=
-50e67f2b
-##a033837d4f23e078bea6b3957
+from ..common.github_api import _API_ROOT
+from ._request import _request
+
+
+def create_commit(message, tree_sha, parent_sha):
+    data = _request("POST", f"{_API_ROOT}/git/commits", json={
+        "message": message,
+        "tree": tree_sha,
+        "parents": [parent_sha],
+    })
+    return data["sha"]

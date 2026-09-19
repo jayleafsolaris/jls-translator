@@ -1,3 +1,61 @@
-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
-d2375915
-##a033837d4f23e078bea6b3957
+"""
+Placeholder/token protection (so color codes and %1$s-style format specs
+survive translation untouched) and the American -> British spelling
+conversion used for en_GB.
+"""
+import re
+from .state import TOKEN_PATTERN
+_SPLIT_PATTERN = re.compile(f"({TOKEN_PATTERN.pattern})")
+_KEY_REF_RE = re.compile(r"\{([^{}]+)\}")
+BRITISH_SPELLINGS = {
+    "color": "colour", "colors": "colours", "colored": "coloured",
+    "coloring": "colouring", "colorful": "colourful", "discolor": "discolour",
+    "discolored": "discoloured", "favorite": "favourite", "favorites": "favourites", 
+    "favor": "favour", "favors": "favours", "favored": "favoured", "favoring": "favouring",
+    "honor": "honour", "honors": "honours", "honored": "honoured",
+    "honoring": "honouring", "honorable": "honourable", "humor": "humour", 
+    "humors": "humours", "humored": "humoured", "humorous": "humourous",
+    "flavor": "flavour", "flavors": "flavours", "flavored": "flavoured",
+    "flavoring": "flavouring", "behavior": "behaviour", "behaviors": "behaviours",
+    "behavioral": "behavioural", "neighbor": "neighbour", "neighbors": "neighbours",
+    "neighborhood": "neighbourhood", "neighborhoods": "neighbourhoods",
+    "labor": "labour", "labors": "labours", "labored": "laboured",
+    "rumor": "rumour", "rumors": "rumours", "armor": "armour", "armors": "armours", 
+    "armored": "armoured", "harbor": "harbour", "harbors": "harbours",
+    "vapor": "vapour", "vapors": "vapours", "savior": "saviour", "saviors": "saviours",
+    "organize": "organise", "organizes": "organises", "organized": "organised", 
+    "organizing": "organising", "organization": "organisation", 
+    "organizations": "organisations", "realize": "realise", "realizes": "realises", 
+    "realized": "realised", "realizing": "realising", "recognize": "recognise", 
+    "recognizes": "recognises", "recognized": "recognised", "recognizing": "recognising",
+    "apologize": "apologise", "apologizes": "apologises", "apologized": "apologised", 
+    "apologizing": "apologising", "customize": "customise", "customizes": "customises",
+    "customized": "customised", "customizing": "customising", "customizable": "customisable",
+    "analyze": "analyse", "analyzes": "analyses", "analyzed": "analysed",
+    "analyzing": "analising", "catalog": "catalogue", "catalogs": "catalogues",
+    "dialog": "dialogue", "dialogs": "dialogues", "theater": "theatre", 
+    "theaters": "theatres", "center": "centre", "centers": "centres", 
+    "centered": "centred", "centering": "centring", "fiber": "fibre", 
+    "fibers": "fibres", "defense": "defence", "defenses": "defences",
+    "offense": "offence", "offenses": "offences", "license": "licence", 
+    "licenses": "licences", "gray": "grey", "grays": "greys", "grayed": "greyed",
+    "grayscale": "greyscale", "canceled": "cancelled", "canceling": "cancelling",
+    "traveled": "travelled", "traveling": "travelling", "traveler": "traveller", 
+    "travelers": "travellers", "modeled": "modelled", "modeling": "modelling",
+    "jewelry": "jewellery", "aluminum": "aluminium", "skeptic": "sceptic", 
+    "skeptics": "sceptics", "skeptical": "sceptical", "mustache": "moustache", 
+    "mustaches": "moustaches", "mold": "mould", "molds": "moulds", 
+    "molded": "moulded", "molding": "moulding", "plow": "plough", "plows": "ploughs",
+}
+_WORD_PATTERN = re.compile(r"[A-Za-z]+")
+from ..functions._match_case import _match_case
+from ..functions._protect import _protect
+from ..functions._restore import _restore
+from ..functions.apply_punctuation_patch import apply_punctuation_patch
+from ..functions.apply_token_patch import apply_token_patch
+from ..functions.join_segments import join_segments
+from ..functions.punctuation_only_diff import punctuation_only_diff
+from ..functions.resolve_key_references import resolve_key_references
+from ..functions.split_segments import split_segments
+from ..functions.to_british import to_british
+from ..functions.tokens_only_diff import tokens_only_diff

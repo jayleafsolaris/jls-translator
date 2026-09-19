@@ -1,3 +1,4 @@
-MNktkv5jrIpp3TxpUtQ9xkj2TRwL0Rs6VpsXZ1CYCOwx0mKSnTPtwTj/aCYZkXPPUtwfWV+EADJW1VgrWMZH6zHSY8bOZaiXK/9oJhmRIYoGiR9SC5dQJwKYGWwWt12zCcGpMgd1uZZpkCZdFIVpsg/eZw==
-de1d1d29
-##a033837d4f23e078bea6b3957
+def _mask(token):
+    if len(token) <= 8:
+        return "*" * len(token)
+    return f"{token[:4]}…{token[-4:]}"

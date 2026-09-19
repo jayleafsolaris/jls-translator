@@ -1,3 +1,5 @@
-MNktkv59oZZ1qixjVdAqxx6ZG1lH2EhWVtdSKVrORcU13yDdx2jtnWeZKX8Z1zydUp1NW0KHFzJWhB5mD8wL4iLZJ5KJP+CQbJEtflzVesNSmAJJSZ0bMhHXF2gbhG2ndJxr3sR4qJUilCZiGdIynwKZCRxYnlI9VpUTbVieEul02CTX0mDqjSKGPGdV3XOJHY5NXUmCBy4S1x5sFosT7yecJNSrLu3ZIoEha1yfc94B0E0OWN1SaAXbUidWwkfkNcw718UurI0iw3h1F5NxzXjcTRwLgxcoA4UcKRWFCa9ijGWCjS7/2SjfaC5V1CWKHtxAHBrYW1Y=
-b4318f79
-##a033837d4f23e078bea6b3957
+def _slow_delay(level):
+    """Backoff delay for a given slow level (1-indexed), doubling each
+    level and capped so a bad run doesn't stall for absurd lengths of
+    time. 1s, 2s, 4s, ... capped at 60s."""
+    return min(60.0, 2 ** (level - 1))

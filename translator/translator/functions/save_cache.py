@@ -1,3 +1,7 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8XtwhfWW2Jx0xsiElWLMy1xD9H/f+TYKsTKEXS3jjGKog0E1jaL4/DD+7N1YzqT7YGf0Z+eRcx5BvhSd0TZE5nB2SZzYhlRc6VoQTfx2zBOY31C6aw2++nF2DKWpM1CDGSPZNHAvRAj0Cn1I0WLwmxB/9DPf+SoSrItpoQnz3Ero+qD5nCZITPx6SLW8RgAKlCbZrkoEuvZh2nWZxS9gnii2ICERf2RgvGZlcbQ2BF/R83irBxFG7mG6ALXUVkTaBAYkfWXSQAT8fnk9PGYAU4nicItzFa6ONP8dhKhnUPYwdmARSTMxQKQKRXzFaxW0=
-2714b5f4
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
+import json
+
+
+def save_cache(base_values):
+    path = PACKAGE_DIR / DEFAULTS["cache_file"]
+    path.write_text(json.dumps(base_values, ensure_ascii=False, indent=2), encoding="utf-8")

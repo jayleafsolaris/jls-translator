@@ -1,3 +1,3 @@
-MNktksthpJddhi1hVNQ9mwHUHV1ZhQF1TP1SKVjMRaV29SXExHy+nCKaLiZKwT+GBqMeWUycFzIChFogWJsP4jqcLNvXa6PZKp4haF2dc4MbiAhOSp0tKBOPBiBYnAbuJs9lkIMsx9ki1Wh0XMUmnRzcTx4Fmx01GN8RZhaYAukgnC3d0y6S1SKWJ2hN1D2bUpUDHFuQACgF3ng=
-aa5d0fed
-##a033837d4f23e078bea6b3957
+def join_segments(parts):
+    """Inverse of split_segments() when given (kind, literal_text) pairs."""
+    return "".join(content for _, content in parts)

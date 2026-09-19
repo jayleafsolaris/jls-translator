@@ -1,3 +1,17 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8XtwhfWW2Jx0xsiElWLMy1xD9H/f+TYKsTKEXS3jjGKog0E1jaL4/DD+7N1YzqT7YGf0Z+eRcx5BvhSd0TZE5nB2SZ1pZnh98WJsdaByzBOY31C6SyGO9lnCBaGpW0DewEZ0OVE77eFYSkhQpC40R4gvfJN/RZ6GcXZ4tfxHaNpZbxmccC9FSflTVeClYzEfENd8j14F6pZwikzpjStlzwl+fAlFbmB45VpwXcFifCKd5kS/XwmGgiWuZLSZa0D3PAJkOU12UAHwfg1JlGZgC9Xq2a5KBLpiXbpwjYxnFO4pS0UBJW5UTKBPXEWYNghOrdMgj29Iuppx71SZjT9QhzxWZGU8LhgA1AoMXZ1iFCfM7nCnT0mvH2SLVaG9NwjaDFNxAEQuTEy8T1x1nFJVH5DXOOdvEfe2YIpMkZ16RPo4AlwhOC9kBORPXHWsemRTkNcgunMh9kpptmDhvVdQ3xl72TRwL0QEzVoMabFiPBuQ82Wvb0i65kWfVO2lV1HOcHYkfX07RHTpWgwB8DIRH7zHOLpyBR6vZa4FvdRndPJwG0E1IQ5R4fFbXUmoXgRfuONkvksNvvpwililoHsVzjRfcH1lIngQ5BJIWJ3LMR6d0nmmQqy7t2SKWKWVR1HPSUpACXU+uET0VnxchUeZHp3ScKNPCZqiiXbYHS2n4H6ottyhldLwzDj2yIFRY0UfsMcVl2sR25dAI1WgmGdIyjBqZMkxKhRp8S9ciSDunJsAR4w/78y7i2UawDkds/Qe8Kd4OXUiZFwMQnh5sWrFtp3Sca9HAbaWcXYUpclGfJJ0biAhjX5QKKF6dAWYWwgPyOcw4msJvrpFn2WhjV8ImnRejDE9ImBthMJYeeh3AR+462C7c1TP/0C7VLWha3jeGHJtQHl6FFHFO1VsD
-cfbedd69
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
+import json
+from .load_cache import load_cache
+
+
+def save_compile_key(key):
+    """
+    Cache the fresh --compile key so --decompile can recover it later.
+    Unlike the --update count, this key never gets written into base
+    itself -- base only carries a flag marker (see obfuscate.is_compiled),
+    so the cache is the sole source of truth here. If it's lost, the
+    compiled base can't be recovered.
+    """
+    cache = load_cache()
+    cache[_COMPILE_KEY_MARKER] = key.hex()
+    cache_path = PACKAGE_DIR / DEFAULTS["cache_file"]
+    cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")

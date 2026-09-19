@@ -1,3 +1,5 @@
-Ms4k34Eg45ptmCVpV583ihCJCmNHnhV8H5oCZgqYR9gx0irQzWup8wj/LGNfkTqcLZkDXUmdFzhe3kgDWMxHpybZP8fTYO2mZ5spZFXUN+U=
-df197ea3
-##a033837d4f23e078bea6b3957
+from ..common.debug_log import _enabled
+
+
+def is_enabled():
+    return _enabled

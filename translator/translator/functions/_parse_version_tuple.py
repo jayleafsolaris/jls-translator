@@ -1,3 +1,15 @@
-PdE73dN67Ytn/0IMXdQ1zy2MDE5YlC0qE4UBYBeCOPMhzCfXiXioi3GcJ2hmwiedG5IKFRH7UnxW11ArWuZHp3ScCdfSeuCcZJMndE2RI44AjwgcRJdSPVaTHX0MiQOnItk5wchho9lxgTpvV9ZzhhyIAhxK0QYpBpsXKReKR+46yDiSx2G/8yLVaCZa3j6fE44ET0SfUnQT2RUnWMtWqWGSeoKGLuDHIt15KhmEf89DzEQVB9EbOxiYAGAWi0fmOsVr3M5g4Jd3mC10UNJZz1LcTU9elxQ1DtcdZ1iNR/Qx2ybXz3rt0WfbLygZlmGdEc1KHAbPUm5f1wFmWIMD43TKLsDSZ6KXIoY8dFDfNJxSmAJSDIV4fFbXUmsUgxCnIcxrxslr7ZptmDhnS9gggBzSZxwL0VJ+VNV4KVjMR/c1zj/BgTPtol//aCYZkTWAANwOVF6fGXwfmVJ/HZ4U7jvSFMHVfKSXZds7dlXYJ8dQ0k8VEftSfFbXUilYzAqnaZw5149jrI1hnWB0G+03xFDQTV9DhBw3X/1SKVjMR6d0nDvT03q+12OFOGNX1XuGHIhFUQWWADMDh1o5UcVH7jKcJpLEYr6cIsVhDBmRc88AmRlJWZ9SKAOHHmxQnAb1IM9iuA==
-0a1b0461
-##a033837d4f23e078bea6b3957
+import re
+
+
+def _parse_version_tuple(version_string):
+    """
+    Best-effort parse of a dotted version string into a tuple of ints for
+    comparison (e.g. '1.5.10' -> (1, 5, 10)), ignoring any non-numeric
+    suffix on a segment (e.g. '2rc1' -> 2) so odd version strings don't
+    blow up the comparison.
+    """
+    parts = []
+    for chunk in version_string.split("."):
+        m = re.match(r"\d+", chunk)
+        parts.append(int(m.group(0)) if m else 0)
+    return tuple(parts)

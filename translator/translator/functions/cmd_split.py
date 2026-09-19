@@ -1,3 +1,37 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJ4bwqDCqd6kijdzGOilyyGLWVN2DyBAdwEUVueAChWhxN7C4k48ybZLp6BaKSXZqosc0ndOowTiAhjWJgQMB+ZFXpUzBD1Pcgu7dV8qJwu1TtnT9QMnBefGVVEny04F4MTAx6eCOp0kmXRzmOglmzbO3JYxTbPG5EdU1mFUhgzsTNcNLg0jV62L9fHLq6UZqo7dlXYJ8dbxmccC9FSPheEF1YIjRPvdIFrwdVvuZwspgtUcOEHsDa1PxwE0TYZMLYnRSy/PKU23TjX/mKsl2XXFQwZkXPPG5pNUkSFUj4XhBdWCI0T73rVOO3HZ6GcKtxyDBmRc89S3E0cW4MbMgLfFCs2g0egL/gO9OBbga1Rrm9kWMI2sB6dA1sMrA97VpEbZR3MAegh0i+SjCPtl22BIG9X1nObHdweTEeYBnJU3ngpWMxHp3Sca8DEeriLbP9CJhmRc5sXhBkcFtEQPQWSLXkZmA+pJtkq1v56qIF23S1oWt43hhybUB5ehRRxTtVbA1jMR6cgzjKIqy7t2SLVaCYZwzyABtBNUUqDGTkEhFI0WJwG9SfZFMbTa6jRdpAwchC7c89S3AhESJQCKFahE2UNiSL1JtM5ksB97Zw4/2gmGZFzz1LcHU5CnwZ0ENUxaBbLE6cnzCfb1TTtgmeIai8zkXPPUtxNHAuDFygDhRwDcsxHp3TVLZLPYbnZcJonchfSO4YemB9ZRct4fFbXUilYzEf3JtUlxolo77dt1W8lGpZzhxedCVVFlgF8EJgHZxzMDul0mzD25EiMrE6hG10e0zKcF6MBXUWWVQEL0FIkVcwJ6CDUItzGLrmWIoY4alDFfc1b9k0cC9FSfFbXAGwMmRXpXrZrkoEuqYxykDsmBJE1hhyYMlhegR41FZYGbCefDuU41SXV0ia/lm2BYQwZkXPPG5pNWF6BFy9M/VIpWMxHp3ScO8DIYLnRILYpaB7Fc5wCkARIEdEBNRSbG2cfzA/iNdgi3MYmvtAilidqVdg3ilKTAxxfmRd8BZYfbFiKCOsw2TmSz2+gnDjXYQwZkXPPUtxNHE2eAHwS1xtnWIgS9zHPcbiBLu3ZItVoJhmRc88CjgRSX9kUflbXCW0Fzk6NdJxrkoEu7dlwkDxzS99Z5VLcTRxJkAE5KYcTfRDCEuk41SXZiSfH2SLVaGRYwjawFpUfHBbRASgXgxcnK681zgToFPboXO3WIrENQHjkH7shp09eSoIXAxqWHG5asW2ndJxr0MB9qKZmnDooVNo3hgDUHV1ZlBwoBcomew2JS6cxxCLB1VGikj+hOnNcmFnPUtxNWkSDUj8enh5tWIUJpybTJMaPbaWQbpE6Y1eLWc9S3E0cC9FSKwSeBmwnmBXiMZQo2shiqdUilyl1XO43hgDcQhxImRswEtkUZhSIAvV9tkGSgS7timODLVlK1DCbG5MDY0+QBj1ehR1mDMIE7z3QL8DEYOHZb5Q6bVzDIMZ43E0cC4EANRiDWis8gwnidZwJ09Jr99lRhSRvTZN65Q==
-ff665481
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.sections import parse_tree, find_duplicate_siblings, write_tree, save_section_data
+from ..common.state import DEFAULTS
+
+
+def cmd_split():
+    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    if not base_path.is_file():
+        print(f"No '{DEFAULTS['base_lang']}' file found -- nothing to split.")
+        return
+
+    text = base_path.read_text(encoding="utf-8")
+    try:
+        root, markers = parse_tree(text)
+    except ValueError as e:
+        print(f"Can't split: {e}")
+        return
+
+    if not root.children:
+        print(f"No '##' headings found in '{DEFAULTS['base_lang']}' -- nothing to split.")
+        return
+
+    dupes = find_duplicate_siblings(root)
+    if dupes:
+        print("Can't split: sibling heading(s) collide on the same folder name:")
+        for d in dupes:
+            print(f"  {d}")
+        return
+
+    base_path.unlink()
+    base_dir = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    base_dir.mkdir(parents=True, exist_ok=True)
+    for child in root.children:
+        write_tree(child, base_dir / child.folder)
+
+    save_section_data(root.children, markers)
+    print("Done! Base: Split")

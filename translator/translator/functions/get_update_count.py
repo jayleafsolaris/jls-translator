@@ -1,3 +1,32 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJ4bwqDCqd6kijdzGOilyyZKWhe7jqAUpUATESDBnwGlgB6HbML5jrbZ5LWfKSNZ6okZ1fWf88BiB9VW64HLBKWBmwnjwjyOsgU38B8ppxwhmQmZsQjixOICGNIngcyAqgRZhWBAukg4zvAxGikgS7VOmNY1QyaApgMSE6uETMDmQZWHp4I6gveKsHEBKuLbZhoKBfSPIIfkwMSWIUTKBPXG2QIgxXzdOwK8epPirxdsQFUFZEXqjS9OHB/ol58OrY8Ti2tIMIHkGvt9F6JuFawF0V25B27LbEsbmC0IHBWqDFGNbwuyxHjAPf4UYC4UL4NVDPXIYAf3ENQRJAWAxWWEWEdzA7qJNM5xoFiophmqitnWtk25RSOAlEL3wUuH4MXVg2cA+Yg2RTRznujjSKcJXZWwyfPBY4ESE6uBywSlgZsJ48I8jrIQbiraqifIpItcmbEI4sTiAhjSJ4HMgLfWzNyzEendJ5pkKsu7dkipy11Vt0ligHcGVRO0REpBIUXZwzMSqohzC/T1Wvtmm2AJnIZ1zydUogFVVjRED0FklJvEYACqXTsOdfHa7+KIoEgYzORc89SkQxOQJQAfBWYH2QdghOnJ8gkwMRq7Zh21TxuXJExgAaIAlELnhR8FJYBbEPMDuF01T+V0i6gkHGGIWhekSeHF44IHEmEBlZW11IpC5gO6zicO8DEfaiXdtUhaBnFO4pSnwxfQ5RefAKfFykbjQTvMdhr0c57o40inDsmS9R+jhaYCFgLhR18FJYBbFieDuA8yEGSgS7tmHWUMSYRwjaDFNEFWUqdGzIR3lJ6F8wT7zGcP8XOLr6NY4xob1eRIJYcn0EcSp8WfAKfE31YngLkO8ouwMRq7Y9jmT1jM5Fzz1KVHhxZlAYpBJkXbVbMNeIgyTnc0i792WuTaGhc2CeHF45NVEqCUj1WhRdqF54Dpzvaa9vVIMfZItVoJBuTWc9S3E1eSoIXAwaWBmFY0Uf0IN0/149djqtLpRxZffgBz13cKXltsCcQIqQpKxqNFOIL0CrcxiyQ8yLVaCZb0CCKLZAEUk6CUmFWhxN7C4k46zXSLJrDb76cXYUpclGYWc9S3E1aWZ4fAxSWAWxY0Uf1Md0v7dR+qZh2kBdlVsQ9my2aH1NGrhA9BZJaaxmfAtg41SXX0ifH2SLVaG9fkTWdHZEyXkqCF3wfhFJnF5hHyTvSLoirLu3ZItVoJhnDNpsHjgMcTYMdMSmVE3od5m2ndJxr0cBtpZwiyGhqVtA3sBGdDlRO2VtWVtdSKRuNBO8x2BTAwHntxCKWKWVR1H2IF4hFY36hNh0isi1KN7kp0wvxCuDqS5/QCNVoJhnYNc8RnQ5UTpUtLheAUmALzAnoIJwF3c9r9/Mi1WgmGZFzzwaOFAYh0VJ8VtdSKVjMR6d03yTHz3rtxCKcJnIR0jKMGpkJY1mQBXV811IpWMxHp3TZM9HEfrnZKqExdlz0IZ0djkEcfZAeKROyAHsXnk69XpxrkoEu7dki1WgmGdI8mhyITQELwXh8VtdSKVjMR/Am1T/X/nu9nWOBLVla3iaBBtQOU16fBnV811IpWMxHp3TOLsbUfKPZYZo9aE27Wc9S3E1OToUHLhjXQgM=
-3218e1a9
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.lang_io import parse_lang, write_lang, strip_update_count_markers, _update_count_comment_prefix, read_update_count_from_base
+from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
+from .load_cache import load_cache
+from .write_update_count import write_update_count
+
+
+def get_update_count():
+    """
+    Resolves the current --update count for this base file. Prefers the
+    marker comment stored at the bottom of base; if it's missing there but
+    still present in the cache, the cached count is re-added to base right
+    away (self-healing) so the two stay in sync, and that recovered value
+    is returned. Returns 0 if neither has a record of it.
+    """
+    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    base_lines = parse_lang(base_path)
+    from_base = read_update_count_from_base(base_lines)
+    if from_base is not None:
+        return from_base
+
+    cache = load_cache()
+    cached_raw = cache.get(_UPDATE_COUNT_MARKER)
+    if cached_raw is not None:
+        try:
+            count = int(cached_raw)
+        except (TypeError, ValueError):
+            count = 0
+        write_update_count(count)
+        return count
+
+    return 0

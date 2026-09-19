@@ -1,3 +1,105 @@
-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
-8eab83ae
-##a033837d4f23e078bea6b3957
+"""
+Network usage rate limiting for translation requests.
+
+Tracks bytes sent to (and received from) Google Translate as a SLIDING
+window log -- each request is logged as (timestamp, bytes), and "usage
+this hour" / "usage today" is always the sum of whatever's still inside
+the trailing 60-minute / 24-hour window. This is deliberate: with a fixed
+bucket that only resets at a fixed clock boundary, running --update
+in the middle of an existing window doesn't move the reset countdown at
+all (it just adds to a bucket that resets whenever it resets, regardless
+of when the most recent activity happened) -- which reads as "the
+countdown is frozen." With a sliding window anchored to the *most
+recent* logged request (see _next_reset_epoch()), every new request
+pushes the reset countdown further out, so it always reflects how
+recently the tool was actually used instead of a timestamp frozen
+from whenever the state file was first created.
+
+Hard caps (bytes, KB = 1000 bytes) are LEARNED, not hardcoded -- there's
+no documented real quota for the unofficial endpoint deep_translator
+hits, so the only trustworthy way to know how much can actually be sent
+is to watch what actually happens:
+
+  - GROW the cap when a whole hour/day window finishes with real demand
+    (usage got pushed close to the current ceiling) and nothing went
+    wrong -- i.e. a bigger job needed more room and Google didn't
+    object, so there was headroom to spare. This is what makes the cap
+    track actual job sizes automatically, without reading any job
+    estimate directly: a bigger job naturally produces more usage,
+    which naturally earns more room over time.
+  - SHRINK the cap hard when a genuine outage was detected during the
+    window (see translate.py's FAILURE_STREAK_THRESHOLD and this
+    module's record_outage()) -- real evidence Google itself pushed
+    back, as opposed to merely bumping into our own self-imposed
+    ceiling (which is expected and not penalized).
+
+See _adjust_cap()/_maybe_reroll_caps() below for the actual mechanics.
+The _INITIAL_*_CAP_RANGE constants only seed a brand-new state file
+before anything has been learned yet; _MIN_*_CAP/_MAX_*_CAP are sanity
+backstops so growth/shrinkage can't run away to a degenerate value, not
+ongoing hardcoded limits themselves.
+
+A per-run "job profile" (how many bytes --create/--update still expects
+to send) additionally lets the cooldown between individual requests
+adapt within a single run: if the remaining work fits inside what's left
+of the current budget, the cooldown stays at the normal configured
+request delay; if it's on track to blow past that budget, the cooldown
+stretches out proportionally.
+
+On top of the automatic caps, --usage --24hr <hours> lets you manually
+force a hard cooldown (1-72 hours) that blocks every translation request
+until it lifts, independent of the hourly/daily budgets.
+"""
+import json
+import random
+import threading
+import time
+from .state import PACKAGE_DIR
+from .config_store import get_request_delay, warn_red
+from . import debug_log
+_INITIAL_HOURLY_CAP_RANGE = (100_000, 1_500_000)
+_INITIAL_DAILY_CAP_RANGE = (4_500_000, 5_000_000)
+_MIN_HOUR_CAP = 150_000
+_MAX_HOUR_CAP = 1_500_000
+_MIN_DAY_CAP = 4_500_000
+_MAX_DAY_CAP = 5_000_000
+_GROWTH_FACTOR = 1.15
+_SHRINK_FACTOR = 0.5
+_GROWTH_UTILIZATION_THRESHOLD = 0.6
+_JITTER_FRACTION = 0.05
+_HOUR_SECONDS = 1.5 * 60 * 60
+_DAY_SECONDS = 24 * 60 * 60
+_MANUAL_COOLDOWN_MIN_HOURS = 1
+_MANUAL_COOLDOWN_MAX_HOURS = 72
+_MAX_COOLDOWN_MULTIPLIER = 20
+_STATE_FILE = PACKAGE_DIR / ".ratelimit_state.json"
+_LOCK = threading.Lock()
+_job_remaining_keys = 0
+_job_remaining_bytes = 0
+_cache_lock = threading.Lock()
+_cached_report = None
+_cached_report_time = 0.0
+_CACHE_TTL_SECONDS = 1.0
+class RateLimitExceededError(RuntimeError):
+    """Raised when the daily cap, or a manually-set cooldown, blocks a
+    request outright. Callers should treat this like an outage: save
+    progress and stop, so --continue can resume once it lifts."""
+    pass
+from ..functions._adaptive_cooldown import _adaptive_cooldown
+from ..functions._adjust_cap import _adjust_cap
+from ..functions._default_state import _default_state
+from ..functions._format_secs import _format_secs
+from ..functions._load_state import _load_state
+from ..functions._maybe_reroll_caps import _maybe_reroll_caps
+from ..functions._next_reset_epoch import _next_reset_epoch
+from ..functions._now import _now
+from ..functions._prune_log import _prune_log
+from ..functions._save_state import _save_state
+from ..functions._usage_within import _usage_within
+from ..functions.clear_manual_cooldown import clear_manual_cooldown
+from ..functions.record_extra import record_extra
+from ..functions.record_outage import record_outage
+from ..functions.reserve import reserve
+from ..functions.set_job_profile import set_job_profile
+from ..functions.set_manual_cooldown import set_manual_cooldown
+from ..functions.status_report import status_report

@@ -1,3 +1,28 @@
-PdE73dN67ZZx/yFrSd4hm1KPBUlfmB5WEIUdZFjCOOQ70j/TyGC+pnKHJ3Jc0ieKFtwEUVueAChWqBFmFpgG7jrPFMLTYbmcYYEtYjO7WYsXmk1jSZARNwOHLWgWiDjkONkqwIl9v5pdkSF0FZExjhGXGEx0lRsuWtcCexeYAuQg2S+bmwTt2SLVaiQbu3PPUtw/WUiEAC8fgRdlAcwK6CLZa9fXa7+Adp0haF6RJoEWmR8cWIMRAxKeACkRghPodN4q0cp7vaZmnDoqGfQLrDesORxKnwtWVtdSKR6FC+J00zmSxWe/nGGBJ3RAkSSHHY8IHEmQATkYlh9sWIUUpz3Sa9LRfKKNZ5Y8Y13Rc8Jf3BlURIIXfBeFFykUiQHzXpxrkoFrtZhhgSR/GcY7igCZTUhDlAt8F4UXJViNE6cj1CrGxHioiyKRLXZN2XObGpkUHEeYBDla1wFmWJwC9SfVOMbEYLnzItVoJkrFMpsX3EVfSpIaOVrXAnsXixXiJ89nksJho59rkmEmSsQhmRuKCE8Lgxc7F4UWZR2fFKc72mvFyWeukSKTJ2pd1CHlUtxNHEKFUjQXhwJsFp9H8zucJ9vXa+2QbNVgYxfWfc8RkwBRRJ9dPxeUGmxWhhToOpVlkuAuqZBwkCtyVsMqzwaUDEgh0VJ8Vp4Geh2AAac9zyWV1S6s2XKHJ3Jc0ieKFtwDXUaUUj4Dg1JqF4IT5j3SOJLALr2LbYEtZU3UN88WmR5fTp8WPRiDUmAL5kendJw518J7v4pnkWhvV8U8zwCdGVROg1IoHpYcKRWDEeIwnDzazmKoimOZLSoZwjzPBpQIHFuDHSgTlAZsHMwB7jjZQZKBLu2QbIYhYlyROptSjxldUoJSLAODUn4QhQvidNk919N3uZFrmy8mWMM8mhyYTVVf0QEoH5seKR+JE/R0zi7CzW+unGbbQiYZkXPNUN5nHAvRUjoZhVJsFpgV/nTVJZLOfeOVa4Y8YlDDe5wAnzJYQoNbZnzXUilYzEendNUtksRguYt71SFoGcEhgAaZDkhOlUhWVtdSKVjMR6d0nGuSwmGjjWubPWMzkXPPUtxNHAuCUmFWmAEnCI0T73rWJNvPJr6LYaosb0udc4ociB9FAvtSfFbXUilYzAOnaZwkwY9+rI1q2yJpUN97jROfBklbrhY1BNtSbBaYFf59tmuSgS7t2SLVIWAZ3iDBAp0ZVAWYATgfhVp6UcwG6TCcFNHOYLmYa5s7WUnDPJsXnxlZT9kBcFaHAGYMiQTzMdhiiKsu7dki1WgmGZFzz1KTHhJGkBk5Ep4AelCIS6cxxCLB1VGikj+hOnNcmFnPUtxNHAvRUnxW11JWGo0E7CHMFNPPapKabpApdBHCf88W0E1MWZ4GORWDF21R5kendJxrkoEu7dki1SFgGd88m1KTHhJHmAEoEp4AIQvFXY10nGuSgS7t2SLVaCYZkXPPHY9DTkaVGy5ehFsDWMxHp3Sca5LEYr6cOP9oJhmRc89S3E0cC9EBNAODG2VWgQjxMZQ4noFq5PM=
-42deb4b3
-##a033837d4f23e078bea6b3957
+import os
+import shutil
+from ._contains_protected import _contains_protected
+
+
+def _backup_and_clear(src_dir, backup_dir, protected):
+    """
+    Recursively move everything under src_dir into backup_dir, EXCEPT any
+    file or directory whose basename is in `protected` -- those are left
+    exactly where they are, at whatever depth they live, so persistent
+    state (cache, progress, config) survives regardless of which folder
+    it happens to live in (e.g. common/cache.json). A directory that
+    itself isn't a protected name but contains a protected descendant is
+    recursed into rather than moved wholesale, so the protected file
+    inside it stays put while everything around it still gets replaced.
+    """
+    for entry in os.listdir(src_dir):
+        if entry in protected:
+            continue
+        s = os.path.join(src_dir, entry)
+        d = os.path.join(backup_dir, entry)
+        if os.path.isdir(s) and _contains_protected(s, protected):
+            os.makedirs(d, exist_ok=True)
+            _backup_and_clear(s, d, protected)
+            if not os.listdir(s):
+                os.rmdir(s)
+        else:
+            shutil.move(s, d)

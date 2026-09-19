@@ -1,3 +1,46 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJ4bwqDCqd6kijdzGOilyyGPGdN1HOGH4wCTl/RNhkwtidFLL9LpwT9CPngSYimRrwaDF/DPIJSmAxIToUbMRPXG2QIgxXzdNgqxsR6pJRn/yFrSd4hm1KGBExNmB45fP14bR2KR+Q52BTQwG2mjHLdYTwzkXPPUp4MX0CEAgMSngApRcwU8zXILpzyTZ+wUqEXQnDjc8BSuCh6aqQ+CCWsUGsZjwzyJOMv29MskPMi1WgmW9AwhAeMMlhCg1wxHZMbe1CJH+4nyBTdyjOZi3eQYQwzkXPPUp4MT06uAj0Cn1I0WJ8T5iDZZeHiXISpVqoMT2uRfM82uSt9fr0mDy3VEGgLiTjrNdIskPwE7dki1SRnV9YMiRuQCE8LzFIvGYUGbBzEFPM1yC6c8k2fsFKhF0Jw432IHpMPFAnbXDAXmRUrUcVtjXSca5LDb76cXZAmckvYNpxSwU1ndvtSfFbXG29Yjgb0MeM709Vm45Bxqi5vVdR7xkj2TRwL0VJ8VtcQaAuJOOI6yDnbxH3jmHKFLWhdmXuNE48IY1uQBjRa1xBoC4k49zXII5zPb6CcK9xCJhmRc4oelQscSZABOSmHE30Qwg70C9giwIkn9/Mi1WgmGZFzzxSTHxxN0RsyVoQdewyJA6823TjX/n6sjWrbOmFV3jHHUNZPFQLLeHxW11IpWMxHp3Sca9vHLqvXa4YXYFDdNsdbxmccC9FSfFbXUilYzEendJxr0MB9qKZnmzx0UNQgwROMHVlFlVp0ENtSegyeT+F6zi7ewHqkj2eqPGkRwieOBplDb2ijOwwiqDZAKsVOrn22QZKBLu2QZNUmaU2RMY4BmTJZRYUANROEUmgWiEfpO8hr3sBgqqZknCRjSotZz1LcTRwL0VIsBJ4cfVCKRck7nDD25EiMrE6hG10e0zKcF6MBXUWWVQEL21InFI0J4HTaIt7EfeHZbYdodUndOptS2xZ4brczCTqjIVJfjgb0MeMn089p6qR/2m8mX94/ixeOTVpEhBw4VoMdKRqNBOx0yTucgyfH2SLVaCYZkXOdF4gYTkX7eHxW11J9EYEC9CDdJsKBM+2dY4EtclDcNsEckxoUAt8BKASRBmAViU+lceVu34RqktxK0AUjapN65VLcTRxRmAIDBpYGYVjRR+U13yDH0VGpkHDVZyZfkz+OHJsyXkqSGSkGqAl9EYEC9CDdJsLcILeQctdCDBmRc88FlRlUC4sbLBCeHmxWtg73EtUn14l0pIldhSlyUZ1zzQXeQRxRmAI6H5sXJyKlN9gQ+Q3+4FqIvSvVKXUZyzXVeNxNHAvRUnxWkR17WJxLpzXOKNzAY6jZa5toZFjCNrAXkhlOQpQBZnzXUilYzEendJxrkoF0q9d1hyFyXJkjw1KdH19FkB85S5YAahaNCuJ9tmuSgS7t2SLVLmlLkSPPG5JNUEqfFQMQnh5sC9Ztp3Sca5KBLu3ZItVofF+fJJ0biAgUW91SPQSUHGgViVr3etIq38Qnx9ki1WgmGZFzjBOfBVl0gRMoHtdPKSitJMwV+w7t5Uef2S3VDEN/8AajJq82HkiQETQTqBRgFIlF2l6ca5KBLu3ZIpwuJlrQMIcXox1dX5lcOQ6eAX0LxE69XpxrkoEu7dki1WgmGcs1wQWOBEhO2RE9FZ8XVgiNE+94nCrAwmCslGfIK2da2TawAp0ZVAWfEzET3ngpWMxHp3Sca97LUb2Ydp1oOxnhEqw5vSp5dLU7DlbYUk09qibSGOgY6YNirJdlgClhXMIMhQGTAx52+1J8VtdSKVjMDuF00CHt0W+5kSyQMG9KxSDHW8ZnHAvRUnxW11IpWMxHpy7aZcXTZ7mcKpkiWUnQJ4de3AxOSJ8TMRPKHmMnnAbzPJIl08xr5PMi1WgmGZFzzwGTMkxKhRp8S9ciSDunJsAR4w/78y7i2UawDkds/Qe8Kd4eWUiFGzMYqB17HIkV2DfdKNrELJDzItVoJhmRc88bmk1PRK4CPQKfXGwAhRTzJ5RiksBgqdlglDtjZsEymxrSBE90lRsuXt5IA1jMR6d0nGuSgS7t2XiTZnFL2CeKWo8CY1uQBjRa1xN7G4IG6jGBON3+fqyNatsmZ1TUeuV43E0cC4UdKBebUjRYgALpfN4qwcRRqJd2hyFjSphzxFKQCFIDnRMyEagUYBSJFK5enGuSgWCijWfVdSZfk3PHG5IOUF6VGzIR1wlNPaom0hjoGOmGbKyKZ6okZ1fWdLIP1U8cQpdSPheEF1YdghP1Pdk4ksRivpwi12oMGZFzzwKOBFJf2RR+NJYRYh2IR/IknDDGznqslX/VLm9V1HucW4cDU1+UD3wCmFJyAoUX2CTdP9qPfKiVY4EhcFzuJ4BajxldX5RcDzWlO1kssyPOBpU2kIgE
-b35b807e
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.state import DEFAULTS, PACKAGE_DIR
+from datetime import datetime
+import zipfile
+
+
+def cmd_backup():
+    backup_dir = state.SCRIPT_DIR / DEFAULTS["backup_dir"]
+    backup_dir.mkdir(exist_ok=True)
+
+    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    lang_files = sorted(state.SCRIPT_DIR.glob("*.lang"))
+
+    base_entries = []
+    if base_path.is_file():
+        base_entries.append((base_path, base_path.name))
+    elif base_path.is_dir():
+        for f in sorted(base_path.rglob("*")):
+            if f.is_file():
+                base_entries.append((f, str(f.relative_to(state.SCRIPT_DIR))))
+
+    if not base_entries and not lang_files:
+        print(f"No {DEFAULTS['base_lang']}, .lang files, or split '{DEFAULTS['base_lang']}/' folder found to back up.")
+        return
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    zip_path = backup_dir / f"lang_backup_{timestamp}.zip"
+
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        for p, arcname in base_entries:
+            zf.write(p, arcname=arcname)
+        for p in lang_files:
+            zf.write(p, arcname=p.name)
+        cache_path = PACKAGE_DIR / DEFAULTS["cache_file"]
+        if cache_path.exists():
+            zf.write(cache_path, arcname=cache_path.name)
+        lj_path = PACKAGE_DIR / DEFAULTS["languages_json"]
+        if lj_path.exists():
+             zf.write(lj_path, arcname=lj_path.name)
+        so_path = PACKAGE_DIR / DEFAULTS["section_order_cache"]
+        if so_path.exists() and base_path.is_dir():
+            zf.write(so_path, arcname=so_path.name)
+
+    total = len(base_entries) + len(lang_files)
+    note = f" (including {DEFAULTS['base_lang']})" if base_entries else ""
+    print(f"Backed up {total} file(s){note} to {zip_path.relative_to(state.SCRIPT_DIR)}")

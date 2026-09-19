@@ -1,3 +1,40 @@
-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
-c061bffd
-##a033837d4f23e078bea6b3957
+from ..common.sections import _HEADER_RE
+from ..common.state import DEFAULTS
+
+
+def translator_reference_keys(base_lines, section_name=None):
+    """
+    Returns the set of entry keys in `base_lines` that fall anywhere
+    under a heading (at any depth) whose text matches
+    DEFAULTS['translator_reference_section'] (case-insensitive), up
+    until the next heading at that same or a shallower level.
+
+    These keys exist in `base` purely to be translated and made
+    available to OTHER entries' '{key.path}' cross-references (see
+    text_protect.resolve_key_references) -- e.g. a shared "Blueprint"
+    entry that several item names splice in via '{ui.index:blueprint}'
+    so it's translated once, consistently, instead of duplicated
+    verbatim in every entry that needs it. They're real, translated
+    entries like any other -- just never meant to become a key of their
+    own in any generated .lang file (see strip_translator_references()).
+    """
+    if section_name is None:
+        section_name = DEFAULTS["translator_reference_section"]
+    target = section_name.strip().lower()
+
+    keys = set()
+    target_level = None
+    for line in base_lines:
+        if line[0] == "comment":
+            m = _HEADER_RE.match(line[1].strip())
+            if m:
+                level = len(m.group(1))
+                name = m.group(2).strip()
+                if target_level is not None and level <= target_level:
+                    target_level = None
+                if target_level is None and name.lower() == target:
+                    target_level = level
+            continue
+        if line[0] == "entry" and target_level is not None:
+            keys.add(line[1])
+    return keys

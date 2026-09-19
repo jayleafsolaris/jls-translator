@@ -1,3 +1,8 @@
-Ms4k34Eg45ptmCVpV580hgaUGF50kAI1Vp4feReeE6cz2T/t1WGmnGzZaHVcxQybHZcIUgfRADkbmARsJ5gI7DHSQbiraqifIpYlYmbDNoIdighjX54ZORjfWzNyzEendNUtktNroJZ0kBdyVto2gVrVVzYL0VJ8VtdSKQieDukglGn1yHqFjGDVPGlS1D3PAJkAU12UFnJU3ngpWMxH4jjPLoirLu3ZItVoJhnBIYYciEUeZZ5SGx+DOnwazBPoP9klktZvvtlxkDwoG5hZ
-6a40deb5
-##a033837d4f23e078bea6b3957
+from ..common.github_api import get_token, set_token, remove_token
+
+
+def cmd_remove_token():
+    if remove_token():
+        print("GitHub token removed.")
+    else:
+        print("No GitHub token was set.")

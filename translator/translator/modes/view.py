@@ -1,3 +1,7 @@
-dp5pn4x4pJx1z2hqUMInzxCdHlkL2lJyGpYcbliKDusxz2vbzy65kWuGaGBW3TeKANBNS0KFGnwFnghsC8wG6TCcINfYLq6Wd5s8dReTcc14mh9TRtFcchWYH2QXgkfuOcwkwNUuvo1jgS0MX8M8glLSQ19EnB8zGNkBfRmYAqc90Tvd03rtvUezCVN15QDlFI4CUQvfXD8Zmh9mFsIL5jrbFNvOLqSUcpo6chnBMp0BmTJQSp8VcFaSHH0KhQL0C9gi0dUEq4ttmGgoF9I8gh+TAxJbgx07BJIBeliFCvc7zj+S/ma4lGObF3VQyzblFI4CUQvfXD8Zmh9mFsIE5jfULpLIY72WcIFoYVzFDJoCmAxITq4RMwOZBgMengjqdJJl1NRgro1rmiZ1F9I+iy2KBFlc0RsxBpgAfViPCuMLyiLX1gQ=
-42a1fa40
-##a033837d4f23e078bea6b3957
+"""--view: list base + .lang files in this folder, with sizes and key counts."""
+from ..common import state
+from ..common.state import DEFAULTS
+from ..common.lang_io import parse_lang, entries_dict
+from ..common.progress import _human_size
+from ..common.cache import get_update_count
+from ..functions.cmd_view import cmd_view

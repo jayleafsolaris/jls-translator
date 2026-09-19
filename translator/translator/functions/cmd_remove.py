@@ -1,3 +1,101 @@
-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
-6bcd6148
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.cache import load_cache, save_cache
+from ..common.lang_io import parse_lang, write_lang, entries_dict, translator_reference_keys
+from ..common.progress import load_base, base_fingerprint, load_progress, save_progress, clear_progress, format_duration, _report_keys, _ask_continue
+from ..common.state import DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER
+import time
+
+
+def cmd_remove(resume=False, interactive=False, show_summary=False):
+    base_lines = load_base()
+    base_values = entries_dict(base_lines)
+    ref_keys = translator_reference_keys(base_lines)
+
+    existing_codes = [code for code in LANGUAGES if (state.SCRIPT_DIR / f"{code}.lang").exists()]
+    if not existing_codes:
+        print("No .lang files to clean up. Run --create or --add first.")
+        return
+
+    fingerprint = base_fingerprint(base_values)
+    completed = []
+    elapsed_time = 0.0
+
+    if resume:
+        progress = load_progress()
+        if not progress or progress.get("command") != "remove":
+            print("No interrupted --remove run found. Starting fresh.\n")
+        else:
+            completed = progress.get("completed", [])
+            elapsed_time = progress.get("elapsed_time", 0.0)
+            print(f"Resuming --remove: {len(completed)}/{len(existing_codes)} language(s) already checked (accumulated time: {format_duration(elapsed_time)}).\n")
+
+    total_keys_to_check = 0
+    keys_checked = 0
+    for code in existing_codes:
+        count = sum(1 for l in parse_lang(state.SCRIPT_DIR / f"{code}.lang") if l[0] == "entry")
+        total_keys_to_check += count
+        if code in completed:
+            keys_checked += count
+
+    print(f"Removing deprecated keys...\n")
+    start_run_time = time.time()
+    summary = []
+    total_removed = 0
+
+    for lang_idx, code in enumerate(existing_codes, start=1):
+        if code in completed:
+            continue
+
+        target_path = state.SCRIPT_DIR / f"{code}.lang"
+        target_lines = parse_lang(target_path)
+
+        removed_this_lang = 0
+        out_lines = []
+
+        for line in target_lines:
+            if line[0] != "entry":
+                out_lines.append(line)
+                continue
+
+            keys_checked += 1
+            _report_keys("Checking", min(keys_checked, total_keys_to_check), total_keys_to_check)
+
+            _, key, value, inline_comment = line
+
+            if key not in base_values or key in ref_keys:
+                removed_this_lang += 1
+                continue
+
+            out_lines.append(line)
+
+        write_lang(target_path, out_lines)
+        summary.append((code, removed_this_lang))
+        total_removed += removed_this_lang
+
+        completed.append(code)
+        current_total_time = elapsed_time + (time.time() - start_run_time)
+        save_progress("remove", completed, fingerprint, current_total_time)
+
+        if interactive and lang_idx < len(existing_codes) and not _ask_continue(code):
+            print(f"\nStopped after {code} ({len(completed)}/{len(existing_codes)} done).\n"
+                  f"Total time so far: {format_duration(current_total_time)}.\n"
+                  f"Run --continue to pick up where you left off.")
+            return
+
+    total_duration = elapsed_time + (time.time() - start_run_time)
+    clear_progress()
+
+    cache = load_cache()
+    trimmed_cache = {k: v for k, v in cache.items() if k in base_values or k == _UPDATE_COUNT_MARKER}
+    if trimmed_cache != cache:
+        save_cache(trimmed_cache)
+
+    if total_removed == 0:
+        print(f"\n\nNo deprecated keys found — all present .lang files already match {DEFAULTS['base_lang']}'s keys (took {format_duration(total_duration)}).")
+    else:
+        print(f"\n\nCleanup complete in {format_duration(total_duration)}:")
+        if show_summary:
+            for code, removed in summary:
+                print(f"  {code}.lang: {removed} key(s) removed")
+        else:
+            print(f"  Removed {total_removed} total key(s) across {len(summary)} language(s).")

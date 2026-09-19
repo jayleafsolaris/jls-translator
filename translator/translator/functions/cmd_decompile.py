@@ -1,3 +1,27 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJ4bwqDCqd6kijdzGOilyyWKWVR1HOGH4wCTl/RHjMXky1qF4EX7jjZFNnEd+HZYZktZ0vuMIAfjARQTq4ZOQ/9FHsXgUepet8k38xho9dtly5zStIymxfcBFFbngAoVpMXaheBF+442RTGxHa582SHJ2sZn32MHZEAU0XfASgXgxcpEYEX6CbIa/bkSIysTqEbDDO7N4oU3A5RT64WORWYH3kRgAKvfYZBkoEu7Ztjhi1ZSdAnh1LBTU9fkAY5WKQxWzG8M9gQ9RmSji6JvES0HUpt4gjNEJ0eWXSdEzIR1S8DWMxHpz3aa9zOeu2bY4YtWUnQJ4dclR5jTZgeOV7eSANYzEendJxrktF8pJd23S4kd95zyAm4KHpqpD4IJaxVaxmfAtg43SXVhlOw3iKTIWpckTWAB5IJHAbcUjIZgxpgFotH8zucL9fCYaCJa5ktKBuYWc9S3E0cC9FSLhODB3sW5m2ndJxr2cR37cQimSdnXe4wgB+MBFBOrhk5D99bA1jMR6c92mvZxHftkHHVBmlX1GnlUtxNHAvRUnwGhRtnDMRFyTucKNPCZqidIpYna0nYP4pSlwhFC5cdKRiTUiRVzATmOps/ksVrrpZvhSFqXJ9xxnjcTRwL0VJ8VoUXfQ2eCY1enGuSgXqogXbVdSZb0CCKLYwMSEPfADkXky19HZQTrzHSKN3FZ6OeP9c9cl+ca81b9k0cC9EGLg/NeClYzEendJxr3dNnqpBslCQmBJE3ihGTAExCnRcDApIKfVCYAv8gkGvZxHfk8yLVaCZcyTCKAohNakqdBzkzhQBmCswG9HTZcbiBLu3ZItVoJknDOoEG1AseaJAcewLXFmwbgwr3PdAuiIF1qIQg3EImGZFzz1LcTU5OhQcuGP14KVjMR+U1zy7t0W+5kSyCOm9N1AybF4QZFESDGzsfmRNlVMwC6TfTL9vPafDbd4EuKwGTeuVS3E0cSJ0XPQSoEWYVnA7rMeMg19gm5PMi1WgmScM6gQbUT3hEnxd9VrUTeh3WR8Mx3yTf0WehnGbXYQw=
-4149359c
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.cache import load_compile_key, clear_compile_key
+from ..common.obfuscate import decompile_text
+from ..common.state import DEFAULTS
+
+
+def cmd_decompile():
+    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    if not base_path.is_file():
+        print(f"No '{DEFAULTS['base_lang']}' file found -- nothing to decompile.")
+        return
+
+    key = load_compile_key()
+    if key is None:
+        print("No cached compile key found -- can't decompile.")
+        return
+
+    text = base_path.read_text(encoding="utf-8")
+    try:
+        original = decompile_text(text, key)
+    except ValueError as e:
+        print(f"Can't decompile: {e}")
+        return
+
+    base_path.write_text(original, encoding="utf-8")
+    clear_compile_key()
+    print("Done! Base: Decompiled")

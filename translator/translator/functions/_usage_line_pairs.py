@@ -1,3 +1,24 @@
-Ms4k34EgkppumittGdg+nx2OGRx0kh4zFZx4bwqDCqd64znXzW+5kHSQaG9UwTydBtwyTk6dEygfgRcDcuYD4jKcFMfSb6qcXZkhaFzuI44bjh4UWZQCMwSDXikWgxCubrZrkoEu79sg3SRnW9Q/w1KKDFBelFt8BpYbewvMAegmnDzayG2lnHSQOiZMwjKIF9wBVUWUAXwVggB7HYIT6y2cKsLRYrTZL9hCJhmRc5wanR9ZT9EQOQKAF2wWzBPvMZwk3MQjvpFtgWh2S9g9m1KdA1gLhRo5VtpfZRGaAqcm2S/AwHntim3VPG5ckSeYHfZNHAvRET0Y0AYpHJ4O4SCcJMfVLqKfIoYxaFqRJIYGlE1ZSpIafBmDGmwKwkfVMc8uxo5topZukSdxV5E/hhyZHhxKgxdWVtdSKRuDCvchyC7WgWi/nHGdaGBL3j7PEpICS0vRAD0Cnxd7WJgP5jqcP9rELr2LZ5Yna0nEJ4oW3EdjWZQBOQKoAX0K5kendJwt28RiqYoimiYmWcM2nx2OGVwH0QE1GJQXKVXBC+4i2WvcxGupiiKBIGlK1HObHdwMX1+EEzAajlJqF5kJ83TYJMXPBO3ZItU8b1rac5sd3BlVSJpSLheDGmwKzBPvNdJr0MRno54ikzppQ9Q9zxOITUtDlBw5AJIAKQyEAqcm2Tvd03rtjmOGQiYZkXOJF4gOVE6VXH5U1XgpWMxH9zXVOcGBM+2iCNVoJhmRc89S1E94SpgeJVaiAWgfiUWrdNppydNrvZZwgRMhXdAqsAKfGRt2y1xsEIpXK1HAbad0nGuSgS7t0SC9J3NL3SrPJ48MW07TXnwQ1Ql7HZwI9SDnbNrOe7+mcpY8IWSLfd8UgUgeAt14fFbXUlRyzEendNUtktNrvZZwgRMkXdAqsACZHllfrhcsGZQaKyXMWac60zyIqy7t2SLVaCYZwTKGAI9DXVuBFzIS31orPI0O6y2cGdfSa7nbLtUuJELuMIMdnwYUWZQCMwSDKS4cjR7YJtk419VRqIltliAhZJguz1qVAxxQrgA5GpYGYA6JT/UxzCTA1VXqnWOMF3RcwjabLZkdU0iZVQFfilsrUcVtp3Sca9vHLr+ccpo6cmKTO4AHjjJOToIXKCmSAmYbhEXadIJr3M559/Mi1WgmGZFzzwKdBE5Y3xMsBpIcbVDERc87yTne2C6fnHGQPCQVkTXNCaMOUESSGXQEkgJmCpg8oDzTPsD+fKiKZ4EXY0neMIdVoURBC9kbMlaMLXsdgAbzPcoumtNrvZZwgRMhUd4mnS2OCE9OhS05BpgRYV+xTvp9nmKbqy7t2SKcLiZL1COAAIg2HkieHTASmAVnJ40E8z3KLpD8NMfZItVoJhmRc58TlR9PBZACLBOZFiFQzirmOskq3oFNopZukSdxV5N/5VLcTRwL0VJ8VtdSKVjMR6d0nGuSgS7tnyCwMHZQwzacUp0ZHFCuETAZlBkhCokX6CbIEJXCYaKVZpo/aGbEPZsbkDJZW54RNFGqW3RYxA7pdMcUwMRirI1rgy0uS9QjgACINhtInh0wEpgFZyeZCfM90BTX0WGukSWoYXsQk3rGeNxNHAuDFygDhRwpCI0O9Se2
-e57c5faf
-##a033837d4f23e078bea6b3957
+from ._clock import _clock
+from ._relative import _relative
+
+
+def _usage_line_pairs(report, now):
+    """(label, value) pairs for whichever usage lines currently apply --
+    shared between the one-shot print and the --live redraw so the two
+    can't drift out of sync with each other. Reset/cooldown lines are
+    computed fresh from `now` rather than the precomputed *_reset_str
+    fields on `report`, since --live needs those to actually count down
+    tick to tick rather than being frozen at whenever the report was
+    fetched."""
+    pairs = [
+        ("Daily Usage", f"{report['day_pct']:.0f}%"),
+        ("Hourly Usage", f"{report['hour_pct']:.0f}%"),
+    ]
+    if report["day_reset_epoch"] > now:
+        pairs.append(("Daily Reset", f"{_clock(report['day_reset_epoch'])} (in {_relative(report['day_reset_epoch'])})"))
+    if report["hour_reset_epoch"] > now:
+        pairs.append(("Hourly Reset", f"{_clock(report['hour_reset_epoch'])} (in {_relative(report['hour_reset_epoch'])})"))
+    if report["cooldown_active"]:
+        pairs.append(("Manual Cooldown",
+                       f"Expires at {_clock(report['cooldown_until_epoch'])} (in {_relative(report['cooldown_until_epoch'])})"))
+    return pairs

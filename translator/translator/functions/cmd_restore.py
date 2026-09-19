@@ -1,3 +1,60 @@
-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
-4f841f52
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.progress import _human_size
+from ..common.state import DEFAULTS, PACKAGE_DIR
+import shutil
+import zipfile
+from ..modes.restore import _PACKAGE_SCOPED
+
+
+def cmd_restore():
+    backup_dir = state.SCRIPT_DIR / DEFAULTS["backup_dir"]
+    if not backup_dir.is_dir():
+        print(f"No {DEFAULTS['backup_dir']}/ folder found -- nothing to restore from.")
+        return
+
+    zips = sorted(backup_dir.glob("lang_backup_*.zip"), reverse=True)
+    if not zips:
+        print(f"No backup zips found in {DEFAULTS['backup_dir']}/.")
+        return
+
+    print("Available backups (most recent first):\n")
+    for i, z in enumerate(zips, start=1):
+        print(f"  {i}.\n{z.name:<32}{_human_size(z.stat().st_size):>8}")
+
+    while True:
+        raw = input(f"\nRestore which one? [1-{len(zips)}] (default 1): ").strip()
+        if not raw:
+            idx = 1
+            break
+        try:
+            idx = int(raw)
+        except ValueError:
+            print("Please enter a number.")
+            continue
+        if 1 <= idx <= len(zips):
+            break
+        print(f"Please enter a number between 1 and {len(zips)}.")
+
+    chosen = zips[idx - 1]
+    with zipfile.ZipFile(chosen, "r") as zf:
+        names = zf.namelist()
+
+    print(f"\nThis will overwrite these files from {chosen.name} if present:")
+    for name in names:
+        print(f"  {name}")
+    confirm = input("\nType 'yes' to confirm: ").strip().lower()
+    if confirm != "yes":
+        print("Cancelled.")
+        return
+
+    with zipfile.ZipFile(chosen, "r") as zf:
+        for name in zf.namelist():
+            if name in _PACKAGE_SCOPED:
+                dest_path = PACKAGE_DIR / name
+            else:
+                dest_path = state.SCRIPT_DIR / name
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+            with zf.open(name) as src, open(dest_path, "wb") as dst:
+                shutil.copyfileobj(src, dst)
+
+    print(f"\nRestored {len(names)} file(s) from {chosen.name}.")

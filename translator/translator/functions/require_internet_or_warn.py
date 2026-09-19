@@ -1,3 +1,26 @@
-Ms4k34Eg45ptmCVpV58wgByaBFt0ggYzBJJSYBWcCPUgnDzT02CSi2eRZCZm4xa8N6hBHEyUBgMEkh5sGZ8C2DbOKtzCZsefcJolJhefMIAfkQJSBZ8XKBWfF2oTzA7qJNM5xoFRj7VXsEJgS94+z1yfBVlImi01GIMXexaJE6c90Tvd03rtmmqQK21m2D2bF44DWV/7eFYSkhQpCokW8j3OLu3IYLmccJstcmbeIbAFnR9SA5cePRGoHGgViU69XpxrkoEs79sI1WgmGfIygx7cDEgLhRo5VoMdeViDAac10jKSwmGglGObLCZN2TKbUpIIWU+CUjITgwVmCodH5jffLsHSLuWNcJQmdVXQJ4YdkmccC9FSPxebHnpYmAinE9Mk1c1r7a1wlCZ1VdAnilvSTWtKgxwvVpYcbVieAvMhziXBgUislXGQaG9fkTyJFJAEUk7dUi8Z1wZhHeZHp3ScKNPNYqiLIpYpaBnTMoYe3AJJX9EQORCYAGxYiAjuOttr08937Y5thyMmVsNzmx2JDlRCnxV8BoUdbgqJFPR73yrRyWvH2SLVaGBQ3TacXPZnHAvRUgkFkgEpGcwU7zvOP5LVZ6CcbYA8PBnTPJsa3B1ORJMXfB6YAX0LzAb1MZw/wMhrqdlhmiZlTMMhihyIAUUH0QEzVpYcA1jMR6c72i3eyGCo2W+UK25Q3zbPWosFVUiZUjoXnh56WIoG9CCcPNvVZu3bbJA8cVbDOM8Hkh9ZSpIaPRSbFytYgxWNdJxrkoNtopdskCtyUN49zwCZC0lYlBZ+VoUTfRCJFacg1CrcgWasl2WcJmEQkTqcUo4ITESDBjkS1xBoG4dH5jjRJMHVBO3ZItUhaErFMoEGkBQSC6UaOVaDG2QdgxLzdNU4ks5goYAilGhlXNg/hhybTVpEg1IoHpJSexmeAvV03yrBxC6inyKUQiYZkXOMHZIDWUiFGzMY1wZhGZhH9D3QLtzVYrTZZocndkqRI44RlwhIWNEbMgWDF2gczAjhdM4u1NR9pJdl1TxuXNx95VLcTRwJ01BWVtdSKRGKR+Q82SjZ/mejjWeHJmNNmSeGH5kCSV/MQnJA3kgDWMxHp3Sca5LTa7mMcJtoUkvENuVS3E0cXJAAMimFF21Q5kendJxrkoEuq9tMmmhvV8U2nRyZGRxInhwyE5QGYBeCR+MxyC7R1Wup1SKOLmpY1gyBE5EIQQufFzkShFJnHZgQ6CbXa9PCbaiKcdVqDBmRc89S3E0cTdMGM1aRB2cbmA7oOpwi3IF6pZBx1TtyWMU2zlD2TRwL0VtWVtdSKQieDukglC2Q2lGPtVewNUVR1DCEUoUCSVnRETMYmRdqDIUI6XTdJdaBer+AIpQvZ1DfcpQtrihvbqUPfl/9UilYzBXiIMk53IFIrJVxkEI=
-7321f2a4
-##a033837d4f23e078bea6b3957
+from ..common.config_store import warn_red, _RESET, get_release_branch
+from ..common.netcheck import _BLUE
+from .check_internet import check_internet
+
+
+def require_internet_or_warn(flag_name):
+    """
+    Call at the top of any command that needs network access (translation
+    calls to Google Translate). Warns and returns False if offline, so the
+    caller can bail out before doing any work or touching progress/cache
+    files.
+
+    Uses a short timeout: both probe hosts are tried concurrently, so an
+    offline machine (which fails fast with "network unreachable" or
+    "connection refused" rather than hanging) is reported back almost
+    instantly. The timeout is only a ceiling for the rarer case of a
+    connection that silently drops packets instead of refusing them.
+    """
+    if check_internet(timeout=0.6):
+        return True
+    warn_red(
+        f"No internet connection detected, {flag_name} needs network access "
+        f"to function in this state!"
+    )
+    print(f"{_BLUE}Check your connection and try again!{_RESET}")
+    return False

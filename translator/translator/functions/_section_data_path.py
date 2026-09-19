@@ -1,3 +1,5 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSTT2qJtIY6BiegV6Mukm0D0Nm9Rq9XtwyaXu1MwgzqDFGLaIz2Bn9GfnkXMfzCJEtYBnuIIoRiARTRa4WPQKWLXkZmA+vfYZBkoEu7YtngT10V5EDrjG3LHturjYVJNddKTypIcYB8B/h+iy+nGGBIWlX7jydFpkfY0iQETQT1S8D
-2d9878bb
-##a033837d4f23e078bea6b3957
+from ..common.state import DEFAULTS, PACKAGE_DIR, _UPDATE_COUNT_MARKER
+
+
+def _section_data_path():
+    return PACKAGE_DIR / DEFAULTS["section_order_cache"]

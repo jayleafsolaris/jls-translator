@@ -1,3 +1,9 @@
-MNktksdhv5RjgRdiTMMymxuTAxRYlBEzGJMBIELmR6d0nDjXwmGjnXHVdSZQ3yfHAJMYUk/ZATkVmBxtC8VOjXSca5LIaO2KZ5YnaF3Cc9NSyl0GIdFSfFbXUilYngLzIc4lkscstopnlidoXcIunFD2TRwL0R81GIIGbAvAR/Qx3ziSnC6pkHSYJ2IRwjaMHZIJTwfRRGxf/VIpWMwO4XTRItzUeqiKIsloMAmLWc9S3E0cC9FSLhODB3sWzAGlL9Ei3NR6qIp/mGh9StQwnA+PTzYL0VJ8HpgHewvAR+o90jiSnC6pkHSYJ2IR3DqBB4gITwfRRGxf/VIpWMwV4iDJOdyBaO+Capo9dErMO88JkQRSWIwffA2EF2oLkRSlXg==
-2200a98e
-##a033837d4f23e078bea6b3957
+def format_duration(seconds):
+    seconds = int(round(seconds))
+    if seconds < 60:
+        return f"{seconds}s"
+    minutes, secs = divmod(seconds, 60)
+    if minutes < 60:
+        return f"{minutes}m {secs}s"
+    hours, mins = divmod(minutes, 60)
+    return f"{hours}h {mins}m {secs}s"

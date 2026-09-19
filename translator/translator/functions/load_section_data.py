@@ -1,3 +1,20 @@
-PdE73dN67ZNxmiYMX8M8glLSMk9OkgY1GZktbRmYBtgk3T/agWegiW2HPCZmwjaMBpUCUnSVEygXqAJoDIRtjV7YLtSBYqKYZqo7Y1rFOoAcowldX5BadUz9UilYzEWldu4uxtR8o4oi3Tx0XNR/zx+dH1dOgwF1VpEAZhXME+8xnCfT0nrt1C+GOGpQxX/PHY5NckSfF3wfkVJ9EIkV4nPPa9zOLriKY5ckYxnSMowamUMeCdN4fFbXUnkZmA+naZwUwcRtuZBtmxdiWMUysAKdGVQD2Hh8VtdSYB7MCeggnDvT1WbjnHqcO3JKmXrVeNxNHAvRUnxWhRd9DZ4JpxrTJderLu3ZIoE6fwO7c89S3E0cC9EWPQKWUjRYhhToOpIn3cBqvtFylDxuF8M2jhajGVlThVo5GJQdbRGCALp2yT/UjDbv0Cv/aCYZkTaXEZkdSAu0Cj8ThwZgF4JdjXSca5KBLu3ZcJA8c0vfc6Edkgg2C9FSfAKFF2xY0UfjNcgqnMZrudEggTpjXJN65VLcTRxCl1IyGYNSYAuFCfQg3SXRxCa5i2eQZCZV2CCbW8ZnHAvRUnxW11J7HZgS9TqcBd3Pa8fZItVoa1jDOIoAj00BC5UTKBfZFWwMxEXqNc4g19N979AI1WgmGdg1zxyTGRxCghsyBYMTZxuJT+o1ziDX033h2W6cO3IQi1nPUtxNHAvRUjEXhRlsCp9HunTnFriBLu3ZcJA8c0vfc5sAmQgQC5wTLh2SAHpy
-3806415c
-##a033837d4f23e078bea6b3957
+import json
+from ._section_data_path import _section_data_path
+
+
+def load_section_data():
+    """Returns (tree, markers) from the last --split, or None if there's no usable cache."""
+    path = _section_data_path()
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    tree = data.get("tree")
+    if not isinstance(tree, list):
+        return None
+    markers = data.get("markers")
+    if not isinstance(markers, list):
+        markers = []
+    return tree, markers

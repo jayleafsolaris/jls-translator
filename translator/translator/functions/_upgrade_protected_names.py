@@ -1,3 +1,31 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSTT2qJtIY6BiegV6Mukm0D0Nm9Rq9XtwqdX+5Jx4puCVHPb5LpxP1H/r0TJKrR6UHKhn2Grs6qS9jaaMzEjW/Xik7oynBHfsU9uhckrFLsQxDd+4drj+5QRxovjwaP7AtTTG+ONEd7wLw7UuSt0O4DSoZ4hC9O6w5Y320IA8/uDwDcuYD4jKcFMfRab+YZpAXdkveJ4oRiAhYdJ8TMROEWiBC5kendJxpkIME7dki1QpnStQ9jh+ZHhwDlxswE4RSZgrMAeg42C7A0iftkGyGIWJckSeHF9wdXUiaEzsT1wZhGZhHqnnJO9XTb6mcIpg9dU27c89S3ANZXZQAfBmBF3sPng7zMZBr1sRiqI1n2WhpS5E+igCbCBxCnwYzWtccZliBBvMg2TmS1masjSKdKXZJ1D2cUogCHEmUeHxW11J6EZgT7jrba9vPLrmRZ9UsaU7fP4ATmAhYC4MXLBnXCGAIzBLpMNk5ktVmqNlxlCVjGd8yghfQTV1FlVIyGdcfaAyYAvVenGuSgWaijiKRLWNJkTqBUogFWQuFADkT1wZhHZVH5jfIPtPNYrTZbpw+YxmZNsEV0k1fRJwfMxjYEWgbhAKpPs8k3Iggx/Mi1Wgmbdk6nFKZFVVYhQF8FJIRaA2fAqcg1C6Swm+ukWfZaHZL3jSdF48eHE2YHjla1x5oFosS5jPZOJzLfaKXLtU8bly7c89S3BtZWYIbMxjaEWEdjwynN90o2sQi7ZhskWhyUdRzjB2SC1VM0RQzGpMXe1iNC+t02C7eyGyoi2OBLWpAkT+GBJlnHAvRUi8Zmhd+EIkV4nTVJcHIaqjZdp0tJlDfIJsTkAFZT9ECPRWcE24dzEqqdMgj14F9rJRn1Tx0XNRzwl+JHVtZkBY5fNdSKVieAvc43SjX0i66kHadaGcZ1yGKAZRNe0KFOikU1xZmD4IL6DXYZZLgYLTZb5Q8ZVHYPYhSmgRQTp8TMRPXG2dYmA/iXpxrkoF8qIlt1T9pTN03zx2IBVlZhhsvE9cBYBSJCfM4xWvd12u/jnCcPGMZxTuKUokeWVnWAXwEkhNlWI8G5DzZZNHOYKuQZf9oJhmRJIYGlE1LQ5AGOQCSACkQjRf3MdI4ktVh7Ztn1StpVNw6mwaZCRwDngB8GJgGKRuDCuo9yD/XxS6sjSKUJGoVkSSHG58FNgvRUnwfhFJjDZ8TpzXPa9DAauTVIoIgb1rZc4YB3AhESpIGMA/XBmEdzEXqLZwo3c9opJ4ikidyGcY6nxeYTV5S+1J8VtdfJA2cAPU12C6QgWy4niKBIG9KkTSaE44JTwuQFT0fmQF9VuZHp3ScaZCDBO3ZItU6Y03EIYFSh2ccC9FSfFbXUk09qibSGOgY6YNtrJpqkBdgUN02zS/QZxwL0VJ8VtdSTT2qJtIY6Bjpg2Ksl2WAKWFcwgyFAZMDHnbdeHxW11IpWMxHwxH6CuftWp6iIIU6aV7DNpwBowtVR5RQAVr9UilYzEendJwP9+dPmLVWphMkTME3jgaZMkhOnAIDEJ4ebFqxS410nGuSgS7t2UawDkds/Qe8Kd4bWVmCGzMYqBFhHY8M2DLVJ9eDU+HzItVoJhmRc882uSt9fr0mDy3VAWwbmA7oOuMkwMVrv6ZhlCtuXJMOw3jcTRwL0VJ8VrM3Tzm5K9MH52nAwHqolWuYIXJm1zqDF94wECHRUnxW11IpWK8oyRL1DO3lR5+mSrwMQnz/DKEzsSgQIdFSfFbXUilYryjJEvUM7eVHn6ZUvBtPe/0WsDy9IHkH+1J8VtdSKVjMRfMx0Tvt1H6pmHaQaiozkXPPUoFn
-67e05313
-##a033837d4f23e078bea6b3957
+from ..common.state import DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, SCRIPT_VERSION
+
+
+def _upgrade_protected_names():
+    """
+    Basenames (files or folders) inside the package that --upgrade must
+    never overwrite, delete, or merge into, no matter what happens to be
+    sitting in the downloaded repo zip under the same name, and no matter
+    how deep in the tree they actually live (e.g. common/cache.json).
+
+    This exists because the cache, progress file, languages.json, the
+    version-check cache, and the config folder all deliberately live
+    somewhere inside the installed package -- the same tree --upgrade
+    replaces with a fresh GitHub download. Any matching filename in the
+    repo would otherwise silently overwrite the user's real cache/config
+    with whatever happens to be committed (or not committed at all, which
+    is just as bad), which is exactly the "my config got wiped by
+    --upgrade" bug this guards against.
+    """
+    return {
+        DEFAULTS["cache_file"],
+        DEFAULTS["languages_json"],
+        DEFAULTS["progress_file"],
+        DEFAULTS["update_temp_file"],
+        DEFAULTS["version_check_file"],
+        DEFAULTS["section_order_cache"],
+        DEFAULTS["ratelimit_file"],
+        CONFIG_DIR_HIDDEN_NAME,
+        CONFIG_DIR_VISIBLE_NAME,
+        "temp_update",
+    }

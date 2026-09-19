@@ -1,3 +1,22 @@
-dp5puPJmrItnkWhuXN0jigCPTVpEg1I/GZoCYBSFCeB72C7RzmO9kG6cJmEZxTuKUogCU0fWAXw5oDwpVpwepyfTPsDCa+2WbNU8bly7JI4L3BlTC5AcOFaRAGYVzCDuIPQ+0IEmvpxn1S5zV9Inhh2SHhNInBYDBoIBYVacHqt03ybW/n64lW7bOH8VuzCCFqMYTEyDEzgT2QJwUcxKqnTII9eBfayUZ9Ukb17ZJ5gXlQpUX91SOgObHnBVngLxMc4428NiqNlauhotW9AgikTIZ1NJlwcvFZYGYBeCR+YnnCjdzGOily2aKmBMwjCOBplDTFLRBy8ThFJvF55H5zbdONfBIu2SZ4wtYhnTKs8biB4cRIYcVhWYHHoMjQnzdNkm0MRqqZxm1SxvS9Qwmx6FTVVF0REwH9kCcFjEFOIxnCjeyCC9gCWGaGlO33OMHZEAWUWFW3wElgZhHZ5H8zzdJbjDb76cJYZoYEvUIIdfjgxST54fcROBF3sBwRXyOpwg19gi7Ypt1SFyGd82mReOTV9EnR41EpIBKQ+FE+903yTf0WehkGySQmRYwjbPX9FNSEOUUigBmFJqGYJH5TGcItyBa6SNapA6JkrFMpsX3ARST5QCORiTF2cMgB6pXrYf2sh97ZBx1SdkX8QgjBOIBFNF3VIyGYNSbBaPFf4kyCLdzy7g1CKcPCZcyTqcBo9NT0TRE3wGghBlEY9H5DjTJdeObL+WdYYtDFbXc5samU1OToEdfBKYF3oWyxOnJ9QkxYF+oZhrmyR/FMM2jhadD1BO0QEzA4URbFiNE6c1nCzewGCunC7VJmlNkSeAeIwfU1+UEShWngYpGYsG7jrPP5LAYLSWbJBocVDdP4Ycm01IRNEAOReTUn0QhRSnJ9M+wMJr7dFth2hlVdh9nwvQTUtDmBE0fJQTewqFAvR0yCPXgWWogCKcJiZN2TbPEZAIXVnRHTJWhwd7CIMU4nSRZpLSa6jZYZkhKEnIesFSvQNFC5wTPx6eHGxYmA/mILYj09IurNlhmjh/Gd41zxGQBBJbiFJxW9cFYRGPD6c9z2vGzi6+mHvZaGdXyHOCE58FVUWUUigelgYpG40JpybJJZLVZqSKCIEnaVWRMptSnQFQC9xffBWWHCkengLiOMVrn4x+uJVu2mUrTME0nROYCBxKnxZ8EZIGKQqJBut4nDzd02Wkl2XVGH9N2TyBeJ4MX0DdUisfgxpmDZhH5jrFa8HEfqyLY4EtJlLUKsIRnQ5UQp8VfAWDF3lW5kWldrYtwM5j7ddxgSlyXJE6ggKTH0gLrjETMrItSjehN84Y+RT55FeStEOnA0NruzWdHZFNEgWXBzIVgxtmFp9J2DfTL9f+Y6yLaZA6WVXYPYpSlQBMRIMGfCmUHW0dswrmJtcuwP5ipJdn/y50VtxzwVyaGFJIhRszGIRcaheBF+442RTRzmqopnaQMHIZ2D6fHY4ZHEieHywfmxdWG4MD4gvILsrVBKuLbZhoKBfXJoERiARTRYJcOBOUHWQIhQviC98k1sRRuZx6gWhvVME8nQbcCVlInh8sH5sXVhuDA+ILyC7K1QSri22YaCgX1yaBEYgEU0WCXDUFqBFmFZwO6zHYFNHOaqjZa5g4aUvFc4YBow5TRoEbMBOTLWoXiAKN
-820ece70
-##a033837d4f23e078bea6b3957
+"""
+Shared helpers for compiling/decompiling the tool's OWN .py source on the
+way to and from GitHub (see functions/cmd_push.py, cmd_pull.py,
+cmd_upgrade.py) -- the same lightweight, fully-reversible XOR+base64
+obfuscation as common/obfuscate.py uses for `base`, keyed by its own
+constant embedded directly in cli.py (see cli.py's own comment) rather than
+base's fresh-random-every-run key, so it never collides with compiling
+base -- the two can be in either state independently.
+
+This is obfuscation, not encryption -- it exists so a public clone/browse
+of the repo doesn't show plainly-readable source at a glance, not to
+protect it against anyone willing to read this source (or cli.py, which
+carries the key in the clear on purpose -- see cli.py). Any machine that
+has a copy of cli.py -- which is to say, any machine that can run this
+tool at all -- can freely --pull/--upgrade and get real, working Python
+back, without any separate key-caching step.
+"""
+from .state import _CODE_COMPILE_KEY_MARKER
+from ..functions._code_marker_line import _code_marker_line
+from ..functions.compile_code_text import compile_code_text
+from ..functions.decompile_code_text import decompile_code_text
+from ..functions.is_compiled_code import is_compiled_code

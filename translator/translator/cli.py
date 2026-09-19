@@ -138,8 +138,128 @@ Requires:
     pip install deep_translator requests --user
 """
 import argparse
+import base64
+import hashlib
+import os
 import sys
 from pathlib import Path
+
+# --- Self-contained bootstrap: decompile the rest of the package BEFORE
+# anything below imports from .common/.functions/.modes -----------------
+#
+# --push compiles (XOR+base64) every .py file in this package except this
+# one -- see functions/cmd_push.py. That means a package freshly pulled
+# down by `pip install` from the repo has plain, readable cli.py sitting
+# next to a tree of unreadable common/*.py, functions/*.py, modes/*.py
+# files. Previously NOTHING decompiled that tree before the imports
+# further down in this file ran, so the very first one --
+# `from .common import state` -- failed instantly with a SyntaxError, since
+# common/state.py was still a base64 blob on disk. --upgrade never hit
+# this because it decompiles a freshly-downloaded copy using only
+# os/zipfile/requests before ever importing it (see
+# functions/cmd_upgrade.py + functions/_decompile_tree_code.py) -- but a
+# plain `pip install` never goes through that path at all.
+#
+# The fix has to live entirely here, with NO relative imports, because
+# the normal decompile helpers (common/code_obfuscate.py,
+# functions/_extract_code_compile_key.py, functions/decompile_code_text.py,
+# ...) are themselves exactly the kind of file that might still be
+# compiled -- importing them to decompile them is the same chicken-and-egg
+# problem. So this duplicates the small amount of pure-stdlib logic those
+# files normally provide (see common/state.py's marker constants and
+# common/obfuscate.py's XOR primitive for the originals) rather than
+# reusing them.
+_PACKAGE_NAME = "roe_translator"
+_GITHUB_REPO = "jls-translator"
+_GITHUB_OWNER = "jayleafsolaris"
+_CODE_COMPILE_KEY_MARKER = hashlib.sha256(
+    f"{_PACKAGE_NAME}:{_GITHUB_REPO}:{_GITHUB_OWNER}:code_compile_key".encode("utf-8")
+).hexdigest()[:25]
+_CLI_KEY_TAG = hashlib.sha256(
+    f"{_PACKAGE_NAME}:{_GITHUB_REPO}:{_GITHUB_OWNER}:cli_key_tag".encode("utf-8")
+).hexdigest()[:25]
+
+
+def _bootstrap_extract_key(cli_py_text):
+    tag_prefix = f"##{_CLI_KEY_TAG}:"
+    for line in reversed(cli_py_text.splitlines()):
+        if line.startswith(tag_prefix):
+            hex_part = line[len(tag_prefix):].strip()
+            if len(hex_part) != 64:
+                return None
+            try:
+                return bytes.fromhex(hex_part)
+            except ValueError:
+                return None
+    return None
+
+
+def _bootstrap_xor_repeat(data, key):
+    return bytes(b ^ key[i % len(key)] for i, b in enumerate(data))
+
+
+def _bootstrap_is_compiled(text):
+    return f"##{_CODE_COMPILE_KEY_MARKER}" in text
+
+
+def _bootstrap_decompile(text, key):
+    marker = f"##{_CODE_COMPILE_KEY_MARKER}"
+    lines = text.splitlines()
+    marker_idx = next((i for i, l in enumerate(lines) if l.startswith(marker)), None)
+    if marker_idx is None or marker_idx < 1:
+        raise ValueError("no usable code-compile marker found")
+    checksum = lines[marker_idx - 1].strip()
+    blob = "\n".join(lines[:marker_idx - 1]).strip()
+    xored = base64.b64decode(blob.encode("ascii"))
+    original = _bootstrap_xor_repeat(xored, key).decode("utf-8")
+    if hashlib.sha256(original.encode("utf-8")).hexdigest()[:8] != checksum:
+        raise ValueError("decompiled content failed its integrity check")
+    return original
+
+
+def _bootstrap_decompile_package():
+    cli_path = Path(__file__).resolve()
+    package_root = cli_path.parent
+    key = _bootstrap_extract_key(cli_path.read_text(encoding="utf-8"))
+    if key is None:
+        # No key marker at all -- either an already-plain dev checkout
+        # (--push --clean) or a version predating this feature. Nothing
+        # to do; if anything below turns out to still be compiled, the
+        # normal ImportError/SyntaxError will surface as before.
+        return
+    failed = []
+    for dirpath, _dirnames, filenames in os.walk(package_root):
+        for name in filenames:
+            if not name.endswith(".py"):
+                continue
+            path = Path(dirpath) / name
+            if path == cli_path:
+                continue
+            try:
+                text = path.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                continue
+            if not _bootstrap_is_compiled(text):
+                continue
+            try:
+                original = _bootstrap_decompile(text, key)
+            except ValueError:
+                failed.append(str(path.relative_to(package_root)))
+                continue
+            path.write_text(original, encoding="utf-8")
+    if failed:
+        sys.stderr.write(
+            "\033[91mError: this install has compiled source that couldn't be "
+            "decompiled (corrupted, or key mismatch): "
+            + ", ".join(sorted(failed))
+            + ". Try reinstalling.\033[0m\n"
+        )
+        sys.exit(1)
+
+
+_bootstrap_decompile_package()
+# --- end bootstrap -------------------------------------------------------
+
 from .common import state
 from .common.state import SCRIPT_VERSION, DEFAULTS
 from .functions._extract_code_compile_key import _extract_code_compile_key
@@ -200,4 +320,4 @@ if __name__ == "__main__":
 from .functions.main import main
 from .functions.prompt_for_ask import prompt_for_ask
 from .functions.prompt_for_mode import prompt_for_mode
-##d967ce2538f6a0557fefb33b1:54bc4bb2a10ecdf902f5480639b153ef72fc6d3c2bf1725c76f7720978ec6787
+##d967ce2538f6a0557fefb33b1:58e2485b550767791bff739284efd1fc6d58d253afa2bf54e285174d99016e76

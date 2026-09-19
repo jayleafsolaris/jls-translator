@@ -1,3 +1,9 @@
-Ms4k34Egqpx2qjxpUtQ9zxuRHVNZhVI7E4MtfReHAuletkHWxGjtpmqQKWJcwyDHW8ZnHAvRUjQTlhZsCp9HunTHafPCbaiJdtdyJhvQI58elQ5dX5gdMlmBHG1Wiw7zPMkpmct9opcgiEImGZFzmx2XCFILzFI7E4MtfReHAul8lUGSgS7tkGTVPGlS1D3VeNxNHAvRUnxWnxdoHIkV9A+eCsfVZqKLa48pclDePc0v3FAcTdMwOReFF3tYlxPoP9klz4ME7dki1TpjTcQhgVKUCF1PlAAvfA==
-c3ccfbb6
-##a033837d4f23e078bea6b3957
+from .get_token import get_token
+
+
+def _headers():
+    headers = {"Accept": "application/vnd.github+json"}
+    token = get_token()
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers

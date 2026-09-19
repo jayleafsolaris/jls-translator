@@ -1,3 +1,19 @@
-PdE73dN67ZZx/yFrSd4hm1KPBUlfmB5WEIUdZFjCOOQ70j/TyGC+pnKHJ3Jc0ieKFtwEUVueAChWqBFmFpgG7jrPFMLTYbmcYYEtYjO7WYsXmk1jWZQfMwCSLWcXgjj3JtM/18J6qJ0qkSF0ZsEymxrQTUxZngY5FYMXbVHWbad0nGuQgyyfnGGAOnVQxzaDC9wJWUeUBjlWkgRsCpUT7z3SLJLUYKmccNUsb0vuI44GlE1ZU5IXLALXAnsXmALkINkvn89voJxm1SFyXNwgwVDeTzYL0VJ8EJgAKR2CE/UtnCLcgWG+126cO3Jd2CHHFpUfY1uQBjRfzXgpWMxHp3Sca9vHLqiXdocxJlDfc58AkxlZSIUXOEz9UilYzEendJxrkoEurpZsgSFoTNRZz1LcTRwL0VIoF4UVbAzMWqc7z2XCwHql12iaIWgR1TqdLYwMSEPdUjkYgwBwUeZHp3Sca5KBLqSfIpo7KEnQJ4dclR5YQoNaKBeFFWwMxUfmOthr7cJho41jnCZ1ZsEhgAaZDkhOlVooF4UVbAzAR/cm0z/XwnqonSvPQiYZkXPPUtxNHAvRUgMEkh9mDok46TvSFMLTYbmcYYEtYhHFMp0VmRkQC4EAMwKSEX0diE6NdJxrkoEu7dki1WgmUNdzgR2ITVNY3x41BYMWYArEE+Ym2y7GiDTH2SLVaCYZkXPPUtxNHAvRUjMF2QBkHIUVryDdOdXEeuTzItVoJhmRc88XkARaC54BcgaWBmFWhRTjPc5jxsB8qpx23HIMGZFzz1LcTRwL0VJ8BZ8HfRGASfU5yDnXxCa5mHCSLXIQu3PPUtxNHAvRFzAFkkgDWMxHp3Sca5KBLu3ZbYZmdFzcPJkX1BldWZYXKF/9
-cb7fa7dc
-##a033837d4f23e078bea6b3957
+import os
+import shutil
+from ._contains_protected import _contains_protected
+
+
+def _remove_non_protected(dir_path, protected):
+    """Recursively delete everything under dir_path except protected-named items."""
+    for entry in os.listdir(dir_path):
+        if entry in protected:
+            continue
+        target = os.path.join(dir_path, entry)
+        if os.path.isdir(target) and _contains_protected(target, protected):
+            _remove_non_protected(target, protected)
+            if not os.listdir(target):
+                os.rmdir(target)
+        elif os.path.isdir(target):
+            shutil.rmtree(target)
+        else:
+            os.remove(target)

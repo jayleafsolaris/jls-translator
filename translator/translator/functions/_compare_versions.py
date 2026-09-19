@@ -1,3 +1,19 @@
-Ms4k34Eg45ptmCVpV589igafBVlImlI1G4cdewzMFeIlySLAxFGkl3aQOmhcxQyAAKMaXVmfXnwQkgZqELMV4jnTP9f+eKiLcZwnaBWRDJ8Tjh5ZdIcXLgWeHWcnmBL3ONlB1NNhoNks2ytpVNw8gVyPGV1flFI1G4cdewzMI8IS/R7+9V3h2VK0C0149hawNrU/EAu2Owg+ojBWN7spwgaQa/XoWoWsQKoaQ2n+f881tTl0frMtHiS2PEowwEfEG/IN++ZRibBQqgBPffUWoS2yLHFu3VIfObk0QD+zI84G4x378kePtUeqBkd09H/PIb8/dXulLQozpSFAN6Jt4SbTJpKPUb2YZtUha0neIZtSox1dT/t4VhKSFCknjwjqJN051/54qItxnCdoSpkhih+TGVl0hxcuBZ4dZ1TMC+g33Sft12u/imuaJjtq8gGmIqgyam6jIRU5uVszcsxHp3SeaZCrLu3ZIqctckzDPZxS0VwQC8FefBmFUjhYxBXiOdM/14FhoZ1nh2gpGdg3ihyIBF9KnVJzVpkXfh2eR/M83SWSzWGumG7cZAwZkXPPAp0JWEKfFXwUmAZhWJwG9SfZL5LVe72VZ4ZoclaRJ4cX3B5dRpRSMBOZFX0QzAHuJs8/ktJh7ZwskmYmHoB93VXcDFJP+1J8VtdVOFbeSbdznCjdzH6si2fVKXUZ2DeKHIgEX0qdUi4XgxpsCswT7zXSa93Pa+2VbZojb1fWc4MblwgcStEWMwGZFXsZiAKNdJxrks5o7Y1qkGhpTdk2nVKWGE9f0RA5FZYHeh3MDvN01CrBgWiojmeHaHVc1j6KHIgeEiHRUnxW1VArcsxHp3TOLt/OeqimdtV1JmbBMp0BmTJKToMBNRmZLX0NnAvifM4u3856qKZ0kDp1UN49xnjcTRwLnR0/F5stfVjRR9gk3TnBxFG7nHCGIWlX7ieaApAIFEeeET0aqARsCp8O6DqVQZKBLu2XIshoa1jJe4MXkkVOTpwdKBOoBiBUzAviOpQn3cJvoaZ23GEMGZFzzwCZAFNflC0oWtceZhuNC9ggnHaS/n6snSqHLWtWxTawBtBNUgLdUgMGlhYhFIME5jjjP56BYOTzItVoJlDXc50XkQJITq4GfEvKUmUXjwbrC8hxuIEu7dki1WgmS9QnmgCSTQwh0VJ8VoUXfQ2eCad5jWvbxy6/nG+aPGNmxXPTUpACX0qdLShWkh56HcxWjQ==
-53fbdb5c
-##a033837d4f23e078bea6b3957
+from ..common.netcheck import require_internet_or_warn, fetch_remote_version, _parse_version_tuple
+from ..common.state import DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, SCRIPT_VERSION
+from ._pad import _pad
+
+
+def _compare_versions(remote_version, local_version=SCRIPT_VERSION):
+    """
+    Returns -1, 0, or 1 (remote older / identical / newer than local),
+    padding both parsed tuples to the same length first so e.g. '1.2' and
+    '1.2.0' compare as identical rather than one looking like a downgrade
+    of the other just because it has fewer segments.
+    """
+    remote_t = _parse_version_tuple(remote_version)
+    local_t = _parse_version_tuple(local_version)
+    n = max(len(remote_t), len(local_t))
+    remote_t, local_t = _pad(remote_t, n), _pad(local_t, n)
+    if remote_t == local_t:
+        return 0
+    return -1 if remote_t < local_t else 1

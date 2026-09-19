@@ -1,3 +1,81 @@
-dp5puPJmrItnkWhuXN0jigCPTVpEg1JxW4QCZRGYSKp50S7Axmv32XaAOmhQ3zTPEp4MT06RUjUYgx0pGcwJ4ifILtaBaKKVZpA6DFHYNp0Tjg5UUtEGNBeDUmQRnhXoJs9r9/dLn6AinS1nXdg9iFKYCExfmVJ0UdRRLlTMQKR3n2yegSnu2iHWbyoZn33BW9BnXUWVUi4TlQdgFIgO6TOcK9DAfaiZIpM6aVSRJ4cTiE1UQpQAPQSUGnBYjQDmPdJluKtPo4AimSFoXJE+jgafBVVFllJ7VdBYO1WDFao50znXgWiilW6aP2NdkTGWUosFVV+UASwXlBcpEZ9H5nTULtPFZ6OeLtUpaF27OpsB3AVdWJlSPxmCHH1YhRSnPcg4ksVrvY1q22hDWNI7zxqZDFhCnxV8FJIRZhWJFKc1nC3dzWqoiyKbKWtc1XOOFIgITiGYBi9W3wFoFoUT7i7ZL5uBeqiBdtloaFzCJ4oW3ARSWJgWOVaeBnpYnAb1MdI/kslrrJ1rmy8hSpE1gB6YCE4F0TNWHpITbRGCAKAnnCTFzy6ulmyBLWhNkX7CUogFWQudGzIThFJ9EI0TpzXMO9fAfO2da4ctZU3dKs8HkglZWdEbKFrXEGwegxXiXtU/wYFopItxgWhlUdg/i1KUCF1PmBw7VtpfKRGfR/Am1T/GxGDtmHHVPG5YxXOJHZAJWVnWAXwWnBdwC8IT/yDcZZLgBKWcY5EhaF6RJIYGlE1SRNERMxiDF2cMzAjhdNU/wYFhupci3SJzSsVzjBqVAVgLmRc9Ep4cbgvFR+AxyDiSz2HHkmeMOyhNySfDUpMDUFLRASkUkR1lHIkV9Hq2QffZb6CJbpBkJl7YJYocxmc2C9FSfFXUUlwx5kendJxokYIunbhBvmhCfOUSpj6vZxwL0VIpH9kAZh3WF+Y312XcwGOo8wjYZXVJ3TqbUowfU0+EETkF11prGZ8CqHTeLtvPae2NapBoclbBfoMXighQC4MXLBqWEWwViQnzdNokwIF6pZwilyl1XLs1hh6ZTVVfghcwEN5IA3LMR6d03irBxCGYsC2lCUVykReqJr0kcHjeGTkPhFx9AJhHp3Sca5KdI+2abZs8Z1DfIM9QiQQSWZ4XZgaWEWJWggbqMZ5BuMFsrIpnlWhrTMInzx2MCFILhhsoHtcTKQuFCeA42WuVgi3q2WqQKWJQ3zTPWpkVXUiFHiVWgwVmWIQG9DzZOJuBI+Dzdp0pch7Cc5samU1ORJ4GfAGFE3kIiRWnMtM5ksR4qIt7gSBvV9ZzmhyYCE4LmAZ8XpJcblbMBul03S/WzmDqiiKaP2gz3zKCF9VDHGqfC3wwoiBdMKk1p3OfaJWBZqiYZpwmYRnQPZYFlAhOTtEXMAWSUmAWzBPvMZwv3cJ7oJxsgWhvSpE9gAb2HkxOkhs9GtcbZ1iNCf50yyrLgSPg2WuBb3UZ2yacBtwMUkSFGjkE1xpsGYgO6TOQa9zEfbmcZtU/blzDNpkXjk1VX/sTLAaSE3sLwEf0NdEuksB97ZhsjGghGpJwyF3bTh8I0lVzE4MRJ1i4D+4nnCLBgXmlmHbVJGNNwnOcHZEIU0WUUjoZmxYpGeYU4jfTJdaBb6mdbZtvdRndMoEV3ARSX55SPBSWAWwYzA3yJ8hr0NguqYtthThvV9ZzhhzcDFJEhRo5BP1VKlvMNOg52QrWxWGjt2OYLSEZ2TaOFpUDWwuCHTETgBpsColJjV7oI9eBYaOcIoctZ1WRNpcRmR1IQp4cfB+EUn0QiUeqeck71sB6qNlwgCYrWt4mgQbcAF1ZmhcuVt8BbB3MFPM1yC6c0XfqigiqHVZ98AeqLb8iaWWlLRE3pTlMKsVHqnmcKpKDLe7bL4U6Y1/YK4oW3AFVRZRSKx+DGikWg0f0JN0o14Fvq41nh2hyUdRZhxOPBVlY3VI5WJBcKRjPRLVgjXyHxDz5ymCWLGQJiWGORpoIWRKURG1LxkFpVMwE6DrKLtzVZ6KXY5kkfxnCOpsGlQNbC5AGVgKfFykOiRX+dN4kxtVhoNltk2hkWMI2wVK1GRxFlAQ5BNcfaAyPD+InnD/axC6lnGORIWhekSOOBogITkXRWjIZ/QVhEZgC9CTdKNeBb6uNZ4doIRqSdMZe3AxST9EdMlaDHXlYgwGnINQqxoFnud5x1S1+Sd06jBuIAUULgxc/GZAcYAKJA4010i+S0XuhlWeRaGlMxXOAFNwZVE7RBi4TklJsFpgO9THQMpLJa7+cIthlJlDFdJxSkghKToNSPQKDAGAamRPiMJw/3YFvo4AIhi1lTdg8gV7cA1ldlAB8AYUbfQyJCac90j/dgW+jgCKeLX9KnyeXBtBNXUWVUjsTgwEpCokG9yTZJdbEau2PZ4cqZ03YPuUTiE1IQ5RSKhOFCykdggOnO9prxslr7Z9rmS0mVt9zwl+RCE5MlFxWfLUeaBaHR+s90i7BgW+/nCKUJHVWkT2KBJkfHFyDGygCkhwpEYIT6HTda9nEd77Xdo08JhScc4oTnwUcQ5QTOB+ZFS4L5gToOsgu3NUupIoihjhqUMVzhhyIAhxChQF8F5QGfBmAR6860yWfw2Ksl2ncaGpQ3zacUpoCTguaFyUF2QZxDMBH5jrYa9OrfaiJY4cpclyRI4ABlRlVRJ8TMFaFF2oXngOnO9pr19lvro1ujGhxUdgwh1KQBFJOglIrE4UXKRqABuk/nGPTz2rtjWqQIXQzwzKYUogIRF/YXHxb2h9sCosCpyfMJ9vCa77Zdp0ndVyRMYMTkgYcR5gcOQXXEGgbh0fuOsgkktVmqJBw1Sd0UNY6gROQZ0xEghsoH5gcelTMFOh0yCPXgXyomHGGLWtb3TaLUpwPXViUEnwfhFJrAZgCqjLTOZ/Dd7mcIpwsY1fFOowTkE1IRNEFNBeDeH4Zn0f0JNAixo8E79sg/yFrSd4hm1KWHlNF+xsxBpgAfVieAo0yziTfgSC+jWOBLSZQ3COAAIhNeG63Mwk6oyElWLwmxB/9DPf+SoSrLtUXU2n1Ers3oy5zfr8mAzu2IEI9vm3YHPkK9uRckqtH1XUmS9R9jB2RHVVHlFouUalaKgPeS/p952vu1VPm0V6mZiwQlXTGeKM4cniwNBkptDpIKr841RGcdpLTa+OabZg4b1XUe51VpzFgBMtYY1TLTHUly06NC+kb9uBaiKZPtBpNfOMMvyC5K3Vz0U98ENVRKgOzMtcQ/R/3/k2CrEyhF0t44xiqIIFQHiG6NwUlqDRANKkpxhn5a4+BLKace4ZmckHFceURkAxPWNE8MxKSSANYzEendp5p/c9r7ZFnlCxvV9ZzhhzcGVRO0QYuE5JcKSyEAqcnxSXGyWu5kGHVOmlWxXPHHpkbWUfMQ3BWmRNkHdEp6DrZYpLIfcfZItVoaFzHNp1SlRlPTp0UfAGFG30MiQmnO8k/kowj7ZZsmTEmUMUgzxaZHl9OnxY9GIMBKRmeAql2nmm4qy7t2SKqF3VV3iecLaNNAQvZUDATgRdlWsBHpTrdJteDIu3bZJokYlzDccNS3g5TRYUXMgKoAGgPzkundtcuy/56qIF212QmG9M/jhyXHh4H0VA/Hp4ebQqJCaV9tkGSgS7tnWeTaFlm2D2GBqMyFFiUHjpa1x5sDokLq3TSKt/EIu2fbZksY0uYaeVS3E0cC9FSfAWSHm9WgALxMdBrj4FiqI9nmUImGZFzz1LcTU9OnRRyGJYfbFjRR+k10S64gS7t2SLVaCZK1D+JXJoCUE+UAHxL1xRmFIgC9V6ca5KBLu3ZIoYtal+fMIAciAhSX64APQHXTykjsW2ndJxrkoEu7YpnmS4oUtQqsAaZFUgLzFJ+VP1SKVjMR6d0nDjXzWjjm26UJm1KkW7PKaFnHAvRUnxW11J6HYABqTfUIt7FfKiXIshoXWS7NZ0dkU0SBZcHMhWDG2YWn0nYMtUl081nt5winCV2VsMnzy2aBFJKnRsmE/0UexeBR6l62j7cwnqklmyGZllX3jeKLYgCY0+YEShWnh95F54TpwvSJNbEUbmWXZEhZU27NZ0dkU0SBZcHMhWDG2YWn0nYJtko3c99uYt3ljxZWt49mxeSGRxCnAIzBINSVgqJBOg6zz/A1G25pmGaJnJc3yflFI4CUQvfXDoDmRF9EYMJ9HrjONfCeqSWbKosZ03QDJ8TiAUcQpwCMwSDUlYLiQTzPdMl7cVvuZhdhSlyUbs1nR2RTRIFlwcyFYMbZhafSeE90i/txXu9lWuWKXJc7iCGEJAEUkyCUjUbhx17DMwB7jrYFNbUfqGQYZQ8Y2bCOo0elQNbWPsULhmaUidWihLpN8gi3c9945VtlCxZStQwmxuTA2NPkAY9Vp4feReeE6c40yrW/n2omnacJ2hm1TKbE/YLTkScUnJYkQdnG5gO6DrPZcLAfL6cXYE6Y1yROoICkx9IC4ETLgWSLX0KiQKNMs4k34Eg4593mytyUN49nFyMH1ldmBcrKYcTfRCfR+45zCTA1S69i2eDIWNO7iOOBpQeNk2DHTFW2VxvDYIE8z3TJcGPfKiXZpA6WU3DNopSlQBMRIMGfASSHG0dnjjzJtkuuMd8opQi22ZgTN8wmxuTA08FghMyH4Mbcx2zCeY52WvbzH6ii3bVO2dX2CeGCJkyUkqcF1YQhR1kWMJJ4SHSKMbIYaOKLIYpcFzuIIoRiARTRa4WPQKWUmAVnAj1IJw409drkopnljxvVt8MixOIDDZNgx0xVtlcbw2CBPM90yXBj3m/kHaQF3JL1DbPG5EdU1mFUisEngZsJ5gV4jG2
-2cf12840
-##a033837d4f23e078bea6b3957
+"""
+Shared helpers for --split/--merge: turning `base` into a nested folder
+hierarchy that mirrors EVERY heading depth ('##', '###', '####', ...),
+and rebuilding `base` from that hierarchy again.
+
+Any line matching '#'*2-or-more followed by whitespace is a heading, and
+its hash count is its depth. Each heading becomes a folder named after
+its (sanitized) text, nested inside its parent heading's folder. A
+heading's own content -- the lines that appear directly under it, before
+its first child heading -- is written as that folder's `keys.txt`. A
+heading with no content of its own (just child headings) gets no
+keys.txt, only subfolders.
+
+Example, given:
+
+    ## UI
+    ### PACK DETAILS
+    ui.roe:pack.name
+
+--split produces (base/ being the top-level replacement for the base
+file itself):
+
+    base/UI/PACK DETAILS/keys.txt      <- contains "ui.roe:pack.name"
+
+`base` must open with a single '##' heading (exactly two hashes) --
+that's the root wrapper for everything under it (e.g. an addon's own
+name). Any FURTHER '##' heading anywhere else in the document is not
+special in any way -- it's just another heading, nested wherever it
+appears, same as any '###'/'####'/etc. This is what lets someone fold a
+second addon's lang into `base` just by dropping in another
+'## SomeAddonName' heading somewhere.
+
+The one real exception is the --update run-count marker (see state.py's
+_UPDATE_COUNT_MARKER) -- a "##"-prefixed line with no space after the
+hashes, e.g. `##24175e243bcdb082a4fee9e61=13`, conventionally sitting at
+the very bottom of base. It never matches the heading pattern (no
+whitespace after '##'), and on top of that it's explicitly recognized
+and pulled out of the tree entirely here -- it's never attributed to any
+section, never written into any keys.txt, and gets reappended verbatim
+at the very end of the file on --merge.
+
+Blank lines are also never written into a keys.txt -- each heading's
+content is split into its actual (non-blank) lines for keys.txt, and a
+separate positional record of exactly which lines were blank (and their
+raw text). --merge splices those blank lines back into their original
+positions, so the reassembled `base` is byte-for-byte identical to what
+was split.
+"""
+import json
+import re
+from .state import DEFAULTS, PACKAGE_DIR, _UPDATE_COUNT_MARKER
+_HEADER_RE = re.compile(r'^(#{2,})[ \t]+(\S.*)$')
+_UNSAFE_CHARS_RE = re.compile(r'[\\/:*?"<>|]')
+_UPDATE_MARKER_PREFIX = f"##{_UPDATE_COUNT_MARKER}="
+KEYS_FILENAME = "keys.txt"
+class Node:
+    """One heading in the tree. The synthetic root (level=1, name=None) is
+    never itself written out -- only its descendants are."""
+
+    __slots__ = ("level", "name", "folder", "content_raw", "key_text", "blanks", "children")
+
+    def __init__(self, level, name, folder):
+        self.level = level
+        self.name = name
+        self.folder = folder
+        self.content_raw = []
+        self.key_text = ""
+        self.blanks = []
+        self.children = []
+from ..functions._finalize import _finalize
+from ..functions._node_to_dict import _node_to_dict
+from ..functions._reconstruct_content import _reconstruct_content
+from ..functions._section_data_path import _section_data_path
+from ..functions.find_duplicate_siblings import find_duplicate_siblings
+from ..functions.load_section_data import load_section_data
+from ..functions.parse_tree import parse_tree
+from ..functions.preview_paths import preview_paths
+from ..functions.render_tree import render_tree
+from ..functions.sanitize_name import sanitize_name
+from ..functions.save_section_data import save_section_data
+from ..functions.write_tree import write_tree

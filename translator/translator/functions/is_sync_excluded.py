@@ -1,3 +1,9 @@
-Ms4k34Eg45ptmCVpV580hgaUGF50kAI1Vp4feReeE6cL7Bn99UuOrUexF0h4/Ba8ePZnWE6XUjUFqAFwFo844izfJ8fFa6nRcJAkWUneIIYKox1dX5lbZnzXUilYzkWlAM4+14Fnq9l2nSF1GcEymxrcRU5OnRMoH4EXKQyDR/M82Wvbz325mG6ZaHRW3ifGUpEYT1/REDlWhBlgCJwC43TeMriBLu3ZYJo8bhmcfp8HjwUcSp8WfFvaAnwUgEeqeZw719N9pIp2kCZyGd08jBOQTU9fkAY5WtccbA6JFacm2TvdgW2il3aQJnIXk3HNeNxNHAuYFHwEkh5WCIMU7izjO9PVZuOcbJE7cVDFO8dQ0h1FSNNbZnzXUilYzEendM4uxtR8o9lWhz1jM5Fzz1KOCEhegxx8F5kLIQiNFfN01SWS/l6ftlawC1J89QyhM7EobwuXHS5WhxN7DMwO6XTOLt7+fqKKa40XdljFO8EBjAFVX9lQc1TeWwM=
-6f74e3ff
-##a033837d4f23e078bea6b3957
+from ..common.github_api import _PROTECTED_NAMES
+
+
+def is_sync_excluded(rel_posix_path):
+    """True if this path (relative to the install root) must be skipped by
+    both --push and --pull -- persistent local state, never repo content."""
+    if rel_posix_path.endswith(".pyc"):
+        return True
+    return any(part in _PROTECTED_NAMES for part in rel_posix_path.split("/"))

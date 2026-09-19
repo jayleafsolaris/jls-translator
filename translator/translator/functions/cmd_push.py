@@ -1,3 +1,114 @@
-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
-3dae397d
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.code_obfuscate import compile_code_text
+from ..common.config_store import get_release_branch
+from ..common.github_api import GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix, get_branch_commit_and_tree, get_full_tree, create_blob, create_tree, create_commit, update_ref, git_blob_sha
+from ..common.obfuscate import _KEY_LEN
+from ..common.progress import _report_keys
+from ..common.state import GITHUB_REPO
+from ._local_files import _local_files
+from ._set_hidden_code_key import _set_hidden_code_key
+import secrets
+
+
+def cmd_push(clean=False):
+    local_root = state.SCRIPT_DIR / GITHUB_REPO
+    if not local_root.is_dir():
+        print(f"No '{GITHUB_REPO}/' folder found in this directory -- nothing to push. "
+              f"Run --pull first to create it.")
+        return
+
+    cli_path = local_root / "cli.py"
+    if not cli_path.is_file():
+        print(f"No cli.py found directly under '{GITHUB_REPO}/' -- nothing to push. "
+              f"Run --pull first to create a proper local checkout.")
+        return
+
+    if clean:
+        code_key = None
+        cli_source = cli_path.read_text(encoding="utf-8")
+    else:
+        code_key = secrets.token_bytes(_KEY_LEN)
+        cli_source = _set_hidden_code_key(cli_path.read_text(encoding="utf-8"), code_key)
+        cli_path.write_text(cli_source, encoding="utf-8")
+
+    branch = get_release_branch()
+
+    try:
+        commit_sha, tree_sha = get_branch_commit_and_tree(branch)
+        remote_tree = get_full_tree(tree_sha)
+    except GitHubAuthError:
+        print("Failed to push: You are not authorized to do this")
+        return
+    except GitHubApiError as e:
+        print(f"Failed to push: {e}")
+        return
+
+    remote_prefix = find_remote_package_prefix(remote_tree)
+    if remote_prefix is None:
+        print("Failed to push: couldn't find cli.py anywhere in the repo's tree "
+              f"on branch '{branch}' -- unexpected repo layout.")
+        return
+
+    remote_files = {
+        e["path"]: e["sha"] for e in remote_tree
+        if e["type"] == "blob"
+        and (e["path"] == remote_prefix or e["path"].startswith(f"{remote_prefix}/"))
+        and not is_sync_excluded(e["path"][len(remote_prefix) + 1:] if remote_prefix else e["path"])
+    }
+    local_files = _local_files(local_root, remote_prefix)
+    cli_remote_path = f"{remote_prefix}/cli.py" if remote_prefix else "cli.py"
+
+    if clean:
+        print("--clean: pushing plain, uncompiled source (no key rotation).\n")
+
+    entries = []
+    total_files = len(local_files)
+    try:
+        for done, (path, local_path) in enumerate(local_files.items(), start=1):
+            _report_keys("Pushing", done, total_files)
+            if path == cli_remote_path:
+                content = cli_source.encode("utf-8")
+            else:
+                content = local_path.read_bytes()
+                if path.endswith(".py") and not clean:
+                    content = compile_code_text(content.decode("utf-8"), code_key).encode("utf-8")
+            if remote_files.get(path) == git_blob_sha(content):
+                continue
+            blob_sha = create_blob(content)
+            entries.append({"path": path, "mode": "100644", "type": "blob", "sha": blob_sha})
+
+        for path in remote_files:
+            if path not in local_files:
+                entries.append({"path": path, "mode": "100644", "type": "blob", "sha": None})
+    except GitHubAuthError:
+        print("\n\nFailed to push: You are not authorized to do this")
+        return
+    except GitHubApiError as e:
+        print(f"\n\nFailed to push: {e}")
+        return
+    except UnicodeDecodeError:
+        print("\n\nFailed to push: a .py file under the repo folder isn't valid UTF-8 text -- "
+              "fix its encoding and try again.")
+        return
+
+    if not entries:
+        print(f"\n\nNothing to push -- already matches '{branch}'.")
+        return
+
+    changed = sum(1 for e in entries if e["sha"] is not None)
+    removed = sum(1 for e in entries if e["sha"] is None)
+
+    try:
+        new_tree_sha = create_tree(tree_sha, entries)
+        new_commit_sha = create_commit(
+            f"Syncronized", new_tree_sha, commit_sha
+        )
+        update_ref(branch, new_commit_sha)
+    except GitHubAuthError:
+        print("\n\nFailed to push: You are not authorized to do this")
+        return
+    except GitHubApiError as e:
+        print(f"\n\nFailed to push: {e}")
+        return
+
+    print(f"\n\nPushed to '{branch}': {changed} file(s) updated, {removed} file(s) removed.")

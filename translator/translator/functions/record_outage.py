@@ -1,3 +1,20 @@
-Ms4k34Eg45ptmCVpV58hjgaZAVVGmAZ8H5oCZgqYR9gY8wj5q2i/lm/VZllV3jKLLY8ZXV+UUjUbhx17DMw46zvdL+3SeqyNZ/8udFbcc8EtjwxKTq4BKBeDFykRgRfoJshr7dJvu5xdhjxnTdRZ5XiYCFoLgxc/GYUWVheZE+Yz2WObmwTt2SLVaiQbu3PPUtwuXUedUisekhwpGcwA4jrJItzELrmLY5s7aljFOoAc3AJJX5AVOVaeASkciRPiN8gu1oEmuYtjmztqWMU2wQKFSk8h0VJ8VrEzQDS5NcIL7x/g5E+Gpla9GkNq+RyjNtwZTkKBAjUYkFspVcFH9THdJ5LEeKSdZ5srYxn2PIAVkAgcQoUBORqReClYzEf3Ic8j18Uur5hhnmQmV94nzxiJHkgLhRo9AtcTKQqZCac81T+Sznu/2W2CJiZK1D+JX5UATESCFzhWlBdgFIUJ4F6ca5KBJqWQdoEhaF6RPJoA3AJLRdEROR+bG2cfzA70dNkzwsRtuZxm1T1oXdQhzwCZDFALnR09EtcTZxzMDvQ6mz+4gS7t2XKQJmdV2CmKFtxAEQuCFzlWqBNtEpkU8wvfKsKJJ+TXIrgpdFLCc40diAUcXJgcOBmAASkbmRX1MdI/3tgupJcI1WgmGcEhgBWOCE9Y0QEzVoMabBGeR+kxxD+S02u/lm6ZaHVRwzqBGY9NSEOUUjATlgBnHYhH5DXMa9vPfbmcY5FoaV+7c89S3ApORIYbMhHXG31W5kendJxpkIME7dki1T9vTdlzsD6zLncR+1J8VtdSKVjMA+Yg3WuPgVGhlmORF3VN0CeKWtVnHAvRUnxW11JtGZgG3HbUJMfTUbqQbJEncWbTMotQoU0BC6UAKRP9UilYzEendJwv09VvlttmlDFZTtg9ix2LMl5KlVABVspSXQqZAo10nGuSgS7t2V2GKXBc7iCbE4gIFE+QBj1f/Q==
-7ae6b8e4
-##a033837d4f23e078bea6b3957
+from ..common.ratelimit import _LOCK
+from ._load_state import _load_state
+from ._save_state import _save_state
+
+
+def record_outage():
+    """
+    Call when a genuine translation outage is detected (translate.py's
+    FAILURE_STREAK_THRESHOLD tripping) -- real evidence Google itself
+    pushed back, not just that a run hit our own self-imposed ceiling
+    (hitting our own ceiling is expected under real load and isn't
+    penalized -- see _adjust_cap()). Marks both windows currently in
+    progress so their next reroll shrinks the learned cap instead of
+    growing it.
+    """
+    with _LOCK:
+        data = _load_state()
+        data["hour_window_bad"] = True
+        data["day_window_bad"] = True
+        _save_state(data)

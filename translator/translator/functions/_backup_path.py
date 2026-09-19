@@ -1,3 +1,5 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSTT2qJtIY6BiegV6Mukm0D0Nm9Rq9ePZnWE6XUgMUlhFiDZw49zXII5qINMfZItVodFzFJp0c3D19aLozGzOoNkAqzEinEPkN8/RCmapZ1ypnStQMjROfBklbrhQ1GpJQVHI=
-3af315aa
-##a033837d4f23e078bea6b3957
+from ..common.state import DEFAULTS, PACKAGE_DIR
+
+
+def _backup_path():
+    return PACKAGE_DIR / DEFAULTS["base_backup_file"]

@@ -1,3 +1,18 @@
-Ms4k34Eg45ptmCVpV58nigqIMkxZngY5FYNSYBWcCPUgnAng6FqEqkqqG1Z8/R+mPLs+EAuuJRMksy1ZObgzwgbyQdTTYaDZLKolZ03SO7ARnR5ZC5gfLBmFBikngQbzN9QU0cB9qPNkhydrGZ8MnwCTGVlIhVI1G4cdewzMOPcm0z/XwnrHn3CaJSYX7iGKAYgCTk7RGzEGmAB9WLMV4ifIJMDEBMfzZpAuJk3eDI0AlRlVWJlaKBOPBiBC5kendJwi1IFgoo0igS1+TYtZz1LcTRwL0VIuE4MHexbME+IsyEGSgS7tiXCaPGNaxTaLXtwZU0CUHC9WylJWCJ4I8zHfP5rVa7WNK/9oJhmRN4oU3B9ZW51aMV/NeClYzEendJxrxc58qdk/1SUoXsM8mgLUXRUh0VJ8VtdSKViOFe4gnHaS41yErUumAFlq4RajPrUje3jfFTkC3wVmCohJ6zvLLsCJJ+TzItVoJhmRc88bmk1eWZgGfB+EUkcXggK9XpxrkoEu7dki1WgmGcM2mweOAxxcngA4fNdSKVjMR6d0zi7G1Hyj2V2YKXJa2QyME48IFFyeADha1xB7EZhOjXSca5LCYaOPZ4c8Y12Rbs8tqyJub64iHSKjN1s2whTyNpQ519Fi4dlyhydyXNInihbVZxwL0VIuE4MHexbMOPUxzz/d02vlmm2bPmNLxTaLXtwZU0CUHC9f/Q==
-b287d1d8
-##a033837d4f23e078bea6b3957
+from ..common.text_protect import BRITISH_SPELLINGS, _WORD_PATTERN
+from ._match_case import _match_case
+from ._protect import _protect
+from ._restore import _restore
+
+
+def to_british(text):
+    if not text:
+        return text
+    protected, tokens = _protect(text)
+    def repl(m):
+        word = m.group(0)
+        brit = BRITISH_SPELLINGS.get(word.lower())
+        if brit is None:
+            return word
+        return _match_case(word, brit)
+    converted = _WORD_PATTERN.sub(repl, protected)
+    return _restore(converted, tokens)

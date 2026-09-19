@@ -1,3 +1,8 @@
-PdE73dN67Ytn/0IMXdQ1zy2OCE9fngA5XoMXcQzAR/M71y7c0if38yLVaCZd1DXPAJkdUAOcW2Z811IpWMxHp3TVL8qBM+2QbIFgaxfWIYAHjEUNAth4fFbXUilYzEf1Mcg+wM8uuZZpkCZ1Ytg3ly/cBFoLmBYkVstSZR2CT/M71y7c0iftnG6GLSZUnzSdHYkdFBvYeHxW11J7HZgS9TqcOdePfbibKodqRmXCea8uj0dsY60Bdl6rFiJRsBStFOA4mOEs4dlwkDhqFZEnigqIQRxNnRM7BcoAbFalIMkb7g7x4F2I0Ag=
-adc84f73
-##a033837d4f23e078bea6b3957
+import re
+
+
+def _restore(text, tokens):
+    def repl(m):
+        idx = int(m.group(1))
+        return tokens[idx] if idx < len(tokens) else m.group(0)
+    return re.sub(r"@\s*@\s*PH\s*(\d+)\s*@\s*@", repl, text, flags=re.IGNORECASE)

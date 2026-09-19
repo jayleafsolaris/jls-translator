@@ -1,3 +1,34 @@
-Ms4k34EgrpRmqitnWtk2sBCJBFBP0RsxBpgAfViPCuML3yrRyWuSm3ecJGIz1yGAH9xDX0aVLT8XlBpsJ48L4jXOa9vMfqKLdtUra13uMI4RlAhjSJ0XPQT9FHsXgUepN9Ev7cJvrpFnqj5vXMZzhh+MAk5f0RExEqgRaBuEAtgi1S7FqwTHnWeTaGVU1QyME58FWXScFzID31szcsxHp3TTO8bIYaOKIshoXTORc89S3E0cC9lQPgOeHm1awEelBtkpx8hiqdl2nS0mWtAwhxfcC05EnFIoHpJSag2eFeI6yGvQwH2o2WScJGMVkSSGBpQCSV/RBi4XmQFlGZgO6TOeYp6rLu3ZItVoJhmZcZkbmRoeB9FQCh+SBSkRggHodN0p3dR67Y1qkGhlWNI7ilKaBFBO0VovH40XJViHAv503yTHz3rk2yvZQiYZkXPPUtxNFAmSHjkXhVAlWM4k6zHdOZLSb7ucZtU4dFbWIYoBj00XC4UaOVaDAGgWnwvmINUk3IFtrJpqkGovFbtzz1LcMDYL0VJ8BoUbZwzERcQ13yPXgSPg2XWdKXIZxjyaHphNRUSEUjAfnBcpDINH4zuDF9yDJ8fZItVoYFbDc4Ze3EVXTohefBKSAWpRzA7pdNklx8xrv5h2kGBpScU6gByPQRxYhRMuAspDIELmR6d0nGuSgS69i2ubPC5fk3PPCZUQEgvcXz8XlBpsWMFK/D/ZMoidNrDZeZEtdVrMccZ49k0cC9EFNB+bFyksnhLibrZrkoEu7dki1TpnTpFuzxuSHUlf2RR+KpkxYReDFOJ0jWbJzWuj0W2FPG9W3yDGD8ZNHgLfASgEngIhUeZHp3Sca5KBLrmLe89CJhmRc89S3E0cC9FSNRKPUjRYhQnzfM4qxYgE7dki1WgmGZE2lxGZHUgLpxMwA5I3ewqDFb1enGuSgS7t2SLVaCYZwSGGHIhFHnudFz0FklJsFpgC9XTda9zUY6+ccNtqLzORc89S3E0cC9FSfFaUHWcMhQnyMbZrkoEu7dki1SFgGYBz00/cBFhT0U5hVpsXZ1CDF/M90yXBiDTH2SLVaCYZkXPPUtxNV06IUmFWmAJ9EYMJ9A/VL8qBI+3IX654WzORc89S3E0cC9FSfFaVAGwZh22ndJxrkoEu7YlwnCZyEddxvx6ZDE9O0RcyApIAKRnMCfI53i7AgWyojXWQLWgZgHOOHJhNR0eUHHQZhwZgF4IUrimSaZurBO3ZItU4dFDfJ8db9k0cC9EbOlacF3BY0Vqndt4+281q78MI1WgmGZFzz1KfAFh0khM/HpItaw2FC+N8lUGSgS7tnG6cLiZS1CrPT8FNHl2YFytUzXgpWMxHp3Sca9HMapKaY5YgY2bHOooF1EQ2C9FSfBObG29YhwL+dIF2koNtoZxjh2o8M5Fzz1LcTRwLkh84KZQTahCJOOQ42SrAiSfH
-cc64d86b
-##a033837d4f23e078bea6b3957
+from .cmd_cache_build import cmd_cache_build
+from .cmd_cache_clear import cmd_cache_clear
+from .cmd_cache_view import cmd_cache_view
+
+
+def cmd_cache_menu():
+    options = [
+        ("build", "Rebuild the cache from the current base file, without translating"),
+        ("view", "View info about the cache file (size, key count)"),
+        ("clear", "Clear saved progress + the translation cache"),
+    ]
+    print("Cache -- what would you like to do?\n")
+    for i, (key, desc) in enumerate(options, start=1):
+        print(f"  {i}. --cache --{key:<8} {desc}")
+
+    while True:
+        raw = input(f"\nChoose 1-{len(options)}: ").strip()
+        try:
+            idx = int(raw)
+        except ValueError:
+            print("Please enter a number.")
+            continue
+        if 1 <= idx <= len(options):
+            key = options[idx - 1][0]
+            break
+        print(f"Please enter a number between 1 and {len(options)}.")
+
+    print()
+    if key == "build":
+        cmd_cache_build()
+    elif key == "view":
+        cmd_cache_view()
+    elif key == "clear":
+        cmd_cache_clear()

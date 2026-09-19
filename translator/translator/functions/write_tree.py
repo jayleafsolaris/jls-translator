@@ -1,3 +1,10 @@
-Ms4k34Eg45ptmCVpV58gihGIBFNFglI1G4cdewzMLMIN7xT06EKIt0O4DQwzuzeKFNwaTkKFFwMChRdsUIII4zGQa9TOYqmccKo4Z03ZetV43E0cC9NQfiGFG30dn0fpO9guldIuoo5s1SNjQMJ9mwqITRRCl1I1AtcaaAvMBuktnCXdzyOvlWObIyZa3j2bF5IZFQfRBjQTmVJ7HY8S9SfZOJLIYLmWIpYgb1XVIYoc0k8eCftSfFbXG29YggjjMZIg19hRuZx6gWZ1TcM6n1rVVzYL0VJ8VtdSKR6DC+MxzhTCwHql12+eLG9LmSOOAJkDSFjMJi4Dkl4pHZQO9CDjJNmcWr+MZ9xCJhmRc89S3E0UTZ4eOBOFLXkZmA+ne5wA9/hdkr9LuQ1IePwWxlyLH1VflC0oE48GIRaDA+J61y7L/nqogXbZaGNX0jyLG5IKAQmEBjpbz1AgcsxHp3TaJMCBbaWQbpFob1eRPYAWmUNfQ5geOASSHDNyzEendJxrkoF5v5B2kBdyS9Q2xxGUBFBP3VI6GZsWbAqzF+Yg1GudgW2lkG6RZmBW3TeKANVn
-11694430
-##a033837d4f23e078bea6b3957
+from ..common.sections import KEYS_FILENAME
+
+
+def write_tree(node, folder_path):
+    """Writes node's own keys.txt (if it has any non-blank content), then recurses into children."""
+    if node.key_text.strip():
+        folder_path.mkdir(parents=True, exist_ok=True)
+        (folder_path / KEYS_FILENAME).write_text(node.key_text, encoding="utf-8")
+    for child in node.children:
+        write_tree(child, folder_path / child.folder)

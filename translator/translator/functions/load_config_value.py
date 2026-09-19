@@ -1,3 +1,12 @@
-PdE73dN67ZNxmiYMX8M8glLSDlNFlxs7KYcTfRDMDuok0znGgW2il2ScL1lJ0CeHePZnWE6XUjAZlhZWG4MJ4T3bFMTAYricKpspa1ydc4sXmgxJR4VPEhmZFyBC5kendJw709Vm7cQilidoX9g0sAKdGVQDnxMxE954KVjMR+4ynDvT1WbjnHqcO3JKmXrVeNxNHAvRUnxWgwBwQuZHp3Sca5KBLu3ZItU6Y03EIYFSlh5TRd8eMxeTASEIjRPves4u08VRuZx6gWBjV9I8ixuSCgEJhAY6W89QIFHmR6d0nGuSgS6ogWGQOHIZ9CuMF4wZVUSfSFZW11IpWMxHp3Sca5LTa7mMcJtoYlzXMpoeiGccC9FSLhODB3sWzAPiMt0+3tUE
-7348b49c
-##a033837d4f23e078bea6b3957
+import json
+from .config_path import config_path
+
+
+def load_config_value(name, default=None):
+    path = config_path(name)
+    if path.exists():
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            return default
+    return default

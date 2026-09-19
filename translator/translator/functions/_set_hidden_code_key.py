@@ -1,3 +1,18 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSVjugLtgf+RLt9U+K8wj/LGNfkQycF4gyVEKVFjkYqBFmHIk47DHFY9HNZ5KJe6o8Y0HFf88ZmRQVEftSfFbXUCta5kendJwZ19V7v5dx1StqUO4jli2ICERf0QU1Ap9SaBaVR+Is1TjGyGCq2WqcLGJc33OEF4VNUUqDGTkE1x5gFolHryfZLriBLu3ZXZAwckvQMJstnwJYTq4RMxuHG2UdswziLZI7y4guv5xvmj5jXZEygRbcDBxNgxcvHtcGexmFC+4622vdz2vH2SLVaGdJwTaBFpkJHE2eAHwWnBdwGMxKqnTJONfFLq+AIthldkzCO88Gk01ORIUTKBPXEWURwhf+c89r18xsqJ1mkCwmUtQq5VLcTRxfnlI9VpUAaBaIR+kxy2vAwGCplm/VJ2hckTyBUpkbWVmIUi8fmRVlHcwX8ifUZZLgLr2VY5wmJhuScNMGnQoCEc0aOQ7JUANYzEenN9Mm38RgudlunCZjFZE9gAbcDBxFkB85EtcRZhafE+Y6yGeS0mHtkHbVLGlcwj3IBtwfWUqVUj0F11BhHZ4Cpz3PQZKBLu2NapBodVzSIYoG3k1dX9ETfBGbE2cbiUevJ9kuksJipNdyjG91Gd4kgVKfAlFGlBwoX9l4KVjMR6V2nkGSgS7tjWOSF3ZL1DWGCtxQHE3TUX8NqDFFMbMswg3jH/Pmc/fbCNVoJhndOoEXj00BC6oefBCYACkUzA7pdN8n2/5+tKZ2kDByF8IjgxuIAVVFlAF0X9cbb1iCCPN00GXB1W+/jXGCIXJRmSeOFaMdTk6XGyRfqngpWMxH8DzVJ9eBYqSXZ4ZoZ1fVc4MbkghPcNxDAViEBnsRnE+udIF2koMs9/Mi1WgmGZFzzx6VA1lY3wIzBt9bA1jMR6c41SXX0iCsiXKQJmIR13GUBp0KY1uDFzofjw9yE4keqTzZM5qIc+/QCNVoJhnDNpsHjgMcCa0cflidHWAWxAvuOtk4m4El7dtem2oM
-20ae4df4
-##a033837d4f23e078bea6b3957
+from ..common.state import _CLI_KEY_TAG
+
+
+def _set_hidden_code_key(cli_py_text, key):
+    """
+    Returns cli_py_text with any existing hidden key marker line (see
+    _extract_code_compile_key.py) removed and a fresh trailing one
+    appended for `key` -- used by --push to rotate cli.py's embedded key
+    to a brand new random one on every single push. A plain "##<tag>:<hex>"
+    comment line, not a named constant, so it doesn't read as "here is
+    the secret" at a glance (see cli.py's own comment).
+    """
+    tag_prefix = f"##{_CLI_KEY_TAG}:"
+    lines = [l for l in cli_py_text.splitlines() if not l.startswith(tag_prefix)]
+    while lines and lines[-1].strip() == "":
+        lines.pop()
+    lines.append(f"{tag_prefix}{key.hex()}")
+    return "\n".join(lines) + "\n"

@@ -1,3 +1,15 @@
-Ms4k34Eg45ptmCVpV580hgaUGF50kAI1Vp4feReeE6cT1T/61GyMjHadDXRL3iHDUrsESGOEEB0Gnjd7CoMVq3TVOO3Sd6OaXZAwZVXEN4oW0E1aQp8WAwSSH2YMiTj3Nd8g08ZrkolwkC5vQZ1ziBeIMl5ZkBw/HqgRZhWBDvML3SXW/nq/nGfZaGFcxQyJB5ABY1+DFzla1xF7HY0T4gveJ93DIu2acJApclzuJ50XmUEcSIMXPQKSLWoXgQruIJBrx9FqrI1nqjpjX51ziBuIMl5HnhADBZ8TA3LmA+IynBTezm2slV2TIWpcwnuDHZ8MUHSDHTMC21J7HYEI8zHjO8DEaKSBK89CJhmRc81Q3j9ZX4QAMgXXCXsdgQjzMeM709Vm99ljlztpVcQnii2MDEhDjFI6GYVSbA6JFf500iTcjGu1mm6ALGNdkTWGHplNSUWVFy5Wmx1qGYA49TvTP5yDLO/zItVoJl/YP4oB3FAcUIx4fFbXUm8Xnkf3dNUlks1hrphuqjppVsV9nRWQAl4D01h+X814KVjMR6d0nGvbxy6jlnbVOChQwgyJG5AIFALLeHxW11IpWMxHp3Sca9HOYLmQbIAtDBmRc89S3E0cWZQefEvXAicKiQvmINU91/56otFumitnVe4hgB2IRBJKgi0sGYQbcVDFbad0nGuSgS7tkGTVIXVmwiqBEaMIREidBzgTk1p7HYBOvV6ca5KBLu3ZItVoJhnSPIEGlQNJTvtSfFbXUilYzBXiOdM/1/5+rI1q1XUmX5MonReRAkhOrgIuE5EbcQXDHPUx0DaQgWer2XCQJWlN1AyfAJkLVVPRFzAFklJ7HYBtp3Sca5KBLu2fa5ktdWLDNoIdiAhjW5AGNCvXTykI5kendJw519V7v5cikyFqXMJZ
-e4d7af2c
-##a033837d4f23e078bea6b3957
+from ..common.github_api import GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix, get_branch_commit_and_tree, get_full_tree, create_blob, create_tree, create_commit, update_ref, git_blob_sha
+
+
+def _local_files(local_root, remote_prefix):
+    """Returns {remote_path: absolute_path} for every non-excluded file under local_root."""
+    files = {}
+    for p in local_root.rglob("*"):
+        if not p.is_file():
+            continue
+        rel = p.relative_to(local_root).as_posix()
+        if is_sync_excluded(rel):
+            continue
+        remote_path = f"{remote_prefix}/{rel}" if remote_prefix else rel
+        files[remote_path] = p
+    return files

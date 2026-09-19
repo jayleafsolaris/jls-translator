@@ -1,3 +1,5 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSVjujI8IL/wT/8UeBvF2+DV9m/BK9Obk/NiH7FjkQ1xt6J48I6iTVJ9fFUa6WZpBgclzJJ8ZI9k0cC9EAOQKCAGdYikWkd8cU8e5KiKZBugVWcP0WsDm5NGNmsCAXM6UPK1iFCacg2TPGqw==
-cb0a6061
-##a033837d4f23e078bea6b3957
+from ..common.state import _CODE_COMPILE_KEY_MARKER
+
+
+def is_compiled_code(text):
+    return f"##{_CODE_COMPILE_KEY_MARKER}" in text

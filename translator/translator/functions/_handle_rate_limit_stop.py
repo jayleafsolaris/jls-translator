@@ -1,3 +1,15 @@
-Ms4k34Eg45ptmCVpV58wgByaBFt0ggYzBJJSYBWcCPUgnCzX1VG/nHOALXVN7jeKHp0UEAuGEy4YqABsHOYO6iTTOcaBfbSKCJwldlbDJ88GlB9ZSpUbMhH9eAMciQGnC9Qq3MViqKZwlDxjZt06ghuIMk9fngJ0E4UAIELmR6d0nGmQg12lmHCQLCZR0D2LHpUDWwuXHS5WpRN9HaAO6j3IDsrCa6idZ5ENdEveIc8FlAhOTocXLlaeBikLmRXhNd8uwZsE7dki1Th0UN8nzwaUCBxZlBMvGZleKRaDE+J0yCPT1S69i22SOmNKwnOGAdweXU2UUigZ1wBsC5kK4nTaOd3MIu2YbJFoY1fVWc9S3E1IQ5RSLASYEWwLn0fhJtMmktVmqNlvlCFoGcU7nRedCRwDnBsuBJgAeliECPB03WvVxGC4kGyQQiYZkXO7AJ0DT0eQBjUZmSdnGZoG7jjdKd7ES7+LbYdoaUzFMogX3ARPC5kTMhKbF21YjgLrO8tinIMs7/Mi1WgmTtAhgS2OCFgDggYuXpIAe1HFbad0nGvC02ejjSrXGHRW1iGKAY9NVEqCUj4TkhwpC40R4jCcZp+BfLiXIthlZVbfJ4YciQgcRJ8ROVaDGmxYmRTmM9lrxchgqZZ11TpjStQnnFzeRDYL0VJ8H5FSfRCeAuYw1SXVj224i3CQJnJmxTudF50JFALRGy9Wgxp7HY0D7jrbZd/AZ6Omdp06Y1jVe8ZI9k0cC9FSfFbXAXALwgL/Pchjg4gE7dki1TpnUMI2zxeOHzY=
-57429c9b
-##a033837d4f23e078bea6b3957
+from ..common.config_store import get_request_delay, warn_red
+import sys
+import threading
+
+
+def _handle_rate_limit_stop(err):
+    """Shared handling for RateLimitExceededError wherever it surfaces:
+    print the reason, note that progress is safe to resume from, and end
+    the process from the main thread (mirrors how a genuine
+    TranslationUnavailableError outage is handled below)."""
+    warn_red(str(err))
+    print("Progress has been saved -- run --continue once the usage window resets.")
+    if threading.current_thread() is threading.main_thread():
+        sys.exit(1)
+    raise err

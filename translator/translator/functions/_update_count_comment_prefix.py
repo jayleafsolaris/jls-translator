@@ -1,3 +1,5 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSVi28I8YA+RTx7luDrV24CVRy9AHlePYJWU3RLSkGkxN9HbME6CHSP+3CYaCUZ5s8WUnDNokbhEUVEftSfFbXAGwMmRXpdNppkYJ1kqxSsQlSfO4QoCeyOWNmsCAXM6UPNFrm
-b111e213
-##a033837d4f23e078bea6b3957
+from ..common.state import _UPDATE_COUNT_MARKER
+
+
+def _update_count_comment_prefix():
+    return f"##{_UPDATE_COUNT_MARKER}="

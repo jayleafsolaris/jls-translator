@@ -1,3 +1,116 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJ4bwqDCqd6kijdzGOilyyWJ2Jc7jyNFIkeX0qFF3wfmgJmCphH5DvRO9vNa5KabZEtWU3UK5te3AlZSJ4fLB+bF1YbgwPiC8guytUi7ZBxqitpVME6gxeYMl9ElRdWEIUdZFjCSeQ70SbdzyCulmyTIWFmwieAAJlNVUaBHS4C1xVsDLMV4jjZKsHEUa+LY5srbjPXIYAf3EMSSJ4fMRmZXG4RmA/yNuMqwsgupJRymjpyGfY6mzqJD31ehRoZBIUde1TMIO4g9D7Q4H6kvHCHJ3QVkTqcLY8UUkiuFyQVmwdtHYhLpzLVJdb+fKiUbYEtWUnQMIQTmwhjW4MXOh+PXikfiRPYNs4q3MJmkpptmCVvTe4ygRajGU5OlF58EZIGVh6ZC+sLyDnXxCLtnmeBF2RV3jGwEZMDSE6fBnBWkBt9J44L6DbjONrABKuLbZhoKBfSPIIfkwMSW4MdOwSSAXpYhQr3O84/kv58qIlthzxZUtQqnHiaH1NG0VxyFZgfZBeCSfQg3T/XgWegiW2HPCZ++AenJ74ybm6hPVYQhR1kWMI44izIOdPCepKabZEtWVrePp8bkAhjQJQLfB+aAmYKmEfYMcQ/wMBtuaZhmixjZtI8ggKVAVl0mhclfP14bR2KR+Q52BTC1GKh0SvPQiYZkXONAJ0DX0PRT3wRkgZWCokL4jXPLu3DfKyXYZ1gLzORc89SkAJfSp0tLhmYBilFzBTzNcgunPJNn7BSoRdCcONzwFK7JGhjpDADJLIiRnLmR6d0nD/A2DTH2SLVaCYZkXOwXtwZTk6ULS8ellI0WIsC8wveOdPPbaWmYZola1DFDI4cmDJIWZQXdBSFE2cbhE6NdJxrkoEu7dlwkCVpTdQMmwCZCBwW0RU5AqgUfBSAOPMm2S6a1XyonF2GIGcQu3PPUtwIREiUAihWsBt9MJkFxiHII/fTfKKLOP9oJhmRc89S3B1OQp8GdFSxE2AUiQOnINNrwtRiocMirCdzGdAhilKSAkgLkAcoHpgAYAKJA6cg02vWzi65kWuGai8zkXPPUtxNHAuDFygDhRwDWMxHpzHEKNfReu2+a4EAc1vwI4Y3jh9TWdETL1aSSANYzEendJxrktF8pJd23S4kf9A6gxeYTUhE0QIpGptIKQOJGqV9tmuSgS7t2SLVOmNNxCGBePZNHAvRADkbmAZsJ5wV4jLVM5KcLquQbJEXdFzcPJsXox1dSJoTOxOoAnsdig7/fM4u3856qKZ2hy1jELtzz1LcBFoLgxcxGYMXVgieAuE9xGvb0i6DlmyQcgwZkXPPUtxNHFuDGzIC3xQrPo0O6zHYa8bOLr2MbplyJlreJoMWkkpIC5cbMhLXEWURwhf+dN0ly9ZmqItn1SFoGcU7ilKOCExE1gF8AoUXbFjObad0nGuSgS7t2SLVaCYZ13GAHNwPTkqfETRW0AlrCo0J5DzBbJKMI+2MbJAwdlzSJ4oW3B9ZW55SMBeOHXwMwkWuXpxrkoEu7dkihy1yTMM95XjcTRwLgxcxGYMXVh6FC+InnHaS2nPH2SLVaGBWw3OKUpUDHFmUHzMCki19CokCvV6ca5KBLu3ZIpwuJlzqcZsLjAgedtFTYVbVEGUXjkW9XpxrkoEu7dki1WgmGdI8gQaVA0lO+1J8VtdSKVjMDuF00iTGgSaooiCFKXJRkw7PT8FNTk6cHSgTqAJ7HYoO/3TTOZLEVe+JY4EgJGSfIJsTjhlPXJgGNF6RUHIKiQroINkUwtNrq5B6iGckEJhp5VLcTRwL0VJ8VtdSKRuDCfM90j7Xqy7t2SLVaCYZwzaDUsFNWXDTAj0Cn1BUI4AC6XzOLt/OeqimcoctYFDJes9Z3FwGdtEbOlaFF2QXmALYJM4u1Mh27Zxuhi0mXOpxnxOIBR52+1J8VtdSKVjMDuF01Tjt0nejml2QMGVVxDeKFtQfWUfYSFZW11IpWMxHp3Sca5LCYaONa5s9YzORc89S3E0cC4MXMRmDF1YehQviJ+c5181T7cQikBMkStkyzS/2ZxwL0VI1ENccZgzMFeI50z/X/miklWeGcgwZkXPPUtxNHFuDGzIC3xQrNoMT7z3SLJLHYbiXZtU9aF3UIc9Vhx9ZRp4GOSmHAGwehR+nO85rlYl8qIlt1TppVsV6yA/bTVNF0RAuF5kRYVjLHOUm3SXRyXPq2S/YaGhWxTuGHJtNSETRAikam1wrUeZHp3Sca5KBLr+cdoA6aDO7c89S3ARaC9MRMB/ZAnBazAnoIJwi3IF8qJRtgS1ZX9g/igHGZxwL0VJ8VtdSeQqFCfN82mn0wGehnGbVPGkZwSaDHsZNUkTRETAf2QJwWIoI8jrYa8fPaqiLItIzdFzcPJsXox1OTpcbJFaYAClfxBXiJNNrwM5hudAliG8mVt9zjQCdA19D0VBWVtdSKVjMR6d0nGuSgS6r2yWOKnRY3zCHD9tNEQbRBzITjwJsG5gC43TOLsLOLqGYe5o9cheTeuVS3E0cC9FSfASSBnwKgm2NdJxrktZ8pI12kCYmBJFj5VLcTRxenxY5FZgWbBzMWqcP4UGSgS7tjW2BKWpm1zqDF49NAQudFzJehRdkF5gC2DLVJ9fSJ8fZItVockvIaeVS3E0cC9FSfCmFF3kXnhPYP9kywYksnYxumSFoXpN/z0PQTUhEhRMwKZEbZR2fTo10nGuSgS7t2WGZIVla3j2bF5IZHBbRFTkCqBBlF4445DvSP9fPeuWLZ5gnclzuNYYemR5nCZIeNViHCyslxW2ndJxrkoEu7ZptkS1ZUtQqz0/cMllThQA9FYMtaheIAtg30ybCyGKopmmQMS5a3TqwEZMDSE6fBnISkhFmHIlPpSHILZ+ZLOHZZ4c6aUvCbs0AmR1QSpIXfl/eeClYzEendJxr0c1nkp1nhjwmBJE/gBGdAWNZnh0oVthSKxuADqkkxWm4gS7t2SLVaCZa3TqwFpkeSAWBEy4TmQYnFYcD7iaUO9PTa6ONccgcdEzUf88XhARPX64dN0ujAHwdxW2ndJxrkoEu7ZpunBdiXMInwQWOBEhOrhAlApIBIRuADtg30yXGxGC50AjVaCYZkXPPUosfVV+FFzJW3E8pSeZtp3Sca5KBLu2fbYdoYlbfNsNS1B9ZR91SLx6WWykRgkfiOskm19NvuZwq/2gmGZFzz1LcTRwL0Vp0BNtSelHMAegmnDmegX3tkGzVOmNU3ieKLZoEUE6CXDUCkh96UMVH7jKcOZKAM+3bYZkhKEnIccZe3B5ISoMGYUT9UilYzEendJxiiKsu7dki1WgmGZFzz1KjH1lbngAoKZwXcAvERdch0Cfbz2nv1SKRJ2hcnXObHYgMUHSXGzAThFsDWMxHp3Sca5KBLu3ZZpA7chmMc4MdnwxQdIMdMwLXXSkKiQuNXpxrkoEu7dki1WgmGdg1zxaZHkgFlAo1BYMBIVHWbad0nGuSgS7t2SLVaCYZkXOGFNwfWUffFzIShAVgDIRPpXrMMpCILqyXZtUraV3UDIQXhU1VWNEcMwLXPGYWiV2NdJxrkoEu7dki1WgmGZFzz1LcTRxfgwtmfNdSKVjMR6d0nGuSgS7t2SLVaCYZkXPPUpACX0qdLT8ZmgJgFIkDp2mcKN3MfqSVZ6oraV3UDJsXhBkUIdFSfFbXUilYzEendJxrkoEu7dki1WgmGZFzz1KYCE9f3wA5F5MtfR2UE68x0ijdxWejnj/XPXJfnGvNW9BNX0SVFwMdkgsDWMxHp3Sca5KBLu3ZItVoJhmRc89S3E0cAt8XMhWYFmxQzhLzMpFzkIgE7dki1WgmGZFzz1LcTRwL0VJ8VtdSKVjMDuF02yLG/myhlmCqO25YmT+AEZ0BY0ieHywfmxdtUcxaunTPI9ObBO3ZItVoJhmRc89S3E0cC9FSfFbXUilYzEendJwo3c96pJd3kEImGZFzz1LcTRwL0VJ8VtdSKVjMR+Is3y7C1S6Yl2uWJ2Jc9TaMHZgIeVmDHS5M/VIpWMxHp3Sca5KBLu3ZItVoJhmRc89S3B1dWIJ4fFbXUilYzEendJxrkoEu7ZxunC4mXtgnsBCQAl50gho9XpMXegzCFeI12BTQ2HqoiircYSYEjHOcGp1XNgvRUnxW11IpWMxHp3Sca5KBLu3ZYZomclDfJop49k0cC9FSfFbXUilYzAToOsgu3NUu8NllkDxZW908jS2fAlJflBwoXoQaaFHmR6d0nGuSgS7t2SLVIWAZwzaDXJkDWFiGGyge31AnCJVFrm62a5KBLu3ZItVoJhmRc89S3BlZU4VSYVaUHWcMiQnzetgu0c5qqNEggDxgFIlxw1KZH05EgwFhVIUXeRSNBOJ2lUGSgS7t2SLVaCYZkXPPUtxNVU3RGy8plB1kCIUL4jDjKN3Fa+WNZ408LwO7c89S3E0cC9FSfFbXUilYzEendJwi1IFtop1nqiNjQJE6nFKyAlJOy3h8VtdSKVjMR6d0nGuSgS7t2SLVaCYZkXOaHJgIX0SVFzhYlgJ5HYIDrybZJ5urLu3ZItVoJhmRc89S3E0cC9FSfFaSHnod1m2ndJxrkoEu7dki1WgmGZFzz1LcTRwL0VIoBI5IA1jMR6d0nGuSgS7t2SLVaCYZkXPPUtxNHAvRUnwVmBx9HYITp2mcL9fCYaCJa5ktWVreN4otiAhEX9kGOQ6DXikbgwPiC9cuy4ggqJdhmixjEZMmmxTRVR4C+1J8VtdSKVjMR6d0nGuSgS7t2SLVaCYZkTaXEZkdSAunEzADkjd7CoMVvV6ca5KBLu3ZItVoJhmRc89S3E0cC9FSfFbXUilYmQnjMd8k1sRq45hyhS1oXZkhih7VZxwL0VJ8VtdSKVjMR+Mxzz+c0W+/nGyBZmtS1TqdWowMTk6fBi9LowB8HcBH4izVOMb+YabEVoc9YxC7c89S3E0cC9FSfFbXFmwLmEnwJtU/1/5stI1nhmBlVt8nihyIRDYL0VJ8VtdSKVjMR6cjziLG1Wuj2SnIaDczkXPPUpkVX06BBnwxngZBDY4m8iDUDsDTYb/DCNVoJhmRc89SjB9VRYVafiqZLmc+jQ7rMdhrxs4uvYxumXImYN4mzxOOCBxFngZ8F4IGYReeDv0x2GvGzi6pliKBIG9Kk3rlUtxNHAvRUnwEkgZ8CoJtp3Sca9fZbaiJdtUPb035Jo0zjAR5WYMdLlaWASkd1m2ndJxrkoEu7YlwnCZyEddxsxygA3pKmB45EtcGZlicEus4hmvJxHPv0AjVaCYZkXPPUo4ISF6DHFZ811IpWJ4C6jvKLtaBM+3JCNVoJhnXPJ1SjE1VRdEeMxWWHlYKgwjzes4s3s5s5dso12E8M5Fzz1LcTRwLmBR8BtkbeieKDusxlGKIqy7t2SLVaCYZkXPPUo4IUAvMUixYhRdlGZgO8THjP92JYqKaY5kXdFbeJ8ZcnR5jW54BNQ7fWwNYzEendJxrkoEu7dlrk2hvSu4glhyfMllTkh4pEpIWIQqJC65utmuSgS7t2SLVaCYZkXPPUtwOU0WFGzIDkngpWMxHp3Sca5KBLu2QZNU6Y1WRPYAG3ARSC4MXMRmDF1YehQviJ4ZBkoEu7dki1WgmGZFzz1LcTUwFhBwwH5kZIVHmR6d0nGuSgS7t2SLVaCYZkSGKH5MbWU/RWWFWxngDWMxHpzrTP9eBM+2fINlodFzcPJkXmE1HWZQfMwCSFnRYnxPmONlr3s5trJUikyFqXJkgxlDcBFoLgxcxGYEXbViJC/QxnGmQqy7t2SKFOm9XxXuJUKADYEWhBzAakhYpHp4I6nSbMNDTb6OaaohvPBnKJJ0biBlZRYxSOh+bFyELxUfyJNgqxsRqtpdtgS17F5N65VLcTRxCl1IpGJMXaheIAuNutmuSgS7t2SLVOHRQ3yfHFN4hWU2FUj8ZmgJgFIkDpzXPZtvSLuWabYAkYleWJ88WmQ5TRoEbMBPXXyRYjwj1Jsk7xsRq4dlth2hlVdh9nwvcBEhYlB46VoATeljObad0nGuSgS7t2SLVaCYZ13GMHY4fSVuFFzhfzVJyX8BHoHrWJNvPJr6WcIEtYhHEPYsXnwJYTpVbdQvVWwM=
-0c506798
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.code_obfuscate import compile_code_text, decompile_code_text, is_compiled_code
+from ..common.config_store import get_release_branch
+from ..common.github_api import GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix, get_branch_commit_and_tree, get_full_tree, get_blob_content, git_blob_sha
+from ..common.progress import _report_keys
+from ..common.state import GITHUB_REPO
+from ._extract_code_compile_key import _extract_code_compile_key
+
+
+def cmd_pull():
+    branch = get_release_branch()
+    local_root = state.SCRIPT_DIR / GITHUB_REPO
+
+    try:
+        _, tree_sha = get_branch_commit_and_tree(branch)
+        remote_tree = get_full_tree(tree_sha)
+    except GitHubAuthError:
+        print("Failed to pull: You are not authorized to do this")
+        return
+    except GitHubApiError as e:
+        print(f"Failed to pull: {e}")
+        return
+
+    remote_prefix = find_remote_package_prefix(remote_tree)
+    if remote_prefix is None:
+        print(f"Failed to pull: couldn't find cli.py anywhere in the repo's tree "
+              f"on branch '{branch}' -- unexpected repo layout.")
+        return
+
+    remote_files = {}
+    for e in remote_tree:
+        if e["type"] != "blob":
+            continue
+        if not (e["path"] == remote_prefix or e["path"].startswith(f"{remote_prefix}/")):
+            continue
+        rel = e["path"][len(remote_prefix) + 1:] if remote_prefix else e["path"]
+        if is_sync_excluded(rel):
+            continue
+        remote_files[rel] = e["sha"]
+
+    if not remote_files:
+        print(f"Nothing found under '{remote_prefix or '(repo root)'}' on branch '{branch}' -- nothing to pull.")
+        return
+
+    if "cli.py" not in remote_files:
+        print(f"Failed to pull: no cli.py found under '{remote_prefix or '(repo root)'}' on branch "
+              f"'{branch}' -- unexpected repo layout.")
+        return
+
+    written = 0
+    undecoded = []
+    total_files = len(remote_files)
+    try:
+        _report_keys("Pulling", 1, total_files)
+        cli_content = get_blob_content(remote_files["cli.py"])
+        code_key = _extract_code_compile_key(cli_content.decode("utf-8", errors="replace"))
+        cli_dest = local_root / "cli.py"
+        cli_dest.parent.mkdir(parents=True, exist_ok=True)
+        cli_dest.write_bytes(cli_content)
+        written += 1
+
+        for done, (rel, sha) in enumerate(
+            ((r, s) for r, s in remote_files.items() if r != "cli.py"), start=2
+        ):
+            _report_keys("Pulling", done, total_files)
+            dest = local_root / rel
+
+            if dest.exists():
+                if rel.endswith(".py") and code_key is not None:
+                    try:
+                        local_compiled = compile_code_text(
+                            dest.read_text(encoding="utf-8"), code_key
+                        ).encode("utf-8")
+                        if git_blob_sha(local_compiled) == sha:
+                            continue
+                    except UnicodeDecodeError:
+                        pass
+                elif git_blob_sha(dest.read_bytes()) == sha:
+                    continue
+
+            content = get_blob_content(sha)
+            if rel.endswith(".py"):
+                text = content.decode("utf-8", errors="replace")
+                if is_compiled_code(text):
+                    if code_key is None:
+                        undecoded.append(rel)
+                    else:
+                        try:
+                            content = decompile_code_text(text, code_key).encode("utf-8")
+                        except ValueError:
+                            undecoded.append(rel)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(content)
+            written += 1
+    except GitHubAuthError:
+        print("\n\nFailed to pull: You are not authorized to do this")
+        return
+    except GitHubApiError as e:
+        print(f"\n\nFailed to pull: {e}")
+        return
+
+    removed = 0
+    for p in local_root.rglob("*"):
+        if p.is_file():
+            rel = p.relative_to(local_root).as_posix()
+            if is_sync_excluded(rel):
+                continue
+            if rel not in remote_files:
+                p.unlink()
+                removed += 1
+
+    note = f", removed {removed} stale local file(s)" if removed else ""
+    print(f"\n\nPulled from '{branch}': {written} file(s) updated{note}.")
+    if undecoded:
+        print(f"Left compiled as-is (couldn't decompile -- corrupted, or cli.py itself was "
+              f"corrupted): {', '.join(sorted(undecoded))}")

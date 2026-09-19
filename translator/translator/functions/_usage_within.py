@@ -1,3 +1,2 @@
-MNktkv57vphlkBdxUMU7hhzUCV1fkF58GJgFJVibDukw0zzt0muulmyROy8Du3PPUtwfWV+EADJWhAdkUI5H4TvOa8bSIu2bIpwmJl3QJ44p3hhPSpYXAxqYFSslzA7hdNIkxYEj7Y1x1XQmTtg9ix2LMk9Okh0yEoRbAw==
-bf64e1d2
-##a033837d4f23e078bea6b3957
+def _usage_within(data, now, window_seconds):
+    return sum(b for ts, b in data["usage_log"] if now - ts < window_seconds)

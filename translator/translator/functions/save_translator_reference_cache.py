@@ -1,3 +1,7 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8eJUATESDBnwchB1ncuZt4zHaa8HAeKimdocpaErdMpsdjjJOTpcXLhOZEWwnjwbkPNlj1sB6rNA4/2gmGZEjjgaUTQELoTMfPbY1TCeoLtV0k2v25EiMrE6hG10bxSGOHI8BXV+eAAMEkhRsCokJ5DHjKNPCZqimZJwkYxvsWc9S3E1MSoUacgGFG30dsxPiLMhj2NJho9dmgCV2Spk3jgadQRxOnwEpBJItaAuPDu5p+ire0mvh2WubLGNXxW7dW9BNWUWSHTgfmRU0WpkT4XmEaZur
-5f8570e1
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS
+import json
+
+
+def save_translator_reference_cache(data):
+    path = PACKAGE_DIR / DEFAULTS["translator_reference_cache_file"]
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")

@@ -1,3 +1,12 @@
-Ms4k34Eg45ptmCVpV58wgByaBFt0ggYzBJJSYBWcCPUgnCfdwGqSmm2bLm9e7iWOHokIEAuCEyoTqBFmFooO4AvKKt7Ua+HZYYA6dFzfJ7ARkwNaQpYtOB+FeGAVnAj1IJwkwatov5Zv1WYoWt4+gh2SQ1tChRopFKgTeRHMDuok0znGgVGZtkmwBll6/h2pO7sycmq8N1Z8/RZsHswU4iDjP93Ka6PRdpojY1eYaeVS3E0cWJAEOSmUHWcehQDYIt0nx8Qmkq1Nvg1IZvIcoTS1KmNlsD8ZWtcGZhOJCa5enGuSgX6sjWrVdSZaxCGdF5IZY0ieHDofkC1tEZ5PrnSTa9SDdZKtTb4NSGbyHKE0tSpjZbA/GQvZEWYWig7gdrZrkoEuuYt7z0ImGZFzz1LcTVNY3xE0G5gWIQiNE+94nHvdlz790AjVaCYZ1CuMF4wZHG6JETkGgxtmFtZtp3Sca5KBLu2JY4Y7DA==
-1f0be29a
-##a033837d4f23e078bea6b3957
+from ..common.config_store import load_config_value, save_config_value, current_config_dir
+import os
+from ..common.github_api import _TOKEN_CONFIG_NAME
+
+
+def set_token(token):
+    save_config_value(_TOKEN_CONFIG_NAME, token)
+    path = current_config_dir() / f"{_TOKEN_CONFIG_NAME}.config"
+    try:
+        os.chmod(path, 0o600)
+    except Exception:
+        pass

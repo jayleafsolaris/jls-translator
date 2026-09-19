@@ -1,3 +1,159 @@
-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
-26e31aca
-##a033837d4f23e078bea6b3957
+from ..common import debug_log
+from ..common.ratelimit import reserve, record_extra, record_outage, RateLimitExceededError
+from ..common.text_protect import split_segments, join_segments
+import concurrent.futures
+import sys
+import threading
+from ..common.translate import TranslationUnavailableError
+from ._handle_rate_limit_stop import _handle_rate_limit_stop
+from ._raw_translate_once import _raw_translate_once
+from ._record_success import _record_success
+from ._translate_segments_deferred import _translate_segments_deferred
+
+
+def translate_many(google_code, texts, max_workers, progress_cb=None):
+    debug_log.log(f"translate_many start -- {google_code}, {len(texts)} values, {max_workers} workers")
+    results = [None] * len(texts)
+    if not texts:
+        return results
+
+    valid_indices = [i for i, t in enumerate(texts) if t.strip()]
+    for i in range(len(texts)):
+        if not texts[i].strip():
+            results[i] = texts[i]
+
+    if not valid_indices:
+        if progress_cb:
+            progress_cb(len(texts))
+        return results
+
+    value_parts = {}
+    for idx in valid_indices:
+        text_clean = texts[idx].replace('\n', '__NL__')
+        value_parts[idx] = split_segments(text_clean)
+
+    segment_to_values = {}
+    segment_order = []
+    value_remaining = {}
+    for idx, parts in value_parts.items():
+        distinct_text = {content for kind, content in parts if kind == "text"}
+        if not distinct_text:
+            results[idx] = join_segments(parts).replace('__NL__', '\n')
+            continue
+        value_remaining[idx] = len(distinct_text)
+        for content in distinct_text:
+            if content not in segment_to_values:
+                segment_to_values[content] = set()
+                segment_order.append(content)
+            segment_to_values[content].add(idx)
+
+    unique_segments = segment_order
+    segment_results = {}
+
+    MAX_BATCH_CHARS = 2500
+    batches = []
+    current_batch = []
+    current_len = 0
+
+    if unique_segments:
+        MIN_BATCH_FLOOR = 8
+        desired_min_batches = min(len(unique_segments), MIN_BATCH_FLOOR)
+        target_batch_count = min(len(unique_segments), max(max_workers, desired_min_batches))
+        items_per_batch = max(1, -(-len(unique_segments) // target_batch_count))
+
+        for seg in unique_segments:
+            if current_batch and (
+                current_len + len(seg) > MAX_BATCH_CHARS
+                or len(current_batch) >= items_per_batch
+            ):
+                batches.append(current_batch)
+                current_batch = []
+                current_len = 0
+
+            current_batch.append(seg)
+            current_len += len(seg) + 1
+
+        if current_batch:
+            batches.append(current_batch)
+
+    done_count = len(texts) - len(valid_indices)
+    done_count += sum(1 for idx in valid_indices if idx not in value_remaining)
+
+    remaining_lock = threading.Lock()
+
+    def resolve_segment(seg, translated):
+        """Records a segment's translated result and returns how many
+        original values just became fully resolved because of it (used
+        only for progress_cb accounting -- the actual strings get rebuilt
+        in one pass after every batch finishes, below)."""
+        segment_results[seg] = translated
+        newly_done = 0
+        with remaining_lock:
+            for idx in segment_to_values[seg]:
+                value_remaining[idx] -= 1
+                if value_remaining[idx] == 0:
+                    newly_done += 1
+        return newly_done
+
+    def translate_batch_worker(batch):
+        combined = "\n".join(batch)
+
+        try:
+            translated = _raw_translate_once(google_code, combined)
+            _record_success()
+        except TranslationUnavailableError:
+            raise
+        except RateLimitExceededError:
+            raise
+        except Exception:
+            completed_values = 0
+            translated_map = _translate_segments_deferred(google_code, batch)
+            for seg in batch:
+                completed_values += resolve_segment(seg, translated_map[seg])
+            return completed_values
+
+        lines = [line.replace('\r', '') for line in translated.split('\n')]
+
+        completed_values = 0
+        if len(lines) == len(batch):
+            for i, seg in enumerate(batch):
+                completed_values += resolve_segment(seg, lines[i])
+        else:
+            translated_map = _translate_segments_deferred(google_code, batch)
+            for seg in batch:
+                completed_values += resolve_segment(seg, translated_map[seg])
+        return completed_values
+
+    if batches:
+        debug_log.log(f"submitting {len(batches)} batches -- {google_code}")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as ex:
+            futures = [ex.submit(translate_batch_worker, b) for b in batches]
+            try:
+                for fut in concurrent.futures.as_completed(futures):
+                    done_count += fut.result()
+                    debug_log.log(f"batch done -- {done_count}/{len(valid_indices)} values resolved, {google_code}")
+                    if progress_cb:
+                        progress_cb(done_count)
+            except (TranslationUnavailableError, RateLimitExceededError) as err:
+                debug_log.log(f"stopping -- {type(err).__name__}: {err}")
+                for f in futures:
+                    f.cancel()
+                ex.shutdown(wait=True, cancel_futures=True)
+                if isinstance(err, RateLimitExceededError):
+                    _handle_rate_limit_stop(err)
+                sys.exit(1)
+    elif progress_cb:
+        progress_cb(done_count)
+
+    for idx in valid_indices:
+        if results[idx] is not None:
+            continue
+        rebuilt = []
+        for kind, content in value_parts[idx]:
+            if kind == "token":
+                rebuilt.append(content)
+            else:
+                rebuilt.append(segment_results.get(content, content))
+        results[idx] = "".join(rebuilt).replace('__NL__', '\n')
+
+    return results

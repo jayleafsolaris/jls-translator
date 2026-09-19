@@ -1,3 +1,8 @@
-MNktkv5vvpJdlidoTdg9mhfUDlNPlFtmfNdSKVibD+442Wvm03uowwjVaCYZkXPPUp0DT1yUAHxL1xtnCJkTrzKeF9znZ6OQcZ0tYhnKMIAWmRASC7IdMgKeHHwdzBPodNIuytUx7aJb2iZbA5FxxlyPGU5CgVp1WJsdfh2eT65enGuSgS7t2SKcLiZY3yCYF45NVUXRWn5U21IrAc5Lp3bFLsGDJ/fzItVoJhmRc89S3E0cWZQGKQSZUl0KmQKNdJxrkoEu7dlrk2hnV8IkigDcBFIL2VAyVNtSKxaDRa5utmuSgS7t2SLVaCYZkSGKBokfUgu3EzAFkngpWMxHp3Sca8LTZ6ONKtcYalzQIIpSmQNIToNSJVaYACkWwkWuXg==
-c5591117
-##a033837d4f23e078bea6b3957
+def _ask_continue(code):
+    while True:
+        answer = input(f"\nFinished {code}. Continue to next? [Y/n]: ").strip().lower()
+        if answer in ("", "y", "yes"):
+            return True
+        if answer in ("n", "no"):
+            return False
+        print("Please enter y or n.")

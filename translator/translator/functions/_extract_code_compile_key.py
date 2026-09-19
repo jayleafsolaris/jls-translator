@@ -1,3 +1,31 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSVjugLtgf+RLt9U+K8wj/LGNfkQyKCogfXUiFLT8ZkxdWG4MK9z3QLu3Ka7TRYZkhWUnIDJsXhBkVEftSfFbXUCta5kendJwbx81ivtl2nS0mUdg3ixeSTV9ElRdxFZgfeRGAAqc/2TKSznu52W2TaGcZ0j+GXIwUHE2YHjlRhFJmD4JH9DvJOdHEBO3ZItU8Y0HFc8Jf3AwcW50TNRjXBnsZhQvuOttrkIIt8Y1jknY8Bdk2l0zeTV9EnB85GINSZRGCAqcm3T/axHztjWqUJiZY31nPUtxNU0mHGzMDhB5wVYIG6jHYa9HOYL6NY5s8KhnCPM8biE1YRJQBMlGDUnsdjQOnNc9rkMlrv5winDsmTdk2zwGZDk5OhVBWVtdSKQyDR+Z03yrB1G+h2XGeIWsZxTuKUosMRQuRLR85szdWO6Mq1x3wDu3qS5TZP9VqKBefcY9SiwJJR5VSdAWSFwNYzEenN9AinNF36ooimj9oGdI8gh+ZA0gC31JxW4cHehDMFegg3T/X0i6kjSKBJyZYkTGdE5IJHEWUBXwElhxtF4FH7DHFQZKBLu2WbNUtcFzDKs8BlQNbR5RSLAOEGilQnwLidOM419VRpZBmkS1oZtI8ixejBllS3wIlX9cTZxzMFeIjziLGxH3tjWqcOwwZkXPPAZ0AWQudGzIT1wVgDIRH8zzZa9zEee2WbJBzJk3ZOpxSlR4cQ54FfFvaAnwUgEiqeck71dNvqZwihy1lVsc2nXjcTRwLhho1FZ8Xfx2eR+wxxWvGyWvtn2eBK25c1XyLHYsDUESQFjkS1xFlEcIX/nTLKsGBb66Nd5QkakCRI5oBlAhYIdFSfFaAG30QwEfwPcgj3dR67ZhsjGh1XMEynROICBxPmAEoBJ4QfAyFCOl00zmSzWGumG7VK2da2TqBFdJnNgvRUnwlkhN7G4QC9HTaOd3MLrmRZ9UtaF2RIIYcnwgcX5kXfBqeHGxYhRSnOdkq3NUuuZYily0mTcMyhh6VA1sH0RMyEv1SKVjMCeYgyTnTzWK02XKHLWBcwyDPBpQIHGewIQhWhAdqEMwL7jrZa9vHLqCWcJBoclHQPc8dkggcWJ4fOR6YBSkdlA70IM9luIEu7dlQkDxzS98gzwaUCBxAlAt8F4RSawGYAvR4nCTAgUCil2fVIWAZ0j+GXIwUG1jRBjkOg1JhGZ9H6TucOMfCZu2Va5stDBmRc88TiE1dR51SdBfXBGwKnw7oOpwtwM5j7Ztnkyd0XJEnhxuPTVpOkAYpBJJSbACFFPMx2GeSznztmm2HOnNJxTaLW9JnHAvRUn5U1XgpWMxH8zXbFMLTa6uQetV1Jl+TcMwJoy5wYq45GS+oJkg/kV2lXpxrkoFooosimSFoXJE6gVKOCEpOgwE5Et8RZRGzF/4LyC7K1SC+iW6cPGpQ3zacWtVEBiHRUnxW11IpWIUBpzjVJdePfbmYcIE7cVDFO8cGnQpjW4MXOh+PWzNyzEendJxrkoEu7dkinS1+ZsEynQbcUBxHmBw5LZsXZ1CYBuALzDnXx2e10DioZnVNwzqfWtVnHAvRUnxW11IpWMxH7jKcJ9fPJqWceqo4Z0vFes9TwU0KH8t4fFbXUilYzEendJxrkoEu7YtngT10V5EdgByZZxwL0VJ8VtdSKVjMR/MmxXG4gS7t2SLVaCYZkXPPUtxNHFmUBikEmVJrAZgC9HraOd3MZqiBKp0tfmbBMp0G1WccC9FSfFbXUilYzEfiLN8uwtUum5hugC1DS8M8nUj2TRwL0VJ8VtdSKVjMR6d0nDnX1Xu/lyK7J2hcu3PPUtwfWV+EADJWuR1nHeY=
-f404f381
-##a033837d4f23e078bea6b3957
+from ..common.state import _CLI_KEY_TAG
+
+
+def _extract_code_compile_key(cli_py_text):
+    """
+    Pulls the hidden code-compile key out of a cli.py file's own source
+    text -- a plain trailing "##<tag>:<hex>" comment line rather than an
+    obviously-named constant, so it doesn't read as "here is the secret"
+    to a casual skim the way `_CODE_COMPILE_KEY = "..."` would (see
+    cli.py's own comment). --push rotates it to a brand new random key
+    on every single push (see _set_hidden_code_key.py) and rewrites this
+    same line with the new one; this is how --pull/--upgrade recover
+    whichever key the fetched/downloaded cli.py was actually pushed
+    with, without any separate distribution or local caching.
+
+    Searches from the end since the line is meant to be trailing, and
+    naturally prefers the LAST such line if more than one somehow exists.
+    Returns the key as bytes, or None if cli.py's text has no such line
+    at all (a version from before this feature existed, or corrupted).
+    """
+    tag_prefix = f"##{_CLI_KEY_TAG}:"
+    for line in reversed(cli_py_text.splitlines()):
+        if line.startswith(tag_prefix):
+            hex_part = line[len(tag_prefix):].strip()
+            if len(hex_part) != 64:
+                return None
+            try:
+                return bytes.fromhex(hex_part)
+            except ValueError:
+                return None
+    return None

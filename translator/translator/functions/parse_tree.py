@@ -1,3 +1,61 @@
-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
-3adcf670
-##a033837d4f23e078bea6b3957
+from ..common.sections import Node, _HEADER_RE, _UPDATE_MARKER_PREFIX
+from ._finalize import _finalize
+from .sanitize_name import sanitize_name
+
+
+def parse_tree(text):
+    """
+    Parses `text` (the full contents of `base`) into a tree of Node
+    objects, keyed off heading depth. Returns (root, markers):
+    root.children are the real top-level sections, and markers is the
+    list of raw --update run-count marker lines found anywhere in the
+    file (almost always exactly one, at the very end).
+
+    Raises ValueError if there's non-blank content before the very first
+    heading, or if that very first heading isn't a single '##' (exactly
+    two hashes).
+    """
+    lines = text.splitlines(keepends=True)
+    root = Node(level=1, name=None, folder=None)
+    stack = [root]
+    first_header_seen = False
+    after_marker = False
+    preamble = []
+    markers = []
+
+    for line in lines:
+        if after_marker:
+            markers.append(line)
+            continue
+        stripped = line.rstrip("\r\n")
+        m = _HEADER_RE.match(stripped)
+        if m:
+            level = len(m.group(1))
+            name = m.group(2).rstrip()
+            if not first_header_seen:
+                if level != 2:
+                    raise ValueError(
+                        f"base must start with a single '##' heading (found "
+                        f"'{'#' * level} {name}' instead)"
+                    )
+                first_header_seen = True
+            while len(stack) > 1 and stack[-1].level >= level:
+                stack.pop()
+            node = Node(level=level, name=name, folder=sanitize_name(name))
+            stack[-1].children.append(node)
+            stack.append(node)
+        elif stripped.startswith(_UPDATE_MARKER_PREFIX):
+            markers.append(line)
+            after_marker = True
+        elif not first_header_seen:
+            preamble.append(line)
+        else:
+            stack[-1].content_raw.append(line)
+
+    if "".join(preamble).strip():
+        raise ValueError(
+            "found content before the first '##' heading -- move it under a section first"
+        )
+
+    _finalize(root)
+    return root, markers

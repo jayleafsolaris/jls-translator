@@ -1,3 +1,53 @@
-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
-96339bee
-##a033837d4f23e078bea6b3957
+import re
+from ._protect import _protect
+
+# Deliberately excludes "@" so a protected token sitting right at the very
+# edge of the skeleton (e.g. "@@PH0@@!" or "(@@PH0@@") is never mistaken
+# for punctuation -- the run stops at the placeholder marker's boundary.
+_LEADING_PUNCT_RE = re.compile(r"^[^\w@]*")
+_TRAILING_PUNCT_RE = re.compile(r"[^\w@]*$")
+
+
+def punctuation_only_diff(old_text, new_text):
+    """
+    Like tokens_only_diff, but for punctuation at the very start and/or
+    end of a base value -- a trailing "!" added to a heading, a "."
+    swapped for a "?", a leading quote mark dropped, an ellipsis added
+    where there was no punctuation at all before, and so on.
+
+    Compares old and new base text (with protected tokens -- %1$s-style
+    placeholders, color codes, etc -- pulled out first, same as
+    tokens_only_diff) and checks whether the *only* difference is the
+    leading and/or trailing punctuation run, with every token identical
+    and in the same order, and everything in between byte-for-byte the
+    same.
+
+    Returns (old_leading, old_trailing, new_leading, new_trailing) if
+    that's the case, so the caller can strip the OLD edge punctuation off
+    an already-translated string (apply_punctuation_patch expects exactly
+    these four pieces) and splice the new pair on instead, without
+    sending anything to Google Translate. Returns None if there's any
+    other change -- meaning a real retranslation is needed, or a token
+    also changed (that's tokens_only_diff's job), or nothing changed at
+    all.
+    """
+    old_skeleton, old_tokens = _protect(old_text)
+    new_skeleton, new_tokens = _protect(new_text)
+    if old_tokens != new_tokens:
+        return None
+
+    old_lead = _LEADING_PUNCT_RE.match(old_skeleton).group(0)
+    new_lead = _LEADING_PUNCT_RE.match(new_skeleton).group(0)
+    old_rest = old_skeleton[len(old_lead):]
+    new_rest = new_skeleton[len(new_lead):]
+
+    old_trail = _TRAILING_PUNCT_RE.search(old_rest).group(0)
+    new_trail = _TRAILING_PUNCT_RE.search(new_rest).group(0)
+    old_core = old_rest[:len(old_rest) - len(old_trail)]
+    new_core = new_rest[:len(new_rest) - len(new_trail)]
+
+    if old_core != new_core:
+        return None
+    if old_lead == new_lead and old_trail == new_trail:
+        return None
+    return old_lead, old_trail, new_lead, new_trail

@@ -1,3 +1,19 @@
-PdE73dN67Yp7hkIMM9U2iVKjH1lbngAoKZYCeRSVDukzlC/dz2vh2XaaPGdVmGnlUtxNHAnTUFZW11IpKJ4O6SDPa5Xgfr2Ve5wmYRnyIYABj0BuTpcXLhOZEWwLzEGnANMg1899L3mk1QZIHJZzhhzcHVBKkhd8EoIAYBaLbad0nGufjG+9iW6MaC5K1DbPEZMAUUSfXSgTjwZWCJ4I8zHfP5zRd+qKIoctdVbdJYotlwhFdIMXOhOFF2cbiRSvfZwq3MUE7dki1TxpUtQ9nC2TA1BSrhY1EJFaIFeNF/c4xRTGzmWol12FKXJa2XvGXtwMUk/RFCkYlAZgF4IUqDfRL+3Afr2Ve9s4fxCRfsJ43E0cC5BSLBOFEWwWmAbgMZw509VmqIsigSBnV5EyzxSODF9fmB0yWtcBYBaPAqcg1CLBgX6sinHVIXUZwCaGEZdnHAvRUiwThV9lGYIA8jXbLpLAYKnZY9U6Z06RNZ0TnxlVRJ9SKxmCHm1Yjgb1MdAyksxhu5ws/0ImGZFzjxaTA1lL0RsvVpIKeR2PE+IwnD/dgWyo2XadLSZc0CCKFtMeUUSeBjQTk1J/GYAS4nTaOd3MLqzZUZgnaU3ZA50dmx9ZWIJ4fFbXUmAWnxPmOt8unoFgoo0igSBjGcMymFKMCE4GnRMyEYITbh3MDukw2TOSxWe/nGGBJH8ZnH7PAZNNSEOUUiwThRFsFpgG4DG2a5KBLq6Va5gqdRnCPoAdiAVQUtEQOQKAF2wWzAvmOts+08ZrvtlrmztyXNA3zx2aTVZenAI1GJBSegyeBu4z1D+Sx3yilCKaJmMzkXPPUpAMUkyEEzsT0AEpHp4G5CDVJNyBeqLZdp0tJlfUK5tc9k0cC9FQflT9UilYzBfkIJx2kshgudFmmiZjGZ5zmx2IDFAL21JtRsdbKRGKR/M7yCregWuhimfVeTYJu3PPUtweRVjfASgSmAd9VpsV7iDZY9SDUr+4coUkf1DfNM8xjgJPWNwgORCSAGwWjwL0dJpr5s5lqJdxF8igGcojjAaBSB4FnRgpBYNaP0jFTo10nGuS0ne+13GBLGlMxX2JHokeVAPYeA==
-999ef95c
-##a033837d4f23e078bea6b3957
+import sys
+
+
+def _report_applying(done, total):
+    """
+    Prints 'Applying Cross-References & Tokens… NN%' in place during
+    --apply (see common/text_protect.py's resolve_key_references() and
+    tokens_only_diff()/apply_token_patch(), and functions/cmd_apply.py) --
+    a percentage rather than a fraction, since this pass is quick
+    per-language and a raw fraction would barely move.
+
+    `done` is expected to be the eased/smoothed value from a SmoothProgress
+    instance, not the raw per-language index directly -- so the percentage
+    climbs smoothly between languages instead of jumping straight from one
+    language's fraction to the next.
+    """
+    pct = int(done / total * 100) if total else 100
+    sys.stdout.write(f"\rApplying Cross-References & Tokens… {pct}%".ljust(60))
+    sys.stdout.flush()

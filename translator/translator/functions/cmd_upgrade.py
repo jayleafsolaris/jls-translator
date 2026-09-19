@@ -1,3 +1,149 @@
-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
-a9e1dd32
-##a033837d4f23e078bea6b3957
+from ..common.config_store import warn_red, get_release_branch
+from ..common.netcheck import require_internet_or_warn, fetch_remote_version, _parse_version_tuple
+from ..common.state import DEFAULTS, PACKAGE_DIR, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, SCRIPT_VERSION
+import io
+import os
+import requests
+import shutil
+import sys
+import zipfile
+from ..modes.upgrade import _REQUIRED_TOP_LEVEL_FILES
+from ._backup_and_clear import _backup_and_clear
+from ._compare_versions import _compare_versions
+from ._copy_skip_protected import _copy_skip_protected
+from ._decompile_tree_code import _decompile_tree_code
+from ._extract_code_compile_key import _extract_code_compile_key
+from ._find_package_source import _find_package_source
+from ._missing_required_files import _missing_required_files
+from ._remove_non_protected import _remove_non_protected
+from ._restore_backup import _restore_backup
+from ._upgrade_protected_names import _upgrade_protected_names
+
+
+def cmd_upgrade(enforce=False):
+    """
+    Fetches the latest zip from GitHub and replaces current files, then
+    restarts. Downloads from whichever branch is currently configured as
+    the release branch (see config_store.get_release_branch() -- defaults
+    to GITHUB_BRANCH, overridable via --release <branch>), so pointing
+    --release at e.g. a "dev" or "beta" branch makes --upgrade track that
+    branch instead of the repo's normal default.
+
+    Before downloading anything, compares the running version against the
+    version on that branch's pyproject.toml:
+      - identical and not --enforce: cancels, nothing is touched
+      - remote older than local: proceeds, but labeled as a Downgrade
+      - remote newer than local, or --enforce: proceeds as a normal Update
+      - can't determine the remote version at all: aborts unless --enforce
+    """
+    branch = get_release_branch()
+    branch_note = f" (branch: {branch})" if branch != GITHUB_BRANCH else ""
+
+    print(f"Checking version{branch_note}...")
+    if not require_internet_or_warn("--upgrade"):
+        return
+
+    remote_version = fetch_remote_version(timeout=3.0)
+    if remote_version is None:
+        if not enforce:
+            warn_red("Couldn't determine the version on GitHub -- aborting. "
+                      "Use --enforce to install anyway.")
+            return
+        comparison = None
+    else:
+        comparison = _compare_versions(remote_version)
+
+    if comparison == 0 and not enforce:
+        print("Already running the latest version:")
+        print(f">> Version: v{SCRIPT_VERSION}")
+        print(f">> Release: {branch}")
+        return
+
+    if comparison == -1:
+        action, action_done = "Downgrading", "Downgrade"
+    else:
+        action, action_done = "Updating", "Update"
+
+    UPDATE_URL = (
+        f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/archive/refs/heads/{branch}.zip"
+    )
+
+    try:
+        response = requests.get(UPDATE_URL, stream=True)
+        if response.status_code == 404:
+            warn_red(f"Invalid branch: '{branch}'")
+            return
+        response.raise_for_status()
+
+        package_root = os.path.dirname(str(PACKAGE_DIR))
+
+        temp_dir = os.path.join(package_root, "temp_update")
+        os.makedirs(temp_dir, exist_ok=True)
+
+        print("Downloading...")
+        protected = _upgrade_protected_names()
+        skipped = []
+        with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+            z.extractall(temp_dir)
+            print(f"{action}...")
+
+            zip_root = os.path.join(temp_dir, z.namelist()[0])
+            extracted_root = _find_package_source(zip_root)
+
+            downloaded_cli = os.path.join(extracted_root, "cli.py")
+            code_key = None
+            if os.path.isfile(downloaded_cli):
+                with open(downloaded_cli, "r", encoding="utf-8") as f:
+                    code_key = _extract_code_compile_key(f.read())
+            undecoded = _decompile_tree_code(extracted_root, code_key)
+            if undecoded:
+                shutil.rmtree(temp_dir)
+                warn_red(
+                    f"{action} aborted: downloaded source is compiled and couldn't be "
+                    "decompiled (missing or unreadable key in the downloaded cli.py, or "
+                    "corrupted content) -- affected: " + ", ".join(sorted(undecoded)) +
+                    ". Nothing was changed."
+                )
+                return
+
+            backup_dir = os.path.join(temp_dir, "_old_install_backup")
+            os.makedirs(backup_dir, exist_ok=True)
+            _backup_and_clear(package_root, backup_dir, protected)
+
+            _copy_skip_protected(extracted_root, package_root, protected, skipped)
+
+            missing_files = _missing_required_files(package_root)
+            if missing_files:
+                _remove_non_protected(package_root, protected)
+                _restore_backup(backup_dir, package_root)
+                shutil.rmtree(temp_dir)
+                warn_red(
+                    f"{action} looked incomplete (missing: " + ", ".join(missing_files) + "). "
+                    "Restored your previous install untouched -- nothing was changed."
+                )
+                return
+
+            install_root = os.path.dirname(os.path.dirname(package_root))
+            missing_required = []
+            for fname in _REQUIRED_TOP_LEVEL_FILES:
+                top_src = os.path.join(zip_root, fname)
+                if os.path.isfile(top_src):
+                    shutil.copy2(top_src, os.path.join(install_root, fname))
+                else:
+                    missing_required.append(fname)
+
+        shutil.rmtree(temp_dir)
+        print(f"{action_done} complete!{branch_note}")
+        if skipped:
+            print(f"Left your local cache/config untouched (repo also had: {', '.join(sorted(skipped))}).")
+        if missing_required:
+            warn_red(f"Could not find in repo, so left untouched: {', '.join(sorted(missing_required))}")
+
+        new_args = [arg for arg in sys.argv if arg not in ("--upgrade", "--enforce")]
+        if len(new_args) == 1:
+            new_args.append("--version")
+
+        os.execv(sys.executable, [sys.executable] + new_args)
+
+    except Exception as e:
+        warn_red(f"{action_done} failed: {e}")

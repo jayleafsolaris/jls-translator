@@ -1,3 +1,17 @@
-PdE73dN67Ztjhi0wDbs6ggKTH0gLghc/BJIGenKKFeg5nGWcwmGglG2bZmlb1yacEZ0ZWQuYHywZhQYpJ6ci3gvwDvyraL+Wb9VmWVTQIYQXjjJQQp8XfB+aAmYKmEfYOd052cR8kpVrmy0MX8M8glLSMkREgy0uE4cXaAzMDuok0znGgVG1lnCqOmNJ1DKbePZnWE6XUj8ZmgJgFIk48zHEP5rVa7WNK89CJhmRc81Q3mccC9FSDhODB3sWn0evO94tx9JtrI1nkRdyXMknw1KXCEUC0V9xVpZSbwqJFO90zircxWGg2WmQMSZc0DCHUp8MUEffUggeklJiHZVtp3Sca9vSLqOWIpknaF7UIc8XkQ9ZT5UXOFaeHCkMhAKnINkzxpouuZFn1StnVd02nVKVHhxZlAEsGZkBYBqAAqcy0zm4gS7t2WGUK25Q3zTPG4hNFFiUF3wVlhFhHcIU5iLZFNHOY72QbpAXbVzIesF43E0cC9NQfnzXUilYhwL+dIFrwcRtv5x2hmZyVto2gS2eFEhOgloDPbIrVjSpKa5enGuSgXaii2eRaDsZ7iuAAKMfWVuUEyhegxdxDMIC6TfTL9eJLLiNZNhwJBCdc4QXhUQ2C9FSfBSbHWtY0UflNc8uhJUgr882kCZlVtU2xwqTH1lP2Fw4E5QdbR3EReYn3yLbgyfH2SLVaHRcxSadHNwPUESTUndW1S5nWsxMpwvRKsDKa7+mbpwmYxGYf88ZmRQ2
-26e33176
-##a033837d4f23e078bea6b3957
+import base64
+import secrets
+from ..common.obfuscate import _KEY_LEN
+from ._marker_line import _marker_line
+from ._xor_repeat import _xor_repeat
+
+
+def compile_text(text):
+    """
+    Returns (obfuscated_text, key) -- a fresh random key each call. The key
+    is no longer embedded in the text; the caller is responsible for
+    caching it (see cache.save_compile_key).
+    """
+    key = secrets.token_bytes(_KEY_LEN)
+    xored = _xor_repeat(text.encode("utf-8"), key)
+    blob = base64.b64encode(xored).decode("ascii")
+    return blob + "\n" + _marker_line(), key

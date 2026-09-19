@@ -1,3 +1,21 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8eJUATESDBnwFjgEDEYEX6CbIa8bIY6jzCP8sY1+RDJ0XjAJOX64ZOQ+EWmgbmA7oOpBr1s5gqNUigSdyWN161XjcTRwL01B+fNdSKVi8Fe46yDiSwC6ulWeUJioZwjqBFZAIEUeYHDlWhwBmH54C9CecItzFZ66Ydpo6JlXYOIpS2yxYT5gcO1a8F3ALwkmpdOd7gJIh+80xqG8oM7tzz1LcLFBckAsvVpQTZRSJA6c70ijXgX6oiyKWJ2tJ3TabF5hNV06IUnQYkgRsCswU7D3MO9fFIa+YdpYgY12Yf88Tkgk2C9FSfAaWB3odn0flJtUu1M137ZhkgS10GdQyjBrcGk5ChRd8BZhSfRCJR+Q7ySXGxHztkHHVKWVNxDKDHoVNSkKCGz4akngpWMxH8z3fINvPae2MctUnaFycMZZfkwNZC9lDcFaDGmwWzFWrdMgj188u/tUi22YoEJE6gQGICF1P0R06VpEeaAuEDukznCnLqy7t2SKBJ2kZ1zKcBtwZUwuDFz0S1x1nWIoG9CCQa97ObayVIt0maVecPYoGiwJOQNhSPxmaH2gWiBSnONUg14Ej4JhmkWhnV9VZz1LcTREGgxcxGYEXJ1i/AuJ0+A704FuBrVGub21cyAyfAJMKTk6CAQMSkh5oAcs6qV6ca5KBLO/bCNVoJhnGOosGlE0BC50XMl6EBntQmAjzNdBim4Fnq9l2mjxnVZFtz0LcCFBYlFJtfNdSKVifHvR6zz/Wznu513WHIXJcmTXNLo4WXUiFGzMYilJCHZUUqXqSa+naaqKXZ894fU7YN5sagQlBBIoGMwKWHnQlzknrPsk4xok4/dAr/2gmGZEglgHSHkhPngcoWJEefAuET65enGuSgWqolWOMaDsZ9RapM6khaHjfFTkC31BiHZU49ybTLMDEfb6mZpAkZ0CTf89C1WccC9FSNRDXFmwUjR69XpxrkoEu7dkigSFrXJ8ggxeZHRRPlB49D954
-7af7fb43
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS
+import sys
+import time
+
+
+def _report_keys(action, done, total):
+    """
+    Prints a clean, single-line progress indicator like 'Adding Keys... [023/643]'.
+
+    Always called once per completed key (never skipped/batched), and
+    pauses briefly after each write so the counter is actually visible
+    ticking up one-by-one (1, then 2, then 3, ...) instead of flashing by
+    too fast to read on fast, local (non-network) commands like --add and
+    --remove. See DEFAULTS['key_progress_delay'].
+    """
+    width = len(str(total)) if total > 0 else 1
+    sys.stdout.write(f"\r{action} Keys... [{done:0{width}d}/{total}]".ljust(60))
+    sys.stdout.flush()
+    delay = DEFAULTS.get("key_progress_delay", 0)
+    if delay:
+        time.sleep(delay)

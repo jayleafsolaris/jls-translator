@@ -1,3 +1,34 @@
-Ms4k34Eg45ptmCVpV58hjgaZAVVGmAZ8H5oCZgqYR/Qg3T/H0lG/nHKaOnIVkSCKBqMAXUWEEzAplB1mFIgI8Dq2It/RYb+NIoEha1y7NZ0dkU0SdJIeMxWcUmAVnAj1IJwU0c1hrpIIkzppVJF9sBGRCWNeghM7E6geYA6JR+45zCTA1S6Smm+RF3NK0DSKLZAESk77FC4ZmlInJ54C6zXIIsTELqSUcpo6chnuIYoenRlVXZR4OgSYHylWsxL0Ndsu7c1no5xdhSlvS8Jzhh+MAk5f0S0pBZYVbCeADukx4zvTyHy+8wj/LGNfkTCCFqMYT0qWF3QVmB1lHIMQ6QvUJMfTffC3bZstKhndOpkXowBVRYQGOQXKPGYWiU69XpxrkoFnq9lhmidqXd4kgS2UAklZglI1BdccZgzMKeg62XG4gS7t2SLVaCZa3TKCApkJHBbRHz0O30MnSMBH6j3SY4WTIP3VIpYnaVXVPJgcowVTXoMBdV/9UilYzEendJwl3dYu8Nl2nCVjF8U6ghfURDYL0VJ8VtdSKQ2CE+444y7Czm2l2T/VO2NN7j6OHIkMUHSSHTMakx1+FsQE6DvQL93WYJKRbYA6dRC7c89S3E0cC9EAOQeCF3oMiQPYIdI/280u8Nlsmj8mEpEwgxORHVlP0Vh8RcFCOXLMR6d0nGuSgWCijWfVdSYbk1nPUtxNHAvRUjUQ1xFlGYEX4jCcao+BbaKWbpEncVfuO4AHjh4GIdFSfFbXUilYzEendNIkxsQu8Nlk12guS9QimhePGVlP0Qk/GZgebRebCdg80z7A0jSqhGrZaGVV0D6fF5hNSETRBjQT10MkT94PpybdJdXEJ+/zItVoJhmRc88bmk1JRYUbMCmSAmYbhEe5dM4uw9Rrvo1nkRdzV8U6g1LXTQ0R+1J8VtdSKVjMR6d0nDvAyGC50WTXCWgZ1CuGAYgEUkzRETMZmxZmD4JH5jjOLtPFd+2Ld5s7JlXQJ4oA3BlUSp9SJxWbE2QIiQO9M8Ejkowj7ZVnkzwmTN8whxOSCllP31B1fNdSKVjMR6d02SfBxDTH2SLVaCYZkXPPUtxNTFmYHChekVBKF4ML4zvLJZLEYKuWcJYtYhnXPJ1Shw5QSpwCORLNFXQQlwnoINk2nIMnx9ki1WgmGZFznwCVA0gDl1AIBJYcehSNE+470jiSwHyo2WCZJ2VS1DfPB5IZVUfRCQMVmx1qE8QS6SDVJ+3EfqKaatw1JhHYPc8Jox9ZR5AGNQCSWnwWmA7rC9k73cJm5IQr22ovM5Fzz1LcTRwLmBR8Gp4EbCeBDukhyC7BgWe+2UyaJmMDu3PPUtxNHAvRUnxW1wBsDJkV6V6ca5KBLu3ZIoU6b1fFe8Z49k0cC9EbOlabG38dswruOsk/19IupIoimydyGf88gRfGZxwL0VJ8VtdSVhuBA9ghzyrVxFGhkHSQYGpQxzawH5UDSV+UAXV811IpWMxHp3TOLsbUfKPzCNVoJhnDNp8djhkcFtEBKBeDB3onngL3O84/mtR9qKZhlCtuXIwVjh6PCBUh0VJ8VpkdfljRR/M90S6c1WegnCrcQiYZkXOJHY5NUEqTFzBa1wRoFJkCpz3Sa+3UfayeZ6okb1fUDJ8TlR9PA4MXLBmFBiVYggjwfYZBkoEu7dki1Wh2S9g9m1qaT0dHkBA5GopIKQOaBush2TaQiAQ=
-f82d75dd
-##a033837d4f23e078bea6b3957
+from ..common.ratelimit import status_report, set_manual_cooldown
+import time
+from ._clock import _clock
+from ._cmd_usage_live import _cmd_usage_live
+from ._relative import _relative
+from ._usage_line_pairs import _usage_line_pairs
+
+
+def cmd_usage(cooldown_hours=None, live_minutes=None):
+    if cooldown_hours is not None:
+        clamped = max(1.0, min(72.0, cooldown_hours))
+        now = time.time()
+        until_epoch = set_manual_cooldown(cooldown_hours)
+        requested_until = now + clamped * 3600
+        note = ""
+        if clamped != cooldown_hours:
+            note = f" (requested {cooldown_hours:g}h, clamped to the 1-72h range)"
+        if until_epoch > requested_until + 1:
+            print(f"An existing cooldown already runs later than {clamped:g}h -- left unchanged.")
+        else:
+            print(f"Cooldown enforced for {clamped:g}h{note}.")
+        print(f"Translations are blocked until {_clock(until_epoch)} (in {_relative(until_epoch)}).")
+        if live_minutes is None:
+            return
+        print()
+
+    if live_minutes is not None:
+        _cmd_usage_live(live_minutes)
+        return
+
+    report = status_report(use_cache=False)
+    now = time.time()
+    for label, value in _usage_line_pairs(report, now):
+        print(f"{label}: {value}")

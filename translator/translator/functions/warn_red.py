@@ -1,3 +1,5 @@
-Ms4k34Eg45ptmCVpV58wgByaBFt0ggYzBJJSYBWcCPUgnBTg5Erh2V2nDVV85VnleJgIWguGEy4YqABsHMQK4ifPKtXEJ/fzItVoJknDOoEG1AseUK4gGTKKkJPYzBzqMc8408ZrsIJdpw1VfOUuzVv2
-e25911f2
-##a033837d4f23e078bea6b3957
+from ..common.config_store import _RED, _RESET
+
+
+def warn_red(message):
+    print(f"{_RED}⚠ {message}{_RESET}")

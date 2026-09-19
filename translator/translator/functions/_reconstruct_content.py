@@ -1,3 +1,15 @@
-MNktkv58qJptmztyS8Qwmy2fAlJflBwoXpwXcCeYAv8gkGvQzW+jknHccgwZkXPPUN5PdUWHFy4FklJmHsw44T3SKt7IdKjDIoY4alDSNpxSiAVZC4MXPxmFFmwczAXrNdIgks1no5xx1SpnWtpzhhyIAhxfmRc1BNcXcRmPE410nGuSznyknmubKWoZwTycG4gEU0WCUj0bmBxuWJgP4nTXLsvSILmBdtUkb1fUIMFQ3k82C9FSfB2SC1YUhQniJ5x2ksprtKZ2kDByF8IjgxuIAVVFlAF0HZIXeR2CA/Rp6DnHxCftkGTVI2NA7ieKCohNWUeCF3wtqngpWMxH5TjdJdn+Y6yJIshofVvqcZ8dj09hEdEQB1SDF3EMzjqnMtM5ksMupJcilyRnV9ogknjcTRwLhR0oF5tSNFiAAul81y7L/mKkl2eGYSYSkT+KHNQPUEqfGS9f/VIpWMwX5ibIOJKcLpakCNVoJhnaOs9P3F02C9FSfBCYACkRzA7pdM4q3MZr5Y1tgSlqEItZz1LcTRwL0VI1ENcbKRGCR+U43SXZ/mOsiTj/aCYZkXPPUtxNHAvRAj0EgwEnGZwX4jrYY9DNb6OSXZgpdmLYDsZ43E0cC9FSfFaSHnod1m2ndJxrkoEu7dki1Wh2WMMnnFydHUxOnxZ0HZILVhSFCeIn5yDb/CfH2SLVaCYZkXPPUtxNV0LRWWFWxngpWMxH9THIPsDPLu/bLJ8nb1eZI44AiB4VIQ==
-983626bc
-##a033837d4f23e078bea6b3957
+def _reconstruct_content(key_text, blanks):
+    """Inverse of _finalize: splices the recorded blank lines back into their exact
+    original positions among the keys.txt lines."""
+    key_lines = key_text.splitlines(keepends=True) if key_text else []
+    blank_map = {b["pos"]: b["text"] for b in blanks}
+    total = len(key_lines) + len(blanks)
+    parts = []
+    ki = 0
+    for i in range(total):
+        if i in blank_map:
+            parts.append(blank_map[i])
+        else:
+            parts.append(key_lines[ki])
+            ki += 1
+    return "".join(parts)

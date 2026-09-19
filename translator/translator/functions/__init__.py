@@ -1,3 +1,3 @@
-dp5p/c9r7Z93mytyUN49zwKZHxxNmB45VtpfKR2aAvUtnD/d0SOhnHSQJCZfxD2MBpUCUguUCigElhF9HYhH4SbTJrjCYaCUbZtnKhncPIsXj0IQC5AcOFaUHmBWnB6nONU919IupZxwkGQmVt82zx+TCUlHlFI5F5QaJViCBuox2GvTx3qoiyKBIGMz1yaBEYgEU0XRGyhWlB1nDI0O6SeSaZCDBA==
-185d7e6d
-##a033837d4f23e078bea6b3957
+"""One function per file -- every top-level function extracted from
+common/, modes/, and cli.py lives here, one module each, named after the
+function it contains."""

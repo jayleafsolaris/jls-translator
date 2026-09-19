@@ -1,3 +1,9 @@
-Ms4k34Eg45ptmCVpV58nnROSHlBKhRd8H5oCZgqYR9gy3Sfew2+ukl2WJ3NXxVnleJgIWguWFygpkRNlFI4G5D/jKN3UYLnRK89CJhmRc81Q3jlTX5AefBiCH2sdnkfoMpw90817qIoigSBnTZE1ih6QTV5Kkhl8AphSfBaYFeY6zyfT1Wup2XaQMHIZmSGKE5BnHAvRUjMDgxNuHZ9H5ifVL9eILqyacJo7dRnFO4pSiwVTR5RSLASYEWwLn0f0O5wt09Mg7bx6hSd1XNVznB3cDl1HnRcuBf1SKVjMC+4/2WufjHu9nWOBLSZa0D3PFJMBWAuFGjUF1xtnDINH8zzZIsCBYbqXIpkhcFyRI50dmx9ZWIJSOB+EAmUZlW2ndJxr2899uZxjkWhpX5EnnROSHlBKhRcDG5YccFiNCek7ySXRyGCq2WuBaGtQ1X6dB5JNVV+CFzAQ2VArWuZHp3ScOdfVe7+XIqouZ1XdMY4RlzJfRIQcKHw=
-649c0920
-##a033837d4f23e078bea6b3957
+from ..common.translate import _fallback_count
+
+
+def get_fallback_count():
+    """Total number of values that fell back to untranslated text (real
+    outages aside) across the whole process so far. Exposed so callers
+    like --update can fold this into their own live progress display
+    instead of translate_many announcing it mid-run itself."""
+    return _fallback_count

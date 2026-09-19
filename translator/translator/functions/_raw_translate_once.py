@@ -1,3 +1,46 @@
-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
-13721834
-##a033837d4f23e078bea6b3957
+from ..common.text_protect import split_segments, join_segments
+from ..common.translate import TranslationUnavailableError, _STOPPED
+from ._translate_raw_api_call import _translate_raw_api_call
+
+
+def _raw_translate_once(google_code, text):
+    """
+    One real attempt against Google -- no retries, no fallback, raises
+    on failure. Also short-circuits immediately if a prior failure streak
+    already declared the service unavailable, so threads stop hammering a
+    dead service once that's been detected.
+
+    Protected tokens (color codes, %1$s-style placeholders, {key.path}
+    cross-references, PUA glyphs) are split OUT of the text entirely
+    before anything is sent to Google -- never embedded as an inline
+    "@@PHn@@"-style marker for Google to (sometimes) mangle or silently
+    drop as noise, which is how a token like a {key.path} cross-reference
+    could previously vanish from the translated result. This mirrors the
+    same split_segments()/join_segments() approach translate_many() uses
+    for its batches.
+    """
+    if _STOPPED:
+        raise TranslationUnavailableError(
+            "Google Translate does not appear to be available right now. Please try again later."
+        )
+
+    text_clean = text.replace('\n', '__NL__')
+    parts = split_segments(text_clean)
+    distinct_text = list(dict.fromkeys(content for kind, content in parts if kind == "text"))
+
+    if not distinct_text:
+        return join_segments(parts).replace('__NL__', '\n')
+
+    combined = "\n".join(distinct_text)
+    result = _translate_raw_api_call(google_code, combined)
+
+    lines = [line.replace('\r', '') for line in result.split('\n')]
+    if len(lines) == len(distinct_text):
+        segment_results = dict(zip(distinct_text, lines))
+    else:
+        segment_results = {seg: _translate_raw_api_call(google_code, seg) for seg in distinct_text}
+
+    rebuilt = []
+    for kind, content in parts:
+        rebuilt.append(content if kind == "token" else segment_results.get(content, content))
+    return "".join(rebuilt).replace('__NL__', '\n')

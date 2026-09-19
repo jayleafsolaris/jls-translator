@@ -1,3 +1,15 @@
-MNktkv5opJdjmSF8XJk9gBaZRAYh0VJ8VtVQKyucC+4gz2vczmqo12GaJnJc3yewAJ0aHEKfBjNWmR1tHcIM4i3jP9fZeu3RbJomK1vdMoEZ3AFVRZQBfBmZHnBRzAbpMLZrkoEuo5ZmkGZkVdA9hAHcRUxEghsoH5gceljHR+Is3SjGgXqogXbVJ2AZxTuKUp4BXUWaUjAfmRd6WJ4C6jvKLtaBaL+Wb9UhchCdWc9S3E1IQ5QcfASSEXwKnwL0dNUlxs4urpFrmSx0XN99zzGdAVBOlVIzGJQXJViNAfMxzmvGyWvtjmqaJGMZ1zqDF9wETwuBEy4FkhYnWs5FjXSca5LKa7SmbpwmY0qRbs8poWccC9FSPhqWHGILzFqnD+FBkoEu7Z9th2hvFZE/hhyZTVVF0RcyA5oXexmYAq860y/Xj22il3aQJnJmwzKYW8ZnHAvRUnxW11JgHswL7jrZZcHVfKSJKtxoOwSRcc1I9k0cC9FSfFbXUilYzAXrNdIgwY9vvYlnmywuQpMjgAHeVxxC3VJ+ApIKfVrWR+s90i7PiATt2SLVaCYZkTaDAZlXNgvRUnxW11IpWMxHpz/ZMu3NZ6OccdspdknUPYtakARSTth4fFbXUmcXiAKpP9ky7dVrtY0iyGgkG585gBuSRVdOiC0wH5kXelHmR6d0nCXdxWvjm26UJm1KkW7PEJAMUkCCeHxW11JvF55H5DzVJ9aBZ6PZbJosYxfSO4YemB9ZRct4fFbXUilYzEfYMtUl081nt5wqliBvVdV65Q==
-973e0f47
-##a033837d4f23e078bea6b3957
+def _finalize(node):
+    """Splits node.content_raw into node.key_text (non-blank lines only) and
+    node.blanks (positions + exact text of the blank lines removed from it),
+    then recurses into children. Called once, after the whole file is parsed."""
+    key_lines = []
+    blanks = []
+    for i, line in enumerate(node.content_raw):
+        if line.strip() == "":
+            blanks.append({"pos": i, "text": line})
+        else:
+            key_lines.append(line)
+    node.key_text = "".join(key_lines)
+    node.blanks = blanks
+    for child in node.children:
+        _finalize(child)

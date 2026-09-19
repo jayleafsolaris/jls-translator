@@ -1,3 +1,10 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSTjG4L9IW4wTl70uf1SKyAVJx5BGwILk9cwfRNRUivydLJ641xhr/A56BXoy6SbQPQ2b1Gr1e3Cl5bbAnECKkXikrrzXOBOgU5ORcnrBNu0JvVME8nQbcB09En3hWfJMXb1izFOYi2RTExHy+kG2bF2VR1DCELZ8MX0OUWjgXgxMgQuZHp3ScO9PVZu3EIqUJRXLwFKotuCRuC95SGDOxM1w0uDTcdsouwNJnopddliBjWtoMiRuQCB52+1J8VtcGewHWbad0nGuSgS7tiWOBIChOwzqbF6MZWVOFWjYFmBwnHJkK9yeUL9PVb+TVIpAmZVbVOoEVwU9JX5dfZFTeeClYzEfiLN8uwtUuiIFhkDhyUN491XjcTRwL0VJ8VocTegvm
-222905a6
-##a033837d4f23e078bea6b3957
+from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
+import json
+
+
+def _save_version_check_cache(data):
+    path = PACKAGE_DIR / DEFAULTS["version_check_file"]
+    try:
+        path.write_text(json.dumps(data), encoding="utf-8")
+    except Exception:
+        pass

@@ -1,3 +1,22 @@
-PdE73dN67Yp7hkJvVME8nQbcGVVGlHg6BJgfKVaKCPU53T/txXu/mHacJ2gZ2D6fHY4ZHE2eADEXgy1tDZ4G8z3TJbirBKmcZNUXdFzBPJ0G1AFdRZYtNRKPXikUjQngC8gkxsBi4dlhmixjFZE4igujBFhT3VI3E44tfReYBut4nDjGwHy5pnacJWME/zyBF9BNTFmUBAMTmxN5C4kDumSSe56BYKKNZ8hqJBCLWc9S3E1TXZQAPRqbLXkbmEe6dJRj3sBgqqZrkTAmFJFixlLXTRRAlAsDH5MKKVfMDOIt4z/d1W+h2WuTaG1cyAybHYgMUAuUHi8T10MgUcxIpzjdJdX+eqKNY5loLBmAY9949k0cC9EbOlaEBmgKmDjzPdEuksh97ZdtgWhIVt821XjcTRwL0VJ8VoMbZB2zFPMmnHaSx2G/lGOBF2JMwzKbG5MDFFuDFyopkh5oCJ8C43SXa5rVZ6CcLIEha1yZes9f3B5ISoMGAwKeH2xRxW2ndJxr1819qMMI1WgmGZFzz1KIBFFOrgEoBNdPKR6DFeo1yBTW1HysjWuaJi5JwzaZLZkBXVuCFzhf/XgpWMxH7ifjLdvPb6HZP9UkZ1fWDIYWhE0CFtEePRiQLX0XmAbrdN0l1oFlqIBdnCx+GY9uzxmZFGNfngY9Gv1SKVjMDuF01Tjtx2ejmG7PQiYZkXPPUtxNUEKfF3xL1xQrI5cL5jrbFNvFdrDWeZkpaF7uJ4AGnQFBdtEJMwCSAGgUgDj3N8hxh48/q4Qn1WUmbdg+ikjcFkhCnBcDBYMAdFrmR6d0nC7e0mv38yLVaCYZkXPPHpUDWQvMUjpUrAllGYIA2D3YM8+OdaGYbJIXclbFMoMPoU1HRIcXLhebHlYIjxO9YZJ61Nwr7dF5lidiXMx6z1/cOVVGlEh8DYMbZB2zFPMmwWm4gS7t2WuTaGhWxTbVeNxNHAvRUnxWmxtnHcxMunTaaZLaYKKNZ4hqDBmRc88BhR4SWIUWMwODXH4KhRPifJ4XwIMu5tlunCZjF905mgGIRQQe2FtWVtdSKQuVFKknyC/d1Hrjn26AO24RmFk=
-d4896c6e
-##a033837d4f23e078bea6b3957
+import sys
+import time
+from .format_duration import format_duration
+
+
+def _report(lang_idx, lang_total, code, key_idx, key_total, start_time=None, prev_elapsed=0.0, note=""):
+    overall_pct = ((lang_idx - 1) + (key_idx / key_total if key_total else 1)) / lang_total * 100
+
+    if start_time is not None:
+        time_str = format_duration(prev_elapsed + (time.time() - start_time))
+    else:
+        time_str = format_duration(prev_elapsed)
+
+    is_final = lang_idx >= lang_total and key_idx >= key_total
+    if is_final:
+        line = f"[{lang_idx}/{lang_total}] {overall_pct:5.1f}% - Time: {time_str}"
+    else:
+        line = f"[{lang_idx}/{lang_total}] {overall_pct:5.1f}% ({code}) - Time: {time_str}"
+    if note:
+        line += f" {note}"
+    sys.stdout.write("\r" + line.ljust(85))
+    sys.stdout.flush()

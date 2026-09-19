@@ -1,3 +1,35 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLlRc+A5AtZReLbeEm0yaSjyCulm+YJ2gX0jyBFJUKY1iFHS4T1xtkCIMV83TbLsb+fKiId5A7cmbVNoMThUEcXJAAMimFF21yihXoOZxlnMJhoJRtm2Z0WMU2gxuRBEgLmB8sGYUGKQqJFOImyi6egXyomm2HLFlcySedE9BNTk6SHS4SqB18DI0A4nicGdPVa4GQb5w8Q0HSNooWmQl5WYMdLnyeH3kXnhOnINUm16tov5Zv1WYoWt4+gh2SQ0hZkBwvGpYGbFiFCvc7zj+S/kKMqlaqGkNo5Ba8JqM5dWa0XnwppTNdPbMrzhn1H+3tQY6yCJM6aVSRfYgXiDJIWZAcLxqWBmYKzA7qJNM5xoFpqI1dgTpnV8I/jgaTHzYh+xY5ENctfQqNCfQ43T/X/nysjl2UOG9m0jKDHtQKU0SWHjkplB1tHcBH8zHEP+3VYZKKZ5ssLwO7c89S3E8eCftSfFbXJmEdzAbkIMkq3oFgqI11mjptGdIygx7QTUxHhAF8BJYGbFiADuo9yCLcxi6sl2bVPXVY1jbCEZ0dHFmUATkEgRN9EYMJq16ca5KBaaSPZ5todlXQOoFSiAhEX9EGNBeDVXpYjQv1Md0vy4F9rJ9n1TxpGcI2gRbcRVJE0QIuGYMXagyJA6cg0yDXz33H2SLVaGNU0zaLFpkJHEKfUjUC118kWJ8C4nTjOdPWUbmLY5s7aljFNrAdkg5ZC5MXMBmAUm8XnkfwPMVrxslvudlvlDxyXMMgxlz2TRwL0VB+VP1SKVjMAOs73iregVGBuFGhF1R84AaqIagyaGK8N1Z811IpWIgC6zXFa4+BaaiNXYctd0zUIJstmAhQSohadXzXUilYmBXmOs8n09Vhv9k/1S9jTe4nnROSHlBKhR0uXpAdZh+AAtg30y/XiATH2SLVaGJc0yaILZACWwWdHTtekVB7HZ8C9SLZY5uBI+DZeZktaBHFNpcGoxlTdIIXMhLZF2cbgwPifJs+xscj9d4r3DUmW8gnigHQTUdMnh07GpItaheIAvp2lUGSgS7ti2eGLXRP1HuDF5JFSE6JBgMCmC16HYIDqTHSKN3Fa+Xbd4EuKwGTesZb9k0cC9EWORSCFVYUgwCpONMsmscsv5xxkDpwXJl6zxGQCF1ZlBZ8W9pSch+DCOA42RTRzmqohCDcQgwZkXPPBZUZVAuuIB0isi1FMaEu0wvwBPHqNMfZItVoJhmRc4Edi00BC4UbMRPZBmAViU+uXpxrkoEu7dkikCRnScI2i1LBTVJEhlJxVqg+SCu4ONUR7R738lqSrUu4DQwZkXPPUtxNHEKXUjkalgJ6HYhHu3TYLt7Ad/fzItVoJhmRc89S3E0cX5gfOViEHmwdnE/jMdAqy4Ej7ZxulDh1XNV65VLcTRwL0VJ8KbszWiyzNcIF6Q7h9VGZsE+waDsZxTqCF9IZVUaUWnV8/VIpWMwD4jbJLO3NYarXbpovLl+TIIocmARSTNFfcVaMFWYXiwviC98k1sRz4dl5mS1oEcU2lwajGVN0ghcyEt4PKRuEBvUnnmK4gS7t2XCQO3NVxXPSUogfXUWCHj0CmAAnDJ4G6SfQKsbEJrmceoEXclbuIIocmEQ2C9FSfBKSEHwfswvoM5In3cYmq9twkCtjUMc2i1LRQBxQlh0zEZsXVhuDA+IpkGvJzWuj0XCQO3NVxXqSUp8FXVmCUHV811IpWJ4C5DvOL+3EdrmLY90kY1eZIYoBiQFIBZQcPxmTFyFamRPheYRpm4gnx9ki1Wh0XMUmnRzcH1lYhB4ofA==
-89d54b13
-##a033837d4f23e078bea6b3957
+from ..common import debug_log
+from ..common.config_store import get_request_delay, warn_red
+from ..common.ratelimit import reserve, record_extra, record_outage, RateLimitExceededError
+import time
+from ..common.translate import _LAST_REQUEST_TIME, _RATE_LIMIT_LOCK
+from .get_translator import get_translator
+
+
+def _translate_raw_api_call(google_code, text_to_send):
+    """
+    The actual network call, plus rate limiting and usage-cap reservation,
+    given plain text that's already safe to send (no protected tokens
+    embedded in it -- see _raw_translate_once below for why that matters).
+    """
+    global _LAST_REQUEST_TIME
+
+    delay = get_request_delay()
+    translator = get_translator(google_code)
+
+    debug_log.log(f"reserve() -- {len(text_to_send.encode('utf-8'))} bytes, {google_code}")
+    reserve(len(text_to_send.encode("utf-8")))
+    debug_log.log(f"reserve() cleared -- {google_code}")
+
+    with _RATE_LIMIT_LOCK:
+        now = time.time()
+        elapsed = now - _LAST_REQUEST_TIME
+        if elapsed < delay:
+            time.sleep(delay - elapsed)
+        _LAST_REQUEST_TIME = time.time()
+
+    debug_log.log(f"sending -- {google_code}, {len(text_to_send)} chars")
+    result = translator.translate(text_to_send)
+    debug_log.log(f"received -- {google_code}, {len(result)} chars")
+    record_extra(len(result.encode("utf-8")))
+    return result

@@ -1,3 +1,28 @@
-Ms4k34Eg45ptmCVpV58wjhGUCBxCnAIzBINSehmaAtg33SjaxCLtnmeBF3NJ1TKbF6MOU16fBnBWgABgDIk48iTYKsbEUa6Wd5s8KhnSP4oTjjJfSpIaOVrXHmYZiDjkNd8j16tov5Zv1WYoWt4+gh2SQ0xZnhUuE4QBKRGBF+gmyGvezm+ppmCUO2MVkTCDF50fY1uDHTsEkgF6VMw47yHRKtz+faSDZ/8udFbcc8FcnwJRRp4ccgWDE30dzA7qJNM5xoFKiL9DoARSap1zvzO/Jn1stC0YP6V4A3KIAuF03ybW/m2smmqQF2VV1DKdWtVXNgvRUnwVmxdoCokDp2mcEO+rLu3ZIpwuJlrdNo4Aox1ORJYAOQWEWiBC5kendJxrkoEurpVnlDpjXZ8ynwKZA1gDtTcaN6I+XSu3Rfcm0yzAxH2+pmScJGMb7HrlUtxNHEKXUj8akhN7J48G5DzZY5ubBO3ZItVoJhmRMIMXnR9ZT98TLAaSHG1QqCLBFekH5vJV75pjliBjZtc6gxfeMBUh+1J8Vtcbb1iCCPN03yfXwHyonTj/aCYZkXPPUtwdTkKfBnRUuR19EIUJ4HTIJJLCYqiYcNVlKxnfPM8BnRtZT9ECLhmQAGwLn0foJpwo08JmqNlkmj1oXZ9xxnjcTRwL0VJ8VoUXfQ2eCY1enGuSgX6/kGyBYCR63TaOAJkJBgnYeHxW11JvF55H6TXRLpLIYO2abpApdFzVaeVS3E0cC9FSfAaFG2cMxAGldJww3MBjqIQg3EImGZFznwCVA0gD+1J8VtdSKVjMR6UI0mXewGCq2WScJGNKkTKBFtwBXUWWLT4XlBl8CJ9IpzXOLpLUYLmWd5YgY12fc8JfnwJSX5gcKRPXHGYPzA/mJ5xpuIEu7dki1WgmG988mxqVA1sLhR18BJIBfBWJS6c10i+S1Wao2WyQMHIZnH6aApgMSE7RBTUam1J7HcEE7zHfIJLEeKiLe9UjY0CRceVS3E0cC9FSfFSYHGodzEqqN84u09Vr4tQvgDhiWMU2wF/RDFhP0QA5FIIbZRyfR/M82WvRwG2lnCzXQiYZkXPGeNxNHAuBADUYg1oDWMxHp3Sca5KDUqO3bYEtPBnFO4pS0UBJW5UTKBPXAHwWzAToIdI/ksxvv5Jnh2hnTZEnhxfcD1NfhR0xVpgUKRqNFOJ01TiSgwTt2SLVaCYZkXGaHIgCSUiZFzhWlQspDIQO9HSRZpLIeuqKIpomakCRIYoBmRkcSYhScVuUAGwZmAKpdrZrkoEu5PM=
-11b45a06
-##a033837d4f23e078bea6b3957
+from ..common.cache import save_cache, get_update_count, write_update_count, clear_cache, load_cache
+from ..common.progress import load_base, clear_progress, _human_size
+from ..common.state import DEFAULTS, PACKAGE_DIR
+
+
+def cmd_cache_clear():
+    cleared = []
+    if clear_progress():
+        cleared.append(DEFAULTS["progress_file"])
+    if clear_cache():
+        cleared.append(DEFAULTS["cache_file"])
+
+    if not cleared:
+        print("Nothing to clear -- no saved progress or cache found.")
+        return
+
+    print("Cleared:")
+    for name in cleared:
+        print(f"  {name}")
+    print(
+         "\n.lang files and lang_backups/ are untouched. --continue now has "
+        "nothing to resume, and the next --update will re-check every key "
+        "once --create/--update/--add rebuilds the cache."
+    )
+    print(
+        "\nNote: the --update run count marker at the bottom of base is "
+        "untouched by this -- it's only reset by --create."
+    )

@@ -1,3 +1,12 @@
-dp5pn4xvqZ041SdoVchzjhaYTVFCggE1GJBSYh2VFKd80iSSwmasl2WQaGJcxTaMBpUCUgfRHDNWmRd9D4MV7HTfKt7NfeTXINdqDFDcI4AAiE1IQpwXVhCFHWRYwknkO9Em3c8upJRymjpyGcInjgaZZ1pZnh98WNkRZhWBCOl6zz/T1WvtkG+FJ3RNkReqNL04cH+iXnw6tjxOLa0gwgeQa/XjUY62TKMNVG27NZ0dkU0SBZIdMRuYHCcUjQngC9UkkshjvZZwgWh2WMMgii2QDFJM3VIrBJ4GbCeABukzkGvXz3q/kGeGF2JQ0ifDUo8ZTkKBLT8Zmh9sFpgU2DLTOe3Oe7mJd4FCYEvePs9c0g5TRpwdMliDF3EMsxf1O8gu0dUupJRymjpyGcU8sBCOBEhCghpWEIUdZFjCSeQ70SbdzyCumGGdLSZQ3COAAIhNW06FLT0Vgxt/HbML5jrbPtPGa5KabZEtdRWRJJ0biAhjR5AcOwOWFWwLsw30O9JB1NNhoNks2ytpVNw8gVyMH1NMgxcvBdcbZAiDFfN0lEGSgS7tlW2ULFlb0CCKXtweRUWSLTkYqAd6J4oV6DnjKdPSa+HZYJQ7Y2bXOoEVmR9MWZgcKFrXHmYZiDj3JtMswMR9vtUI1WgmGcIymRejHU5ElgA5BYReKRuAAuYm4zvAzmm/nHGGZCZf3iGCE4gyWF6DEygfmBwlWLMV4iTTOcb+ZaiAcdloWVjCOLARkwNIQp8HOVr9WwMengjqdJJl1NRgro1rmiZ1F9I+iy2dCVgLmB8sGYUGKRuBA9g12C+4
-ef841f2a
-##a033837d4f23e078bea6b3957
+"""--add: only add missing keys (no change detection, no network calls)."""
+import time
+from ..common import state
+from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT
+from ..common.lang_io import parse_lang, write_lang, entries_dict, strip_comments_for_output
+from ..common.text_protect import to_british
+from ..common.cache import get_active_language_codes, write_languages_json
+from ..common.progress import (
+    load_base, sync_en_us_from_base, base_fingerprint, load_progress,
+    save_progress, clear_progress, format_duration, _report_keys, _ask_continue,
+)
+from ..functions.cmd_add import cmd_add

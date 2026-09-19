@@ -1,3 +1,33 @@
-PdE73dN67YtjmyxpVLs1nR2RTRIFkh0xG5gcJwqNE+I41Sbb1S6klHKaOnIZ7hS9Pas5dHS3Mx8iuCAlWLMg1RvrH/r+W5mwTrwSR234HKEtqCVubqI6EzqzXiknpi7TAPkZ7edcjLpWvAdIFZEMvDquJHJgrjQdNaM9W3LmbeMx2mvtwGqnjHGBF2VYwXuMB44fWUWFLT8Xh14pDZ8C4wveMsbEfeHZapQsWVbEJ44VmUEcRpgcAxWWAiVYgQb/C98qwog0x9ki1WgkG5NZz1LcTX1ivDZxBYMLZR3MBuM+yTjGzGujjSKUOHZV2DaLUpMDX07RE3wBnhxtF5tHrzzTPsCBYb/ZZpQxLxnXOoEbjwVZWMt4VlbXUilVzA/mMOMkx9Vvqpw/oTpzXJF7nRefAk5Prh0pApYVbFDFR/A1z2vRwGKhnGbVLHNL2D2IUogFVVjRBTUYkx1+WMFKjXSca5KBLqzZZZAmc1DfNs8GjgxSWJ0TKB+YHCkXmRPmM9lnks9hudlogDtyGdk6mwaVA1sLngcuVpgFZ1iPAu441SXViDTH2SLVaCYZwjudG5IGHEOQADhY1yBsGYBH4iLVL9fPbajZdZBodVzfJ88fkx9ZC4UaPRjXNWYXiwvidMgk3sR8rI1nkWYMGZFzz1/cIkhDlAArH4QXJViFAachzyrVxC6qlnbVOHNK2TaLUogCHEqFUjATlgF9csxHp3Sca+3mXIKuVr0XU234H6YovTl1ZL8tCD6lN1owoyvDdNMtktVmqNlhgDp0XN8nzxGdHQYLlgAzAdcVbBaYC/56tmuSgS7t2VadIXUZ2CDPBpQIHESfHiVWhx5oG4lH7Tvea8HIdKjZa5suakzUPYwXj01IQ5RSPxeHXikZggOnPchr1s5rvtlxmkImGZFzz1KVA1hCgxc/ApsLKRmCA6cn3S3XzXft1C/VKSZb2DSIF45NVkSTUiwEmBZ8G4kUpznTOdeBfKiYbtU9dVjWNsN43E0cC9FSKx6eEWFYhRSnI9QqxoFrrItshmhrVsM2zwCTAlEH0QA9Ap8Xe1iYD+Y6nD/A1H25kGySaGdXkTLCAo4EU1mYeHxW11IpWIkU8z3RKsbELrmWIocpb0rUc5samU1fTpgeNRiQUmsdigj1MZw/2sR8qN5x1SloQJE2mRuYCFJIlFI1AtABA1jMR6d0nDjTx2vj8yLVaCYUkRybGpkfS0KCF3xegBtnHIMQpyPdONyGeu2Jd4YgY12RO44AmE1ZQoUaOQTXBWgBxV2nONkqxMQupI0ilCRpV9R/5VLcTRwL0QY0E4UXLgvMCegg1CLcxi65liKZLWdL33OJAJMAHEqfUikYkxd7DZ8C43TLItzFYbrXCP9oJhmREs8BkQxQR9FZc1vXGGAMmAL1dNU4ksB+vZVrkCwmXNgnhxeOTUtKiFIvGdcGYR3MFeInySfGgWe+lyWBQiYZkXOfF44LWUiFHiVWkxd9HZ4K7jrVOMbIbeHZdp0taBnSP44fjAhYC4UdfC2aG2cnjwb3eJwm09lRrphyqGYMGZFzz1DeTzYL0VJ8H5FSYRmIOOghyCrVxDTH2SLVaCYZkXOBF4syX0qBUmFWlAd7CokJ8wvfKsKBJO2mUb0aT3f6DKkzvzlzeftSfFbXF2URikfkIc451896kppjhWhnV9VzxwePCFh0kwsoE4RSJliPEvUm2SXG/m2siSvVdjsZ7hS9Pas5dHSkJhU6vihILKUoyQvoA+DkXYW2TrFyDBmRc89S3E0cRZQFAxWWAilFzATyJs4u3NVRrphy1WImZvYBoCWoJWNtsDEIOaV4KVjMR+I4zy6Iqy7t2SLVaCYZ3zaYLZ8MTAvMUj8DhQBsFpg45DXMQbiBLu3ZaJw8clzDc9JSzU0XC4MTMhKYHycNgg7hO84mmoxRh7BWoQ1UZvcBrjGoJHNl3VIDPL4mXT2+OMEG/Qjm6EGD0AjVaCYZwzabB44DHEaQCnQbnhxWG40Xq3TRItyJY6yBXZYpdhWRPYoFow5dW9FYfByeBn0dnk6uXg==
-89b6e934
-##a033837d4f23e078bea6b3957
+import random
+from ..common.ratelimit import _GROWTH_FACTOR, _GROWTH_UTILIZATION_THRESHOLD, _JITTER_FRACTION, _SHRINK_FACTOR
+
+
+def _adjust_cap(current_cap, used_bytes, had_outage, min_cap, max_cap):
+    """
+    AIMD-style adjustment applied once a window (hour or day) finishes:
+
+    - had_outage=True (record_outage() was called during this window --
+      a genuine translation outage, not just hitting our own ceiling):
+      shrink hard. Real evidence we sent more than Google tolerated.
+    - Otherwise, if usage got pushed to at least
+      _GROWTH_UTILIZATION_THRESHOLD of the current cap: grow gently.
+      This is the only place job size influences the cap, and it does so
+      indirectly and safely -- a bigger job produces more real usage,
+      which is what earns more room, rather than trusting an a-priori
+      estimate to raise the ceiling before there's any evidence it's
+      safe.
+    - Otherwise (window wasn't pushed hard either way): leave it alone,
+      there's nothing to learn from an underused window.
+
+    A small +/- jitter is applied either way so the result isn't
+    perfectly deterministic, then clamped to [min_cap, max_cap].
+    """
+    if had_outage:
+        new_cap = current_cap * _SHRINK_FACTOR
+    elif current_cap and (used_bytes / current_cap) >= _GROWTH_UTILIZATION_THRESHOLD:
+        new_cap = current_cap * _GROWTH_FACTOR
+    else:
+        new_cap = current_cap
+
+    jitter = 1 + random.uniform(-_JITTER_FRACTION, _JITTER_FRACTION)
+    return max(min_cap, min(max_cap, new_cap * jitter))

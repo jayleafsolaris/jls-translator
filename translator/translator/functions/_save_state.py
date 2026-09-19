@@ -1,3 +1,9 @@
-PdE73dN67ZNxmiYMX8M8glLSQ19EnB8zGNkAaAyJC+451T+SyGO9lnCBaFlq5RK7N6MrdWe0eFZ8kxdvWLMU5iLZFMHVb7mcKpEpcliYaeVS3E0cX4MLZnzXUilYzEendOMY5uBaiKZEvARDF8YhhgaZMkhOiQZ0HIQdZ1aIEuokz2PWwHqs0C7VLWha3jeGHJtQHl6FFHFO1VsDWMxHpzHEKNfReu28epYtdk3YPIFI9k0cC9FSfFbXAmgLn20=
-2946068d
-##a033837d4f23e078bea6b3957
+import json
+from ..common.ratelimit import _STATE_FILE
+
+
+def _save_state(data):
+    try:
+        _STATE_FILE.write_text(json.dumps(data), encoding="utf-8")
+    except Exception:
+        pass

@@ -1,3 +1,49 @@
-Ms4k34Eg45ptmCVpV58nigqIMkxZngY5FYNSYBWcCPUgnBT55FeSq0ezF1R8u1nlFpkLHFmUATMagRdWE4ke2CbZLdfTa6OaZ4ZgcFjdJooB0E1RSoktOBOHBmFF3VeubrZrkoEu79sg/2gmGZEBigGTAUpOglI5AJIAcFjLHOgg1C7Aj2WogH/SaGVL3iCcX44IWk6DFzIVklJgFswH8TXQPtfSbu3RY9Usb1rFc4AU9k0cC9EZOQ/XXzdYmgbrIdlr1M587bZMsGgoVdA9iFKaBFBO2FI1GIMdKQyEBvN00z/axHztkmeMb3UZ3iSBUooMUF6UXlZW11IpD4UT7z3Sa8bJZ77ZcZQlYxnXOoMX0wFdRZYHPRGSUiRVzBTodMgj14FopJdjmWgoVdA9iFKUAlBPglIuE5YeA1jMR6cm2TjdzXionSKBLX5NkTqBAYgIXU/RHTpWllJ7GZtH9THaLsDEYK6cIpgpdFLUIc8Ukx8cX5kXfBGWH2xYmAinONMk2asu7dkigDgmWMVznQeSGVVGlFxWfNdSKVitR/Ux2i7AxGCunCKWKWgZ2CecF5ALHEieHCgXnhwpGYII8zzZOZLTa6uccJAmZVyRe50XjwJQXZQWVlbXUikKiQTyJs8ixMRitNUigDgmTd5zghOEMlhOgQY0X9tSYAvMCuI50yLIxGrtim3VO25YwzaLUo4IWk6DFzIVkgEpGZ4CjXSca5LOYKGAIoctdVbdJYoW3AJSSJRefBeZFikRn0frMdo/ksB97Y1qkGhqUMU2nROQTRtQngY0E4VcYh2VGqB0yC7K1QTt2SLVYGhcxzadUpsYWViCFzhWlgYpF55H4ybTO8LEauTZdZ0taFzHNp1SlRkcSJAcewLXEGxYngL0O9A918UurpVnlCZqQItZz1LcTUhDlFIuE5EXex2CBOIwnCDX2C6plmeGJiFNkTaXG48ZHEKfUigengEpHoUL4nicJMCBfKiKbZk+b1fWc4YG3BpTXp0WVlbXUikKiRbyPc4uktNr4JxsgS10UN80zxPcBllS0RMwBJITbQHMBeI90iyS02u+lm6DLWIZ0D+AHJtNSEOUUi8XmhcDWMxHpzfUKtvPLuWYIpYxZVXUesF49k0cC9EgOQKCAGcLzAanOtk8ksVnro051ShwWN0migGcTVVfghcwENcbeliCCPN00T7GwHqonSz/aCYZkXHNUPZNHAvRADkFmB5/HYg45DXfI9eBM+2Cf/9CJhmRc4sXmk1OToIdMACSLX8ZgBLifNcuy40uqZxygSAqGcInjhGXRAYh0VJ8VtdSKViFAac/2TKSyGDti2eGJ2pP1DewEZ0OVE7LeHxW11IpWMxHp3Sca8DEeriLbNU6Y0reP5kXmDJfSpIaOS2cF3Al5kendJxrkoEuuZx6gWg7GccygweZHhJMlAZ0HZILIHLMR6d0nGuSgWer2XaQMHIZ2CDPPJMDWRH7UnxW11IpWMxHp3ScOdfVe7+XIrsnaFy7c89S3E0cC9EbOlacF3BYhQmnJ8gq0couoosikS12Tdlz0VKRDER0lRcsAp9IA1jMR6d0nGuSgS7t2XCQPHNL33ObF4QZNgvRUnxW11IpEYpHpS+ea9zOeu2QbNU8Y0HFaeVS3E0cC9FSfFbXUikKiRToOMou1v5trJpqkBNtXMgOz0/cGVlThXh8VtdSKVjMR6d0nGvAxHq4i2zVPGNBxVnlUtxNHAvRUnwFgxNqE8xapyfIKtHKLrHZeZ4tf0S7Wc9S3E0cC9FSOBORUnsdnAuvOZVxuIEu7dki1WgmGZFzzwCZC2NAlAt8S9cfJx+eCPIklHqbqy7t2SLVaCYZkXPPUpULHFmUFAMdkgspRdFH7DHFcbiBLu3ZItVoJhmRc89S3E0cWZQGKQSZUmRWixXoIcxjgogE7dki1WgmGZFzz1LcHklJ0U98BJIBZhSaAtgi3SfHxCa/nGSqI2NAnXOLF4wZVAvaUm1a1wF9GY8Mrl6ca5KBLu3ZItVoJhnDNpsHjgMcWIQQfB+RUnoNjkfuJ5wl3dUug5ZskGhjVcI2zx/SCk5EhAJ0Rt54A1jMR6d0nGuS02u+jG6BaDsZ7hiqK6M/eW2uIBlYhAdrUJ4C9ziQa8bEdrnQCNVoJhmRc89SjghPRJ0EORKoEWgbhALcP9ky74Ez7Ytnhj1qTbtzz1LcTRwL0QA5AoIAZ1ieAvQh0D+4qy7t2SKHLXJMwz3PCZcIRRHRADkFmB5/HbMR5jjJLprKa7TVIsVkJl/DPJUXkh5ZX9lbdVaRHXtYhwL+dNUlktdvoYxnhjUM
-7d3cd286
-##a033837d4f23e078bea6b3957
+from ..common.text_protect import _KEY_REF_RE
+
+
+def resolve_key_references(values, max_depth=10):
+    """
+    Resolves every '{other.key}' cross-reference in `values` (a dict of
+    key -> value for ONE .lang file) into that other key's own value,
+    within this same file/language -- so the final .lang holds real
+    resolved text instead of a raw reference marker for the game to look
+    up at runtime.
+
+    A reference can itself contain another reference (resolved
+    recursively, up to max_depth), is memoized so shared references are
+    only resolved once, and is left as the literal '{other.key}' text
+    (never guessed at or dropped) whenever it can't be resolved cleanly:
+    the referenced key doesn't exist in this file, or resolving it would
+    require re-entering a key already being resolved along the same
+    chain (a cycle).
+
+    Returns a new dict; `values` itself is not mutated.
+    """
+    resolved_cache = {}
+
+    def resolve_value(key, depth, stack):
+        if key in resolved_cache:
+            return resolved_cache[key]
+        text = values.get(key)
+        if text is None:
+            return None
+        if key in stack or depth > max_depth:
+            return text
+        if "{" not in text:
+            resolved_cache[key] = text
+            return text
+
+        stack = stack | {key}
+
+        def repl(m):
+            ref_key = m.group(1)
+            if ref_key == key:
+                return m.group(0)
+            sub = resolve_value(ref_key, depth + 1, stack)
+            return sub if sub is not None else m.group(0)
+
+        result = _KEY_REF_RE.sub(repl, text)
+        resolved_cache[key] = result
+        return result
+
+    return {key: resolve_value(key, 0, frozenset()) for key in values}

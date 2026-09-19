@@ -1,3 +1,21 @@
-MNktksB+vZV7qjhzV9InmhOIBFNFrgI9ApQaIQyeBukn0CrGxGqSjWeNPCoZ3j+LLZAIXU+YHDta1x1lHLMT9TXVJ9vPaeHZbJA/WVXUMosbkgoQC58XKymDAGgRgA7pM5VxuIEu7dkg12oMGZFzzyCZQF1bgR41E4RSaBbMEvcw3T/XxS6hnGORIWheniedE5UBVUWWUiwDmRF9DY0T7jvSa8LAZ7/ZbZs8aRnQPeVS3E0cSp0AOReTCyQMngbpJ9AqxsRq7Yp2hyFoXpEkhgaUAklf0RE9GpsbZx/MIOg72yfXgVq/mGyGJGdN1H3PPZIBRSHRUnxWhBNvHcwQ7zHSa8bJa+2NcJQmdVXQJ4oW3B5IWZgcO1aEBmAUgEfkNc4528R97Y1qkGhjQdAwm1KzIXgh0VJ8VpsXaByFCeB7yDnTyGKkl2XVOHNX0ieaE4gEU0XRBjQXg1J5DYIE8yHdP9vOYJKWbJkxWV3YNYla1U1PSoZSMxj9UilYzAXmJ9lrn4wuuYtjmztqWMU8nQHcCVNF1gZ8F5sFaAGfR/cm2TjX03io2WeRL2MZwSaBEYgYXV+YHTJ811IpWI4e8zGRLd3TI6+AdpBoLlrEIYML3BxJRIUXL1rXE20ciQOoMM4kwtFrqdlxhSllUN80w1KdTVFKgxl8Ap8TfXLMR6d01j7B1S6qnHaGaGdbwjydEJkJHEKfBjNWgxpsWJ8C6SDZJdHEJ+HZcZpoclHUc4wTkAFZWdEBNBmCHm1YigbrOLZrkoEur5hhnmhyVpEyzxSJAVALgxcoBJYcehSNE+470mvFyWujnHSQOiZN2TqcUo4ISF6DHC9WuR1nHcJtp3Sca5CDLMfZItVoZVbDNs9P3BlOSp8BMBeDF20nmAL/ILZrkoEupJ8imiRiZt02jhaVA1sR+1J8VtdSKVjMDuF00iTGgW2ii2fbO3JYwyecBZUZVAOeHjgpmxdoHIUJ4H2GQZKBLu3ZItVoJhmRc50XiBhORdE8MxiSeClYzEendJxr0c58qNk/1StpS9QIgxeSRVNHlS0wE5YWYBaLTr0JtmuSgS6knyKaJGJmxSGOG5AEUkzLeHxW11IpWMxH7jKcJd3VLq6WcJBmY1fVIJgbiAUURJ0WAwKFE2AUhQngfYZBkoEu7dki1WgmGZFznReIGE5F0TwzGJJ4KVjMR6d0nGvRznyo2T/VK2lL1AjVHpkDFEieADlf118pFIkJrzvQL+3VfKyQbpwmYRDsWc9S3E1OToUHLhjXFCsDggLwC9Au08Vno55/jitpS9QulByZGmNfgxM1Gp4cbgXObQ==
-dc21179c
-##a033837d4f23e078bea6b3957
+def apply_punctuation_patch(translated_text, old_leading, old_trailing, new_leading, new_trailing):
+    """
+    Re-applies an updated leading/trailing punctuation pair onto an
+    already-translated string without calling Google Translate. Only
+    safe when the translated string still carries the exact OLD
+    leading/trailing punctuation that punctuation_only_diff() saw on
+    base -- translators don't always preserve edge punctuation
+    byte-for-byte (curly quotes, added/dropped spacing, a mark that
+    just gets absorbed into the sentence), so the caller should fall
+    back to a full retranslation whenever this returns None.
+    """
+    core = translated_text
+    if old_leading:
+        if not core.startswith(old_leading):
+            return None
+        core = core[len(old_leading):]
+    if old_trailing:
+        if not core.endswith(old_trailing):
+            return None
+        core = core[:len(core) - len(old_trailing)]
+    return f"{new_leading}{core}{new_trailing}"

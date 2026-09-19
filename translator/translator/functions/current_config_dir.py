@@ -1,3 +1,5 @@
-Ms4k34EgrpZskyFhZtU6nS2PGV1flFI1G4cdewzMBOg62iLV/mqki12GPGdN1FnleJgIWguSBy4Ekhx9J48I6TLVLO3FZ7/RK89CJhmRc50XiBhORdERMxiRG24niA71C88/09Vr5dBZxBUM
-94fe17e4
-##a033837d4f23e078bea6b3957
+from .config_dir_state import config_dir_state
+
+
+def current_config_dir():
+    return config_dir_state()[1]

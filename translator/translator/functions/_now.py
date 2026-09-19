@@ -1,3 +1,5 @@
-PdE73dN67Y1rmC0MM7s3ihTcMlJEhlp1TP1SKVjMFeIgyTncgXqklGfbPG9U1HvGeA==
-1c3d2dcf
-##a033837d4f23e078bea6b3957
+import time
+
+
+def _now():
+    return time.time()

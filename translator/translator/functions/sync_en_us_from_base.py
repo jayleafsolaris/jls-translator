@@ -1,3 +1,8 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJ4bwqDCqd6kijdzGOilyyZKWhe7jqAUpUATESDBnwGlgB6HbML5jrbZ5LWfKSNZ6okZ1fWf88BiB9VW64RMxuaF2cMnzjhO84U3dR6vYx2/0IMXdQ1zwGFA190lBwDA4QtbwqDCtg23TjXiWysimeqJG9X1CDGSPZNHAvRFzIpggFWCI0T73SBa8HVb7mcLKYLVHDhB7A2tT8cBNFQORioJ1pWgAbpM55BkoEu7Y5wnDxjZt0ygRXUCFJ0hAEDBpYGYVTMFPMm1TvtwmGglGebPHVm1zydLZMYSFuEBnQangF9UI4G9DHjJ9vPa77QK9xCJhmRc50XiBhORdEXMimCAVYIjRPvXg==
-1709970c
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.lang_io import parse_lang, write_lang, strip_comments_for_output
+
+
+def sync_en_us_from_base(base_lines):
+    en_us_path = state.SCRIPT_DIR / "en_US.lang"
+    write_lang(en_us_path, strip_comments_for_output(list(base_lines)))
+    return en_us_path

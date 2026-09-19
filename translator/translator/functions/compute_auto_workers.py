@@ -1,3 +1,6 @@
-PdE73dN67ZZx/0IMXdQ1zxGTAExehRcDF4IGZiebCPU/2TnBiSf38yLVaCZawSbPT9wCTwWSAikplB18FphPrnTTOZKVBO3ZItU6Y03EIYFSkQxEA8RefBueHCFK3EunN8w+kosu+dAr/w==
-6eea2314
-##a033837d4f23e078bea6b3957
+import os
+
+
+def compute_auto_workers():
+    cpu = os.cpu_count() or 4
+    return max(5, min(20, cpu * 4))

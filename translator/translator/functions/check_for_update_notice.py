@@ -1,3 +1,67 @@
-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
-ac9e0995
-##a033837d4f23e078bea6b3957
+from ..common.config_store import warn_red, _RESET, get_release_branch
+from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
+import time
+from ..common.netcheck import _BLUE
+from ._branch_suffix import _branch_suffix
+from ._load_version_check_cache import _load_version_check_cache
+from ._parse_version_tuple import _parse_version_tuple
+from ._save_version_check_cache import _save_version_check_cache
+from .fetch_remote_version import fetch_remote_version
+
+
+def check_for_update_notice(force=False):
+    """
+    Best-effort, silent-on-failure notice printed when a newer version is
+    available on GitHub than the one currently installed/running.
+
+    Only reaches out to the network at most once every
+    DEFAULTS['version_check_interval_minutes'] minutes (tracked in a small
+    cache file next to the package), so this never adds network latency to
+    every-day command usage. Pass force=True (used by --version and a bare
+    --check) to always check fresh regardless of that interval.
+
+    When a check is due, this makes exactly one short, low-timeout network
+    attempt (no separate "are we online" probe beforehand) so an offline
+    or slow connection is discovered and given up on quickly instead of
+    waiting out two stacked timeouts.
+
+    The passive/automatic check can be turned off entirely with
+    `--check false` (see the "autocheck_enabled" flag in the version-check
+    cache) -- while off, this function does nothing unless force=True, so
+    --version and a bare --check still always work even with autocheck
+    disabled.
+
+    Never raises and never blocks a command on a slow/offline connection --
+    worst case this simply prints nothing.
+    """
+    cache = _load_version_check_cache()
+    if not force and cache.get("autocheck_enabled", True) is False:
+        return
+    now = time.time()
+    last_checked = cache.get("last_checked", 0)
+    interval_seconds = DEFAULTS["version_check_interval_minutes"] * 60
+
+    remote = cache.get("remote_version")
+    stale = force or (now - last_checked) > interval_seconds
+
+    if stale:
+        fetched = fetch_remote_version(timeout=1.5 if not force else 3.0, bypass_cache=force)
+        if fetched:
+            remote = fetched
+            cache["remote_version"] = remote
+            cache["last_checked"] = now
+            _save_version_check_cache(cache)
+        else:
+            return
+
+    if not remote:
+        return
+
+    try:
+        is_newer = _parse_version_tuple(remote) > _parse_version_tuple(SCRIPT_VERSION)
+    except Exception:
+        return
+
+    if is_newer:
+        print(f"{_BLUE}⬆ Update available: v{SCRIPT_VERSION} → v{remote}{_branch_suffix()} "
+              f">> run --upgrade to update.{_RESET}")

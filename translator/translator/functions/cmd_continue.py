@@ -1,3 +1,28 @@
-Ms4k34Eg45ptmCVpV58jnR2bH1lYglI1G4cdewzMC+g12BTC02Gqi2eGOwxfwzyCUtJDUUSVFy9YlhZtWIUK9zvOP5LCY6mmY5EsDF/DPIJS0kNRRJUXL1iUAGwZmAKnPdE73dN67ZpvkRdlS9Qymxf2C05EnFJyWJodbR2fSeMx0C7GxC6klHKaOnIZ0j6LLZgIUE6FF1YQhR1kWMJJ6jvYLsGPfKiUbYMtJlDcI4AAiE1fRpUtLhOaHX8d5gH1O9FrnI9jop1nhmZzSdUymxfcBFFbngAoVpQfbSeZF+M1yC64qwSpnGTVK2td7jCAHIgEUl6UWjUYgxd7GY8T7iLZdvTAYr6cLtU7blbGDJwHkQBdWYhPGhebAWxR1m2ndJxrwtNhqotnhjsmBJE/gBOYMkxZnhUuE4QBIVHmR6d0nCLUgWCijSKFOmlewzacAcZnHAvRUnxW11J5CoUJ83yeBd2Bfr+cdJwnc0qRIZoc3BlTC5IdMgKeHHwdwkfJO8gj289p7Y1t1TpjSsQ+ilzeRDYL0VJ8VtdSKQqJE/Im0kG4gS7t2WGaJWtY3zfPT9wdTkSWADkFhFxuHZhPpTfTJt/AYKnbK/9oJhmROolSnwJRRpAcOFbKTylajxXiNcgukJsE7dki1WgmGZEwghajDk5OkAY5XoUXeg2BAroAzj7XjS6kl3aQOmdaxTqZF8EEUl+UAD0Vgxt/HcBH9DzTPO3Se6CUY4cxO0rZPJgtjxhRRpAAJV/9UilYzALrPdpr0c5joJhskWg7BJFxmgKYDEhO00hWVtdSKVjMR6c30S/t1H6pmHaQYHRcwiaCF8E5Tl6UXnwfmQZsCo0E8z3KLo/IYLmccJQrclDHNsNSjwVTXK4BKRuaE3sB0RTvO8sUwdRjoJhwjGEMGZFzzxeQBFoLkh0xG5YcbVjRWqd23S/WgzTH2SLVaCYZkXOMH5gyXU+VWi4ThAdkHdEz9SHZZ5LIYLmccJQrclDHNtIbkhlZWZARKB+BFyVYnw/oI+M4x8xjrIt7yDtuVsYMnAeRAF1ZiFtWVtdSKR2ADuF03yTfzG+jnSLIdSYbwzaCHYoIHhH7UnxW11IpWMwE6jDjOdfMYbucKoctdUzcNtImjhhZB9EbMgKSAGgbmA7xMYEi3NVrv5hhgSFwXJ1znBqTGmNYhB8xF4ULNAuECPALzz7fzG+/gCv/aCYZkTaDG5pNX0ScHz0Yk1I0RcxF4zHQLsbELPfzItVoJhmRc88RkQljT5QeOQKSWnsdnxLqMYEfwNRr4dlrmzxjS9AwmxuKCAFCnwY5BJYRfRGaAq5enGuSgWuhimfPQiYZkXPPUtxNTFmYHChe1SFoDokDpyTOJNXTa76KIpw7JkzfIYoRkwpSQosXOFaYACkbgxX1Icw/18UgkZcg/2gmGZFzz1LcTRwL0VJ8VKUXJAqZCad5kSjAxG+5nC7VZStMwTeOBplBHAbcEzgS21IkVZ4C6jvKLp6BYb/ZL9gsY1XUJ4pSiAIcWIUTLgLXHX8dnkmlfbY=
-acdd3b09
-##a033837d4f23e078bea6b3957
+from ..common.progress import load_progress
+from ..modes.add import cmd_add
+from ..modes.create import cmd_create
+from ..modes.delete import cmd_delete
+from ..modes.remove import cmd_remove
+from ..modes.update import cmd_update
+
+
+def cmd_continue(interactive=False, show_summary=False):
+    progress = load_progress()
+    if not progress:
+        print("No previous run to continue. Nothing to resume.")
+        return
+
+    command = progress.get("command")
+    if command == "create":
+        cmd_create(resume=True, interactive=interactive, show_summary=show_summary)
+    elif command == "update":
+        cmd_update(resume=True, interactive=interactive, show_summary=show_summary)
+    elif command == "add":
+        cmd_add(resume=True, interactive=interactive, show_summary=show_summary)
+    elif command == "remove":
+        cmd_remove(resume=True, interactive=interactive, show_summary=show_summary)
+    elif command == "delete":
+        cmd_delete(resume=True, interactive=interactive)
+    else:
+        print("Saved progress is unrecognized or corrupted.\n"
+              "Re-run --create, --update, --add, --remove, or --delete to start over.")

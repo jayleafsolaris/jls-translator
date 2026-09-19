@@ -1,3 +1,18 @@
-MNktksdno51dkT12VdgwjgaZMk9Ckx41GJABIRaDA+J4nDvT1Wbw2yDccgwZkXPPUN5PNgvRUnwkkgZ8CoIUpzWcJ9vSeu2WZNUgc1TQPcIAmQxYSpMeOVaEBnsRggD0dNguwcJ8pJtrmy8mWN8qzwGZGRxEl3h8VtdSehGOC+4622vaxG+pkGySOyYRwjKCF9wdXVmUHChf1wZhGZhH9DXSIsbIdKjZdppoclHUc5wTkQgcTZ4eOBOFeClYzEfpNdEukowj7Y1qkDtjGcY8mh6YTU9CnRcyApsLKRuDC+s92C6dznioi3WHIXJckTaOEZRNU1+ZFy5WmBwpHIUU7Hq2a5KBLu/bIP9oJhmRI50dngFZRoJSYVasLwNYzEenNsUU1M5iqZxw1XUmQsxZz1LcTVpEg1I/Hp4ebViFCac60y/Xj22lkG6ROmNXi1nPUtxNHAvRUj4PqBRmFIgC9XrPLsbFa6uYd5k8LlrZOoMW0gtTR5UXLlrXKVRRwgb3JNkl1oltpZBukWZoWNw2xnjcTRwLlx0uVpEdZRyJFat00irfxH3tkGzVKn9m1zyDFpkfEkKFFzEF31szcsxHp3Sca5KBZ6vZbpAmLlfQPooB1U0CC8BIVlbXUilYzEendJxrktZmqItn1XUmX5MonxOIBUEEihQzGpMXewXOR+4ynDvT1WbtnG6GLSZf3j+LF45nHAvRUnxW11IpWMxH9ybTKd7EY77XY4U4Y1fVe4lQhxpUToMXIVbLXykDy0unc5Ih3chg5ZdjmC11EMxxxnjcTRwLlx0uVpQaYBSIR+46nCXdxWvjmmqcJGJL1D3VeNxNHAvRUnxWlBpgFIg49zXII5KcLqvbeYUpclHMfJQRlARQT98UMxqTF3sFzkfuMpw709Vm7Zxuhi0mWtk6gxbSC1NHlRcufNdSKVjMR6d0zDndw2KolHHbLX5N1D2LWpoEUk+uFikGmxtqGZgC2CfVKd7IYKqKKpYgb1XVf88RlARQT64CPQKfWyByzEendM4uxtR8o9lyhydkVdQ+nHg=
-b67f4ef7
-##a033837d4f23e078bea6b3957
+def find_duplicate_siblings(node, path=""):
+    """
+    Returns a list of human-readable strings describing any set of
+    sibling headings (same parent) that sanitize to the same folder
+    name -- these would silently collide/overwrite each other on disk.
+    """
+    problems = []
+    by_folder = {}
+    for child in node.children:
+        by_folder.setdefault(child.folder, []).append(child.name)
+    for folder, names in by_folder.items():
+        if len(names) > 1:
+            where = f"{path}/{folder}" if path else folder
+            problems.append(f"{where} <- {', '.join(names)}")
+    for child in node.children:
+        child_path = f"{path}/{child.folder}" if path else child.folder
+        problems.extend(find_duplicate_siblings(child, child_path))
+    return problems

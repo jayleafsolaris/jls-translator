@@ -1,3 +1,6 @@
-Ms4k34Eg45ptmCVpV58wgByaBFt0ggYzBJJSYBWcCPUgnCfdwGqSmm2bLm9e7iWOHokIEAuCEyoTqBFmFooO4AvKKt7Ua+HZYYA6dFzfJ7ARkwNaQpYtOB+FeG8KgwqnepIo3cxjopcskiFyUcQxsBOMBBxCnAIzBINSViyjLMIa4wj970iEvl27CUt8u1nlFpkLHEyUBgMCmBlsFsROvV6ca5KBfKiNd4cmJlXeMostnwJSTZgVAwCWHnwdxDjTG/cO/P5NgrdEvA9Zd/Aeql7cCVlNkAcwAso8ZhaJTo0=
-2425346d
-##a033837d4f23e078bea6b3957
+from ..common.config_store import load_config_value, save_config_value, current_config_dir
+from ..common.github_api import _TOKEN_CONFIG_NAME
+
+
+def get_token():
+    return load_config_value(_TOKEN_CONFIG_NAME, default=None)

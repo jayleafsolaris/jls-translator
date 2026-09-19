@@ -1,3 +1,22 @@
-Ms4k34Eg45ptmCVpV58hjgaZAVVGmAZ8H5oCZgqYR9gZ/RPt4kGCtUa6H0hm/AajJrU9cGK0IHBWqBhmGrMV4jndItzIYKqmYIw8Y0q7WeUWmQscdJAWPQaDG38dswToO9Av3dZg5ZFtgDpZTMI2i17cCV1SrgcvE5NeKRCDEvUL3yrCjS6pmHuqK2dJnXONE48IY0+UHj0P3kgDWMxHpz3aa+3LYa+mcJAlZ1DfOoEVow9FX5QBfErKUjlC5kendJxrkoEuv5x2gDpoGdMynBejCVlHkAtWfNdSKViECPIm4znXzG+kl2ubL1lbxDeIF4hNAQucEyRexlw5VMwP6CHOFNHAfu3UIp0nc0vuJpwXmEQ2C9FSfBKWC1YKiQrmPdIi3MZRr4xmki1yGYxzghOERQ0FwV58EpYLVhuNF6d5nC/T2FG4imeRYQwzkXPPUp4IT1+uHykagxt5FIUC9XSBa4OPPsfZItVoYFbDc50XkQxVRZgcOymVB20fiROnPdJrmslhuItdhy1rWNg9hhybMl5elRU5AttSbRmVOPUx0Srbz2ejnl2XPWJe1CfGSPZNHAvRUnxW1xtvWLMN6DbjOdfMb6SXa5svWVvIJ4oB3FEBC4MXMReeHGAWizjlIdgs19U0x9ki1WgmGZFzz1LcTV9EnwY1GIIXA1jMR6d0nGuSw2u+jV2YPWpN2CODG5kfHBbRHz0O3xBsC5g46iHQP9vRYqSccNloWVPeMbAAmQBdQp8bMhGoEHAMiRSne5w518xvpJdrmy9ZW8Q3iBeIRDYh0VJ8VoUXfQ2eCac23TjX/mqolWOMaCwZ3DqBWp4IT1+uHykagxt5FIUC9XicFP/gVpK6TboEQnbmHbA/qSFoYqE+FTOlWwM=
-8136ef83
-##a033837d4f23e078bea6b3957
+from ..common import ratelimit
+
+
+def _adaptive_cooldown(hour_used, day_used, hour_cap, day_cap, base_delay):
+    # Read straight off the ratelimit module's own attribute -- not a
+    # value imported at module-load time -- so this actually sees what
+    # set_job_profile() most recently wrote. See set_job_profile.py for
+    # why importing the name directly doesn't work here.
+    remaining_bytes = ratelimit._job_remaining_bytes
+    if remaining_bytes <= 0:
+        return base_delay
+
+    hour_remaining_budget = max(1.0, hour_cap - hour_used)
+    day_remaining_budget = max(1.0, day_cap - day_used)
+
+    best_multiplier = 1.0
+    for remaining_budget in (hour_remaining_budget, day_remaining_budget):
+        if remaining_bytes <= remaining_budget:
+            continue
+        best_multiplier = max(best_multiplier, remaining_bytes / remaining_budget)
+
+    return base_delay * min(best_multiplier, ratelimit._MAX_COOLDOWN_MULTIPLIER)

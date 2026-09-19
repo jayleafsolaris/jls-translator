@@ -1,3 +1,9 @@
-Ms4k34Eg45ptmCVpV58wgByaBFt0ggYzBJJSYBWcCPUgnCfdwGqSmm2bLm9e7iWOHokIEAuCEyoTqBFmFooO4AvKKt7Ua8efcJolJhefMIAfkQJSBYIGPQKSUmAVnAj1IJwb8+JFjL5HqgxPa51zqze6LGlnpSFwVrszRz+5JsAR72eS/ludvUOhDVl6/gahJqMgfXm6Nw5a1y1KN6E3zhj5FPnkV5K0Q6cDQ2u7WeUWmQscTJQGAxeUBmAOiTjrNdIsx8BpqKZhmixjSpl61XjcTRwLkBEoH4EXKUXMC+g12BTRzmCrkGWqPmdVxDbHUJAMUkyEEzsThFAgcsxHp3TVLZLAbbmQdJBob0qRHYAcmVc2C9FSfFbXUikKiRPyJtJr3sh9udFOtAZBbPAUqiHSBllSglp1X/1SKVjMFeIgyTncgVWulmaQaGBWw3OMHZgIHEKfUhA3uTVcOasi1HTVLZLCYamcIpwmJljSJ4YEmTA2
-92042137
-##a033837d4f23e078bea6b3957
+from ..common.config_store import load_config_value, save_config_value
+from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
+
+
+def get_active_language_codes():
+    active = load_config_value("languages")
+    if active is None:
+        return list(LANGUAGES.keys())
+    return [code for code in LANGUAGES if code in active]

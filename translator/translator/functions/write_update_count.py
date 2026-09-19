@@ -1,3 +1,33 @@
-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
-026c971a
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.lang_io import parse_lang, write_lang, strip_update_count_markers, _update_count_comment_prefix, read_update_count_from_base
+from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
+import json
+from .load_cache import load_cache
+
+
+def write_update_count(count):
+    """
+    Persists the running --update count in two places:
+      1. As a hidden marker comment appended to the very bottom of the
+         base file (source of truth -- survives independent of the cache).
+      2. Under the same marker key in the translation cache, so that if
+         the marker line is ever removed from base (by hand, a merge, or a
+         partial restore), get_update_count() can recover the count from
+         cache and re-add it to base instead of silently resetting to zero.
+
+    This reloads base and the cache fresh from disk rather than trusting
+    whatever the caller has in memory, since this is the last write before
+    a run finishes and shouldn't clobber anything written concurrently.
+    """
+    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    current_lines = parse_lang(base_path)
+    stripped = strip_update_count_markers(current_lines)
+    while stripped and stripped[-1][0] == "blank":
+        stripped.pop()
+    marker_line = ("comment", f"{_update_count_comment_prefix()}{count}")
+    write_lang(base_path, stripped + [marker_line])
+
+    cache = load_cache()
+    cache[_UPDATE_COUNT_MARKER] = str(count)
+    cache_path = PACKAGE_DIR / DEFAULTS["cache_file"]
+    cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")

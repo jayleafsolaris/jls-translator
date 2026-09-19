@@ -1,3 +1,12 @@
-Ms4k34EgkptjliNzSe4jjgaUTVVGgR0uAtctaxmPDPIk4zvT1WbH8wiRLWAZ3TyOFqMPXViULT4XlBl8CMROvV6ca5KBLO/bUJA8c0vfIM8GlAgcR5ABKFaEHGgInw/oIMgu1oFsrIpn1StpV8U2gQbQTVNZ0TwzGJJSYB7ME+8xzi6SyH2j3nbVJ2hcn3HNUPZNHAvRAj0Cn1I0WLMF5jfXPsL+fqyNat1hDBmRc88bmk1SRIVSLBeDGicdlA70IM9jm5sE7dki1WgmGZEhigaJH1ILvx0yE/1SKVjME/UthkGSgS7t2SLVaHRcxSadHNwdXV+ZXC4TlhZWDIkf83zZJdHOaqSXZchqc03XftdQ1WccC9FSOQ6UF3kMzCL/N9k7xshho8MI1WgmGZFzz1KOCEhegxx8OJgcbHI=
-5e63167d
-##a033837d4f23e078bea6b3957
+from ._backup_path import _backup_path
+
+
+def load_base_backup():
+    """Returns the last snapshotted base content, or None if there isn't one."""
+    path = _backup_path()
+    if not path.exists():
+        return None
+    try:
+        return path.read_text(encoding="utf-8")
+    except Exception:
+        return None

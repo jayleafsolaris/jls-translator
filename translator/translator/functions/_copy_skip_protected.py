@@ -1,3 +1,22 @@
-PdE73dN67ZZx/yFrSd4hm1KPBUlfmB5WfP0WbB7MOOQ7zDLt0mWkiV2FOmlN1DCbF5hFT1mSLTgfhV4pHJ8T2DDVOZ6Bfr+WdpArclzVf88BlwRMW5QWdUz9UilYzEWldrZrkoEun5xhgDp1UMc2gwvcDlNbiFIvBJQtbRGeQPR03yTc1WujjXHVIWhN3nOLAYgyWEKDXnwFnBt5CIUJ4HSUJd3VBO3ZItUncFzDJJ0biARSTNhSPRiOUm8RgAKnO85r1sh8qJp2mjp/GcY7gAGZTV5KghcyF5oXKRGfR+46nCvC02G5nGGBLWJZnVnPUtxNXV/REzIP1xZsCJgPp3mRa9/IfL+WcIZoWVvQMIQHjDJdRZUtPxqSE3tYnwinJNk5wch9uZxsgWhgUN02nFKIBV1f+1J8VtcBfAqaDvEx2GvGyWvtm2OWI3NJkSCbF4xNXVmUUjITgRd7WI8L6DbeLsDEau2be9U8blyRNZ0XjwUcSJ4CJVj9UilYzEWldrZrkoEuooosmCltXNU6nQHUCU9frhY1BNtSbACFFPML0yCP9Xy4nCv/aCYZkTWAANwIUl+DC3wfmVJmC8IL7ifIL9vTJr6LYaosb0uYaeVS3E0cC9FSfB+RUmwWmBX+dNUlktF8oo1nljxjXYtZz1LcTRwL0VJ8VtdSehOFF/cx2GXT0X6ol2bdLWhNwyrGeNxNHAvRUnxW11IpWI8I6SDVJcfEBO3ZItVoJhmRIM9P3AJPBYETKB7ZGGYRgk/0Jt8U1sh84dlnmzx0QJhZz1LcTRwL0VI4VspSZgvCF+Yg1GXYzmej0WaGPFld2CHDUpkDSFmIW1ZW11IpWMxHpz3aa93SIL2Ydp1mb0rVOp1aj0QGIdFSfFbXUilYzEendOMo3dF3koppnDhZScM8mxefGVlP2QFwVpNeKQieCPMx3z/XxSLtimmcOHZc1XrlUtxNHAvRUnwTmwFsQuZHp3Sca5KBLu3ZItU7bkzFOoNcnwJMUsNaL1rXFiBy
-6efd697c
-##a033837d4f23e078bea6b3957
+import os
+import shutil
+
+
+def _copy_skip_protected(src_dir, dst_dir, protected, skipped):
+    """
+    Recursively copy src_dir's contents into dst_dir, skipping (not
+    overwriting) any file or directory whose basename is in `protected`,
+    at any depth -- mirrors _backup_and_clear so persistent files that
+    survived the backup step are never clobbered by the fresh copy.
+    """
+    os.makedirs(dst_dir, exist_ok=True)
+    for entry in os.listdir(src_dir):
+        if entry in protected:
+            skipped.append(entry)
+            continue
+        s = os.path.join(src_dir, entry)
+        d = os.path.join(dst_dir, entry)
+        if os.path.isdir(s):
+            _copy_skip_protected(s, d, protected, skipped)
+        else:
+            shutil.copy2(s, d)

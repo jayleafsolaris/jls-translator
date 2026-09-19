@@ -1,3 +1,30 @@
-Ms4k34Eg45ptmCVpV58nigqIMkxZngY5FYNSYBWcCPUgnBTh8UKErV2lCVJt9AGhePZnWE6XUi8Gmxt9J58C4DnZJcbSJrmceoFhPDORc89S3k8eIdFSfFakAmURmBSnINkzxoFno41t1SloGd4hixeOCFgLnRsvAtcdb1jEQPM71y7chiLtlWuBLXRY3XrPXdxFG1+UCihR21JqF4IT4jrIYriBLu3ZcpwtZVzCc44G3DlzYLQ8Aya2Jl09vimnNtM+3MVvv5BnhmguWt4/gADcDlNPlAFwVtJDLQvBFPMt0C64gS7t2XKZKWVc2TyDFpkfTwfRCTcTjlx5GZgP+nTfOd3SfeCLZ5MtdFzfMIoB0E1jdL8+AynXHGwPgA7pMZwm09NlqItx2WhWbPBZz1LcTVtHiAI0Bd5cA3LMR6d06SXeyGWo2V2FOmlN1DCbWtVBHF+ZGy9Wkx1sC8wpyACcOMfDfbmQdoA8YxnFPIQXkh4cXJgGNFaWHCkXnAb2IdlBkoEu7ZRjhyNjS5EnhxOITUhDlBx8AoUTfx2AFKc10CTcxn2knWfVOmNY3XObF4QZHAbcUjUC1wFsCI0V5iDZOJLVZqiUIpo9cjORc89SmQNIQoMXMA/ZUkoZgAviJs9rwclhuJVm1TtjV9VzoDywNBxfmRd8UYMXcQzLR/c92SjX0i65liKUaHJL0D2cHp0ZVUSfeHxW11J6HZ4R7jfZa9PPau2JY4Y7Jh7FPIQXkkocW5gXPxOEUn0QngjyM9Rr0c5jvZVngS1qQJEmgQaTGF9DlBZwVoQdKRnmR6d0nD/AwGC+lWOBJ3QZ3zaZF45NT06UAXwXmQt9EIUJ4HTePsaBaaiXd5wmYxnZJoITkkBOTpAWPRSbFykUjQngId0s16su7dki3SZpGcE/jhGZBVNHlRcuW4QaaAiJA6c60yLBxC6gkHqQLCZQ33ObGp0ZHEieBzAS1xVsDMwK7ifIOdPPfaGYdpAsJlbDWc9S3E1OTpAWfBeEUnoIjQqoJtk719VnuZBtm2EoM7tzz1LcKFFbhQt8ApIKfVicDuI32TiSiXq6liKBJ21c3yDPBZUZVAufHSgenhxuWI4C8yPZLtyBeqWcb9xoZ0vUc4AflRlITpV4fFbXUmwWmA71MdAynoF9pJdhkGhsVtg9sAGZClFOnwYvXt5degyeBu4z1D+SwmGjmmOBLWhYxTqAHNwfWUieHC8ChQdqDJ9tp3Sca9HOfL+cYYEkfxnUOpsamR8cXJALcnzXUilYzkWlXpxrkoF8rI4iyGhZauEfpiajPX1/pTcOONkBeRSFE68g2TPGiATt2SLVOGdLxSDPT9w2YSHRUnxWkR17WIVLpzfUPtzKLqSXIpAmc1TUIY4GmUVOSoZbZnzXUilYzEendNUtksgu6Nkw1XU7GYBp5VLcTRwL0VJ8VtdSKQiNFfMnkirC0WujnSrdanJW2jaBUNBNX0OEHDdf3ngpWMxHp3Sca9fNZ6vZYZ09aFKLWc9S3E0cC9FSfFbXUnkZnhP0et07wsRgqdEq1zxjQcVxw1KfBUlFmlt1fNdSKVieAvMhziWS0W+/jXH/
-0d2781c5
-##a033837d4f23e078bea6b3957
+from ..common.text_protect import _SPLIT_PATTERN
+
+
+def split_segments(text):
+    """
+    Splits text into an ordered list of ('token', literal) / ('text', content)
+    pieces at TOKEN_PATTERN boundaries (color codes, %1$s-style
+    placeholders, {key.path} cross-references, __NL__ newline markers, PUA
+    glyphs).
+
+    Unlike _protect(), this does NOT substitute tokens with an opaque
+    marker that then travels alongside real text -- it separates them out
+    entirely. Callers should send ONLY the 'text' pieces to a translation
+    service and pass 'token' pieces through completely untouched, so a
+    translator never sees anything but genuine human-readable language
+    (no placeholder-shaped noise mixed in that could get mistranslated or
+    read as spam/repetition).
+
+    Empty text pieces (two tokens with nothing between them) are omitted
+    entirely, since join_segments()/straight concatenation reconstructs
+    correctly either way.
+    """
+    raw = _SPLIT_PATTERN.split(text)
+    parts = []
+    for i, chunk in enumerate(raw):
+        if i % 2 == 1:
+            parts.append(("token", chunk))
+        elif chunk:
+            parts.append(("text", chunk))
+    return parts

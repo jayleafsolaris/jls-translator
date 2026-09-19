@@ -1,3 +1,17 @@
-PdE73dN67ZZx/0IMXdQ1zy2aBFJPrgI9FZwTbh2zFOghzijXiWu1jXCUK3Jc1QydHZMZFRH7UnxW11ArWuZHp3ScDNvVRribIoI6Z0nCc5samU1LQ54eOVaFF3kXzA7pdN1rwchgqpVn1TxpSZw/igSZARxNnh44E4VSIR3CAKlenGuSgSm5i2ObO2pYxTydX5EMVUXeVXVY1ztnWJgP7iecOdfRYe2NapQ8Jk7DMp8CmR8cTZ4eOBOFUmALzCnIAJw/2sQuvZhhnilhXLtzz1LcBEhYlB46VtpfKQyEAqcm2SregX6smmmUL2MZmTCDG9IdRQfRETMbmh1nV8BH6jvYLsGOJ+2Va4MtdRnePYpSkAhKTp14fFbXUm0diRfiJpBr09Uu6o1wlCZ1VdAngADRAF1Cn10oBJYcehSNE+gmk2ycgVmslWnVPG5ckTaXBo4MX1+UFnwChRdsWI0J416ca5KBfKiNd4cmJk3ZNs8WlR9ZSIUdLg/XBmEZmEfmN8g+081itNlhmiZyWNg9nFKfAVUFgQtwVoUTfRCJFacg1CrcgW++ineYIWheu3PPUtwZVE7RCDUG0AEpF5kT4iacPMDAfr2ccNUuaVXVNp1SlR4cQoVcfDCWHmULzAXmN9drxs4uqIF2hyllTdQ3sACTAkgLmBR8GJh4KVjMR/Qh3yOSxWe/nGGBJ3RAkTqcUpoCSUWVXnwFmFJoFswS6THEO9fCeqidIpkpf1bEJ88WkwhPRdYGfB6WAG1VjxXmJ9RluIEu7dkg12oMGZFzzxSTHxxPmAAsF4MaJViIDvU63SbX0iLtn2uZLWhY3DacUpUDHESCXCsXmxkhHZQT9TXfP9fFUb+WbYFhPDORc89S3E0cC5gUfFSUHmBWnB6ldNUlksdnoZxslCVjSotZz1LcTRwL0VJ8VtdSex2YEvU6nC/b036sjWr/aCYZkSGKBokfUguUCigElhF9HYg49TvTP7g=
-0ebb3012
-##a033837d4f23e078bea6b3957
+import os
+
+
+def _find_package_source(extracted_root):
+    """
+    GitHub wraps the whole repo in a single top-level folder (e.g.
+    'translator-main/'). In this repo that wrapper folder is NOT the package
+    itself -- the real package (cli.py, common/, modes/) lives one level
+    deeper, at 'translator-main/translator/'. Walk the extracted tree and
+    return the directory that actually contains cli.py, rather than assuming
+    the zip's outer wrapper folder is it. Falls back to extracted_root if no
+    such directory is found, so an unexpected layout doesn't hard-crash.
+    """
+    for dirpath, dirnames, filenames in os.walk(extracted_root):
+        if "cli.py" in filenames:
+            return dirpath
+    return extracted_root

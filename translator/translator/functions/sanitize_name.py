@@ -1,3 +1,7 @@
-Ms4k34Eg45ptmCVpV58gihGIBFNFglI1G4cdewzMONIa7wr05FGOsUOnG1lr9FnleJgIWguCEzIfgxtzHbMJ5jnZY9zAY6jQOP9oJhmRcc1QqBhORdETfB6SE20RggCgJ5w/19l67ZBsgScmWJEgjhSZTVpEnRY5BNccaBWJSaV2nkGSgS7tmm6QKWhc1XPSUqM4cniwNBkptDpIKr841RGSOMfDJu+mINloaFjcNsZcjxlOQoFadXzXUilYngLzIc4lksJiqJhskCwmVsNzzQGZDkhCnhx+fA==
-cd2dfba8
-##a033837d4f23e078bea6b3957
+from ..common.sections import _UNSAFE_CHARS_RE
+
+
+def sanitize_name(name):
+    """Turn a heading's text into a safe folder name."""
+    cleaned = _UNSAFE_CHARS_RE.sub("_", name).strip()
+    return cleaned or "section"

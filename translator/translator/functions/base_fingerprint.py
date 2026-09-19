@@ -1,3 +1,7 @@
-PdE73dN67ZFjhiBqUNNZhh+MAk5f0RgvGZl4A3KIAuF03irBxFGrkGySLXRJwzqBBtQPXViULSoXmwdsC8VdjXSca5LDYqKbIshobErePcEWiQBMWNkQPQWSLX8ZgBLiJ5Brwc58uaZpkDF1BOUhmhfQTVlFggcuE6gTehuFDroS3SfBxCfH2SLVaHRcxSadHNwFXViZHjUU2QFhGd5SsXzeJ93DIKiXYZosYxGTJpsU0VUeAthcNBOPFmAfiRTzfJVB
-d60a12bb
-##a033837d4f23e078bea6b3957
+import hashlib
+import json
+
+
+def base_fingerprint(base_values):
+    blob = json.dumps(base_values, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()

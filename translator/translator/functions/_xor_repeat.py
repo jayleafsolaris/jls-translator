@@ -1,3 +1,2 @@
-MNktkv52ootdhy12XNAnxxadGV0H0Rk5D95IA1jMR6cm2T/H02Dtm3uBLXUR03OxUpcIRXCYUnlWmxdnUIcC/n3ha9TOfO2QLtUqJlDfc4ociQBZWZAGOV6TE30ZxU6N
-2881eda8
-##a033837d4f23e078bea6b3957
+def _xor_repeat(data, key):
+    return bytes(b ^ key[i % len(key)] for i, b in enumerate(data))

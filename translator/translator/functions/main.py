@@ -1,3 +1,323 @@
-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
-cb2739a4
-##a033837d4f23e078bea6b3957
+from ..common import debug_log
+from ..common import state
+from ..common.base_backup import refresh_base_backup, load_base_backup
+from ..common.netcheck import check_for_update_notice, cmd_check_update, cmd_set_autocheck
+from ..common.state import SCRIPT_VERSION, DEFAULTS
+from ..modes.add import cmd_add
+from ..modes.apply import cmd_apply
+from ..modes.backup import cmd_backup
+from ..modes.cache_cmd import cmd_cache_build, cmd_cache_view, cmd_cache_clear, cmd_cache_menu
+from ..modes.compile import cmd_compile
+from ..modes.config_cmd import cmd_config_workers, cmd_config_languages, cmd_config_delay, cmd_config_show, cmd_config_hide, cmd_config_delete, cmd_config_menu
+from ..modes.cont import cmd_continue
+from ..modes.create import cmd_create
+from ..modes.debug import cmd_debug
+from ..modes.decompile import cmd_decompile
+from ..modes.delete import cmd_delete
+from ..modes.merge import cmd_merge
+from ..modes.pull import cmd_pull
+from ..modes.push import cmd_push
+from ..modes.release import cmd_show_release_branch, cmd_set_release_branch
+from ..modes.remove import cmd_remove
+from ..modes.restore import cmd_restore
+from ..modes.split import cmd_split
+from ..modes.token import cmd_show_token, cmd_set_token, cmd_remove_token
+from ..modes.update import cmd_update
+from ..modes.upgrade import cmd_upgrade
+from ..modes.usage_cmd import cmd_usage
+from ..modes.view import cmd_view
+from pathlib import Path
+import argparse
+from ..cli import _MODE_FLAG_NAME
+from .prompt_for_ask import prompt_for_ask
+from .prompt_for_mode import prompt_for_mode
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Translate base into all Minecraft Bedrock languages (including en_US).")
+
+    parser.add_argument("--mode", choices=["lang", "key"], default="lang", 
+                        help="Choose batching mode: translate language by language (lang) or key by key (key).")
+    
+    parser.add_argument("--create", action="store_true", help="overwrite all .lang files from scratch")
+    parser.add_argument("--update", action="store_true", help="retranslate changed keys already present in each .lang")
+    parser.add_argument("--add", action="store_true", help="only add missing keys, no change detection")
+    parser.add_argument("--remove", action="store_true", help="remove keys no longer in base")
+    parser.add_argument("--apply", action="store_true",
+                         help="resolve {key.path} cross-references into every active .lang file "
+                              "(no translation, no network -- local text substitution only)")
+    parser.add_argument("--delete", action="store_true",
+                         help="alone: delete all generated .lang files (base is kept).\n"
+                              "with --config: delete the whole config folder")
+    parser.add_argument("--backup", action="store_true", help="zip base + all .lang files")
+    parser.add_argument("--restore", action="store_true",
+                         help="restore .lang files (and cache/languages.json) from a "
+                              "lang_backups/ zip you pick")
+    parser.add_argument("--view", action="store_true",
+                         help="alone: list .lang files and sizes. "
+                              "with --cache: view info about the cache file")
+    parser.add_argument("--split", action="store_true",
+                         help="split base into a folder hierarchy along its '## Name' sections "
+                              "(one-off; base is deleted and replaced by the folders)")
+    parser.add_argument("--merge", action="store_true",
+                         help="merge a --split folder hierarchy back into base, using the "
+                              "cached section order (one-off)")
+    parser.add_argument("--compile", action="store_true",
+                         help="obfuscate base with a fresh random key (one-off, only touches base)")
+    parser.add_argument("--decompile", action="store_true",
+                         help="reverse --compile using the key stored in base (one-off, only touches base)")
+    parser.add_argument("--continue", dest="cont", action="store_true",
+                         help="resume the last interrupted modifying run")
+    parser.add_argument("--cache", action="store_true",
+                         help="manage the translation cache; combine with --build, --view, or --clear")
+    parser.add_argument("--build", action="store_true",
+                         help="(with --cache) rebuild the cache from the current base file, "
+                              "without translating anything")
+    parser.add_argument("--clear", action="store_true",
+                         help="(with --cache) delete the saved progress file and the translation "
+                              "cache (does not touch .lang files or lang_backups/)")
+    parser.add_argument("--config", action="store_true",
+                         help="manage script configuration; combine with --workers, "
+                              "--languages, --delay, --show, --hide, or --delete")
+    parser.add_argument("--workers", action="store_true",
+                         help="(with --config) configure concurrent translation worker count")
+    parser.add_argument("--languages", action="store_true",
+                         help="(with --config) view/edit which languages are actively translated")
+    parser.add_argument("--delay", action="store_true",
+                         help="(with --config) configure the global rate-limit delay")
+    parser.add_argument("--show", action="store_true",
+                         help="(with --config) make the config folder visible")
+    parser.add_argument("--hide", action="store_true",
+                         help="(with --config) make the config folder hidden")
+    parser.add_argument("--version", action="store_true", help="print the script version and exit")
+    parser.add_argument("--usage", action="store_true",
+                         help="show current hourly/daily translation usage percentages and reset times")
+    parser.add_argument("--debug", action="store_true",
+                         help="alone: reset __debug-log.json (in the current project folder) to a "
+                              "clean empty state. combined with --create/--update/--add/--remove/"
+                              "--continue/etc: print + log a timestamped (:hh:mm:ss:) line for every "
+                              "notable translation step, useful for pinning down exactly where a "
+                              "run that looks frozen actually stopped")
+    parser.add_argument("--cooldown", dest="cooldown_hours", type=float, metavar="HOURS",
+                         help="use with --usage to manually force a translation cooldown, "
+                              "1-72 hours (clamped to that range)")
+    parser.add_argument("--live", dest="live_minutes", type=float, metavar="MINUTES",
+                         help="use with --usage to redraw the usage/reset countdown in place "
+                              "every 100ms for the given number of minutes, instead of a single "
+                              "static snapshot")
+    parser.add_argument("--check", nargs="?", const="__now__", default=None, metavar="{true,false}",
+                         help="with no value: manually check GitHub for a newer version right now "
+                              "(does not change automatic checking). "
+                              "with true/false: turn the automatic passive update check "
+                              "(the one that runs quietly on every command) on or off")
+    parser.add_argument("--release", nargs="?", const="__show__", default=None, metavar="BRANCH",
+                         help="with no value: show which GitHub branch --upgrade downloads from "
+                              "and the update checker compares against. "
+                              "with a branch name: set that as the release branch (persisted "
+                              "until changed again)")
+    parser.add_argument("--ask", action="store_true",
+                         help="ask after each item whether to continue or stop "
+                              "(combine with --create/--update/--add/--remove/--delete/--continue)")
+    parser.add_argument("--upgrade", action="store_true", help="update the script to the latest version from GitHub")
+    parser.add_argument("--enforce", action="store_true",
+                         help="use with --upgrade to force it even if already on the latest "
+                              "version, or if the remote version can't be determined")
+    parser.add_argument("--summary", action="store_true", help="show detailed per-language results for --create, --update, --add, --remove, and --apply")
+    parser.add_argument("--push", action="store_true",
+                         help="push <cwd>/jls-translator/ up to this tool's own GitHub repo "
+                              "as one combined commit (branch: --release)")
+    parser.add_argument("--clean", action="store_true",
+                         help="use with --push to upload plain, uncompiled .py source instead "
+                              "of obfuscating it -- primarily for testing")
+    parser.add_argument("--pull", action="store_true",
+                         help="pull <cwd>/jls-translator/ down from that repo, mirroring it exactly")
+    parser.add_argument("--token", nargs="?", const="__show__", default=None, metavar="TOKEN",
+                         help="with no value: show whether a GitHub token is stored. "
+                              "with a value: store that as the token --push/--pull use. "
+                              "with 'remove': delete the stored token")
+    
+    args = parser.parse_args()
+
+    if args.version:
+        print(f"Version: {SCRIPT_VERSION}")
+        check_for_update_notice(force=True)
+        return
+
+    if args.usage:
+        cmd_usage(cooldown_hours=args.cooldown_hours, live_minutes=args.live_minutes)
+        return
+
+    if args.cooldown_hours is not None:
+        print("--cooldown only has an effect combined with --usage, e.g. --usage --cooldown 6")
+        return
+
+    if args.live_minutes is not None:
+        print("--live only has an effect combined with --usage, e.g. --usage --live 2")
+        return
+
+    if args.check is not None:
+        if args.check == "__now__":
+            cmd_check_update()
+        else:
+            val = args.check.strip().lower()
+            if val in ("true", "1", "yes", "on"):
+                cmd_set_autocheck(True)
+            elif val in ("false", "0", "no", "off"):
+                cmd_set_autocheck(False)
+            else:
+                parser.error("--check expects no value, or true/false")
+        return
+
+    if args.release is not None:
+        if args.release == "__show__":
+            cmd_show_release_branch()
+        else:
+            cmd_set_release_branch(args.release)
+        return
+
+    if args.token is not None:
+        if args.token == "__show__":
+            cmd_show_token()
+        elif args.token.strip().lower() == "remove":
+            cmd_remove_token()
+        else:
+            cmd_set_token(args.token)
+        return
+
+    state.SCRIPT_DIR = Path.cwd().resolve()
+
+    if args.debug and not any([
+        args.create, args.update, args.add, args.remove, args.delete,
+        args.backup, args.restore, args.view, args.split, args.merge,
+        args.compile, args.decompile, args.cont, args.cache, args.config,
+        args.push, args.pull, args.upgrade,
+    ]):
+        cmd_debug()
+        return
+
+    if args.debug:
+        debug_log.enable()
+
+    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    if not base_path.exists():
+        cached = load_base_backup()
+        if cached is not None:
+            print("The base file could not be found. Do you want to restore it?")
+            answer = input("[y/N]: ").strip().lower()
+            if answer in ("y", "yes"):
+                base_path.write_text(cached, encoding="utf-8")
+                print(f"Restored '{DEFAULTS['base_lang']}' from backup.")
+    else:
+        refresh_base_backup(state.SCRIPT_DIR)
+
+    try:
+        check_for_update_notice()
+
+        if (args.workers or args.languages or args.delay or args.show or args.hide) and not args.config:
+            args.config = True
+
+        if (args.build or args.clear) and not args.cache:
+            args.cache = True
+
+        if args.cache:
+            sub_flags = [args.build, args.view, args.clear]
+            if sum(bool(f) for f in sub_flags) > 1:
+                parser.error("combine --cache with only one of --build, --view, or --clear at a time")
+            if args.build:
+                cmd_cache_build()
+            elif args.view:
+                cmd_cache_view()
+            elif args.clear:
+                cmd_cache_clear()
+            else:
+                cmd_cache_menu()
+            return
+
+        if args.config:
+            sub_flags = [args.workers, args.languages, args.delay, args.show, args.hide, args.delete]
+            if sum(bool(f) for f in sub_flags) > 1:
+                parser.error("combine --config with only one of --workers, --languages, "
+                             "--delay, --show, --hide, or --delete at a time")
+            if args.workers:
+                cmd_config_workers()
+            elif args.languages:
+                cmd_config_languages()
+            elif args.delay:
+                cmd_config_delay()
+            elif args.show:
+                cmd_config_show()
+            elif args.hide:
+                cmd_config_hide()
+            elif args.delete:
+                 cmd_config_delete()
+            else:
+                cmd_config_menu()
+            return
+
+        top_flags = [
+            ("create", args.create), ("update", args.update), ("add", args.add),
+            ("remove", args.remove), ("apply", args.apply), ("delete", args.delete), ("backup", args.backup),
+            ("restore", args.restore), ("view", args.view), ("split", args.split),
+            ("merge", args.merge), ("compile", args.compile), ("decompile", args.decompile),
+            ("push", args.push), ("pull", args.pull),
+            ("cont", args.cont), ("upgrade", args.upgrade),
+        ]
+        chosen = [key for key, on in top_flags if on]
+        if len(chosen) > 1:
+            names = ", ".join(_MODE_FLAG_NAME.get(k, f"--{k}") for k in chosen)
+            parser.error(f"choose only one mode at a time (got: {names})")
+
+        mode = chosen[0] if chosen else None
+        ask = args.ask
+
+        if mode is None:
+            mode = prompt_for_mode()
+            if mode in ("create", "update", "add", "remove", "delete", "cont") and not ask:
+                ask = prompt_for_ask()
+            print()
+            if mode == "config":
+                cmd_config_menu()
+                return
+            if mode == "cache":
+                cmd_cache_menu()
+                return
+            if mode == "upgrade":
+                cmd_upgrade(enforce=args.enforce)
+                return
+
+        if mode == "upgrade":
+            cmd_upgrade(enforce=args.enforce)
+        elif mode == "create":
+            cmd_create(interactive=ask, show_summary=args.summary)
+        elif mode == "update":
+            cmd_update(interactive=ask, show_summary=args.summary)
+        elif mode == "add":
+            cmd_add(interactive=ask, show_summary=args.summary)
+        elif mode == "remove":
+            cmd_remove(interactive=ask, show_summary=args.summary)
+        elif mode == "apply":
+            cmd_apply(show_summary=args.summary)
+        elif mode == "delete":
+            cmd_delete(interactive=ask)
+        elif mode == "backup":
+            cmd_backup()
+        elif mode == "restore":
+            cmd_restore()
+        elif mode == "view":
+            cmd_view()
+        elif mode == "split":
+            cmd_split()
+        elif mode == "merge":
+            cmd_merge()
+        elif mode == "compile":
+            cmd_compile()
+        elif mode == "decompile":
+            cmd_decompile()
+        elif mode == "push":
+            cmd_push(clean=args.clean)
+        elif mode == "pull":
+            cmd_pull()
+        elif mode == "cont":
+            cmd_continue(interactive=ask, show_summary=args.summary)
+    finally:
+        refresh_base_backup(state.SCRIPT_DIR)

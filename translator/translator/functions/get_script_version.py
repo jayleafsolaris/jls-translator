@@ -1,3 +1,35 @@
-IM4yiKsu7dkikzppVJE6ggKTH0hHmBB8H5oCZgqYR+oxyCrWwHqs2WOGaG9UwTydBpAEXnScFygXkxN9GeYC/zfZO8aBR6CJbYc8Q0vDPJ1I9k0cC9EbMQaYAH0UhQXYOdk/08VvuZgiyGhIVt825RSOAlEL31w/GZofZhbCFPM1yC6SyGO9lnCBaFZ48hiuNbkycmq8N3BWqDRINKAlxhf3FOTkXJ6wTbtCYEvePs9cowtVRZUtLA+HAGYSiQTzC8ouwNJnopcinCV2VsMnzy2aBFJPrgIlBoUdYx2PE9gi2TnByGGj8wj/LGNfkTSKBqMeX1mYAigpgRd7C4UI6XyVcbiBLu3ZINdqDBmRc88gmQxYWNEGNBPXAHwWgg7pM5w40dNnvY0lhmhwXMMghh2STVpZnh98H5kBfRmAC+IwnDvTwmWsnmfVJWNN0DeOBp1nHAvRUnQGmAJ8FI0T4jCcKcuBfqSJIpM6aVSRI5YCjgJWTpIGcgKYH2Vfn0fcJM4k2MRtuaQigy10Stg8gVKdGRxCnwEoF5seA1jMR6cg1SbXiCLtim3VPG5cwzbIAdwMHFiYHDsaklJ6F5kV5DGcJNSBer+Mdp1ob1fCJ4oTmE1TTdETfB6WAG0bgwPiMLZrkoEuvo1wnCZhGdk2nRfcGVRKhVI/F5lSbQqFAfN00z7GgWGr2XGMJmUZxjqbGtwdRVuDHTYTlAYnDIMK63q2QZKBLu2wZNU8blyRI44RlwxbTtEbLxjQBikIhReqPdI4xsBioZxm1WBjF9Z9zwCJA1JCnxV8Ap8XKVacHqcy1SfXgWqki2eWPGpAnVnPUtxNT16SGnwXhFJ8FogC9XTdZuHJa6GVK9lob1TBPJ0GkAReC5wXKBeTE30ZzA/mJ5wl3dVmpJdl1TxpGd08gBncGEwL3F9WVtdSKRGCR/M83T+Swm++nC7VLmdV3XONE58GHF+eUi4TlhZgFotH8zzZa8TEfL6QbZtodU3DMoYVlBkcRIQGfBmRUmhyzEendMwywtNhp5xhgWZyVtw/zwGVGUhCnxV8GJIKfViYCKcg1CLBgX2ui2uFPCoZwjzPX9EbWVmCGzMY1wF9EYALpybZO93Ter7zItVoJk3ZNs8AmQxQC4cXLgWeHWdYhQn0INkq1oFhq9l2nS0mXdQlzwKQDF9OmR0wEpIAJ1ijCestnCLUgXqlmHbVKWpK3lnPUtxNX0qfVShWlRcpHoMS6TCcL93Efe2QdtUuZ1Xdc40TnwYcX55SKB6SUnkUjQTiPNMn1sR84/Mi1WgmG5Nx5VLcTRxCl1I1G4cdewyADuUL0S7GwGqsjWPVIXUZ3zybUrICUk7LeHxW11IpWMxH8ybFcbiBLu3ZItVoJhmRc88AmRlJWZ9SNRuHHXsMgA7lC9EuxsBqrI1j2z5jS8I6gBzUPX1oujMbM6g8SDWpTo10nGuSgS7t2WeNK2NJxXOGH4wCTl+dGz4pmhd9GYgG8zWSG9PCZayeZ7sncn/eJoEWuR9ORINIVlbXUilYzEendJxrktFvvooI1WgmGZFzz1KZFV9OgQZ8M48RbAiYDug6hkGSgS7t2SLVaCYZkXOfE48eNiHRUnxWkR18FohHunTjLdvPapKJe4U6aVPUMJstighOWJgdMl7eeClYzEfuMpwt3dRgqcMI1WgmGZFzz1KOCEhegxx8EJgHZxzmbad0nGvAxHq4i2zVF0B4/R+tM78mY320IA8/uDwD
-74c6883b
-##a033837d4f23e078bea6b3957
+try:
+    from importlib import metadata as importlib_metadata
+except ImportError:
+    importlib_metadata = None
+from ..common.state import PACKAGE_NAME, _FALLBACK_VERSION
+from ._find_pyproject_version import _find_pyproject_version
+
+
+def get_script_version():
+    """
+    Reads the running script's version from installed package metadata
+    (populated by pip from pyproject.toml's [project] version at install
+    time), so there's a single source of truth instead of a hardcoded
+    string here that can drift out of sync with pyproject.toml.
+
+    If the package isn't pip-installed (e.g. running the .py file directly,
+    such as under a-Shell), importlib metadata has nothing to look up --
+    in that case, fall back to reading the version straight out of a
+    pyproject.toml sitting next to this script, so --version still reports
+    the real version instead of the dev placeholder. Only if that also
+    can't be found does it fall back to the placeholder.
+    """
+    if importlib_metadata is not None:
+        try:
+            return importlib_metadata.version(PACKAGE_NAME)
+        except importlib_metadata.PackageNotFoundError:
+            pass
+        except Exception:
+            pass
+
+    found = _find_pyproject_version()
+    if found:
+        return found
+
+    return _FALLBACK_VERSION

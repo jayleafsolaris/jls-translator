@@ -1,3 +1,3 @@
-MNktktF8opRygRdgVsMMjgGXRRUR+1J8VtcAaA/MWqc90jvH1SbvuHGeaGBWw3OMHZILVVmcEygfmBwpGYoT4iacLtPCZu2QdpAlJl/YPYYBlAhPFNEpJVm5LzNYzk6pJ8g529Em5Ndumj9jS5l65VLcTRxZlAYpBJlSexmbR+46nGOQ2Czh2SCMLXUbmFk=
-0e9ab2d7
-##a033837d4f23e078bea6b3957
+def prompt_for_ask():
+    raw = input("Ask for confirmation after each item finishes? [y/N]: ").strip().lower()
+    return raw in ("y", "yes")

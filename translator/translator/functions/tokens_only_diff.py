@@ -1,3 +1,24 @@
-Ms4k34EgkolwmjxjWsVzhh+MAk5f0S0sBJgGbBuYbY1e2C7UgXqikmebO1lW3z+WLZgEWk3ZHTASqAZsAJhLpzrZPO3Va7WNK89CJhmRc81Q3mccC9FSHxmaAmgKiRSnNdJr3c1q7ZhskWhoXMZzjROPCBxdkB4pE9cTZxzMBO8x3yDBgXmlnHadLXQZxTuKUtYCUkeIWFZW11IpHIUB4THOLtzCa+2bZ4E/Y1zfc5samQAcR5gEOQXXG2cLhQPidMw53dVrro1nkWhyVto2gQHcRRka1QFxBYMLZR3mR6d0nDvewG2okW2ZLGNLwn/PAZkOSEKeHHEFnhVnWI8I6zvOa9HOaqiKLtUYU3iRNIMLjAVPB9EXKBXeUiRVzA6pMZJr19drv4AI1WgmGdM6m1KTCxxKkgYpF5tSfQqNCfQ43T/Tw2Ko2XaQMHIZ2CDPEIUZWQaXHS5blQt9HcwO4zHSP9vCb6HVIpomakCRJ4cX9k0cC9EGMx2SHCELxUfzPNkmwcRiu5xx1StuWN80ihbcRV0LggU9BocXbVicC+Y32SPdzWqoiyKcJmJcyX/PE9wJVU2XFy4TmQYDWMxHpzfTJ93TLq6WZpBkJljfN88Bk01TRdhcVnzXUilYvgLzIc4lwYF6pZwimy1xGcU8hBeSTVBCggZ8Xp4cKReeA+ImlWvbxy65kWOBb3UZxTuKUp8MT07dUi8Z1wZhHcwE5jjQLsCrLu3ZIpYpaBnCI4MbnwgcQoVSNRiDHSkZgkfmOM4u08V34I1wlCZ1VdAnihbcHkhZmBw7Vp4cegyJBuN00y2S02u5i2ObO2pYxTqBFdJnHAvRUg4Tgwd7Fp9HyTvSLpLIaO2NapA6Yx7Cc44chU1TX5kXLlaUGmgWiwKnfNEu089no54ilGh0XNA/zwCZGU5KnwEwF4MbZhbmR6d0nCLBgWConGaQLC8VkTqBEZAYWEKfFXwCnxcpG40U4nTLI9fTa+2XbYEgb1fWc4wanQNbTpVSPQLXE2UUwm2ndJxrkIMsx9ki1WhpVdUMnBmZAVlfnhxwVpgebSeYCOwx0jiSnC6SiXCaPGNaxXuAHpgySE6JBnV811IpWIIC8AvPINfNa7mWbNloaFzGDJsdlwhSWNFPfCmHAGYMiQTzfNIuxf56qIF23EImGZFzhhTcAlBPrgE3E5sXfReCR6ZpnCXX1lG+kmeZLXJW32nlUtxNHAvRUnwEkgZ8CoJHyTvSLriBLu3Za5NoaVXVDJsdlwhSWNFPYVaZF34nmAjsMdI4iKsu7dki1WgmGcM2mweOAxxlnhw5fNdSKVieAvMhziWSz2u6pnaaI2NXwlk=
-e039f769
-##a033837d4f23e078bea6b3957
+from ._protect import _protect
+
+
+def tokens_only_diff(old_text, new_text):
+    """
+    Compares an old and new base value and checks whether the *only*
+    difference between them lives inside protected tokens (%1$s-style
+    placeholders, section-sign color codes, PUA glyphs, etc) -- i.e. every
+    bit of actual translatable text is byte-for-byte identical, only the
+    token(s) themselves changed (a swapped placeholder index, a different
+    color code, and so on).
+
+    Returns the new token list (in order) if that's the case, so the caller
+    can splice it into an already-translated string instead of retranslating.
+    Returns None if there's any other change (meaning a real retranslation
+    is needed), including the case where nothing changed at all.
+    """
+    old_skeleton, old_tokens = _protect(old_text)
+    new_skeleton, new_tokens = _protect(new_text)
+    if old_skeleton != new_skeleton:
+        return None
+    if old_tokens == new_tokens:
+        return None
+    return new_tokens

@@ -1,3 +1,37 @@
-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
-78793891
-##a033837d4f23e078bea6b3957
+from ..common.state import _CODE_COMPILE_KEY_MARKER
+import base64
+import hashlib
+from ._xor_repeat import _xor_repeat
+
+
+def decompile_code_text(text, key):
+    """
+    Inverse of compile_code_text(). `key` is normally whatever
+    functions/_extract_code_compile_key.py pulled out of the relevant
+    cli.py. Raises ValueError if the marker is missing,
+    the blob can't be decoded with the given key, or the embedded
+    checksum doesn't match -- the last case is what catches a wrong key
+    that otherwise happens to decode as plausible-looking UTF-8 garbage
+    (see compile_code_text()'s docstring for why that check exists here
+    but not on base's equivalent).
+    """
+    marker = f"##{_CODE_COMPILE_KEY_MARKER}"
+    lines = text.splitlines()
+    marker_idx = next((i for i, l in enumerate(lines) if l.startswith(marker)), None)
+    if marker_idx is None:
+        raise ValueError("no code-compile marker found -- this doesn't look like compiled source")
+    if marker_idx < 1:
+        raise ValueError("couldn't decode compiled source -- it may be corrupted")
+
+    checksum = lines[marker_idx - 1].strip()
+    blob = "\n".join(lines[:marker_idx - 1]).strip()
+    try:
+        xored = base64.b64decode(blob.encode("ascii"))
+        original = _xor_repeat(xored, key).decode("utf-8")
+    except Exception:
+        raise ValueError("couldn't decode compiled source -- it may be corrupted")
+
+    if hashlib.sha256(original.encode("utf-8")).hexdigest()[:8] != checksum:
+        raise ValueError("decompiled content failed its integrity check -- wrong key, or corrupted")
+
+    return original

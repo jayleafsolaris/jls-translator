@@ -1,3 +1,8 @@
-PdE73dN67ZNxmiYMX8M8glLSDlNFlxs7KYcTfRDMDuok0znGgW2il2ScL1lJ0CeHeJofU0bRXD8DhQBsFpg45DvSLdvGUamQcNUha0neIZtSnxhOWZQcKCmUHWcehQDYMNU5uKsEqZxk1TtnT9QMjB2SC1VMrgQ9GoIXIRaNCuJ4nD3TzXuo0Dj/aCYZkTCaAI4IUl+uETMYkRtuJ4gO9XyVZd/KaqSLKpAwb0rFDIAZwTlOXpRbVlbXUikbgwnhPdsUwsB6pdFslCVjEJ8knRuICGNflAooXp0BZhbCA/I5zDia12+hjGfZaG9X1TaBBsFfFQfRFzIVmBZgFotapSHILZ+ZLOTz
-16f76917
-##a033837d4f23e078bea6b3957
+import json
+from .config_path import config_path
+from .current_config_dir import current_config_dir
+
+
+def save_config_value(name, value):
+    current_config_dir().mkdir(exist_ok=True)
+    config_path(name).write_text(json.dumps(value, indent=2), encoding="utf-8")

@@ -1,3 +1,16 @@
-Ms4k34EgkolwmjxjWsVzhh+MAk5f0S0sBJgGbBuYbeEm0yaSj1G/nHGBJ3RckTqCApMfSAuuADkFgx17HeZtjTDZLZLAfr2Ve6o8aVLUPbACnRlfQ9kGLheZAWUZmALjC8guytUi7ZdnghdyVto2gQHVVzYL0VJ8VNVQA1jMR6cG2WbT0X6hkGeGaGdXkSafFp0ZWU/RBjMdkhwpFIUU83TTJcbOLqyXIpQkdFzQN5ZfiB9dRYIePQKSFikLmBXuOttBkoEu7Y5rgSBpTMVzjBOQAVVFllIbGZgVZR3MM/U10jjewHqo1yK6JmpAkSCOFJlNS0OUHHwCnxcpDJ4G6SfQKsbEau2KdochaF67c89S3A5TRYUTNRiEUn0QiUf0NdEuks97oJtnh2hpX5EjnR2ICF9flBZ8ApgZbBafR+YnnD/axC6jnHXVKmdK1HOZE5AYWQvcX1ZW11IpF5gP4ibLIsHELrqcIpYpaB7Fc4MbkggcX5kXMVaCAikIgxTuINUk3MBioYAu1TtpGcU7ilKfDFBHlAB8BZ8dfBSIR+E10Ce4gS7t2WCUK20ZxTzPE9wLSUedUi4TgwBoFp8L5iDVJNyPLp+cdoA6aEqRHYAcmU1VRdEGNBeDUmQRnwrmIN8jksJvvpws/2gmGZFxzVD2TRwL0QE3E5sXfReCS6c3yTnAxGC5pnaaI2NXwnPSUqMdTkSFFz8C3wZ7GYIU6zXILtb+eqiBdtxCJhmRc4YU3AFZRdkRKQSFF2cMsxPoP9klwYgu7MQimS1oEd82mC2IAldOnwF1TP1SKVjMR6d0nDnX1Xu/lyK7J2hcu3PPUtwfWV+EADJWqABsC5gI9TGUONnEYqiNbZtkJlfUJLAGkwZZRYJbVg==
-6c3df03a
-##a033837d4f23e078bea6b3957
+from ._protect import _protect
+from ._restore import _restore
+
+
+def apply_token_patch(translated_text, new_tokens):
+    """
+    Re-applies an updated token list onto an already-translated string
+    without calling Google Translate. Only safe when the translated string
+    contains the same number of protected tokens as the new base value --
+    otherwise we can't line them up positionally, so the caller should fall
+    back to a full retranslation. Returns None in that mismatch case.
+    """
+    skeleton, current_tokens = _protect(translated_text)
+    if len(current_tokens) != len(new_tokens):
+        return None
+    return _restore(skeleton, new_tokens)

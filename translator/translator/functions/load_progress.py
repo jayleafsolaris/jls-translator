@@ -1,3 +1,12 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8eJUATESDBnwchB1ncuZt4zHaa97Ob6mmcocnYUvUIJxa1Vc2C9FSfAaWBmFY0UfXFf8A8+ZLkr1Lp2gpGfUWqTOpIWh4qlAsBJgVex2fFNgy1SfXg1PH2SLVaG9fkSOOBpRDWVOYASgF31szcsxHp3Sca5KBer+AOP9oJhmRc89S3E0cC9EAOQKCAGdYhhToOpIn3cBqvtFylDxuF8M2jhajGVlThVo5GJQdbRGCALp2yT/UjDbv0Cv/aCYZkXPPUtwIREiUAihWsgpqHZwT7jvScbiBLu3ZItVoJhmRc89SjghIXoMcfDiYHGxyzEendM4uxtR8o9lMmiZjMw==
-99ae36d1
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS
+import json
+
+
+def load_progress():
+    path = PACKAGE_DIR / DEFAULTS["progress_file"]
+    if path.exists():
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+             return None
+    return None

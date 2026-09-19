@@ -1,3 +1,23 @@
-dp5puPJmrItnkWhuXN0jigCPTVpEg1JxW5QdZAiFC+J7kWbWxG2ilHKcJGMDkTLPHpUKVF+GFzURnwYlWIoS6zjFZsDEeKiLcZwqaly7PI0UiR5fSoUbMxjXHW9YjAXmJ9krldIuv5h11TxjQcV/zxmZFFlP0RAlVpZSbwqJFO90zircxWGg2WmQMSZcxzadC9wZVUaUeHFblB1kCIUL4nTOPtzSIO2tapBobVzIc4YB3A5dSJkXOFbfAWwdzAToOdEk3I5trJpqkGZ2QJYgzwGdG1l0kh0xBp4ebCeHAv57tifdwGqSmm2YOG9V1AyEF4VEHFmQBjQThVJ9EI0JpyfIJMDEau2QbNUqZ0rUc4YGjwhQTdFfcVaVE3odzAjpOMVr2cRrvYoilEJgVdA0zx+dH1dOg1IwH5kXKQuDR+4n4yjdzH6klWeRYC8Z0jKBUogIUEfRETMbhxtlHYhH4SbTJpLRYqyQbNU8Y0HFfeUmlAgcRpAANxOFUmALzAandp9okIx+v5xknDBjXZE/hhyZTUtChRp8GJhSegiNBOJ03S3GxHztjWqQaG5YwjuKAdBNVUXRBjQT/QFoFYlH9CTVOdvVLqyKIoY8Z03UfZ8L2x4cdKQiGDejN1Y7ozLJAOMG8/NFiKsu1TtpGdgnyAHcA1ldlAB8G54BfRmHAul02iTAq2/ti2eUJCYeknDPPJ0AWQzRGjkXkxtnH8xP9DHZa9HOY6CWbNo7Y1rFOoAcj0NMUtYBfCm/N0g8qTXYBvlinKsEmZFrhmhvSpE8jRSJHl9KhRszGNtSZxeYR+I63znL0XqklmzVZSsZ2CfPF4QET1+CUigZ1x9oE4lH5nTYIsHVfKSbd4EtYjPRMY4BmQ0cTZgeOVaZHX1YmBXuItUq3s137Z1rky5nW902wACZDFhKkx45VpYGKRnMAOs10ijXjS6jlnbVPGkZwSGABpkOSCGYBnwXkBNgFp8TpzXSMt3Pa+2Oa5kkb1fWc5sd3B9ZSpVSKB6eASkLgxL1N9lluIMs7/NrmDhpS8VzjROPCAof+xsxBpgAfVifAuQm2T/Bq2i/lm/VZnVN0CeKUpUATESDBnwptD1EKKUrwgv3Duv+Q4yrSbAaDGb6FrYtsChyC8xSb0T9FHsXgUepeto+3MJ6pJZshmZZVNAhhBeOMlBCnxd8H5oCZgqYR9g53TnZxHySlWubLQxfwzyCUtJDWl6fESgfmBx6VrMf6CbjOdfRa6yNIpwldlbDJ88thAJOdIMXLBOWBgMengjqdJJl1NRgro1rmiZ1F9I8ggKVAVl0hRckAtcbZAiDFfN03yTf0WehnF2BLX5NuzWdHZFNEgWXBzIVgxtmFp9J4zHfJN/RZ6GcXYEtfk2ROoICkx9IC5UXPxmaAmAUiTjzMcQ/uMd8opQi22ZgTN8wmxuTA08FmAEDFZgfeRGAAuN01SbCzny52WuGF2VW3COGHpkJNg==
-3491c72d
-##a033837d4f23e078bea6b3957
+"""
+Shared helpers for --compile/--decompile: a lightweight, fully-reversible
+obfuscation of `base`'s raw text, keyed by a fresh random key every time
+--compile runs. The key is cached (see common/cache.py's save_compile_key/
+load_compile_key) rather than stored in base itself -- base only keeps a
+flag marker line so is_compiled() can tell compiled from plain text.
+The marker is a "##"-prefixed line with no space after the hashes, in the
+same spirit as state.py's _UPDATE_COUNT_MARKER, so it's never mistaken for
+a real '## Name' heading (see common/sections.py's _HEADER_RE).
+
+This is obfuscation, not encryption -- it exists to make a distributed
+`base` file not trivially diffable/readable at a glance, not to protect
+it against anyone willing to read this source.
+"""
+import base64
+import secrets
+from .state import _COMPILE_KEY_MARKER
+_KEY_LEN = 32
+from ..functions._marker_line import _marker_line
+from ..functions._xor_repeat import _xor_repeat
+from ..functions.compile_text import compile_text
+from ..functions.decompile_text import decompile_text
+from ..functions.is_compiled import is_compiled

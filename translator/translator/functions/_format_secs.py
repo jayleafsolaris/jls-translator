@@ -1,3 +1,12 @@
-MNktkv5oootvlDxZStQwnFqPCF9Y2EhWVtdSKQuJBPR0gWvfwHblyS7VIWhNmSCKEY9EFSHRUnxWk14pCokKp2mcL9vXY6KdKoYtZUqdc9dEyF0MAvtSfFbXGiVYngLqdIFr1sh4oJZm3TpjVJ1z3ETMXRUh0VJ8VppeKQvMWqcw1T3fzmrli2eYZCYPgXrleNxNHAuEHDUChFI0WLdPpTCeZ5LFJ+HZKtcgJBWRO8Ze3EUeRtNefBveXilQzhSleJw4m/wE7dki1SZpV8s2nR3cUBxw2R49FJIeJViaBut9nC3d0y6hmGCQJCoZxzKDUpUDHF6fGygF1xtvWJoG6wm2QZKBLu2QZNUmaU2RPYAchghORMt4fFbXUilYzEf1Mcg+wM8u78lx10ImGZFznReIGE5F0VB8VNkYZhGCT+F2xz3TzXO2lWOXLWpEk3OJHY5NUEqTFzBa1wRoFMwO6XTSJNzba7+WK/8=
-3465c7be
-##a033837d4f23e078bea6b3957
+def _format_secs(secs):
+    secs = max(0, int(secs))
+    d, rem = divmod(secs, 86400)
+    h, rem = divmod(rem, 3600)
+    m, s = divmod(rem, 60)
+
+    units = [("d", d), ("h", h), ("m", m), ("s", s)]
+    nonzero = [(label, val) for label, val in units if val]
+
+    if not nonzero:
+        return "0s"
+    return " ".join(f"{val}{label}" for label, val in nonzero)

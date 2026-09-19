@@ -1,3 +1,26 @@
-Ms4k34F+rI1qmSFkGdg+nx2OGRx7kAY0fP14bR2KR/c1zjjX/mKsl2XdOGdN2WnPIp0ZVALLeHxW11JlEYIC9HSBa+n8BO3ZItUhYBnfPJtSjAxIQ98XJB+EBnpQxV2NdJxrkoEu7dlwkDxzS99zgxuSCE8h0VJ8VoAbfRDMF+Yg1GXd0Wuj0SCHaioZ1D2MHZgEUkzMUCkCkV8xWsVH5iecLYirLu3ZItVoJhnXPJ1SjgxLC5gcfBDZAGwZiE+ues873sh6oZBskDsuEItZz1LcTRwL0VJ8VtdSegyeDvck2S+SnC6/mHXbO3JL2CPHW/ZNHAvRUnxW11IpWMwO4XTSJMaBfbmLa4U4Y12LWc9S3E0cC9FSfFbXUilYzEfrPdIuwY9vvYlnmywuEZMxgxOSBh4H0VB+X954KVjMR6d0nGuSgS7t2SLVaGVW3yeGHIkINgvRUnxW11IpWMxHpz3aa8HVfKSJcpAsKErFMp0GjxpVX5laflXVWzNyzEendJxrkoEu7dki1WgmGd06gRePQ11bgRcyEt9aKxuDCuox0j+QjS6/mHXcYQwZkXPPUtxNHAvRUnxW11IpG4MJ8z3SPterLu3ZItVoJhmRc89SlQscCcxQfBiYBikRgkf1NctxuIEu7dki1WgmGZFzz1LcTRxHmBw5BdkTeQiJCeN8lGnRzmOgnGyBaioZwzKYW9VnHAvRUnxW11IpWMxHp3Sca9HOYLmQbIAtDBmRc89S3E0cC9FSfB2SCyVYs0unJtk4xoEz7YtjgmZ2WMMnhgaVAlID009+X/1SKVjMR6d0nGuSgS6mnHvVdSZS1CrBAYgfVVvZW1ZW11IpWMxHp3Sca5LIYKGQbJAXZVbcPoociE0BC78dMhP9UilYzEendJxrkoEupJ8i1xRyGpJxzxuSTU5OggZmfNdSKVjMR6d0nGuSgS7t2SKHLXVNnXOwXtwEUkeYHDkplB1kFYkJ83SBa8DEfbnXcpQ6clDFOoAc1E9gX9JRfl/9UilYzEendJxrkoEuoZBskDsoWMEjihyYRRQJlBwoBI5QJViHAv54nDnX0nrh2WubJG9X1AyMHZEAWUWFW3V811IpWJ4C8yHOJZLNZ6Occf8=
-4c7a1dfe
-##a033837d4f23e078bea6b3957
+from pathlib import Path
+
+
+def parse_lang(path: Path):
+    lines = []
+    if not path.exists():
+        return lines
+    with path.open("r", encoding="utf-8") as f:
+        for raw in f.read().splitlines():
+            stripped = raw.strip()
+            if not stripped:
+                lines.append(("blank", ""))
+                continue
+            if stripped.startswith("#"):
+                lines.append(("comment", raw))
+                continue
+            if "=" not in raw:
+                lines.append(("comment", raw))
+                continue
+            key, _, rest = raw.partition("=")
+            key = key.strip()
+            inline_comment = None
+            if "\t##" in rest:
+                rest, _, inline_comment = rest.partition("\t##")
+            lines.append(("entry", key, rest, inline_comment))
+    return lines

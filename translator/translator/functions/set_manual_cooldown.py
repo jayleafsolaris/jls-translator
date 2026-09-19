@@ -1,3 +1,37 @@
-Ms4k34Eg45ptmCVpV58hjgaZAVVGmAZ8H5oCZgqYR9gY8wj5jS6StEO7HUd17hCgPbApc3y/LRE3ry1BN7k11HicFP/gQJi4TqoLSXb9F6AlsjJxYr8tFDmiIFpyihXoOZxl7c1hrJ1dhjxnTdRzhh+MAk5f0S0wGZYWVguYBvMxti3AzmPt112YKX9b1AydF44CUEeuET0GhFJgFZwI9SCcFN/Ad6+cXYctdFbdP7ARnR1PIZcAMxvXXFYWgxCnPdE73dN67aZsmj8MX8M8glLSMkxZhBw5KZsdbliFCvc7zj+S/n6/jGyQF2pW1lmJAJMAHAWuAT0Aki16DI0T4nTVJsLOfLnZXYYpcFzuIJsTiAg2IfsWORDXAWwMswrmOskq3v5topZukSdxV5k7gAeOHhUR+1J8VtdQK1rmR6d0nAbTz3uslW6MaGBWwzCKAdwMHEOQADhWlB1mFIgI8DqcZp+Ba7uccIxodFzCNp0EmUUVC5ITMBrXAGgRnwL0XpxrkoFcrI1nuSFrUMUWlxGZCFhOlTcuBJgAKQ2CE+44nCLGgWKkn3aGZCZQ3zeKApkDWE6fBnwZkVJ9EIltp3Sca9rOe7+Ve9osZ1DdKs8RnR1PBdExMBeaAmwczBPodOd6noE5/6QinSdzS8JzgR3cAF1fhRcuVoAaaAzLFKck3TjBxGrH2SLVaG9Xn1nlUtxNHGSfHiVWkgRsCswC/yDZJdbSLqyXIpQkdFzQN5ZfnQ5IQocXfBWYHWUcgxDpdJFmks9ru5xw1TtuVsMnihyPTVNZ+1J8VtcRZR2NFfR00yXXjy6EnyKBIGMZwzaeB5keSE6VUj8ZmB5tF5sJpyPTPt7FLqiXZtU7aVbfNp1SiAVdRdEdMhP9UilYzAbrJtkq1tgupJcikC5gXNInw1KIBVkLlAo1BYMbZx/MT+s1yC7AiC6ol2bVPG9U1HOGAdwGWVuFUj0F2ht6VuZHp3ScGdfVe7+XcdU8blyRNp8dnwUcX5gfOQWDE2QIzBPvMZwo3c5iqZZ1m2hqUNcnnFKdGRwDhho1FZ8Xfx2eR+4ntmuSgS6hmHaQOjwZxTuKUpkVVViFGzIR1x1nHcBH6CacP9rIfe2XZ4JodFzAJooBiEQSIdFSfFbVUCtyzEendNQkx9N97cQimCl+Ee4erjypLHB0sj0TOrM9XjazKs4a4wP99Fye1SKYIWgR7h6uPKkscHSyPRM6sz1eNrMqxgzjA/30XJ7VIp0nc0vCesZ43E0cC4YbKB7XLUU3ryy9XpxrkoEu7dkimydxGYxzsByTGhQC+1J8VtdSKVjMA+Yg3WuPgVGhlmORF3VN0CeKWtVnHAvRUnxW11JWCJ4S6THjJ93GJqmYdpRkJlfeJMZ43E0cC9FSfFaoH2gBjgLYJtk53c1ikppjhTsuXdAnjl7cA1Nc2HhWVtdSKVjMR6cm2TrHxH25nGaqPWhN2D/PT9wDU1zRWXwemAd7C8xNp2eKe4KrLu3ZItVoJhnUK4YBiARSTK4HMgKeHilFzAPmIN1l1cR65dtvlCZzWN0MjB2TAVhEhhwDA5kGYBTOTo10nGuSgS7t2WuTaGNB2CCbG5IKY16fBjUa1xNnHMwC/z3PP9vPaZKMbIEhahmPc4Edi01dRZVSOQ6eAX0RggDYIdI/280u89lwkDlzXMInihajGFJfmB5mfNdSKVjMR6d0nGuSgXujjWuZaDsZ1CuGAYgEUkyuBzICnh4DWMxHp3Sca5LEYr6cOP9oJhmRc89S3E0cC9EHMgKeHilFzBXiJckuwdVrqaZ3mzxvVbtzz1LcTRwL0VJ8VtcWaAyNPKU53SXHwGKSmm2aJGJWxj2wB5IZVUfTL3xL1wdnDIULjXSca5KBLu3ZItVoJmbCMpkXox5ISoUXdBKWBmhR5kendJw519V7v5cigCZyUN1Z
-54bb480b
-##a033837d4f23e078bea6b3957
+from ..common.ratelimit import _LOCK, _MANUAL_COOLDOWN_MAX_HOURS, _MANUAL_COOLDOWN_MIN_HOURS
+from ._load_state import _load_state
+from ._maybe_reroll_caps import _maybe_reroll_caps
+from ._now import _now
+from ._prune_log import _prune_log
+from ._save_state import _save_state
+
+
+def set_manual_cooldown(hours):
+    """
+    Manually forces a hard cooldown -- every reserve() call raises
+    RateLimitExceededError until it lifts, independent of the
+    hourly/daily caps. Clamped to [1, 72] hours no matter what's passed
+    in.
+
+    Only ever extends an already-active cooldown -- never shortens or
+    clears one. If the requested cooldown would end sooner than one
+    already in effect, the existing (later) end time is kept as-is.
+    Returns the epoch timestamp the cooldown lifts at (whichever is
+    later: the existing one, or this new request).
+    """
+    hours = max(_MANUAL_COOLDOWN_MIN_HOURS, min(_MANUAL_COOLDOWN_MAX_HOURS, hours))
+    with _LOCK:
+        now = _now()
+        data = _load_state()
+        _prune_log(data, now)
+        _maybe_reroll_caps(data, now)
+
+        requested_until = now + hours * 3600
+        existing_until = data.get("manual_cooldown_until")
+        if existing_until and existing_until > now and existing_until > requested_until:
+            until = existing_until
+        else:
+            until = requested_until
+            data["manual_cooldown_until"] = until
+            _save_state(data)
+    return until

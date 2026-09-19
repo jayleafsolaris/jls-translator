@@ -1,3 +1,18 @@
-dp5puOAuqYxvl2QmWN0kjguPQFNF0QE9EJIGcFiCAvN02iTAgW6vmHGQKDwZ0HODE48ZEUCfHSsY2hVmF4hH9DrdO8HJYbnZbZNCb03Cc50Ti01fRJ8GORiDXikKiQH1Mc8j18UuopcikD5jS8hznBuSClBO0QApGNcdb1iYD+J0yCTdzS7lm2eTJ3RckRKhNvYMWl+UAHwBnxN9HZoC9XTfJN/Mb6OdIpQrckzQP4ML3AhETpIHKBOEWyVYnwinINQqxoFnq9lilyl1XNFzigSZHxxMnhcvfJobeguFCeB0kWaSyW+jnS+RLWpcxTaLXtwaVVuUFnwUjlJoWI4G43TRIsDTYb/ZbYVkJk7ZMpsXighOC9xffAKfF3sdyxSNNdA809h97YptmC1yUdg9iFKIAhxElxQ5BNcAbAuYCPU90iySx3yilCz/QlJR2CDPFpMIT0XWBnwChQspDINH8zHQJ5KDaaKWZtdoZVbfJ4ociE1aWZ4ffFSVE21azAToOsgu3NUi7ZhskWhvTZE6nBzbGTZYkh0sE5NSeR2eSvcm0yHXwnrt1C/VIXIZ2yacBtwfWUaUHz4ThQEpD4QG8zHKLsCBbq+YcZAoJlXePIQXmE1QQpoXfAKfFwMUjRTzdMgi38QujLdb1StpVNwygRbcHl1c0RsoVpYBKRnMF+s11SWSx2ehnC7VO2dU1HOcGp0fVUWWUj8XgRdoDMwG9HTII9erer+YbIYkZ03YPIFSnwxfQ5RSPRiTUnodjxPuO9Jm3dNqqIsilillUdRzxwGZCBxYhRMoE9kCcF+fR9cV/wDz5kuSvUunQmVW3D6KHIhEEgu4FHwPmAcpGoMS6TfZa9DEerqcZ5toa0zdJ4YCkAgcW4MdNhOUBnpYmw7zPJwk3MQupJdxgSlqVZ1zgByQFDZfmRd8G5gBfVieAuQx0j/e2C65lneWIGNdkSOdHZYIX1/WAXwWlRN6HYxH7iecKdPCZaidIoA4JlHUIYpc9k8eCfsULhmaUicLmAbzMZwi39Fhv40isQ1AeOQfuyHQTWxqsjkdMbItTTG+beEm0yaSjyCrjGyWPG9W3yDBLZ4MX0CEAgMGlgZhWIUK9zvOP5L+bKyaaYA4WUnQJ4d4mh9TRtFcchCCHGoMhQjpJ5In3cBqkptjhi1ZW9AwhAeMTVVGgR0uAtceZhmIOOU1zy7tw2+ukneFQmBL3j7PXNILSUWSBjUZmQEnCokB9THPI+3Db76cXZcpZVLEI88bkR1TWYVSLhORAGwLhDjlNc8u7cNvrpJ3hUI=
-95652207
-##a033837d4f23e078bea6b3957
+"""
+A dumb, always-on safety net for `base`: a last-known-good snapshot of
+its raw content, refreshed on every single run of the tool (before AND
+after whatever command actually executes), so that if `base` ever goes
+missing -- hand-deleted, wiped by a bad mirror op, whatever -- there's
+always something to offer restoring from.
+
+This doesn't try to tell "good" content from "bad" content, and it isn't
+scoped per-project -- it just remembers whatever `base` looked like the
+last time ANY command saw it as a plain file, same sharing caveat as the
+translation cache and section-order cache (see state.py's PACKAGE_DIR
+comment). If you bounce between multiple projects with one install, only
+the most recently touched project's `base` is backed up here.
+"""
+from .state import DEFAULTS, PACKAGE_DIR
+from ..functions._backup_path import _backup_path
+from ..functions.load_base_backup import load_base_backup
+from ..functions.refresh_base_backup import refresh_base_backup

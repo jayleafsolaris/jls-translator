@@ -1,3 +1,6 @@
-dp5pn4xtopRynCRjA5E8jRSJHl9KhRd8FJYBbF+fR/U1y2vGxHa52XWcPG4Z0HOJAJkeVAuDEzISmB8pE4kepzHdKNqBfLiXLNdqJDPXIYAf3EMSSJ4fMRmZUmAVnAj1IJw4xsB6qPNkhydrGZ99jB2RAFNF3wEoF4MXKRGBF+gmyGv25EiMrE6hGwxfwzyCUtJDX0ScHzMY2R1rHpkU5DXILpLIY72WcIFoZVbcI4YemTJITokGcFaeAVYbgwr3PdAu1qtov5Zv1WYoWt4+gh2SQ19Kkho5Vp4feReeE6cn3T3X/m2ilHKcJGNm2jaWeJofU0bRXHIQghxqDIUI6SeSKN/FUa6Wb4UhalyROoICkx9IC5IfOCmUHWQIhQviXg==
-05443c12
-##a033837d4f23e078bea6b3957
+"""--compile: obfuscate base's raw text with a fresh random key each run."""
+from ..common import state
+from ..common.state import DEFAULTS
+from ..common.obfuscate import compile_text, is_compiled
+from ..common.cache import save_compile_key
+from ..functions.cmd_compile import cmd_compile

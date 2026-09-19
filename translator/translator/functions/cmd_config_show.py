@@ -1,3 +1,24 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJeKRuDCeE92xTB1WG/nAiTOmlUkX3BEZMAUUSfXD8ZmRRgH7MU8zvOLpLIY72WcIFoalbQN7ARkwNaQpYtKhebB2xUzBTmItkU0c5gq5Blqj5nVcQ2w1KbCEh0gxctA5IBfSeIAus1xWeSwmGjn2uSF2JQwwycBp0ZWSGXADMb11wnG4MK6jvSZcHVb7mcIpwldlbDJ882uSt9fr0mD1rXPkg2qzLGE/kYnoFCjLdFoAlBfO4drj+5PhALoTMfPbY1TCeoLtV4nAj970iEvl2xAVRm5xq8O74heXS/MxEz21JKN6IhzhPjD/vzUYWwRrENSGb/EqI39gtORJxScimEF30nmw7pMNM8wf5mpJ1mkCZZWMUnnRueGEhO0RsxBpgAfVizFOIg4zzbz2qijnGqIG9d1TaBLZ0ZSFmYECkCkngDcogC4XTfJtb+baKXZJwvWUrZPJha1Vc2C9FSfAWDE30dwEf3NcgjkpwurpZskyFhZtU6nS2PGV1flFp1fNdSKViFAac60z+S0W+5kSyQMG9KxSDHW8ZnHAvRUnxW11J5CoUJ83yeBd2BbaKXZJwvJl/eP4sXjk1ZU5gBKAXXC2wMzEqqdM4+3IEj4Jptmy5vXpF+wgWTH1dOgwF8GYVSK3LMR6d0nGuSgS7t2SLVaCQUnDCAHJoEWwvcXzAXmRV8GYsC9HTaIsDSeuHZdp0taBnIPJpSnwxSC4UdOxGbFykRmBSnItU428NnoZB2jGYkELtzz1LcTRwL0QA5AoIAZ3LMR6d01S2S0nqsjWfVdTsZkyWGAZUPUE7TSFZW11IpWMxHpyTOItzVJqvbQZomYFDWc4kdkAlZWdEbL1aWHnsdjQP+dMoiwchsoZw41TN2WMU7wRydAFlW3lB1fNdSKVjMR6d0zi7G1Hyj8wjVaCYZxTKdFZkZHBbRIh01vDNOPbMjzgacZJLiQYO/S7IXQnDjDLk7ryR+Z7QtEje6NwNYzEenPdprxsB8qpx22y1+UMInnFrVVzYL0VJ8VtdSKQieDukglC2Q4m+j3nbVJWdS1HOGBtwbVViYEDAT118kWI1HoC/IKsDGa7nXbJQlY0SWc4kdkAlZWdETMASSE20BzAL/Pc8/wYFmqItn1S5pS5EygR2IBVlZ0QA5F4QdZ1bOTo10nGuSgS7t2XCQPHNL31nlUtxNHFuQBjRYhRdnGYECryDdOdXEeuTzItVoJmbCNpstiwRST54FLymfG20ciQnYNcg/wMhsuI1n3TxnS9Y2m17cBVVPlRcyS7ETZQuJTo10nGuS0Xykl3bdLiR63j2JG5tNWkSdFjkE1xt6WIII8HTKIsHIbKGcONUzcljDNIoG0gNdRpQPc1TeeA==
-9b15f7fb
-##a033837d4f23e078bea6b3957
+from ..common import state, config_store
+from ..common.config_store import load_config_value, save_config_value, get_request_delay, config_dir_state
+from ..common.state import DEFAULTS, LANGUAGES, LANGUAGE_NAMES, PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME
+from ._set_windows_hidden_attribute import _set_windows_hidden_attribute
+
+
+def cmd_config_show():
+    state, path = config_dir_state()
+    if not path.exists():
+        print("No config folder exists yet -- run --config --workers or "
+              "--config --languages first, then you can toggle its visibility.")
+        return
+    if state == "visible":
+        print(f"Config folder is already visible: {path.name}/")
+        return
+
+    target = PACKAGE_DIR / CONFIG_DIR_VISIBLE_NAME
+    if target.exists():
+        print(f"Can't make it visible -- a '{target.name}' folder already exists here for another reason.")
+        return
+
+    path.rename(target)
+    _set_windows_hidden_attribute(target, hidden=False)
+    print(f"Config folder is now visible: {target.name}/")

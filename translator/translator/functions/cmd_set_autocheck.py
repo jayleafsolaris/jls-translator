@@ -1,3 +1,21 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSTjG4L9IW4wTl70uf1SKyAVJx5BGwILk9cwfRNRUivydLJ641xhr/A56BXoy6SbQPQ2b1Gr1e3Cl5bbAnECKkXikrrzXOBOgU5ORcnrBNu0JgS94+z1yjAVNKlS0qE4UBYBeCOOQ82SjZ/m2smmqQaG9UwTydBtwyUESQFgMAkgB6EYMJ2DfULtHKUa6YYZ0tDF/DPIJS0jJPSocXAwCSAHoRgwnYN9Qu0cpRrphhnS0mUNwjgACITWNYkAQ5KYEXewuFCOkL3yPXwmWSmmOWIGMzu1mLF5pNX0aVLS8Tgy1oDZgI5DzZKNmJa6OYYJktYhCLWc9S3E0eCdN4fFbXUl0Nngn0dMgj14F+rIpxnD5jFtAmmx2RDEhCklIpBpMTfR3MBO8x3yCSiXqlnCKaJmMZxTuOBtweVUeUHCgajlJ7DYIUjXSca5LAeu2NapBoclbBc4AU3AhKToMLfBWYH2QZggOudNMlks587ZZkk2QmT9gyzxLRQF9DlBE3VoMAfB2MR6h03Gafwmaommn/aCYZkTWOHo8IXAXRNjMThFJnF5hH7iDPLt7HLqWQdtU8blyRPYoGiwJOQNEdLlaUGmgWiwKnINQuksJvrpFnkWh0XNw8mxf2TRwL0QQ5BIQbZhbMSqp01T+SzmChgCKTJG9JwnObGplNT1+eADkS1xRlGYtH8zzdP5LCZqiaaaouaUvuJp8WnRlZdJ8dKB+UFyFR5kendJwo3c99uJV2hmYMGZFzz1DeTzYL0VJ8FZYRYR3MWqcL0CTTxVG7nHCGIWlX7jCHF58GY0iQETQT31sDWMxHpzfdKNrEVe+Yd4EnZVHUMIQtmQNdSZ0XOFSqUjRYiQnmNtAu1qsu7dkiqjtnT9QMmReOHlVEny0/HpIRYiePBuQ82WPRwG2lnCv/aCYZkTqJUpkDXUmdFzhM/VIpWMxHp3ScO8DIYLnRZNcJc03ePo4GlQ4cXoEWPQKSUmoQiQTsJ5wqwMQuo5Z11S1oWNM/ihbcRV9DlBE3BdcTfViBCPQgnC7ExHy02SD/aCYZkXPPUtxNHAvRUnwQ1QlNPaom0hjoGOmGeKiLcZwnaGbSO4oRlzJVRYUXLgCWHlYVhQnyINk4lfxz7ZRrmz1yXMJ6wVDVZxwL0VI5GoQXM3LMR6d0nGuSgX6/kGyBYCR4xCeAH50ZVUjRBywSlgZsWI8P4jfXOJLAfKjZbJo/Jl3YII4QkAhYBdEgKRjXXyQbhALkP5wq3Nh6pJRn1TxpGdI7ihGXTVFKnwc9GpsLJ1rFbQ==
-a950aa2d
-##a033837d4f23e078bea6b3957
+from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
+from ._load_version_check_cache import _load_version_check_cache
+from ._save_version_check_cache import _save_version_check_cache
+
+
+def cmd_set_autocheck(enabled):
+    """
+    Turns the passive/automatic update check (the one that silently runs
+    at the top of every command) on or off, via `--check true` / `--check
+    false`. Does not itself hit the network or change the cached remote
+    version -- it only flips the stored flag that check_for_update_notice()
+    consults.
+    """
+    cache = _load_version_check_cache()
+    cache["autocheck_enabled"] = enabled
+    _save_version_check_cache(cache)
+    if enabled:
+        print(f"Automatic update checks are now enabled (checks at most every "
+              f"{DEFAULTS['version_check_interval_minutes']} minutes).")
+    else:
+        print("Automatic update checks are now disabled. Run --check anytime to check manually.")

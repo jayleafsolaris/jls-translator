@@ -1,3 +1,18 @@
-Ms4k34Eg45ptmCVpV58nnROSHlBKhRd8H5oCZgqYR9gH6ATi8UuJ1SKqK2lXwjaMB4gESk6uFD0fmwd7HZ9LpwvPP8DEb6ambporbTO7WYsXmk1OToIXKCmYB30ZiwLYJ8gqxsQm5MMI1WgmGZNxzTGQCF1ZglIoHpJSbR2PC+Ym2S+fznu5mGWQaGBV0DTPE5IJHF+ZF3wVmBx6HY8S8z3KLp/Hb6SVd4ctJkrFIYoTl0M2IdFSfFaoIV03vDfCEJwkxslrv45rhi0mVdAnjBqZHhx/gwc5VpEde1iYD+J0zi7B1S6inyKBIGMZwSGAEZkeTwueHD8T/VIpWMwhxh3wHuDkUZ6tULAJTWblG703ryVzZ7VSNQXXEXsXnxTiMJxmn4FstNlmkDtvXt9/zwGTTV0LghsyEZsXKRuNC+sxzkGSgS7tlGuRZXRM33OLHZkeUgyFUjcTkgIpEI0K6jHOItzGLqzZZpApYhnCNp0ElQ5ZBdEzfBWWHmUdnkfzPN0/ksNvrpJx/2gmGZE8iRTcAlILmAYvVpgFZ1jEAqkzkmufjHu9nWOBLSFKkSCDHYtAWESGHHMEkgZ7AcwP5jrYJ9vPaeTZY5ssJk7QPZsB9k0cC9EGM1aQG38dzCDoO9sn14Fv7Z5nmz1vV9Q/llKaH1lYmVI9AoMXZAiYR+YyyC7AgXmskHacJmEZ3zaKFo9NXQuGEyVWgx0DWMxHpzjVLcaBeqWYdtUkZ03SO88UlR9PX8pSMwKfF3sPhRTidNk919N37YtngTp/GcY8mh6YTU9DngAoW5QbexuZDvNenGuSgX25i2OcL25NkTGOEZdNVUWFHXwihRNnC4AG8z3TJefPb7uYa5kpZFXUFp0Akx8cXJgGNBmCBikdmgL1dMgkx8JmpJdl/2gmGZEnhxfcA1lfhh0uHdcTbhmFCal2nmm4gS7t2WWZJ2RY3XOwEZMDT06SBygfgRdWHo0O6yHOLsGNLpKqVroYVnz1Wc9S3E1LQoUafCmEBnsdjQzYONMo2ZsE7dki1WgmGZEMjB2SHllIhAY1AJItbxmFC/Im2TiSnC798yLVaCYZkXPPLa85c3uhNxhWylJPGYAU4l4=
-b1f9fef7
-##a033837d4f23e078bea6b3957
+from ..common.translate import _STOPPED, _consecutive_failures, _streak_lock
+
+
+def reset_outage_state():
+    """Clears the declared-outage flag and the consecutive-failure streak.
+
+    _STOPPED otherwise latches True for the rest of the process once
+    FAILURE_STREAK_THRESHOLD is crossed -- by design, so a single caller
+    mid-run doesn't keep hammering a dead service. A caller that backs
+    off on its own (e.g. --update's slow-down/retry handling) and wants
+    to give Google a genuinely fresh attempt after waiting needs a way to
+    lift that latch first; otherwise every retry would short-circuit
+    straight back into TranslationUnavailableError without ever touching
+    the network again."""
+    global _consecutive_failures, _STOPPED
+    with _streak_lock:
+        _consecutive_failures = 0
+        _STOPPED = False

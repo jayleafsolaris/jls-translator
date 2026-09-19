@@ -1,3 +1,49 @@
-Ms4k34Eg7ZBvhSd0TZEhigGZH0pO0RMvVoUXeh2eEeIL0STWq2egiW2HPCZa3j2bF4QZUEKTeFZ8txFmFpgC/yDQItCPbaKXdpAwclTQPY4VmR82T5QUfCmGB2AdmDjwNc4l289pvtFxnCZtEItZz1LcTR4J0yY5G4cdexmeDustnDnX02G4jWeGaHJR1HOYE44DY1mUFnRf1xFoFIBH7jrPItbELr+ccZA6cFyZesgB9k0cC9EBORqRX3sdnwjrItUl1YFmooxwmTErWtAjzwKdGE9O0RsyAphSaQuFCew0nGPTgWKkinbcaG9XwieKE5hNU03RBjQT/VIpWMwT4ibRItzAYuHZZJo6Jk3ZNs8WiR9dX5gdMlaYFCkXggKnJtk/wNhvr5Vn1SlyTdQ+nwbcQBELgh18Ap8TfXLMR6d0yyrAz2ejniKRJ2NK33SbUpsISAuQHDIZghxqHYhH8DzVJ9eBI+CMcpEpclyROpxSjxlVR51SLQOeF30UlW2ndJxrxcBnuZBskmhpTMVzmxqZTVREhAAwD9cFYBaICPB03SXWgXyojXCMIWhekTyBUpUZTwueBTJY/XgpWMxHyRvoDoiBeqWQcdU9dVzVc5sd3B1dX5IafBWYH2QXgkjzJt0lwc1vuZwshTEhSpEygRb2TRwL0REzG5odZ1eeBvMx0CLfyHrjiXvSOyZWxj3PBZ0fUnSDFzhWlgZ9CoUF8iDZOJ6BbKyaadU/blzfc5samU1dSIUHPRr9UilYzBDmJtIUwMRq5dAililqVcJzgxuKCFgLmBwwH5kXKRGCR/M80zjXgXq6liKTIWpcwn3PJpQIHESfF3EQghxqDIUI6Xm2a5KBLr2ccNgub1XUc4oKiB9dSIUbMxjXWnodiUfOGvgO6o9jqdAimCdwXNVzigSZH0ULgxc9GtcRaBSAR/Q9yC6Sznu58yLVaCZQ3yeAUpUZTwueBTJWmh1tDYACpyHSL9fTLquMbJY8b1bfIMBe3AhdSJlSKx+DGikRmBSnG+sFkshgqZxykCZiXN8n5VLcTRxLlwAzG9dcJxuDCuo70mXRzmCrkGWqO3JWwzbPG5EdU1mFUisXhRxWCokD53TVJsLOfLnZL9hoZxnXIYoBlE1QRJITMHzXUilYjg7pMNUl1Y0uo5Z21SkmVdglilKOCFpOgxcyFZJSaxmPDKc90j/dgW2ilG+aJilNwzKBAZAMSE7fAiVWmAADWMxHpzfTJt/OYOKLY4EtalDcOptcjBQSC6ETKBWfG2cfzDPPG+8OksxhqYxukDshGd88mF+TH0xDkBw5EtcFaAqCOPUx2EGSgS7tmHaBOm9bxCeKUo8EUE6fBjAP1xZgHMwJ6CDUItzGIu2YbJFoY0/UIZZSiwxORZgcO1aaF2gWmEfzO5w4xsB3x9ki1Wh3TNg2m1KYGE5CnxV8F9cAbAyeHqd8yCPb0i6llneHJH8UwTKaAZlNU0WUUjUYlB58HIkDrnTQLtPKa6nzItVoJkrFIY4bmwVIC4UdfAKfFykMiRXqPdIq3oFno4p2kCliFZEwgACOGExfmBw7VtpffAiIBvMxmziSx2e1nGbYJG9X1FnPUtxNTFmeFS4ThAEpCokD9TXLZZL1ZqSKIoUpclrZNpxSiAVZC5wdOAObFykMhAbzdN0oxtRvoZV71TtyUN0/zxGdAVBY+1J8VtcFaAqCOPUx2GvfyGrgi2eBOn8Xu1nPUtxNeE6dGz4ThRN9HYAepzDTLsGBQIKtIoEnc1rZc5wLj0NPX5UdKQLXG30LiQvhbpw/wMBgvpVjgS1ZVNA9llrVSk8h0VJ8VocAZh+eAvQn4yjQgWiki2eGaHJRwzyaFZRNSEOUUi8XmhcpC5gD6CHIa8TIb+2NapBoalDHNs8CjgJbWZQBL3zXUilYngLpMNk519Mi7ZhskWh1TtA/gx2LBFJM0QY0F4NSfReDR6810mvXwHyhkGeHaHBcwyCGHZJNU03RBjQfhFJtEYhLjXSca5LXZ6zZcJAsb0vUMJstjxlYRIQGdVaVAGwZhxSnINQuktF8op5wkDt1GdU6nAKQDEULlx0uVoMabFiJCfM9zi64gS7t2WOBPGNUwSfDUo8YX0iUAS9WmAApFoMTqV62a5KBLomWZ4ZoSHblc4wdighOC64aPRiTHmwnngbzMeMn28xnuaZxgSd2HsJzgAD2TRwL0S0oBJYcehSNE+ILzy7VzGujjXGqLGNf1CGdF5hKTwuGEy4YqABsHMwE5jjQOJKMI+2bbYEgJlbXc5sakx5ZC54cMA/9UilYzAHuJtlr09UurNllkCZzUN82gwvcGVlZnBsyF5tSbhGaAqohzGvCzmejjSLdOm9e2SfPEJkLU1mUUj1WkxdlEY4C9TXILriBLu3ZcYw7KFzJOpta1UJOSpgBOVaDGmgMzALpMM9rxslr7Yt3m2hgVsNznRedARUH0QEzVp8bbRGCAKcg1C7fgXmijG6RQiYZkXOFB48ZHE+UHj0P1wZhHcwV4jXQa9fZfqGYbJQ8b1bfc50TiAVZWdEGNBeZUmQZnwynNZw/wMBgvpBnmzwmS9QnnQvSZxwL0VIdGoATcAvMFeInyCTAxH3tjWqQaHRc0D/PBZ0fUnSDFzhWmBwpDIQCpyPdMpLOe7nVIoY9ZVrUIJxSkx82C9FSfBCWG2UNngKpdp5puIEu7dlwkClqZsM2nBeOG1l0hhMuGNdPKQqJFOImyi7tzGGp13WUOmhmwzaLePZNHAvRFjkQ1y1qGZwT8ibZY9/Efb6YZZBhPDORc89S3E0cC4IbMh3ZE3kIiQnjfNEuwdJvqpwr/0ImGZFznRePCE5dlC0xGZNcfhmeCdgm2S+SnC6SmmOFPHNL1FnPUtxNSFmISFZW11IpWMxHpy3VLt7FBO3ZItUub1fQP4MLxmccC9FSfFbXUnsdnwL1ItkU385q445jhyZZS9Q3z0/cH1lKnS0uE4QXew6JOPA1ziW4
-cf35c99a
-##a033837d4f23e078bea6b3957
+from . import reserve as reserve_mod
+import contextlib
+
+
+@contextlib.contextmanager
+def _quiet_warnings(sink):
+    """Temporarily reroutes the warn_red() call inside reserve()'s
+    self-resolving hourly-cap pause into `sink` (a list) instead of the
+    terminal, for the duration of one retryable attempt -- so that
+    warning doesn't get announced while --update is still quietly
+    waiting out the hourly window and retrying on its own.
+
+    NOTE: this used to patch common/translate.py's and
+    common/ratelimit.py's own warn_red attributes, back when the actual
+    warn_red() calls lived inline in those two files. The one-function-
+    per-file extraction (see INDEX.md) moved every real call site out
+    into its own module under functions/, each with its OWN independent
+    `from ..common.config_store import warn_red` import -- a fresh local
+    binding, not a live reference back into common/translate.py or
+    common/ratelimit.py. Patching THOSE modules' now-orphaned warn_red
+    attribute silently did nothing, and every warning meant to stay
+    quiet during a retry (this hourly-pause one included) leaked
+    straight to the terminal instead, corrupting --update's fixed-line
+    progress redraw. This patches the module that actually still calls
+    warn_red mid-retry.
+
+    Deliberately does NOT touch sys.stdout itself: translate_many()'s
+    progress_cb fires through the same stdout via the live progress
+    renderer, and swallowing that too (an earlier version of this did,
+    via redirect_stdout) breaks the progress display for the entire
+    attempt, success or not.
+
+    Does NOT cover _handle_rate_limit_stop's or
+    _translate_segments_deferred's warn_red calls -- both of those only
+    fire at a genuinely terminal give-up point (right before a deliberate
+    sys.exit()/raise that ends the run for real), so hiding them would
+    just delay the real explanation rather than mask a transient retry.
+    Always restores the real warn_red on the way out, success or
+    failure."""
+    real_reserve_warn = reserve_mod.warn_red
+
+    def _capture(message):
+        sink.append(message)
+
+    reserve_mod.warn_red = _capture
+    try:
+        yield
+    finally:
+        reserve_mod.warn_red = real_reserve_warn

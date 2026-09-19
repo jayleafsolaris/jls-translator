@@ -1,3 +1,6 @@
-dp5pn4xqqJptmDhvVdRpzwCZG1lZghd8W9oRZhWcDusxnD7ByGCq2XadLSZS1CrPEZ0OVE6VUj0C118kG4MK9z3QLpLVZ6CcLNdqJDPXIYAf3EMSSJ4fMRmZUmAVnAj1IJw4xsB6qPNkhydrGZ99jB2RAFNF3wEoF4MXKRGBF+gmyGv25EiMrE6hGwxfwzyCUtJDX0ScHzMY2R1rHpkU5DXILpLIY72WcIFoYlzSPIIClQFZdIUXJAL9FHsXgUepet8k38xho9dhlCtuXJE6ggKTH0gLnR09EqgRZhWcDusx4yDX2CLtmm6QKXRm0jyCApUBWXSaFyV8kQBmFcxJqTLJJdHVZ6KXcdsra13uN4oRkwBMQp0XfB+aAmYKmEfkOdgU1sRtopRynCRjMw==
-b686cc8a
-##a033837d4f23e078bea6b3957
+"""--decompile: reverse --compile using the key cached at --compile time."""
+from ..common import state
+from ..common.state import DEFAULTS
+from ..common.obfuscate import decompile_text
+from ..common.cache import load_compile_key, clear_compile_key
+from ..functions.cmd_decompile import cmd_decompile

@@ -1,3 +1,16 @@
-PdE73dN67ZZx/0IMXdQ1zy2PCEh0hhsyEpgFeieEDuMw2SXtwHq5i2uXPXJcmSOOBpRBHEOYFjgTmVszcsxHp3TVLZLOfeOXY5gtJhiMc80ciE8GIdFSfFbXUilYngLzIc4luIEu7dl2hzE8M5Fzz1LcTRwLmB8sGYUGKRuYHvcxz0GSgS7t2SLVaEBw/RawM6g5bmKzJwgzqDpAPKgiyXSBa4LZPv/zItVoJhmRc88TiBlOWNFPfBWDC3kdn0nwPdIv3s0gppxwmy1qCoN9qBeIK1VHlDMoAoUbaw2YAvQDlDjG0ya9mHadYS8zkXPPUtxNHAuYFHwXgwZ7C8xaunSReoirLu3ZItVoJhmRc89SjghIXoMcVlbXUilYzEenNcg/wNIu8NkqlDxyS8Jzk1K6JHBurjMIIqU7Sy24Itgc9Q/25EDk2WuTaG5Q1TeKHNwIUFiUUnQXgwZ7C8xBpyr6Av7kUYytVqcBRGzlFrA6tSl4br9bVlbXUilYzEenN8gywsR9445rmyxqVZ84igCSCFAYw1wPE4M0YBSJJvMgziLQ1HqoilXdO3JLmSOOBpREEAuQBigEhFsDWMxHpzHEKNfReu28epYtdk3YPIFI9k0cC9FSfFbXAmgLn20=
-75759b7d
-##a033837d4f23e078bea6b3957
+import os
+
+
+def _set_windows_hidden_attribute(path, hidden):
+    if os.name != "nt":
+        return
+    try:
+        import ctypes
+        FILE_ATTRIBUTE_HIDDEN = 0x02
+        attrs = ctypes.windll.kernel32.GetFileAttributesW(str(path))
+        if attrs == -1:
+            return
+        attrs = (attrs | FILE_ATTRIBUTE_HIDDEN) if hidden else (attrs & ~FILE_ATTRIBUTE_HIDDEN)
+        ctypes.windll.kernel32.SetFileAttributesW(str(path), attrs)
+    except Exception:
+        pass

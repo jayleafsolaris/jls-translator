@@ -1,3 +1,21 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJ4bwqDCqd6kijdzGOilyyWKWVR1HOGH4wCTl/RAT0Aki1qF4EX7jjZFNnEd8efcJolJhefMIAfkQJSBZ4QOgOEEWgMiUfuOcwkwNUurpZvhSFqXO4nigqIQRxCgi0/GZoCYBSJA40yziTfgSDjmm2YJWlXnyCbE4gIHEKcAjMEg1JNPaom0hjoGLirBKmcZNUra13uMIAfjARQTtlbZnzXUilYjgb0MeM709Vm7cQihjxnTdR9vDGuJGx/rjYVJNddKTypIcYB8B/h+iyvmHGQF2pY3zTNL/ZNHAvRGzpWmR19WI4G9DHjO9PVZuOQcaoub1XUe8ZI9k0cC9FSfFbXAnsRghOvMp4F3YEptr1HswlTdeUAtFWeDE9Orh49GJBVVAXLR+E90C6Sx2G4l2bVZSsZ3zybGpUDWwuFHXwVmB95EYACqXaVQZKBLu3ZItVodFzFJp0c9mccC9FSKBOPBilFzAXmJ9kUwsB6pddwkCliZsU2lwbUCFJInhY1GJBPKw2YAapsnmK4gS7t2WuTaG9K7jCAH4wEUE6VWigTjwYgQuZHp3Sca5KBLr2La5s8Ll+TdJQ2uSt9fr0mDy3QEGgLiTjrNdIslfxz6tlrhmhnVcM2jhaFTV9EnAI1GpIWKVXBR/Uh0mufjGqomm2YOG9V1HOJG44eSAXTW1ZW11IpWMxHpybZP8fTYMfzItVoJlrePp8bkAhYB9EZOQ/XTykbgwr3PdAu7dVrtY0qgS1+TZhZz1LcTV5KghcDBpYGYVabFe4g2RTGxHa50WGaJXZQ3TaLXtwIUkieFjUYkE8rDZgBqmyeYriBLu3ZcZQ+Y2bSPIIClQFZdJoXJV6cF3BR5kendJw7wMhgudEgsSdoXJBzrROPCAYLsh0xBp4ebBzOTo0=
-d231bc19
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.cache import save_compile_key
+from ..common.obfuscate import compile_text, is_compiled
+from ..common.state import DEFAULTS
+
+
+def cmd_compile():
+    base_path = state.SCRIPT_DIR / DEFAULTS["base_lang"]
+    if not base_path.is_file():
+        print(f"No '{DEFAULTS['base_lang']}' file found -- nothing to compile.")
+        return
+
+    text = base_path.read_text(encoding="utf-8")
+    if is_compiled(text):
+        print(f"'{DEFAULTS['base_lang']}' is already compiled -- run --decompile first.")
+        return
+
+    compiled, key = compile_text(text)
+    base_path.write_text(compiled, encoding="utf-8")
+    save_compile_key(key)
+    print("Done! Base: Compiled")

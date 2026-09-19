@@ -1,3 +1,6 @@
-MNktkv5jrI1hnRdlWMI2xx2OBFtCnxMwKYAdexzAR/UxzCfTwmugnGyBYTwzkXPPUpULHESDGzsfmRNlJ5sI9TCSIsHUfr2ccN1hPDORc89S3E0cC4MXKAOFHCkKiRfrNd8u38Rgudd3hThjS5l65VLcTRxCl1IzBJ4VYBaNC9gj0znW+jT8pCycO3NJwTadWtVXNgvRUnxW11IpCokT8ibSa8DEfqGYYZAlY1fFCNVDoUNJW4EXLl7eUiJYngL3ON0o18xro41ZxHJbM5Fzz1KOCEhegxx8BJICZRmPAuox0j+4
-949d413e
-##a033837d4f23e078bea6b3957
+def _match_case(original_word, replacement):
+    if original_word.isupper():
+        return replacement.upper()
+    if original_word[:1].isupper():
+        return replacement[:1].upper() + replacement[1:]
+    return replacement

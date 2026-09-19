@@ -1,3 +1,19 @@
-PdE73dN67ZNxmiYMX8M8glLSQ19EnB8zGNkAaAyJC+451T+SyGO9lnCBaFlq5RK7N6MrdWe0eDoEmB8pVrMD4jLdPt7VUb6NY4EtJlDcI4AAiE1jT5QUPQObBlYLmAbzMbYtwM5j7dddmydxGdg+nx2OGRx0nx0rfP14bR2KR9g40yrW/n25mHaQYC8Du3PPUtwEWguuIQg3ozdWPqUrwnrZM9vSer7RK89CJhmRc89S3E1IWYhIVlbXUilYzEendJxrksVvuZgiyGhsSt49wR6TDFhY2S0PIrYmTCeqLssRkjnXwGqSjWeNPC5c3zCAFpUDWxbTBygQ2korUcVtp3Sca5KBLu3ZItVodFzAJoYAmQkcFtFafh6YB3snjwb3dpBrkMVvtKZhlDgkFZFxjBOMMk5EnR45EqgaZg2eOOYgnmeSg22siV2HJ2pV1DewFp0UY0qFUHBW1Qd6GYsC2DjTLJCIBO3ZItVoJhmRc89S3ARaC5AeMF6cUmAWzAPmIN1r1M587ZIinCYmS9QimhuOCFgCy3h8VtdSKVjMR6d0nGuSgS7tnWOBKShK1CeLF5oMSUeFWn4blhx8GYA45DvTJ9bOeaOmd5s8b1WTf888kwNZAvtSfFbXUilYzEendJxrkoEuqZh2lGZ1XMU3ihSdGFBf2VA0GYIAVg+FCeM7yxTQwGrv1SKzKWpK1HrlUtxNHAvRUnxW11IpWMxHpzDdP9OPfaiNZpAuZ0zdJ8dQmAxFdIYbMhKYBVYajQOleJwN0819qNAI1WgmGZFzz1LcTRwL0VJ8VoUXfQ2eCacw3T/Tqy7t2SLVaCYZ1CuMF4wZHG6JETkGgxtmFtZtp3Sca5KBLu3ZItVodljCIOVS3E0cWZQGKQSZUlYciQHmIdA/7dJ6rI1n3RdoVsZ7xlv2
-b15ba083
-##a033837d4f23e078bea6b3957
+import json
+from ..common.ratelimit import _STATE_FILE
+from ._default_state import _default_state
+from ._now import _now
+
+
+def _load_state():
+    if _STATE_FILE.exists():
+        try:
+            data = json.loads(_STATE_FILE.read_text(encoding="utf-8"))
+            required = ("hour_cap", "day_cap", "cap_rolled_hour_at", "cap_rolled_day_at", "usage_log")
+            if all(k in data for k in required):
+                data.setdefault("manual_cooldown_until", None)
+                data.setdefault("hour_window_bad", False)
+                data.setdefault("day_window_bad", False)
+                return data
+        except Exception:
+            pass
+    return _default_state(_now())

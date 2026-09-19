@@ -1,3 +1,120 @@
-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
-72a5e589
-##a033837d4f23e078bea6b3957
+"""
+Progress tracking (resumable --create/--update/--add/--remove/--delete
+runs), base-file loading, and the various in-place progress renderers
+shared by the mode commands.
+"""
+import hashlib
+import json
+import re
+import sys
+import threading
+import time
+from . import state
+from .state import PACKAGE_DIR, DEFAULTS
+from .lang_io import parse_lang, write_lang, strip_comments_for_output
+class SmoothProgress:
+    """
+    Eases a progress bar's displayed value toward the latest real ("target")
+    value instead of jumping straight to it.
+
+    Real targets only arrive in chunks (once per finished network batch),
+    so between two updates -- while a request is in flight, rate-limited,
+    or cooling down -- the bar would otherwise catch up within
+    catch_up_seconds and then sit dead flat for however long the next
+    batch takes, which reads as "frozen"/laggy even though work is still
+    happening. Once caught up, if no new (higher) target has arrived for
+    stall_creep_after seconds and real work remains, this creeps the shown
+    value forward slowly on its own -- capped at just under one whole
+    percent of this instance's own key_total (floored at 0.9 units so
+    small totals, e.g. a typical --update run's handful of changed keys,
+    behave exactly as before), so it never visually claims a large chunk
+    of real, unfinished work as done. Any real update snaps the ramp back
+    to normal, ceiling-free motion toward the new target.
+
+    That floor matters more than it looks: a caller with a small
+    key_total (--update) needs a small absolute ceiling to stay honest,
+    but a caller composing many per-item SmoothProgress instances into one
+    larger displayed percentage (--create, one instance per language,
+    folded into an overall-run percentage) needs the ceiling to scale with
+    its own key_total -- a flat +0.9 units is a meaningfully large nudge
+    against a total of 10, but is completely invisible against a total in
+    the hundreds once diluted into that outer percentage, and reaches its
+    tiny ceiling in about 6s regardless, then sits dead flat for however
+    much longer the real stall runs. Scaling by key_total keeps both cases
+    honest while keeping both visibly alive for the length of a real stall
+    instead of just its first few seconds.
+    """
+
+    def __init__(self, key_total, render, tick_interval=0.08, catch_up_seconds=1.0,
+                 stall_creep_after=1.2, creep_rate=0.15, creep_ceiling_fraction=0.02):
+        self.key_total = key_total
+        self._render = render
+        self._tick_interval = tick_interval
+        self._ticks_to_catch_up = max(1, round(catch_up_seconds / tick_interval))
+        self._target = 0
+        self._shown = 0.0
+        self._step = 0
+        self._stall_creep_after = stall_creep_after
+        self._creep_rate = creep_rate
+        self._creep_ceiling = max(0.9, key_total * creep_ceiling_fraction)
+        self._last_target_update = time.time()
+        self._lock = threading.Lock()
+        self._stop = threading.Event()
+        self._thread = threading.Thread(target=self._run, daemon=True)
+        self._thread.start()
+
+    def update(self, target):
+        """Called (possibly from multiple worker threads) with the latest known progress."""
+        with self._lock:
+            if target > self._target:
+                self._target = target
+                self._last_target_update = time.time()
+                gap = target - self._shown
+                self._step = gap / self._ticks_to_catch_up
+
+    def _run(self):
+        while not self._stop.is_set():
+            with self._lock:
+                target = self._target
+                shown = self._shown
+                step = self._step
+                stalled_for = time.time() - self._last_target_update
+            if shown < target:
+                shown = min(target, shown + step)
+                with self._lock:
+                    self._shown = shown
+            elif stalled_for > self._stall_creep_after and target < self.key_total:
+                creep_ceiling = target + self._creep_ceiling
+                if shown < creep_ceiling:
+                    shown = min(creep_ceiling, shown + self._creep_rate * self._tick_interval)
+                    with self._lock:
+                        self._shown = shown
+            self._render(shown)
+            self._stop.wait(self._tick_interval)
+
+    def finish(self):
+        """Ease any remaining gap up to 100%, then stop the ticker thread."""
+        self.update(self.key_total)
+        while True:
+            with self._lock:
+                shown = self._shown
+            if shown >= self.key_total:
+                break
+            time.sleep(self._tick_interval)
+        self._stop.set()
+        self._thread.join(timeout=1.0)
+from ..functions._ask_continue import _ask_continue
+from ..functions._confirm_overwrite_saved_task import _confirm_overwrite_saved_task
+from ..functions._convert_base_vars import _convert_base_vars
+from ..functions._human_size import _human_size
+from ..functions._report import _report
+from ..functions._report_applying import _report_applying
+from ..functions._report_finishing import _report_finishing
+from ..functions._report_keys import _report_keys
+from ..functions.base_fingerprint import base_fingerprint
+from ..functions.clear_progress import clear_progress
+from ..functions.format_duration import format_duration
+from ..functions.load_base import load_base
+from ..functions.load_progress import load_progress
+from ..functions.save_progress import save_progress
+from ..functions.sync_en_us_from_base import sync_en_us_from_base

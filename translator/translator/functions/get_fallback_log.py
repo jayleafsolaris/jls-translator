@@ -1,3 +1,8 @@
-Ms4k34Eg45ptmCVpV58nnROSHlBKhRd8H5oCZgqYR9gy3Sfew2+ukl2ZJ2VSnXOwFJ0BUEmQETcpmx1ucuZt4zHaa9XEepKfY5kkZFjSOLAekwoUAst4fFbXUitaziToJMVr3ccuuZFn1WB2S9QlhheLQRxOgwAzBN5SeRmFFfR03i7ayGCp2WWQPFlf0D+DEJ0OV3SSHSkYg1ogVMwB6Ca2a5KBLq6YbpktdEqRJ4cTiE1LSp8GfAKYUnsdnAj1IJw4wsRtpJ9rljsmWMVzmxqZTVlFlVIzENcTKQqZCal2nmm4gS7t2XWcPG4Z7jWOHpAPXUiaLTAZlBkzcsxHp3Sca5KBfKiNd4cmJlXYIJtaowtdR50QPRWcLWUXi06N
-9cb1012a
-##a033837d4f23e078bea6b3957
+from ..common.translate import _fallback_lock, _fallback_log
+
+
+def get_fallback_log():
+    """Copy of the (preview, error) pairs behind get_fallback_count(), for
+    callers that want to report specifics at the end of a run."""
+    with _fallback_lock:
+        return list(_fallback_log)

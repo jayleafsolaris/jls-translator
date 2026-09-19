@@ -1,3 +1,20 @@
-Ms4k34Eg45ptmCVpV58hjgaZAVVGmAZ8H5oCZgqYR9gQ/RLt8kuOtkyxGyoZ7hugJ64yb26yPRIypF4pJ6Em3wv4Cuv+TYypLtUXS3jpDKc9qT9jaLAicFaoP0A2syPGDeMI8/Ei7aZPvAZZcf4GvS2/LGwhlwAzG9dcVhmIDfInyBTRwH7tkG+FJ3RNkQyOFpYYT1+uET0G/RR7F4FHqQvJONPGa5KOa4Egb1eROoICkx9IC64HLxeQF1YPhRPvPdJBuKtqqJ8iqiVnQNM2sACZH1NHnS0/F4cBIRyNE+Z4nCXd1if38yLVaCZQ13OBHYtNEQuVEygXrFBqGZw49TvQJ9fFUaWWd4cXZ02TDs9MwU1jY74nDimkN0o3oiPUbrZrkoEu7dki1T11XNVz0lKjGE9KlhcDAZ4GYRGCT+M1yCqegWCiji7VF0525AGwIbkuc2W1IXV811IpWMxHp3TYKsbAVe+RbYA6WVrQI80v3FAcdJAWNgOEBlYbjRevXpxrkoEu7dki1WgmGdUymxOnT1REhAADFZYCKyXAR/In2S+egWqsjWPbL2NNmXGHHYkfY1yYHDgZgC1rGYhFq3T6Kt7Sa+TVIqoFT3fuG6AnrjJ/aqFefCm6M1EnpCjSBuMI8/EE7dki1WgmGZF65VLcTRwL0VJ8EpYGaCPOBOYk4zndzWKonV2dJ3NL7jKbUKFNAQufHSt811IpWMxHp3TYKsbAVe+RbYA6WU7YPYsdizJeSpVQAVbKUk8ZgBTiXpxrkoFnq9lsmj8mFJE3jgadNh5IkAIDBJgeZR2IOOM1xRTT1SyQ2TzIaFl98AqwIbkuc2W1IWZ811IpWMxHp3TJONfFLvDZXYA7Z17UDJgbiAVVRdkWPQKWXikWgxCrdOMP8/hRnrxBugZCaphZz1LcTRwL0VI4F4MTUlqIBv4L3yrCg1PtxCKqKWJTxCCbLZ8MTAP7UnxW11IpWMxHp3ScL9PVb5bbZpQxWVrQI80v0E1JWJQWcFaTE30ZwgDiIJRp1sB3ko5rmyxpTu4xjhbeQRxtkB4vE95eKSehLskL+Arr/k2MqS7VF0t46QyrM6Uyf2qheHxW11IpWMxHrl6ca5KBLu3ZIpEpcljqcYwTjDJORJ0eORKoFmgBswbzduFrj4Fgoo4I1WgmGZFzz1KYDEhKqlA4F44tfhGCA+gj4ynTxSyQ2T/VDmdVwjbl
-f646bf32
-##a033837d4f23e078bea6b3957
+from ..common.ratelimit import _DAY_SECONDS, _HOUR_SECONDS, _MAX_DAY_CAP, _MAX_HOUR_CAP, _MIN_DAY_CAP, _MIN_HOUR_CAP
+from ._adjust_cap import _adjust_cap
+from ._usage_within import _usage_within
+
+
+def _maybe_reroll_caps(data, now):
+    if now - data["cap_rolled_hour_at"] >= _HOUR_SECONDS:
+        used = _usage_within(data, now, _HOUR_SECONDS)
+        data["hour_cap"] = _adjust_cap(
+            data["hour_cap"], used, data.get("hour_window_bad", False), _MIN_HOUR_CAP, _MAX_HOUR_CAP
+        )
+        data["cap_rolled_hour_at"] = now
+        data["hour_window_bad"] = False
+    if now - data["cap_rolled_day_at"] >= _DAY_SECONDS:
+        used = _usage_within(data, now, _DAY_SECONDS)
+        data["day_cap"] = _adjust_cap(
+            data["day_cap"], used, data.get("day_window_bad", False), _MIN_DAY_CAP, _MAX_DAY_CAP
+        )
+        data["cap_rolled_day_at"] = now
+        data["day_window_bad"] = False

@@ -1,3 +1,50 @@
-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
-a16b8e5f
-##a033837d4f23e078bea6b3957
+from ..common.state import DEFAULTS, LANGUAGES, LANGUAGE_NAMES, PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME
+
+
+def _edit_active_languages_curses(codes, active_set):
+    import curses
+
+    def _run(stdscr):
+        curses.curs_set(0)
+        idx = 0
+        top = 0
+        selected = set(active_set)
+        while True:
+            stdscr.erase()
+            h, w = stdscr.getmaxyx()
+            stdscr.addstr(0, 0, "Active languages", curses.A_BOLD)
+            stdscr.addstr(1, 0, "SPACE toggle  A all/none  ENTER save  Q cancel"[:max(w - 1, 0)])
+            visible = max(h - 4, 1)
+            if idx < top:
+                top = idx
+            if idx >= top + visible:
+                 top = idx - visible + 1
+            for row, code in enumerate(codes[top:top + visible]):
+                real_i = top + row
+                mark = "[x]" if code in selected else "[ ]"
+                name = LANGUAGE_NAMES.get(code, "")
+                line = f"{mark} {code:<8} {name}"
+                attr = curses.A_REVERSE if real_i == idx else curses.A_NORMAL
+                try:
+                    stdscr.addstr(row + 3, 2, line[:max(w - 4, 0)], attr)
+                except curses.error:
+                    pass
+            stdscr.refresh()
+            key = stdscr.getch()
+            if key in (curses.KEY_UP, ord('k'), ord('K')):
+                idx = max(0, idx - 1)
+            elif key in (curses.KEY_DOWN, ord('j'), ord('J')):
+                idx = min(len(codes) - 1, idx + 1)
+            elif key == ord(' '):
+                if codes[idx] in selected:
+                    selected.discard(codes[idx])
+                else:
+                    selected.add(codes[idx])
+            elif key in (ord('a'), ord('A')):
+                selected = set() if len(selected) == len(codes) else set(codes)
+            elif key in (curses.KEY_ENTER, 10, 13):
+                return selected
+            elif key in (ord('q'), ord('Q'), 27):
+                return None
+
+    return curses.wrapper(_run)

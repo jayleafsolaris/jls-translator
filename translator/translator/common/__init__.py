@@ -1,3 +1,1 @@
-dp5p4clvv5xm1TtyWMU2w1LSAV1FllIVWbheKQyeBukn0CrGyGGj1SKWKWVR2D2IXtwMUk/RAi4ZkABsC59K8ybdKNnIYKrZapAkdlzDIMFQ3k82
-78eedd7f
-##a033837d4f23e078bea6b3957
+"""Shared state, .lang I/O, translation, caching, and progress-tracking helpers."""

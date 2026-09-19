@@ -1,3 +1,7 @@
-Ms4k34Eg45ptmCVpV58hjgaZAVVGmAZ8H5oCZgqYR9gQ/RLt8kuOtkyxGwwzuzeKFNwyTFmEHDkpmx1uUIgG8zWQa9zOeeTDCNVoJhmTcc02jgJMWNETMg/XHmYfiwLjdMk408Zr7ZZukS10GcU7jhzcGVRO0RY9H5sLKQ+FCeM7y2ufjC6jlnadIWheu3PPUtwdXViFUm5Cn1JkGZgT4ibPa9TOfO2ca4EgY0uRJ4cX3AVTXoMeJVaYACkcjQ7rLZw4x8wg79sg/2gmGZE3jgadNh5eghM7E6geZh/OOqdpnBDp1X3h2WCoaGBWw3ObAdBNXguYHHwSlgZoI84S9DXbLu3NYarbX9UhYBnfPJhS0U1IWNFOfCmzM1AnvyLEG/IP4fwE
-4a955e97
-##a033837d4f23e078bea6b3957
+from ..common.ratelimit import _DAY_SECONDS
+
+
+def _prune_log(data, now):
+    """Drops any logged usage older than the daily window -- nothing
+    past 24h matters for either the hourly or daily sum."""
+    data["usage_log"] = [[ts, b] for ts, b in data["usage_log"] if now - ts < _DAY_SECONDS]

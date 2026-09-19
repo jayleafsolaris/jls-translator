@@ -1,3 +1,9 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8XtwhfWW2Jx0xsiElWLMy1xD9H/f+TYKsTKEXS3jjGKog0E1jaL4/DD+7N1YzqT7YGf0Z+eRcx/MIkS1gGdI/ihOOMl9Kkho5Xt5IA1jMR6ck3T/agTPtqUO2A0d+9AyrO65NEwu1Nxo3oj5dK7dF5DXfI9f+aKSVZ9cVDBmRc88bmk1MSoUachOPG3oMn0+ubrZrkoEu7dki1ThnTdl9mhyQBFJA2VtWVtdSKVjMR6cm2T/H02DtrXCALQwZkXPPAJkZSVmfUhoXmwFscg==
-98ad6df5
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
+
+
+def clear_cache():
+    path = PACKAGE_DIR / DEFAULTS["cache_file"]
+    if path.exists():
+        path.unlink()
+        return True
+    return False

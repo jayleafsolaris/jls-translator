@@ -1,3 +1,10 @@
-Ms4k34Eg45ptmCVpV580hgaUGF50kAI1Vp4feReeE6cT1T/61GyMiWuwOnRWw3/PLb09dXSjPRMi/RR7F4FHqQvOLsPUa76NIpwldlbDJ88tjghNXpQBKHz9eG0dikfgMcgU1NRioaZ2hy1jEcUhihejHlRK2EhWVtdSKVrORdUxyD7Az33tjWqQaGBM3T/PAJkOSVmCGyoT1wZ7HYldpzWcJ9vSeu2WZNUzdljFO8NSkQJYTt1SKA+HFyVYnw/meJxlnI9z7Z1rljx1F5NxzXjcTRwLlRMoF9dPKSeeAvYh2TjGiSyKvFbXZCZfkyiwM6wkY3m+PQgL2BVgDMMT9THZOJ3aer+cZ6o7bljMccNSjAxOSpwBYQ3VAGwbmRX0PcoukJsu78ggiGEMGZFzzxuaTVhKhRNyEZIGIVqYFfI63yrGxGrv0Dj/aCYZkXPPUtwfXUKCF3wxngZBDY4m9z35OcDOfOXbUJA4aRnFIYoX3ARPC4UdM1abE3sfiUfhO85r04F9pJdlmS0mS9QwmgCPBEpO0RQ5ApQaKVCrDvMcySmS1Xy4l2GUPGNdkTqbW9JPFSHRUnxWhRd9DZ4JpzDdP9OPaaiNKtc8dFzUccNSpzAVIQ==
-9422f2e1
-##a033837d4f23e078bea6b3957
+from ..common.github_api import GitHubApiError, _API_ROOT
+from ._request import _request
+
+
+def get_full_tree(tree_sha):
+    """Returns the full recursive tree: a list of {path, mode, type, sha, ...} dicts."""
+    data = _request("GET", f"{_API_ROOT}/git/trees/{tree_sha}", params={"recursive": "1"})
+    if data.get("truncated"):
+        raise GitHubApiError("Repo tree is too large for a single recursive fetch (GitHub truncated it).")
+    return data.get("tree", [])

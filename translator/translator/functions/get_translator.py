@@ -1,3 +1,5 @@
-Ms4k34FqqJxyqjx0WN8ggxOIAk4LmB8sGYUGKT+DCOA42R/AwGC+lWOBJ3Qzu1mLF5pNW06FLSgElhx6FI0T6CaULN3OaaGcXZYnYlyYaeVS3E0cWZQGKQSZUk4XgwDrMeg50899oZh2mjouSt4mnRGZUB5On1BwVoMTex+JE7oz0yTVzWuSmm2RLS8z
-22b90fb1
-##a033837d4f23e078bea6b3957
+from deep_translator import GoogleTranslator
+
+
+def get_translator(google_code):
+    return GoogleTranslator(source="en", target=google_code)

@@ -1,3 +1,114 @@
-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
-304adfc9
-##a033837d4f23e078bea6b3957
+"""
+Shared runtime constants and mutable state for the jls-translator package.
+
+SCRIPT_DIR and _CODE_COMPILE_KEY are the two pieces of genuinely mutable,
+cross-module state set once from outside this module rather than computed
+here. SCRIPT_DIR is set in cli.main() from the current working directory.
+_CODE_COMPILE_KEY is set at cli.py's IMPORT time (not inside main()) from a
+literal embedded directly in cli.py -- see cli.py for why. Every other
+module that needs either does ``from . import state`` and reads
+``state.SCRIPT_DIR`` / ``state._CODE_COMPILE_KEY`` rather than importing the
+name directly, so the value set from outside is visible everywhere.
+"""
+import hashlib
+import re
+import sys
+from pathlib import Path
+try:
+    from importlib import metadata as importlib_metadata
+except ImportError:
+    importlib_metadata = None
+DEFAULTS = {
+    "base_lang": "base",
+    "cache_file": ".translate_cache.json",
+    "languages_json": "languages.json",
+    "backup_dir": "lang_backups",
+    "progress_file": ".translate_progress.json",
+    "update_temp_file": ".translate_update_temp.json",
+    "version_check_file": ".version_check_cache.json",
+    "section_order_cache": ".section_order.json",
+    "base_backup_file": ".base_backup.txt",
+    "ratelimit_file": ".ratelimit_state.json",
+    "version_check_interval_minutes": 10,
+    "check_cooldown_seconds": 180,
+    "request_delay": 0.15,
+    "max_retries": 5,
+    "workers_min": 1,
+    "workers_max": 100,
+    "workers_throttle_ceiling": 20,
+    "update_limit": 50,
+    "key_progress_delay": 0.0001,
+    "translator_reference_section": "Translator References",
+    "translator_reference_cache_file": ".translator_references.json",
+}
+SCRIPT_DIR = None
+_CODE_COMPILE_KEY = None
+PACKAGE_DIR = Path(__file__).resolve().parent
+GITHUB_OWNER = "jayleafsolaris"
+GITHUB_REPO = "jls-translator"
+GITHUB_BRANCH = "unstable"
+PACKAGE_NAME = "roe_translator"
+_UPDATE_COUNT_MARKER = hashlib.sha256(
+    f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:update_count".encode("utf-8")
+).hexdigest()[:25]
+_COMPILE_KEY_MARKER = hashlib.sha256(
+    f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:compile_key".encode("utf-8")
+).hexdigest()[:25]
+_CODE_COMPILE_KEY_MARKER = hashlib.sha256(
+    f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:code_compile_key".encode("utf-8")
+).hexdigest()[:25]
+_CLI_KEY_TAG = hashlib.sha256(
+    f"{PACKAGE_NAME}:{GITHUB_REPO}:{GITHUB_OWNER}:cli_key_tag".encode("utf-8")
+).hexdigest()[:25]
+_FALLBACK_VERSION = "?.?.?"
+from ..functions.get_script_version import get_script_version
+SCRIPT_VERSION = get_script_version()
+CONFIG_DIR_HIDDEN_NAME = ".config"
+CONFIG_DIR_VISIBLE_NAME = "configuration"
+GB_CONVERT = "__gb_spelling__"
+LANGUAGES = {
+    "en_US": None,
+    "id_ID": "id",
+    "da_DK": "da",
+    "de_DE": "de",
+    "en_GB": GB_CONVERT,
+    "es_ES": "es",
+    "es_MX": "es",
+    "fr_CA": "fr",
+    "fr_FR": "fr",
+    "it_IT": "it",
+    "hu_HU": "hu",
+    "nl_NL": "nl",
+    "nb_NO": "no",
+    "pl_PL": "pl",
+    "pt_BR": "pt",
+    "pt_PT": "pt",
+    "sk_SK": "sk",
+    "fi_FI": "fi",
+    "sv_SE": "sv",
+    "tr_TR": "tr",
+    "cs_CZ": "cs",
+    "el_GR": "el",
+    "bg_BG": "bg",
+    "ru_RU": "ru",
+    "uk_UA": "uk",
+    "ja_JP": "ja",
+    "zh_CN": "zh-CN",
+    "zh_TW": "zh-TW",
+    "ko_KR": "ko",
+}
+LANGUAGE_NAMES = {
+    "en_US": "English (US)", "id_ID": "Indonesian", "da_DK": "Danish", "de_DE": "German",
+    "en_GB": "English (GB)", "es_ES": "Spanish", "es_MX": "Mexican Spanish",
+    "fr_CA": "Canadian French", "fr_FR": "French", "it_IT": "Italian",
+    "hu_HU": "Hungarian", "nl_NL": "Dutch", "nb_NO": "Norwegian (Bokmål)",
+    "pl_PL": "Polish", "pt_BR": "Brazilian Portuguese", "pt_PT": "Portuguese",
+    "sk_SK": "Slovak", "fi_FI": "Finnish", "sv_SE": "Swedish", "tr_TR": "Turkish",
+    "cs_CZ": "Czech", "el_GR": "Greek", "bg_BG": "Bulgarian", "ru_RU": "Russian",
+    "uk_UA": "Ukrainian", "ja_JP": "Japanese", "zh_CN": "Chinese (Simplified)",
+    "zh_TW": "Chinese (Traditional)", "ko_KR": "Korean",
+}
+TOKEN_PATTERN = re.compile(
+    r"__NL__|§.|%\d+\$[a-zA-Z]|%[a-zA-Z]|\{[^{}]+\}|[\uE000-\uF8FF\U000F0000-\U000FFFFD\U00100000-\U0010FFFD]"
+)
+from ..functions._find_pyproject_version import _find_pyproject_version

@@ -1,3 +1,83 @@
-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
-2cfde334
-##a033837d4f23e078bea6b3957
+from ..common import debug_log
+from ..common.config_store import get_request_delay, warn_red
+import time
+from ..common.ratelimit import RateLimitExceededError, _DAY_SECONDS, _HOUR_SECONDS, _LOCK
+from ._adaptive_cooldown import _adaptive_cooldown
+from ._format_secs import _format_secs
+from ._load_state import _load_state
+from ._maybe_reroll_caps import _maybe_reroll_caps
+from ._next_reset_epoch import _next_reset_epoch
+from ._now import _now
+from ._prune_log import _prune_log
+from ._save_state import _save_state
+from ._usage_within import _usage_within
+
+
+def reserve(num_bytes):
+    """
+    Call right before sending a request to Google Translate, with the
+    UTF-8 byte size of the outgoing text.
+
+    - Blocks immediately if a manual cooldown (--usage --24hr) is active.
+    - Raises RateLimitExceededError if this request would exceed the
+      daily cap.
+    - Sleeps until the hourly window clears since your most recent
+      request if this request would exceed the hourly cap (daily budget
+      permitting).
+    - Otherwise applies the adaptive cooldown and logs the usage.
+
+    Thread-safe -- safe to call concurrently from translate_many's
+    worker threads.
+    """
+    base_delay = get_request_delay()
+
+    while True:
+        cooldown = None
+        wait_secs = None
+
+        with _LOCK:
+            now = _now()
+            data = _load_state()
+            _prune_log(data, now)
+            _maybe_reroll_caps(data, now)
+
+            cooldown_until = data.get("manual_cooldown_until")
+            if cooldown_until and now < cooldown_until:
+                _save_state(data)
+                raise RateLimitExceededError(
+                    f"Manual cooldown active. Resets in {_format_secs(cooldown_until - now)}."
+                )
+
+            day_used = _usage_within(data, now, _DAY_SECONDS)
+            hour_used = _usage_within(data, now, _HOUR_SECONDS)
+
+            if day_used + num_bytes > data["day_cap"]:
+                _save_state(data)
+                reset_epoch = _next_reset_epoch(data, now, _DAY_SECONDS)
+                raise RateLimitExceededError(
+                    f"Daily translation usage limit reached. Resets in {_format_secs(reset_epoch - now)}."
+                )
+
+            if hour_used + num_bytes > data["hour_cap"]:
+                reset_epoch = _next_reset_epoch(data, now, _HOUR_SECONDS)
+                wait_secs = max(1.0, reset_epoch - now)
+                _save_state(data)
+            else:
+                cooldown = _adaptive_cooldown(hour_used, day_used, data["hour_cap"], data["day_cap"], base_delay)
+                data["usage_log"].append([now, num_bytes])
+                _save_state(data)
+
+        if wait_secs is not None:
+            warn_red(
+                f"Hourly translation usage limit reached -- pausing "
+                f"{_format_secs(wait_secs)} for the hourly window to clear."
+            )
+            debug_log.log(f"hourly cap hit -- sleeping {wait_secs:.0f}s (not stuck, this is deliberate)")
+            time.sleep(min(wait_secs, _HOUR_SECONDS))
+            debug_log.log("hourly pause finished -- rechecking")
+            continue
+
+        if cooldown and cooldown > 0:
+            debug_log.log(f"adaptive cooldown -- sleeping {cooldown:.1f}s")
+            time.sleep(cooldown)
+        return

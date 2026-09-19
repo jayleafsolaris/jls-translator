@@ -1,3 +1,7 @@
-dp5pn4x9vZVrgXImTcQhgVKeDE9O0RsyAphSaFiOBvQxk2vUzmKpnHDVIG9cwzKdEZQUHEaYAC4ZhRtnH8wC8THOMpLJa6yda5svJl3UI5sa0k8eCfsULhmaUidWjwjqOdMlkshjvZZwgWh1TdAniniaH1NG0VxyFZgfZBeCSfQg3T/XgWegiW2HPCZ99BWuJ7A5byGXADMb11wnG4MK6jvSZcHEbbmQbZs7JlDcI4AAiE0UIdFSfFaHE3sLiTjzJtkunoFopJdmqixzSd06jBOICGNYmBAwH5kVelTMEPU9yC7t1XyonC7VO2dP1AycF58ZVUSfLTgXgxMlcsVt4SbTJpKPIKuMbJY8b1bfIMERkQljWIEeNQLXG2QIgxXzdN8m1v59vZVrgUI=
-6a22cd55
-##a033837d4f23e078bea6b3957
+"""--split: turn base into a base/ folder hierarchy mirroring every heading depth."""
+from ..common import state
+from ..common.state import DEFAULTS
+from ..common.sections import (
+    parse_tree, find_duplicate_siblings, write_tree, save_section_data,
+)
+from ..functions.cmd_split import cmd_split

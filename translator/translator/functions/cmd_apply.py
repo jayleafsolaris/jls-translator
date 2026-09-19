@@ -1,3 +1,142 @@
-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
-b881fc12
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.cache import (
+    load_cache, save_cache, load_translator_reference_cache, get_active_language_codes,
+)
+from ..common.lang_io import parse_lang, write_lang, entries_dict, translator_reference_keys, strip_translator_references
+from ..common.progress import load_base, format_duration, SmoothProgress, _report_applying
+from ..common.state import LANGUAGES
+from ..common.text_protect import (
+    resolve_key_references, tokens_only_diff, apply_token_patch,
+    punctuation_only_diff, apply_punctuation_patch,
+)
+import time
+
+
+def cmd_apply(show_summary=False):
+    start_run_time = time.time()
+    base_lines = load_base()
+    base_values = entries_dict(base_lines)
+    cache = load_cache()
+    ref_keys = translator_reference_keys(base_lines)
+    translator_ref_cache = load_translator_reference_cache()
+
+    active_codes = set(get_active_language_codes())
+    existing_codes = [
+        code for code in LANGUAGES
+        if code in active_codes and (state.SCRIPT_DIR / f"{code}.lang").exists()
+    ]
+    if not existing_codes:
+        print("No active .lang files to apply cross-references to. Run --create or --add first, "
+              "or check --config --languages if you expected some here.")
+        return
+
+    # Resolve everything in memory first -- cheap, local-only -- before
+    # committing to any progress display or file write. Lets this report
+    # "nothing to apply" outright when there's genuinely nothing pending,
+    # instead of always redrawing a progress bar and rewriting every file.
+    per_lang = {}
+    keys_to_recache = set()
+    for code in existing_codes:
+        target_path = state.SCRIPT_DIR / f"{code}.lang"
+        target_lines = parse_lang(target_path)
+        entries = [line for line in target_lines if line[0] == "entry"]
+        current_values = {key: val for _, key, val, _ in entries}
+        if ref_keys:
+            current_values.update(translator_ref_cache.get(code, {}))
+        resolved_values = resolve_key_references(current_values)
+
+        changed_count = 0
+        new_entries = []
+        has_leaked_ref_entry = False
+        for kind, key, val, inline_comment in entries:
+            if ref_keys and key in ref_keys:
+                has_leaked_ref_entry = True
+
+            new_val = resolved_values.get(key, val)
+
+            # A key --update deferred because its base text changed by
+            # only a token (see functions/cmd_update.py's
+            # token_only_changed_keys) gets that patch applied here
+            # instead, entirely locally -- it never goes through Google
+            # Translate for this.
+            # Same idea, but for a base change limited to leading/trailing
+            # punctuation (see functions/cmd_update.py's
+            # punct_only_changed_keys) -- applied here too, entirely
+            # locally, never through Google Translate. Only checked when
+            # the token patch above didn't already claim this key, since
+            # a key can't have been deferred for both reasons at once.
+            if val.strip() and key in base_values and key in cache and cache[key] != base_values[key]:
+                new_tokens = tokens_only_diff(cache[key], base_values[key])
+                if new_tokens is not None:
+                    patched = apply_token_patch(new_val, new_tokens)
+                    if patched is not None:
+                        new_val = patched
+                        keys_to_recache.add(key)
+                else:
+                    punct_diff = punctuation_only_diff(cache[key], base_values[key])
+                    if punct_diff is not None:
+                        old_lead, old_trail, new_lead, new_trail = punct_diff
+                        patched = apply_punctuation_patch(new_val, old_lead, old_trail, new_lead, new_trail)
+                        if patched is not None:
+                            new_val = patched
+                            keys_to_recache.add(key)
+
+            if new_val != val:
+                changed_count += 1
+            new_entries.append(("entry", key, new_val, inline_comment))
+
+        per_lang[code] = (target_path, target_lines, new_entries, changed_count, has_leaked_ref_entry)
+
+    total_changed = sum(changed for _, _, _, changed, _ in per_lang.values())
+    needs_write = any(changed or leaked for _, _, _, changed, leaked in per_lang.values())
+    if not needs_write:
+        print("Nothing to apply — no unresolved cross-references or pending token changes found "
+              "in any active .lang file.")
+        return
+
+    total = len(existing_codes)
+    smoother = SmoothProgress(
+        total,
+        lambda done, _total=total: _report_applying(done, _total),
+        catch_up_seconds=1.5,
+    )
+
+    summary = []
+    for i, code in enumerate(existing_codes, start=1):
+        target_path, target_lines, new_entries, changed_count, has_leaked_ref_entry = per_lang[code]
+
+        if changed_count or has_leaked_ref_entry:
+            out_lines = []
+            e_idx = 0
+            for line in target_lines:
+                if line[0] != "entry":
+                    out_lines.append(line)
+                else:
+                    out_lines.append(new_entries[e_idx])
+                    e_idx += 1
+            out_lines = strip_translator_references(out_lines, ref_keys)
+            write_lang(target_path, out_lines)
+
+        summary.append((code, changed_count))
+        smoother.update(i)
+    smoother.finish()
+    print()
+
+    if keys_to_recache:
+        # The token patch has now actually been written for every
+        # language above -- advance the cache for just these keys so
+        # --update stops re-deferring them on every future run.
+        new_cache = dict(cache)
+        for key in keys_to_recache:
+            new_cache[key] = base_values[key]
+        save_cache(new_cache)
+
+    total_duration = time.time() - start_run_time
+    if show_summary:
+        print(f"\nApply complete in {format_duration(total_duration)}:")
+        for code, changed in summary:
+            print(f"  {code}.lang: {changed} key(s) updated")
+    else:
+        each = total_changed // len(summary) if summary else 0
+        print(f"\nApplied {total_changed} key(s) across {len(summary)} language(s) "
+              f"({each} each) in {format_duration(total_duration)}.")

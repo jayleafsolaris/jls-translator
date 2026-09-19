@@ -1,3 +1,39 @@
-Ms4k34Eg45ptmCVpV58hjgaZAVVGmAZ8H5oCZgqYR/Qg3T/H0lG/nHKaOnIVkSCKBqMAXUWEEzAplB1mFIgI8Dq2It/RYb+NIoYxdTPYPp8djhkcX5gfOXyRAGYVzEnYIc8q1cRRoZBskBd2WNghnFKVAExEgwZ8KYIBaB+JOOs90i7t0W+ki3H/Qgxd1DXPLZ8AWHSEAT0Rki1lEZoCrznVJcfVa77QOP9oJhmRcc1QrghYWZAFL1aDGmxYmRTmM9lrwMR+oot21SFoGcE/jhGZTVldlAAlVsZCORWfR+E7zmvSzGejjHaQO2YzkXPPUpEEUl6FFy9a1wFmWJgP4nTOLsHEeuKabZokYlbGPc8RkxhSX5UdKxiEUn8Rnw7lOMVrxshtptlmmj9oGdg9nAaZDFgh0VJ8VpgUKQqJFvI9ziLcxi6/nHKQKXJc1XPCX4keXUyUUj8Xmx56Vswk8ybQYPGBa6OdcdUhchnUMp0ehU1dRZVSPxqSE2cUlW2ndJxrms9h7Y1wlCtjW9AwhFvcHlVFkhd8Ap8beliFFKc1nDvT0n2kj2fVPm9cxn/PHJMZHErRACkY1xtnWJwV6DPOLsHSIO/bIP9oJhmROolSkQRSXoUXL1bLTylI1m2ndJxrkoEu7YlwnCZyEZN+wh6VG1kLnxc5EoRSaFicCPQ9yCLExC6jjG+XLXQZ3jXPH5UDSV+UAXBWklxuVsxKqiHPKtXELuDUbpw+YxmDccZ43E0cC9FSfFaFF30NngmNXpxrkoFquItjgSFpV5Fuzx+VA0lflAF8XNdEOVbcbad0nGvGyG2mpmubPGNLxzKDUsFNDAXAeHxW11J6DI0V83SBa8bIY6jXdpwlYxGYWc9S3E1aQoMBKFbKUl0KmQKNdJxrks1vvo1dmSFoXO4wgAeSGRwW0UJWfNdSKViYFf5utmuSgS7t2SLVP25Q3TbPBpUAWQWFGzET31spVcwU8zXOP5KdLqmMcJQ8b1bfaeVS3E0cC9FSfFbXUikWgxCnaZw/28xr441rmC0uELtzz1LcTRwL0VJ8VtcAbAiDFfN0gWvB1W+5jHGqOmNJ3iGbWtVnHAvRUnxW11IpWMxH6z3SLsGBM+2iZNcUNgqCCKRS3BZQSpMXMAvNUnIOjQvyMcFpksdhv9lulCpjVZ1zmROQGFkLmBx8KYIBaB+JOOs90i7t0W+ki3HdOmNJ3iGbXtwDU1zYL1Z811IpWMxHp3Sca5KBbbiLcZo6WUzBc9JS3k8cQpdSOh+FAX1YiQv0MZwtkP0+/spZjiRnSsUMgxuSCGNIngcyAoo0K3LMR6d0nGuSgS7t2SKTIXRKxXPSUroMUFiUeHxW11IpWMxHp3Sca97AfbmmbpwmY2bSPJociE0BC50XMl6bG2cdn06NXpxrkoEu7dki1WgmGcIqnFyPGVhEhAZyAYUbfR3EBPImzyTA/nu92SnValpXk32FHZUDFEeYHDkF3lIiWM476XaVQZKBLu3ZItVoJhmRc5wLj0NPX5UdKQLZFGUNnw+vfbZBkoEu7dki1WgmGZFzmxuRCBJYnRc5Bt8GYBuHOO46yC7A12+h0AjVaCYZ1CuMF4wZHGCUCz4ZlgBtMYIT4ibOPsLVNMfZItVoJhmRc58Tjx42IdFSfFaHAGAWmE+uXg==
-d384cc98
-##a033837d4f23e078bea6b3957
+from ..common.ratelimit import status_report, set_manual_cooldown
+import sys
+import time
+from ._usage_line_pairs import _usage_line_pairs
+
+
+def _cmd_usage_live(minutes):
+    """Redraws the usage report in place every 100ms for `minutes`
+    minutes, so the reset/cooldown countdowns visibly tick down instead
+    of requiring repeated --usage calls. Ctrl+C ends it early and cleanly
+    (no traceback) since this is a passive view, not a run in progress."""
+    if minutes <= 0:
+        print("--live needs a positive number of minutes, e.g. --usage --live 2")
+        return
+
+    duration = minutes * 60.0
+    tick_interval = 0.1
+    start = time.time()
+    first = True
+    last_line_count = 0
+
+    try:
+        while time.time() - start < duration:
+            now = time.time()
+            report = status_report()
+            lines = [f"\033[K  {label}: {value}" for label, value in _usage_line_pairs(report, now)]
+
+            cursor_up = "" if first else f"\033[{last_line_count}F"
+            first = False
+            last_line_count = len(lines)
+
+            sys.stdout.write(cursor_up + "\n".join(lines) + "\n")
+            sys.stdout.flush()
+
+            time.sleep(tick_interval)
+    except KeyboardInterrupt:
+        pass
+
+    print()

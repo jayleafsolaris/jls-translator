@@ -1,3 +1,8 @@
-Ms4k34Eg45ptmCVpV58nnROSHlBKhRd8H5oCZgqYR9gy3Sfew2+ukl2WJ3NXxX/PLZoMUEeTEz8dqB5mG4dLpwvaKt7NbKyaaaokaV67WeUWmQscdIMXPxmFFlYejQvrNt0o2Yl+v5x0nC1xFZE2nQDVVzYL0VJ8EZsdaxmAR9gy3Sfew2+ukl2WJ3NXxVnPUtxNS0KFGnwpkRNlFI4G5D/jJ93CZffzItVoJhmRc88tmgxQR5MTPx2oEWYNghOnf4Frg6su7dki1WgmGe41jh6QD11Imi0wGZBcaAicAukwlGPC02u7kGeCZCZcwyHGW/Y=
-6744e40b
-##a033837d4f23e078bea6b3957
+from ..common.translate import _fallback_count, _fallback_lock, _fallback_log
+
+
+def _record_fallback(preview, err):
+    global _fallback_count
+    with _fallback_lock:
+        _fallback_count += 1
+        _fallback_log.append((preview, err))

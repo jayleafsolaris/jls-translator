@@ -1,3 +1,9 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSXTenIskL7Arm9Uuftwj/QmJc13OwAo4CSE6SBnQCkgp9UdZtp3Sca8bOZaiXcdV1JmLsWc9S3E1YTpdSLhOHHiEVxV2NdJxrkoEu7dl2miNjV8J9jgKMCFJP2R9yEYUdfAjEV659tmuSgS7t2SLVOmNNxCGBUppPfGuhOicakhwhDIMM4jrPYpKMLvyEQrVqDBmRc88AmRlJWZ9SCDm8N0cnvCbTAPkZ/I99uJsqhy12VZ1zmxeEGRUH0QYzHZIcenI=
-2a5e3fd6
-##a033837d4f23e078bea6b3957
+from ..common.state import TOKEN_PATTERN
+
+
+def _protect(text):
+    tokens = []
+    def repl(m):
+        tokens.append(m.group(0))
+        return f"@@PH{len(tokens) - 1}@@"
+    return TOKEN_PATTERN.sub(repl, text), tokens

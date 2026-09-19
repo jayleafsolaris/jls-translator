@@ -1,3 +1,6 @@
-PdE73dN67ZZx/y50VtxzwVyRAlhOglwpBpAAaByJR+45zCTA1S6Sq0ekHU9r9BewIr0ud2q2NwMwvj5MK+ZtjTDZLZL+Y6SKcZwmYWbDNp4HlR9ZT64UNRqSASEIjQTsNdsu7dNhoo0rz0ImGZFznReIGE5F0Sk6VpEde1iKR+46nBTg5F+YsFCwDFlp8BCkM7soY224Phkl1xtvWIII83TTOJzRb7mRLJw7YFDdNscdj0NMSoUachyYG2dQnAbkP90s1/58opZ22WhgEJgO5Q==
-1ff4e559
-##a033837d4f23e078bea6b3957
+import os
+from ..modes.upgrade import _REQUIRED_PACKAGE_FILES
+
+
+def _missing_required_files(package_root):
+    return [f for f in _REQUIRED_PACKAGE_FILES if not os.path.isfile(os.path.join(package_root, f))]

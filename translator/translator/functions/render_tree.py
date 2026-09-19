@@ -1,3 +1,31 @@
-Ms4k34Eg45ptmCVpV58gihGIBFNFglI1G4cdewzMLMIN7xT06EKIt0O4DQxfwzyCUtIyTk6SHTIFgwB8G5g45DvSP9fPeu2Qb4UndE2RDJ0XnwJSWIUAKRWDLWoXghPiOshBuKtqqJ8ihy1oXdQhsAaOCFkDhQA5E9tSaxmfAtgw1TmegWOsi2mQOnUE/zyBF9VXNgvRUnxU1VADWMxHpx3SPdfTfajZbZNocUvYJ4otiB9ZTtFZfAWWBGwnnwLkINUk3P5qrI1jz2hhUMc2gVKIBVkLkhM/HpIWKQyeAuJenGuSgSahkHGBaGlfkT2AFplAWEKSBi9a1wFsHcw46TvYLu3VYZKda5Y8LxWRJ4cX3A9dWJRdfBCYHm0dnkfzPNkyktZrv5wI1WgmGcYhhgaICFILhBw4E4VeKRmCA6cg1C6Swm+ukWeRaGtYwziKANwBVUWUAXBWhRdoC58C6jbQLsGBbKyKZ9I7Jl/EP4N43E0cC4UXJALXXyRYjgvmOtdr3shgqIoihy11Td4hihbcBFILgR49FZJeKRWNFewxzmveyGCo0XHcaHRc0COfF5IJWU/REyh811IpWJgP4nTKLsDYLqiXZttCJhmRc81Q3mccC9FSLBeFBnpY0UfcCbZBkoEu7Z1nk2hZTtA/hFqSAlhOrhY1FYNeKRyFFdgk3T/aiDTH2SLVaCYZkXOfE44ZTwWQAiwTmRYhWs9Fp36cJd3Fa5Kda5Y8XRvdNpkXkE9hC9pSflbVUiJYggjjMeMv28J6lttslCVjG+xzxFLeMVIJ2Hh8VtdSKVjMR+wxxTjtx2ehnCLIaGJQwwyfE4gFHATRORkvpC1PMaAiyRXxDriBLu3ZItVoJlLUKrAGmRVIC8xSNxOOAVYehQvies4u08VRuZx6gWBjV9I8ixuSCgEJhAY6W89QIFiFAac/2TLB/miklWfbLX5QwiecWtVNWUeCF3xU1XgpWMxHp3Sca8LAfLmKLJQ4dlzfN8ctjghfRJ8BKASCEX0njwjpINklxollqIBdgS1+TZ1zgR2YCGNPmBEoWJAXfVDOBes10iDBgyLtol/cYS8zkXPPUtxNHAuXHS5WlBpgFIhH7jqcJd3Fa5Kda5Y8XRvSO4YemB9ZRdMvZnzXUilYzEendJxrkoFRuphunmBlUdg/i17cCVVZrgI9Ap9SJliPD+442BCQx2GhnWeHalsQu1nPUtxNWkSDUjIZkxdWHIUE83TVJZLVfKicOP9oJhmRc89S3DJLSp0ZdBiYFmwniA7kIJBr0MB9qKZmnDomFpE9gBaZMlhCkgYHVJEdZRyJFaUJlUG4gS7t2WuTaGtYwziKAI9XNgvRUnxW11IpEYpH9zXOP8GBb6OdIpsnchnBMp0GjzYRGqxcORiTAX4RmA+vduAlkIg0x9ki1WgmGZFzz1LcTUxKgwYvWJYCeR2CA6924CWQiATt2SLVaCYZkSOOAIgeEk6JBjkYk1pkGZ4M4ibPYrirLu3ZIoctckzDPc9Q3kNWRJgcdAaWAH0LxW0=
-334c6c80
-##a033837d4f23e078bea6b3957
+from ..common.sections import KEYS_FILENAME
+from ._reconstruct_content import _reconstruct_content
+
+
+def render_tree(tree, base_dir, markers=None):
+    """
+    Inverse of write_tree + save_section_data: given the cached tree
+    (list of node-dicts, see _node_to_dict), the base/ folder they were
+    written under, and the cached marker lines, reassembles base's full
+    text -- blank lines restored in place, marker line(s) reappended at
+    the very end.
+    """
+    parts = []
+
+    def _walk(node_dict, dir_path):
+        parts.append("#" * node_dict["level"] + " " + node_dict["name"] + "\n")
+        keys_file = dir_path / KEYS_FILENAME
+        key_text = keys_file.read_text(encoding="utf-8") if keys_file.exists() else ""
+        parts.append(_reconstruct_content(key_text, node_dict.get("blanks", [])))
+        for child in node_dict["children"]:
+            _walk(child, dir_path / child["folder"])
+
+    for node_dict in tree:
+        _walk(node_dict, base_dir / node_dict["folder"])
+
+    if markers:
+        if parts and not parts[-1].endswith("\n"):
+            parts.append("\n")
+        parts.extend(markers)
+
+    return "".join(parts)

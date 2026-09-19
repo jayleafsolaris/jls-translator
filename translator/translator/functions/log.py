@@ -1,3 +1,32 @@
-PdE73dN67ZNxmiYMUNwjgACITUhDgxc9Ep4cbnKFCvc7zj+S1WegnAiTOmlUkX3BEZMAUUSfXDgTlQduJ4AI4HTVJsLOfLnZXZAmZ1vdNote3DJZRYUANROEXikngAjkP7YtwM5j7ddmkCpzXu4/gBWjHV1fmVI1G4cdewzMA+I2ySztzWGqpnKUPG4zu1mLF5pNUESWWjEThAFoH4lOvV6ca5KBLO/bCNVoJhnlOoIXjxldRoEXOFaTF2sNi0frPdIunIFAotRthTsmEd49ilKeAlNHlBMyVpQabBuHTqch0ifX0n3t1C+RLWRM1lnPUtxNS0qCUiwXhAFsHMwT7z3Pa8DUYOPZUochaE3Cc4YfkQhYQpAGORqOUn4RmA+nNdJr19lvro0izyBuA9w+1QGPVzYL0VJ8Ap4fbAuYBuoknCrcxS6siXKQJmJKkSeAUqMyWE6TBztbmx1uVoYU6DqcOdvGZrnZY4Ipfxmcfs8cmRtZWdEaORqTeClYzEfuOpwm18xhv4AimiZqQJEmgQaVARxfmRd8E5kWJVifDuk32WvTgWi/lniQJiZLxD3PH50UHEWUBDkE1wBsGY8PjXSca5KDeqWcIpAmYhufWc9S3E0eCdN4fFbXUmAezAnoIJwU189vr5VnkXIMGZFzz1LcTRxZlAYpBJl4A1jMR6c60zySnC65kG+QZnJQ3DbHW/ZNHAvRBi9WylJ9EYECqSfIOdTVZ6CcKtdtTgOUHtVXr08QC4UbMRPZHmYbjQvzPdEums9hutAr/2gmGZEnhwCZDFh0nxMxE9dPKQyEFeI12CLcxiCujHCHLWhN7ieHAJkMWAPYXDIXmhcDcsxHp3TMOdvPeuWfIM8zckrMac8phxlUWZQTOCmZE2QdkTqnL9EuwdJvqpx/12QmX90mnBrBOU5elFtWfNdSKVibDvM8nBTezm2mwwjVaCYZkXPPUqMIUl+DGzkF2RN5CIkJ43zHacbIY6jbONU8dRWRcYoCkw5UCctSMhmAXilamA/1Md0vkJsuuZFwkCliZt8yghfQTR5GlAEvF5AXK0LMCuInzyrVxHPk8yLVaCYZkXPPF5IZTkKUAQMFmRN5C4QI83SBa97IfbnRXZAmckvYNpxb9mccC9FSKASOSANYzEendJxrksVrr4xlqiRpXu4jjgaURRUFhgA1ApItfR2UE68+zyTcj2q4lHKGYGNXxSGGF48yT0WQAi8emAYlWIUJ4zHSP4+TJ+HZZ5sraV3YPYhP3hhITdxKfl/9UilYzAL/N9k7xoFLtZpnhTxvVt9p5VLcTRwL0VJ8BpYBenI=
-eefdba6a
-##a033837d4f23e078bea6b3957
+import json
+import threading
+import time
+from ..common.debug_log import _enabled, _entries, _lock
+from .debug_log_path import debug_log_path
+
+
+def log(message):
+    """
+    Timestamped debug line. No-ops (one boolean check) unless --debug
+    was passed this run. Prints immediately with an exact :hh:mm:ss:
+    timestamp and appends to __debug-log.json right away -- never held
+    in memory only until the end, since a frozen run may never reach
+    "the end".
+    """
+    if not _enabled:
+        return
+
+    now = time.time()
+    ts = time.strftime("%H:%M:%S", time.localtime(now))
+    thread_name = threading.current_thread().name
+
+    print(f":{ts}: [{thread_name}] {message}", flush=True)
+
+    with _lock:
+        _entries.append({"time": ts, "epoch": now, "thread": thread_name, "message": message})
+        entries_snapshot = list(_entries)
+
+    try:
+        debug_log_path().write_text(json.dumps(entries_snapshot, indent=2), encoding="utf-8")
+    except Exception:
+        pass

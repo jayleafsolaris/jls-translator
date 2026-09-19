@@ -1,3 +1,6 @@
-dp5pn4x6opJnm3ImWNU3zx2OTU5OnB0qE9cGYR3MIO4g9D7QgX6oi3GaJmdVkTKMEZkeTwuFHTcTmVJ8C4kDpzbFa5+MfriKatplK0nEP4Nc3k8eIZcAMxvXXCcbgwrqO9Jl1ch6pYxgqil2UJE6ggKTH0gLlhcoKYMdYh2CS6cn2T/t1WGmnGzZaHRc3DyZF6MZU0CUHFYQhR1kWMJJ4SHSKMbIYaOKLKolZ0rac4YfjAJOX9EtMReEGQMengjqdJJl1NRgro1rmiZ1F9I+iy2OCFFEhxcDApgZbBbMDuok0znGgW2gnV2HLWtWxzawBpMGWUX7FC4ZmlInVooS6TfIIt3PfeOab5EXdVzFDJsdlwhSC5gfLBmFBikbgQPYJ9k/7dVhppxs/y50VtxzwVyaGFJIhRszGIRcahWIOPQ80zzt1WGmnGzVIWtJ3iGbUp8AWHSCGjMBqAZmE4kJjQ==
-be167b61
-##a033837d4f23e078bea6b3957
+"""--token: add or remove the GitHub personal access token used by --push/--pull."""
+from ..common.github_api import get_token, set_token, remove_token
+from ..functions._mask import _mask
+from ..functions.cmd_remove_token import cmd_remove_token
+from ..functions.cmd_set_token import cmd_set_token
+from ..functions.cmd_show_token import cmd_show_token

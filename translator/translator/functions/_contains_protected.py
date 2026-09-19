@@ -1,3 +1,10 @@
-PdE73dN67ZZx/0IMXdQ1zy2fAlJfkBsyBagCexeYAuQg2S+axWe/pnKUPG4VkSOdHYgIX1+UFnVM/VIpWMxFpXboOcfELqSfIpEhdGbBMpsa3A5TRYUTNRiEUmhYnBXoINkoxsRq4JdjmC1iGdc6gxfTC1NHlRcuVpYccA+EAvUxnCnXzWG62WuBZiQbk1nPUtxNWkSDUjgfhQJoDIRLpzDVOdzAY6iKLtUub1XUPY4fmR4cQp9SMwXZBWgUh0/jPc4UwsB6pdA4/2gmGZFzz1LcC1NZ0Rw9G5JSYBbMA+4m0irfxH3t0iKTIWpc3zKCF49XNgvRUnxW11IpWMxHpz3aa9zAY6jZa5todkveJ4oRiAhYEftSfFbXUilYzEendJxrkoEuv5x2gDpoGeUhmhf2TRwL0QA5AoIAZ1iqBusn2UE=
-9ad5ecca
-##a033837d4f23e078bea6b3957
+import os
+
+
+def _contains_protected(dir_path, protected):
+    """True if dir_path contains a protected-named file/folder anywhere below it."""
+    for dirpath, dirnames, filenames in os.walk(dir_path):
+        for name in dirnames + filenames:
+            if name in protected:
+                return True
+    return False

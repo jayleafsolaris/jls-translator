@@ -1,3 +1,10 @@
-dp5pn4x7vphlkHImStk8mFKfGE5ZlBwoVoMAaBafC+Yg1STcgXu+mGWQaGde0DqBAYhNSEOUUjQZggBlAcMD5j3QMpLCb72KLv8paF2RfsIRkwJQT54FMkzXH2gWmQbrOMVr1M58rpwilGhlVt4/ix2LAxxEn1IoGYdSZh7ME+8x0WWQgyzHkG+FJ3RNkSCWAfYEUVueAChWgxtkHeYB9TvRa5yPbaKUb5omKEvQJ4oelQBVX9EbMQaYAH1YnxPmIMk47dNrvZZwgWQmStQnsB+dA0lKnS0/GZgebRebCY0yziTfgSDjn3ebK3JQ3j2cXKMOUESSGXwfmgJmCphH2DfQJNHKBKuLbZhoKBfXJoERiARTRYJcAxWaFlYNnwbgMeMn29dr7ZBvhSd0TZEMjB+YMklYkBU5KZsbfx3mAfU70Wucj2i4l2GBIWlXwn2wAJkBXV+YBDlWnh95F54TpwvOLt7AeqSPZ/8udFbcc8FcmhhSSIUbMxiEXFYNnwbgMeMn289rkoljnDp1Gdg+nx2OGRx0hAE9EZItZRGCAtgk3SLA0gSri22YaCgX1yaBEYgEU0WCXD8bky18C40A4nTVJsLOfLnZYZgsWUzCMogX9g==
-e770ad18
-##a033837d4f23e078bea6b3957
+"""--usage: show current translation usage against the hourly/daily caps,
+and --cooldown: manually force a cooldown on top of them."""
+import sys
+import time
+from ..common.ratelimit import status_report, set_manual_cooldown
+from ..functions._clock import _clock
+from ..functions._cmd_usage_live import _cmd_usage_live
+from ..functions._relative import _relative
+from ..functions._usage_line_pairs import _usage_line_pairs
+from ..functions.cmd_usage import cmd_usage

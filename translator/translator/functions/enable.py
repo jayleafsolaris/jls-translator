@@ -1,3 +1,7 @@
-Ms4k34Eg45ptmCVpV583ihCJCmNHnhV8H5oCZgqYR9gx0irQzWup8wj/LGNfkTaBE54BWQPYSFZW11IpWs5FxDXQJ9fFLquLbZhoZVXYfZ8L3BpUTp9ScVuTF2sNi0fuJ5wo3cxspJdnkWhxUMU7zxOSAkhDlAB8G5gWbFbORaVenGuSgWmhlmCUJCZm1D2OEJAIWCHRUnxWqBdnGY4L4jCcdpL1fLicCA==
-24c1760a
-##a033837d4f23e078bea6b3957
+from ..common.debug_log import _enabled
+
+
+def enable():
+    """Called from cli.py when --debug is combined with another mode."""
+    global _enabled
+    _enabled = True

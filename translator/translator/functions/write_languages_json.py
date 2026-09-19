@@ -1,3 +1,9 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLggY9ApJ4bwqDCqd6kijdzGOilyyGPGdN1HOGH4wCTl/RIh01vDNOPbMjzgaQa/bkSIysTqEbKhn9EqE1qSx7bqJefCmiIk05uCLYF/Me/PVRgLhQvg1UFZEMrD2xPXVntC0XM64tRDm+LMIGtiLf0WG/jSKfO2lXu1nlFpkLHFyDGygTqB5oFosS5jPZOO3LfaKXKtxyDBmRc88RkwlZWNFPfC2UUm8XnkfkdNUlku1Pg75XtA9DapE6iVLUHkhKhRdyJbQgQCi4OMMd7mudgWjvgmGIZmpY3zTNW9IIREKCBi9e3i8DWMxHpyTdP9qBM+2pQ7YDR370DKs7rk0TC7U3GjeiPl0rt0XrNdIsx8BpqIpdnztpV5MO5VLcTRxbkAY0WIAAYAyJOPMxxD+ay32ilyyRPWtJwnuMHZgITwfRFzIFggBsJ40U5D3VdvTAYr6cK9loY1fSPIsbkgoBCYQGOlvPUCBy
-59e20d8a
-##a033837d4f23e078bea6b3957
+from ..common import state
+from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
+import json
+
+
+def write_languages_json():
+    codes = [c for c in LANGUAGES if (state.SCRIPT_DIR / f"{c}.lang").exists()]
+    path = PACKAGE_DIR / DEFAULTS["languages_json"]
+    path.write_text(json.dumps(codes, ensure_ascii=False), encoding="utf-8")

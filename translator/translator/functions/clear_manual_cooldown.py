@@ -1,3 +1,10 @@
-Ms4k34Eg45ptmCVpV58hjgaZAVVGmAZ8H5oCZgqYR9gY8wj5q2i/lm/VZllV3jKLLY8ZXV+UUjUbhx17DMw46zvdL+3SeqyNZ/8udFbcc8EtjwxKTq4BKBeDFykRgRfoJshr7dJvu5xdhjxnTdRZ5XiYCFoLkh45F4UtZBmCEuY44yjdzmKplnWbYC8Du3PPUtwaVV+ZUgM6uDFCQuZHp3Sca5KBLqmYdpRoOxnuP4ATmDJPX5AGOV7eeClYzEendJxr1sB6rKIgmCloTNA/sBGTAlBPngUyKYIcfRGARdp0gWv8zmCo8yLVaCYZkXPPLY8MSk6uASgXgxchHI0T5n22
-fb6f5db4
-##a033837d4f23e078bea6b3957
+from ..common.ratelimit import _LOCK
+from ._load_state import _load_state
+from ._save_state import _save_state
+
+
+def clear_manual_cooldown():
+    with _LOCK:
+        data = _load_state()
+        data["manual_cooldown_until"] = None
+        _save_state(data)

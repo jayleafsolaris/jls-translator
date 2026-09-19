@@ -1,3 +1,8 @@
-Ms4k34Eg45ptmCVpV5E6ggKTH0gLlRc+A5AtZReLbY1e2C7UgW2gnV2RLWRM1nvGSPZNHAvRAj0Cn1I0WIgC5SHbFN7OaeOdZ5c9YWbdPIgtjAxIQ9lbVlbXUikIjRPvess529Vrko1njTwuG+oOzV7cCFJInhY1GJBPKw2YAapsnmK4gS7t2XKHIWhNmTXNNpkPSUzRHjMR1wBsC4kTvXTHO9PVZrDbK/9oJhmRI50bkhkUCbIdMRSeHGxYwUrjMd4+1YF5pI1q1SloVsU7igDcAFNPlFJ0E9kVJ1jBSvIk2CrGxC7g1GaQKnNemHObHdwBU0zRBjQXg1J7DYJJpX22
-c5a02241
-##a033837d4f23e078bea6b3957
+from ..common import debug_log
+
+
+def cmd_debug():
+    path = debug_log.debug_log_path()
+    path.write_text("[]", encoding="utf-8")
+    print(f"Debug log reset: {path}")
+    print("Combine --debug with another mode (e.g. --update --debug) to log that run.")

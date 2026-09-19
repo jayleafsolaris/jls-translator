@@ -1,3 +1,34 @@
-PdE73dN67ZptmytzS8M2gQbSC0lfhAA5Bf14AxyJAac31C7RylGkl3aQOmhcxXubG5EIU16FT21YxVszcsxHp3SeaZCrLu3ZIqQ9b1raf88RlAhdW9ERMxiZF2oMhRHuIMVrwtNhr5ws1Rx0UNQgzxPcDlNegR45VpgUKQ+JC+t51yXd1mDh2WqcL25VyFnPUtxNXV2QGzAXlR5sWIQI9CDPa93PLrmRZ5w6Jn3/AM8Ckx9IC4IdfAGSUm0XgkDzdNguwsRgqdltm2hBVt40gxfcOU5KnwEwF4MXA1jMR6c9yDjXzWjt0W2HaEJ34nOdF48CUF6FGzMY1x1vWI1H7zvPP9zAY6jQIp89dU2RJ4BSmgRST9EdKQLXBWEdmA/iJpw814Z8qPMi1WgmVt8/hhyZTV1f0RMwGtl4A1jMR6cA1C6SyWG+jXHVKXRckSOdHZ4IWAuSHTIVggB7HYIT6y2Qa9zOeu2WbJBoZ1/FNp1SnQNTX5kXLlbaXykZzBTrO8tr3dME7dki1TtvVdQ9mx6FQFhZngIsH5kVKRuDCekx3z/bzmDtjW3VJ2hckTuAAYhNUkTRHjMYkBd7WIgI8jbQLsGBeqWcIoIpb02fWc9S3E1rRIMBKFaUE3odzA70dM4kx8ZmoYAilTxvVNQ8mgacTU9Okh0yEoRSfReYBut0lCXd1S6tjWuYLWlMxTPPApkfHEOeAShf2XgpWMxH1THIPsDPfe2tcIAtJlbfc5samU1aQoMBKFaEB2obiRT0MsknkvVNndlhmiZoXNInw1K6DFBYlFI1ENcXfx2eHo10nGuSwHq5nG+FPCZf0DqDAdwCTguFGzEThFJmDZhJjXSca5KDLO/zItVoJlDcI4AAiE1PRJIZOQL9eClYzEfvO88/wYEz7aIq13AoAZ9rwUreQRwewltwVt9QOFbdSbZ6jWmegTv+0F//QiYZkXOLF5pNY1+DC3QemAF9J5wI9SCVcbiBLu3ZItVoJlHeIJte3B1TWYVSYVafHXoMsxfoJshBkoEu7dki1WhyS8hp5VLcTRwL0VJ8VtdSKQ+FE+90zyTRymu512GHLWdN1AyMHZIDWUiFGzMY31phF58Tq3TMJMDVJ+HZdpwlY1bEJ9IGlQBZRIQGdUz9UilYzEendJxrkoEu7dki1TpjTcQhgVKoH0lO+1J8VtdSKVjMAv832TvGgUGevHCHJ3QDu3PPUtxNHAvRUnxW1wBsDJkV6XT6Kt7Sa8fzItVoJk7YJ4dSnwJSSIQALhOZBicemRPyJtk4nPVmv5xjkRhpVt0WlxefGEhEg1oxF48tfheeDOImz3bexGDlkW2GPHUQmHOOAdwIRBH7UnxW11IpWMwB8iDJOdfSLvDZWZAwKErEMYIbiEVjX4MLcFafAiBYigj1dNQ7kshg7ZFthjx1ZLtzz1LcTRwL0RQzBNcUfAzMDul03yTcwnu/i2ebPChfxCeaAJkeEkqCLT8ZmgJlHZgC43zaPsbUfKiKK89CJhmRc89S3E0cC9FSNRDXFHwMwhXiJ8knxokn9/Mi1WgmGZFzz1LcTRwL0VJ8BJIGfAqCR9MmyS64gS7t2XCQPHNL33OpE5AeWSE=
-ebcaef98
-##a033837d4f23e078bea6b3957
+import concurrent.futures
+
+
+def check_internet(timeout=1.2):
+    """
+    Quick, cheap connectivity probe. Tries a couple of well-known, highly
+    available hosts on their DNS port so we don't depend on Google Translate
+    itself (or DNS resolution of a hostname) just to find out whether we're
+    online at all.
+
+    The hosts are probed concurrently, not one after another -- a slow or
+    silently-dropping connection to one host no longer doubles the wait.
+    Worst case is roughly `timeout` seconds total (not `timeout` per host).
+    Returns True on the first successful TCP connect, False if every
+    attempt fails or times out.
+    """
+    import socket
+
+    hosts = [("8.8.8.8", 53), ("1.1.1.1", 53)]
+
+    def _try(host_port):
+        host, port = host_port
+        try:
+            with socket.create_connection((host, port), timeout=timeout):
+                return True
+        except OSError:
+            return False
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(hosts)) as ex:
+        futures = [ex.submit(_try, hp) for hp in hosts]
+        for fut in concurrent.futures.as_completed(futures):
+            if fut.result():
+                return True
+    return False

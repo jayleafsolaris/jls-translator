@@ -1,3 +1,25 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSVjujKtcd8A7t6kuUpk+0Gk1841mGH4wCTl/RED0FkkQ9cooV6DmcZe3ZYb+mcJA4Y1jFc4YfjAJOX9EtJBmFLXsdnALmILZBuMVrq9lmkCtpVME6gxejGVlThVooE48GJViHAv59hkGSgS7t2yDXQiYZkXOmHIoITliUUjMQ1xFmFZwO6zHjP9fZeuPZYp4tf1mRPpoBiE1eTtEGNBPXEHAMiRSnJtk/x9NgqJ0ilzEmWt4+nxuQCGNflAoofNdSKVjEFOIxnCjTwmao126aKWJm0jyCApUBWXSaFyVf2VJbGYUU4iecHdPNe6i8cIcndBnYNc8GlAgcRpAANxOFUmALzAruJ88i3MYE7dki1Sd0GcU7ilKeAVNJ0RE9GNAGKRqJR+Mx3yTWxGrtjmuBICZN2TbPFZUbWUXRGTkP2XgpWMxHpXaeQZKBLu2UY4cjY0uRbs8U3k4fUK4xEzunO0U9syzCDeMG8/NFiKt/10ImGZFzgxuSCE8LzFIoE48GJwucC+4g0CLcxH3l0AjVaCYZ3DKdGZkfY0KVCnxL1xxsAJhPrz2cLd3TLqTVIplob1eRNoEHkQhOSoUXdBqeHGwLxUfuMpwnnNJ6rIt2hj9vTdl7ghOOBllZ2FtwVrkdZx3Fbad0nGvbxy6gmHCeLXRm2DeXUpUeHGWeHDlM/VIpWMxHp3ScOdPIfajZVJQkc1z0IZ0djkUeRZ5SPxmaAmAUiUfqNc4g19Muq5Z3mywmFJxzmxqVHhxPnhcvGNAGKRSDCOx00CLZxC6ulm+FIWpc1XONE48IHgL7eHxW11JrFIMFp2mcae7PLOOTbZwmLlXYPYoBp1dRSoMZOQSoG20AsU6pJ8g529Em5PMi1WgmTcMq1XjcTRwL0VJ8Vo8dex2IR7p03irBxDj512DDfGJc0jyLF9QPUESTXDkYlB1tHcRF5iffItuDJ+TzItVoJhmRc88djgRbQp8TMFbKUlYAgxXYJtk718B65YFthy1iFZE4igvVQ1hOkh04E99QfAyKSr92lUGSgS7tnHqWLXZNkRaXEZkdSEKeHGZ811IpWMxHp3TOKtvSa+2vY5k9Y3zDIYAA1E9fRIQeOBjQBikciQToMNlr0c5jvZBukCwmW9AgilLRQBxChVIxF45Sax3MBOgmzj7C1Wup2yv/QiYZkXOdF4gYTkXRHS4fkBtnGYBt
-133ee4d8
-##a033837d4f23e078bea6b3957
+from ..common.state import _COMPILE_KEY_MARKER
+import base64
+from ._xor_repeat import _xor_repeat
+
+
+def decompile_text(text, key):
+    """
+    Inverse of compile_text. `key` must be the bytes returned by compile_text
+    (see cache.load_compile_key). Raises ValueError if the marker is missing
+    or the blob can't be decoded with the given key.
+    """
+    marker = f"##{_COMPILE_KEY_MARKER}"
+    lines = text.splitlines()
+    marker_idx = next((i for i, l in enumerate(lines) if l.startswith(marker)), None)
+    if marker_idx is None:
+        raise ValueError("no compile marker found -- this doesn't look like compiled base")
+
+    blob = "\n".join(lines[:marker_idx]).strip()
+    try:
+        xored = base64.b64decode(blob.encode("ascii"))
+        original = _xor_repeat(xored, key).decode("utf-8")
+    except Exception:
+        raise ValueError("couldn't decode compiled base -- it may be corrupted")
+
+    return original

@@ -1,3 +1,15 @@
-PdE73dN67ZZx/yFrSd4hm1KPBUlfmB5WfP0WbB7MOPUxzz/d02uSm2OWI3NJmTGOEZcYTHSVGy5a1xZ6DLMD7iaVcbiBLu3ZINdqVFzSJp0BlRtZR4hSMRmBFykdmgL1Lcgj289p7Z9wmiUmW9AwhAeMMlhCg1I+F5QZKRGCE+h02DjG/mqkiyzXaiQzkXPPUpoCTguUHCgEjlJgFswI9HrQIsHVaqSLKpcpZVLEI7AWlR8VEftSfFbXUilYzBSnaZwkwY9+rI1q2yJpUN97jROfBklbrhY1BNtSbBaYFf59tmuSgS7t2SLVLCYEkTycXIwMSEPfGDMfmVptC5g44z3OZ5LEYLmLe9xCJhmRc89S3E1VTdEdL1iHE30Qwg70MNU5mtIn7ZhskWhpSp8jjgaUQ1VYlRsuXpNbM3LMR6d0nGuSgS7t2SKqOmNKxTydF6MPXUiaByxehF4pHMVtp3Sca5KBLu3ZItVob1+RPYAG3AJPBZ0bLwKTG3tQn069XpxrkoEu7dki1WgmGZFzz1KTHhJZnBY1BN8BIHLMR6d0nGuSgWuhimfPQiYZkXPPUtxNHAvRUi8eggZgFMIK6CLZY8GNLqnQCA==
-99956009
-##a033837d4f23e078bea6b3957
+import os
+import shutil
+
+
+def _restore_backup(backup_dir, dst_dir):
+    """Recursively move everything from backup_dir back into dst_dir."""
+    for entry in os.listdir(backup_dir):
+        s = os.path.join(backup_dir, entry)
+        d = os.path.join(dst_dir, entry)
+        if os.path.isdir(s) and os.path.isdir(d):
+            _restore_backup(s, d)
+            if not os.listdir(s):
+                os.rmdir(s)
+        else:
+            shutil.move(s, d)

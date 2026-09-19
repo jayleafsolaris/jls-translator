@@ -1,3 +1,48 @@
-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
-460aa0ac
-##a033837d4f23e078bea6b3957
+from ..common import state, config_store
+from ..common.cache import compute_auto_workers, get_active_language_codes, save_active_language_codes
+from ..common.state import DEFAULTS, LANGUAGES, LANGUAGE_NAMES, PACKAGE_DIR, CONFIG_DIR_VISIBLE_NAME, CONFIG_DIR_HIDDEN_NAME
+from ._curses_available import _curses_available
+from ._edit_active_languages_curses import _edit_active_languages_curses
+from ._edit_active_languages_text import _edit_active_languages_text
+
+
+def cmd_config_languages():
+    codes = list(LANGUAGES.keys())
+    active = set(get_active_language_codes())
+
+    print(f"{len(active)}/{len(codes)} language(s) active (translated by --create/--update/--add):\n")
+    for code in codes:
+        marker = "I" if code in active else "O"
+        exists = (state.SCRIPT_DIR / f"{code}.lang").exists()
+        file_note = "file exists" if exists else "not created yet"
+        name = LANGUAGE_NAMES.get(code, "")
+        print(f"  [{marker}] {code:<8} {name:<24} ({file_note})")
+
+    print("\n[I] = active (in)   [O] = inactive (out)")
+    edit = input("\nEdit which languages are active?\n[y/N]: ").strip().lower()
+    if edit not in ("y", "yes"):
+        return
+
+    result = None
+    if _curses_available():
+        try:
+            result = _edit_active_languages_curses(codes, active)
+        except Exception:
+            print("Couldn't start the interactive toggle editor here -- falling back to text mode.")
+            result = _edit_active_languages_text(codes, active)
+    else:
+        result = _edit_active_languages_text(codes, active)
+
+    if result is None:
+        print("\nNo changes made.")
+        return
+
+    save_active_language_codes(result)
+    print(f"\nSaved. {len(result)}/{len(codes)} language(s) active.")
+
+    stale = [c for c in codes if c not in result and (state.SCRIPT_DIR / f"{c}.lang").exists()]
+    if stale:
+        print("Note: these .lang files already exist but won't be touched by "
+              "--create/--update/--add while inactive (still on disk):")
+        for c in stale:
+            print(f"  {c}.lang")

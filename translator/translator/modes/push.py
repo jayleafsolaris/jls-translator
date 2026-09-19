@@ -1,3 +1,14 @@
-dp5pn4x+uIpqz2h1QN8wz06fGlgV3hgwBdoGexmCFOs1yCTAji64iSKBJyZN2TqcUogCU0fWAXwZgBwpCokX6HicKsGBYaOcCJYna1vYPYoW3A5TRpwbKFjXN38dnh6neswyksdnoZwinDsmWt4+nxuQCFgL2R0+EIIBahmYAuN9nCnXx2G/nCKAOGpW0DfPX9FnT06UUj8Zmh9mFsME6DDZFN3DaLiKYZQ8YxfBKs9f0U1PRNEGNBPXAGwIg0foOtAyksR4qIsinSdqXcJzmhyOCF1PkBAwE/0QZReOFKc72mvGyWvtjW2aJCFKkTyYHNweU16DETlN118kCJkL63uRZsfRab+YZpBoYlzSPIIClQFZC5gGfBSWEWJWzkWlXto53cwu49dhmiVrVt9zhh+MAk5f0QEoF4MXAx6eCOp0kmXRzmOglmzbO3JYxTbPG5EdU1mFUhs/ozpcOrM1wgTzQdTTYaDZLNsraVTcPIFcnwJSTZgVAwWDHXsdzA7qJNM5xoFpqI1dhy1qXNAgii2eH11FkhpWEIUdZFjCSeQ70SbdzyCqkHadPWRm0COGUpUATESDBnxe/VIpWMwg7iD0PtDge7mRR4c6aUudc6gbiCVJSbACNTOFAGYKwEfuJ+M4y89tkpx6liRzXdQ3w1KaBFJPrgA5G5gGbCecBuQ/3SzX/n6/nGScMCozkXPPUpsISHSTAD0YlBpWG4MK6j3IFNPPapKNcJAtKhnWNpstmhhQR64GLhOSXikbngLmINkU0M1hr9UiljpjWMU2sAaOCFkH+1J8VtcRex2NE+IL3yTfzGe51SKAOGJYxTawAJkLEAuWGygplR5mGrMU7zWQQZuraL+Wb9VmKF/EPYwGlQJSWN8tMBmUE2Unig7rMc9r28x+oot21RdqVtIygy2aBFBOgng6BJgfKVbCAfI63z/bzmC+12GYLFlJxCCHUpUATESDBnwVmhZWCJkU714=
-15c53ca9
-##a033837d4f23e078bea6b3957
+"""--push: sync <cwd>/jls-translator/ up to this tool's own repo, as one
+combined commit. Every .py file is compiled (obfuscated) before upload --
+see common/code_obfuscate.py -- so the repo only ever holds unreadable
+blobs of the tool's own source; --pull/--upgrade decompile it back."""
+from ..common import state
+from ..common.state import GITHUB_REPO
+from ..common.config_store import get_release_branch
+from ..common.github_api import (
+    GitHubAuthError, GitHubApiError, is_sync_excluded, find_remote_package_prefix,
+    get_branch_commit_and_tree, get_full_tree, create_blob, create_tree,
+    create_commit, update_ref, git_blob_sha,
+)
+from ..functions._local_files import _local_files
+from ..functions.cmd_push import cmd_push

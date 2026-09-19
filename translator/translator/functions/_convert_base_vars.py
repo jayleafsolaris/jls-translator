@@ -1,3 +1,13 @@
-PdE73dN67Ytn/0IMXdQ1zy2fAlJdlAAoKZUTeh2zEeYmz2PeyGCoiivPQiYZkXPNUN4uU0WHFy4ChFJ8C4kVqjLOItfPaqGAIo55exnCKoEGnRUcQp9SPheEFykMg0fFMdg53cJl6ooi0HkiSp9xzVD2TRwL0R0pAtdPKSOxbad0nGvUznztlWubLSZQ33ODG5IITxH7UnxW11IpWMwO4XTQItzEVf2kIsh1JhvUPZsAhU8GIdFSfFbXUilYzEendNIuxf54rJUiyGh0XJ8gmhDUHx53iloAEtxbVQXOS6cmnm7ukCq+2y7VJG9X1AjdL9VnHAvRUnxW11IpWMxH6CHIZdPRfqiXZt1gJFzfJ50L3kEcR5gcOS3GLyVYggLwC8oq3o0uoZBskBM1ZJh65VLcTRwL0VJ8E5sBbELmR6d0nGuSgS7t2SLVJ3NNnzKfApkDWAOdGzIT3ngpWMxH9THIPsDPLqKMdv8=
-8df94c08
-##a033837d4f23e078bea6b3957
+import re
+
+
+def _convert_base_vars(lines):
+    """Converts user-friendly {1} syntax in base to Bedrock's %1$s."""
+    out = []
+    for line in lines:
+        if line[0] == "entry":
+            new_val = re.sub(r"\{(\d+)\}", r"%\1$s", line[2])
+            out.append(("entry", line[1], new_val, line[3]))
+        else:
+            out.append(line)
+    return out

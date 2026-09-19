@@ -1,3 +1,49 @@
-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
-1a449848
-##a033837d4f23e078bea6b3957
+"""
+GitHub API helpers for --push/--pull (Git Data API: blobs, trees, commits,
+refs) and --token (storing/removing the personal access token those calls
+authenticate with).
+
+--push/--pull always sync one local folder -- <cwd>/jls-translator/ --
+against the exact same-named path in this tool's OWN repo
+(GITHUB_OWNER/GITHUB_REPO, from state.py -- not some separately configured
+project repo), on whichever branch config_store.get_release_branch()
+currently points to (the same branch --upgrade/--release use).
+"""
+import base64
+import hashlib
+import os
+import requests
+from .state import (
+    GITHUB_OWNER, GITHUB_REPO, PACKAGE_DIR, DEFAULTS,
+    CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME,
+)
+from .config_store import load_config_value, save_config_value, current_config_dir
+_TOKEN_CONFIG_NAME = "github_token"
+_API_ROOT = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}"
+_PROTECTED_NAMES = {
+    DEFAULTS["cache_file"], DEFAULTS["languages_json"], DEFAULTS["progress_file"],
+    DEFAULTS["update_temp_file"], DEFAULTS["version_check_file"], DEFAULTS["section_order_cache"],
+    DEFAULTS["base_backup_file"],
+    CONFIG_DIR_HIDDEN_NAME, CONFIG_DIR_VISIBLE_NAME, "temp_update", "__pycache__", ".git",
+}
+class GitHubAuthError(Exception):
+    """Raised whenever the API responds 401/403/404 -- treated uniformly as 'not authorized'."""
+    pass
+class GitHubApiError(Exception):
+    """Any other API failure (network, 5xx, unexpected response shape, truncated tree, etc)."""
+    pass
+from ..functions._headers import _headers
+from ..functions._request import _request
+from ..functions.create_blob import create_blob
+from ..functions.create_commit import create_commit
+from ..functions.create_tree import create_tree
+from ..functions.find_remote_package_prefix import find_remote_package_prefix
+from ..functions.get_blob_content import get_blob_content
+from ..functions.get_branch_commit_and_tree import get_branch_commit_and_tree
+from ..functions.get_full_tree import get_full_tree
+from ..functions.get_token import get_token
+from ..functions.git_blob_sha import git_blob_sha
+from ..functions.is_sync_excluded import is_sync_excluded
+from ..functions.remove_token import remove_token
+from ..functions.set_token import set_token
+from ..functions.update_ref import update_ref

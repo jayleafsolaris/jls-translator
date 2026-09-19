@@ -1,3 +1,8 @@
-MNktkv5gop1nqjxpZtU6jAbUA1NPlFtmfNdSKVieAvMhziWS2gTt2SLVaCYZkXGDF4oIUAnLUjIZkxcnFIkR4jiQQZKBLu3ZItVoJFfQPopQxk1SRJUXchiWH2xU5kendJxrkoEu759tmSxjS5NpzxyTCVkFlx0wEpIAJXLMR6d0nGuSgSyvlWObI3Ubi3OBHZgIEkmdEzIdhF4DWMxHp3Sca5KDbaWQbpE6Y1eTac8powNTT5QtKBmoFmAbmE/kfZwt3dMurtlrm2hoVtU2wRGUBFBPgxcyK9t4KVjMR/pe
-024124d6
-##a033837d4f23e078bea6b3957
+def _node_to_dict(node):
+    return {
+        "level": node.level,
+        "name": node.name,
+        "folder": node.folder,
+        "blanks": node.blanks,
+        "children": [_node_to_dict(c) for c in node.children],
+    }

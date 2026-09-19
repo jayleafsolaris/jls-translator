@@ -1,3 +1,12 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSTjG4L9IW4wTl70uf1SKyAVJx5BGwILk9cwfRNRUivydLJ641xhr/A56BXoy6SbQPQ2b1Gr1e3Cl5bbAnECKkXikrrzXOBOgU5ORcnrBNu0JvVME8nQbcB09En3hWfJMXb1izC+g12BTExHy+kG2bF2VR1DCELZ8MX0OUWnVM/VIpWMwX5iDUa4+BXoy6SbQPQ2b1Gr1S0014brczCTqjIVJamgL1J9Uk3P5tpZxhnhdgUN02zS/2TRwL0Rs6VocTfRDCAv89zz/BiSf38yLVaCYZkXPPBo4UBiHRUnxW11IpWMxHp3TOLsbUfKPZaIYnaBfdPI4Wj0VMSoUacgSSE20nmAL/IJQu3MJhqZBsknUkTMU1wkreRBUh0VJ8VtdSKViJH+QxzD+S5HaunHKBIWlXi1nPUtxNHAvRUnxW11J7HZgS9TqcMM+rLu3ZIoctckzDPc8JgWc=
-b17c8160
-##a033837d4f23e078bea6b3957
+from ..common.state import GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, PACKAGE_DIR, DEFAULTS, SCRIPT_VERSION
+import json
+
+
+def _load_version_check_cache():
+    path = PACKAGE_DIR / DEFAULTS["version_check_file"]
+    if path.exists():
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}

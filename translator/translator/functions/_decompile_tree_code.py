@@ -1,3 +1,42 @@
-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
-ee5c1173
-##a033837d4f23e078bea6b3957
+import os
+from ..common.code_obfuscate import is_compiled_code, decompile_code_text
+
+
+def _decompile_tree_code(root, key):
+    """
+    Walks every .py file under `root` and, if it looks compiled (see
+    common/code_obfuscate.py's is_compiled_code()), decompiles it in
+    place using `key`. Returns the list of paths (relative to `root`)
+    that were compiled but couldn't be decompiled -- missing/wrong key,
+    or corrupted content. An empty list means everything under root is
+    now plain, runnable Python.
+
+    Never raises on a bad individual file -- it's reported back in the
+    returned list instead, so the caller (--upgrade) can decide what a
+    partial failure means for it, rather than this helper deciding to
+    abort a walk the caller might still want to finish.
+    """
+    failed = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        for name in filenames:
+            if not name.endswith(".py"):
+                continue
+            path = os.path.join(dirpath, name)
+            try:
+                text = open(path, "r", encoding="utf-8").read()
+            except UnicodeDecodeError:
+                continue
+            if not is_compiled_code(text):
+                continue
+            rel = os.path.relpath(path, root)
+            if key is None:
+                failed.append(rel)
+                continue
+            try:
+                original = decompile_code_text(text, key)
+            except ValueError:
+                failed.append(rel)
+                continue
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(original)
+    return failed

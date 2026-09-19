@@ -1,3 +1,6 @@
-Ms4k34Eg45ptmCVpV580hgaUGF50kAI1Vp4feReeE6cL/Rv7/lyCtlb/LnRW3HPBLY4ITV6UAShWnh95F54TpwvOLsPUa76NCP9CYlzXc5oCmAxITq4AORDfEHsZggTveJwo3cxjpI1dhiBnEItZz1LcTWNZlAMpE4QGIVq8JtMX9GmegWjvgl20GE9m4xygJoFCW0KFXS4TkQEmEIkG4yeTMNDTb6OaaohqKhnbIIAcwRYeWJkTfkzXEWYVgQ7zC88j09wnxw==
-9683e945
-##a033837d4f23e078bea6b3957
+from ..common.github_api import _API_ROOT
+from ._request import _request
+
+
+def update_ref(branch, commit_sha):
+    _request("PATCH", f"{_API_ROOT}/git/refs/heads/{branch}", json={"sha": commit_sha})

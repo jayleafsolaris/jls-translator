@@ -1,3 +1,12 @@
-Ms4k34Eg45ptmCVpV58gmxOICBxCnAIzBINSWTmvLMYT+RT26Fzh2UawDkds/Qe8XtwhfWW2Jx0xsiElWLMy1xD9H/f+TYKsTKEXS3jjGKog0E1jaL4/DD+7N1YzqT7YGf0Z+eRcx5BvhSd0TZE5nB2SZzYhlRc6VpsdaByzBOY31C6aiDTH2SLVaHZYxTvPT9w9fWi6MxszqDZAKsxIpxD5DfP0QpmqWdcrZ1rZNrAUlQFZCax4fFbXUmAezBfmINRl19lnvo1x3WE8M5Fzz1LcTRwLhQAlTP1SKVjMR6d0nGuSgS6/nHaAOmgZ2yCAHNIBU0qVAXQGlgZhVp4C5jDjP9fZeuWcbJYnYlDfNNJQiRlaBslQdV/9UilYzEendJwuysJrvY0isDBlXMEnhh2SVzYL0VJ8VtdSKVjMR6cm2T/H02Dtgn//aCYZkSGKBokfUguKD1Y=
-fcae7abe
-##a033837d4f23e078bea6b3957
+from ..common.state import PACKAGE_DIR, DEFAULTS, LANGUAGES, _UPDATE_COUNT_MARKER, _COMPILE_KEY_MARKER
+import json
+
+
+def load_cache():
+    path = PACKAGE_DIR / DEFAULTS["cache_file"]
+    if path.exists():
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}
