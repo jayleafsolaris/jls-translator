@@ -42,4 +42,5 @@ from ..functions.get_fallback_log import get_fallback_log
 from ..functions.get_translator import get_translator
 from ..functions.reset_outage_state import reset_outage_state
 from ..functions.translate_many import translate_many
+from ..functions.translate_many_grouped import translate_many_grouped
 from ..functions.translate_value import translate_value

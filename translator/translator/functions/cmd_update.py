@@ -10,7 +10,7 @@ from ..common.progress import load_base, sync_en_us_from_base, base_fingerprint,
 from ..common.ratelimit import set_job_profile, status_report
 from ..common.state import DEFAULTS, LANGUAGES, GB_CONVERT, PACKAGE_DIR
 from ..common.text_protect import tokens_only_diff, punctuation_only_diff, to_british
-from ..common.translate import translate_many, reset_outage_state
+from ..common.translate import translate_many_grouped, reset_outage_state
 import json
 import random
 import sys
@@ -269,54 +269,32 @@ def cmd_update(resume=False, interactive=False, show_summary=False):
                 by_google_code.setdefault(t["google_code"], []).append(t)
 
             slow_level = 0
+            base_offset = done_count
 
-            for google_code, group in by_google_code.items():
-                texts = [base_values[t["key"]] for t in group]
-                base_offset = done_count
+            def _make_jobs(only_incomplete=False):
+                # google_code doubles as job_key here since by_google_code's
+                # keys are already unique -- each job is exactly one
+                # language's remaining texts, same grouping as before.
+                codes = by_google_code
+                if only_incomplete:
+                    codes = {
+                        gc: grp for gc, grp in by_google_code.items()
+                        if any(task_key(t["code"], t["key"]) not in results for t in grp)
+                    }
+                return [
+                    (google_code, google_code, [base_values[t["key"]] for t in group])
+                    for google_code, group in codes.items()
+                ]
 
-                def _progress_cb(group_done, _base_offset=base_offset):
-                    smoother.update(_base_offset + group_done)
-
-                workers = resolve_workers(len(texts))
-
-                while True:
-                    suppressed = []
-                    try:
-                        with _quiet_warnings(suppressed):
-                            translated = translate_many(google_code, texts, workers, progress_cb=_progress_cb)
-                    except Exception:
-                        # SystemExit is deliberately NOT caught here.
-                        # translate_many() raises it (via
-                        # _handle_rate_limit_stop / a detected outage)
-                        # specifically to mean "stop now, progress is
-                        # already saved, resume with --continue" -- not
-                        # "retry me." Catching it here used to silently
-                        # absorb that into up to MAX_SLOW_LEVEL retries,
-                        # each one immediately re-hitting the same daily
-                        # cap and re-printing the same warning (which
-                        # itself bypassed _quiet_warnings -- see that
-                        # file), climbing "(Slowed x/15)" while
-                        # corrupting this progress display instead of
-                        # actually stopping.
-                        slow_level += 1
-                        if slow_level > MAX_SLOW_LEVEL:
-                            for msg in suppressed:
-                                warn_red(msg)
-                            raise
-                        _slow_level_display = slow_level
-                        reset_outage_state()
-                        time.sleep(_slow_delay(slow_level))
-                        continue
-
-                    if slow_level > 0:
-                        slow_level -= 1
-                    _slow_level_display = slow_level
-                    break
-
+            def _on_job_done(google_code, translated):
+                # Fires the moment ONE language finishes, independent of
+                # whatever else is still running in the shared pool --
+                # same persistence granularity --update always had when
+                # languages ran one at a time, just no longer gated on
+                # them actually finishing in sequence.
+                group = by_google_code[google_code]
                 for t, value in zip(group, translated):
                     results[task_key(t["code"], t["key"])] = value
-                done_count = base_offset + len(group)
-                smoother.update(done_count)
                 save_temp()
                 save_progress("update", [], fingerprint, time.time() - start_run_time)
 
@@ -330,6 +308,57 @@ def cmd_update(resume=False, interactive=False, show_summary=False):
                     if task_key(t["code"], t["key"]) not in results
                 )
                 set_job_profile(remaining_keys, remaining_bytes)
+
+            jobs = _make_jobs()
+            total_remaining_texts = sum(len(texts) for _, _, texts in jobs)
+            workers = resolve_workers(total_remaining_texts)
+
+            def _progress_cb(group_done, _base_offset=base_offset):
+                smoother.update(_base_offset + group_done)
+
+            while jobs:
+                suppressed = []
+                try:
+                    with _quiet_warnings(suppressed):
+                        translate_many_grouped(
+                            jobs, workers,
+                            progress_cb=_progress_cb,
+                            on_job_done=_on_job_done,
+                        )
+                except Exception:
+                    # SystemExit is deliberately NOT caught here.
+                    # translate_many_grouped() raises it (via
+                    # _handle_rate_limit_stop / a detected outage)
+                    # specifically to mean "stop now, progress is
+                    # already saved, resume with --continue" -- not
+                    # "retry me." Catching it here used to silently
+                    # absorb that into up to MAX_SLOW_LEVEL retries,
+                    # each one immediately re-hitting the same daily
+                    # cap and re-printing the same warning (which
+                    # itself bypassed _quiet_warnings -- see that
+                    # file), climbing "(Slowed x/15)" while
+                    # corrupting this progress display instead of
+                    # actually stopping.
+                    slow_level += 1
+                    if slow_level > MAX_SLOW_LEVEL:
+                        for msg in suppressed:
+                            warn_red(msg)
+                        raise
+                    _slow_level_display = slow_level
+                    reset_outage_state()
+                    time.sleep(_slow_delay(slow_level))
+                    # Only whatever's still unresolved needs retrying --
+                    # _on_job_done already persisted every language that
+                    # fully finished before the failure, so those are
+                    # excluded and not redone.
+                    jobs = _make_jobs(only_incomplete=True)
+                    workers = resolve_workers(sum(len(texts) for _, _, texts in jobs))
+                    continue
+
+                if slow_level > 0:
+                    slow_level -= 1
+                _slow_level_display = slow_level
+                break
 
             smoother.finish()
         except Exception as err:
