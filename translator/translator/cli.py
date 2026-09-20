@@ -130,6 +130,7 @@ separate files under a .config/ folder:
     jls-translator --config --workers    set the concurrent worker count
     jls-translator --config --languages  view/edit which are actively translated
     jls-translator --config --delay      set the global translation rate-limit delay
+    jls-translator --config --debug      turn debug logging (a file, never printed) on/off by default
     jls-translator --config --delete     delete the whole config folder (resets all)
     jls-translator --config --show       make the config folder visible
     jls-translator --config --hide       make the config folder hidden
@@ -267,7 +268,7 @@ from .functions._extract_code_compile_key import _extract_code_compile_key
 state._CODE_COMPILE_KEY = _extract_code_compile_key(Path(__file__).read_text(encoding="utf-8"))
 from .common.netcheck import check_for_update_notice, cmd_check_update, cmd_set_autocheck
 from .modes.config_cmd import (
-    cmd_config_workers, cmd_config_languages, cmd_config_delay,
+    cmd_config_workers, cmd_config_languages, cmd_config_delay, cmd_config_debug,
     cmd_config_show, cmd_config_hide, cmd_config_delete, cmd_config_menu,
 )
 from .modes.cache_cmd import cmd_cache_build, cmd_cache_view, cmd_cache_clear, cmd_cache_menu
@@ -320,4 +321,4 @@ if __name__ == "__main__":
 from .functions.main import main
 from .functions.prompt_for_ask import prompt_for_ask
 from .functions.prompt_for_mode import prompt_for_mode
-##d967ce2538f6a0557fefb33b1:7c85bfcdba2a9ad6dc755363539ff4f1fb52baafce40e16fd5851695d15eb57e
+##d967ce2538f6a0557fefb33b1:7b9134e879b8cc3de81efce31a9392bd5e3e136f77800bfdc34397a88ef42af6
